@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="installation">
+	<title>Installing @product.name@</title>
+	<section id="installation-prereqs">
+		<title>Prerequisites</title>
+		<para>
+			The @product.name@, or @short.product.name@ for short, requires Java SE 6 or later to be installed. Java is available from
+			<ulink url="http://java.sun.com/javase/downloads/index.jsp">Sun</ulink> and elsewhere.
+		</para>
+	</section>
+	<section id="installation-zip">
+		<title>Installing from the ZIP Download</title>
+		<section>
+			<title>Downloading the ZIP file</title>
+			<para>
+				@product.name@ is distributed as a ZIP file. This can be downloaded from 
+				<ulink url="http://www.springsource.com/products/suite/applicationplatform">here</ulink>.
+				Follow the instructions to obtain a username and password.
+			</para>
+		</section>
+		<section id="installation-zip-installing">
+			<title>Installing</title>
+			<section  id="installation-zip-installing-linux">
+				<title>Linux</title>
+				<para>
+					To install the @product.name@ on Linux, unzip the distribution package to the desired installation directory. 
+					For example, to install into <literal>/opt</literal>:
+				</para>
+				<screen>prompt$ unzip virgo-web-server-@bundle.version@.zip -d /opt</screen>
+				<para>
+					This creates a directory called <literal>virgo-web-server-@bundle.version@</literal> under <literal>/opt</literal>.
+				</para>
+				<para>
+					@product.name@ requires write access to the installation directory, in this case <literal>/opt/virgo-web-server-@bundle.version@</literal>.
+					Typically this means it must be run as the user that installed it, or the installation directory&rsquo;s ownership must be changed.
+				</para>
+			</section>
+			<section  id="installation-zip-installing-win">
+				<title>Microsoft Windows</title>
+				<para>
+					To install the @product.name@ on Windows, unzip the distribution package to the desired installation directory.
+					You should use a zip application such as 7zip, not the built-in folder decompression.  Note that both Windows and
+					Java 5 have some issues with long file names and file paths, so we recommend installing to the root directory of
+					your chosen drive.
+				</para>
+			</section>
+		</section>
+	</section>
+	
+	<section id="installation-post">
+		<title>Post-installation steps</title>
+		<section id="installation-post-env">
+			<title>Set environment variable variables</title>
+			<section id="installation-post-env-java">
+				<title>JAVA_HOME</title>
+				<para>
+					The @product.name@ uses the <literal>JAVA_HOME</literal> environment variable to locate the <literal>java</literal>
+					executable. Configure this environment variable to point to the home directory of the Java 5 or Java 6 installation on your computer.
+				</para>
+			</section>
+			<section id="installation-post-env-server">
+				<title>SERVER_HOME</title>
+				<para>
+					As a convenience it is recommended that you create an environment variable that points
+					to the @product.name@ installation directory. Note that the @product.name@ does not require that
+					such an environment variable has been set. This variable may have any name of your
+					choosing. The @product.name@&rsquo;s documentation assumes that the variable is named
+					<literal>SERVER_HOME</literal>. 
+				</para>
+				<section id="installation-post-env-server-linux">
+					<title>Linux</title>
+					<para>
+						Edit the <literal>.profile</literal> file in your home directory to
+						add the <literal>SERVER_HOME</literal> and <literal>JAVA_HOME</literal> environment variables. For
+						example, if you installed into <literal>/opt</literal>:
+					</para>
+					<screen>export SERVER_HOME=/opt/virgo-web-server-@bundle.version@/
+export JAVA_HOME=/user/java/jdk1.6.0_17
+export PATH=$JAVA_HOME/bin:$PATH</screen>
+				</section>
+				<section id="installation-post-env-server-win">
+					<title>Microsoft Windows</title>
+					<para>
+						This section shows how to add <literal>SERVER_HOME</literal> as a system variable on Windows.  Follow the same procedure to add or update the <literal>JAVA_HOME</literal> environment variable. 
+					</para>
+					<para>
+						From the Start menu, open the Control Panel and double-click on &lsquo;System&rsquo;.
+					</para>
+					<para>	 
+						<imagedata fileref="images/system-props.png"/>
+					</para>
+					<para>	 
+						Click the &lsquo;Advanced&rsquo; tab and select &lsquo;Environment Variables&rsquo;. Next, 
+						click the &lsquo;New&rsquo; button in the &lsquo;System Variables&rsquo; section. 
+					</para>
+					<para>	 
+						<imagedata fileref="images/env-variables.png"/>
+					</para>
+					<para>
+						This will display the &lsquo;New System Variable&rsquo; window.  Enter 
+						<literal>SERVER_HOME</literal> as the &lsquo;Variable name&rsquo; and 
+						the installation directory as the &lsquo;Variable value&rsquo;. Click OK.
+					</para>
+					<para>	 
+						<imagedata fileref="images/system-variable.png"/>
+					</para>
+				</section>
+			</section>
+		</section>
+		<section id="installation-post-env-server-win-troubleshooting">
+			<title>Microsoft Windows - Troubleshooting</title>
+			<para>
+				When starting the @product.name@ on some variants of Windows you might encounter a problem with file permissions. 
+				The error looks like this.
+			</para>
+			<screen>C:\dev\virgo-web-server-2.0.1.BUILD-20091208094124>bin\startup.bat
+Error: Exception thrown by the agent : java.io.FileNotFoundException: C:\dev\...\config\
+		org.eclipse.virgo.kernel.jmxremote.access.properties (Access is denied)</screen>
+			<para>
+				If the @short.product.name@ starts at this point you can skip this section and carry on. Otherwise, go to the 
+				&lsquo;config&rsquo; directory of your install in Windows Explorer and you will be able to confirm the problem, 
+				an incorrect file ownership.
+			</para>
+			<para>
+				<imagedata fileref="images/install-windows-1-FileListing.png" />
+			</para>
+			<para>
+				Right click on the &lsquo;org.eclipse.virgo.kernel.jmxremote.access.properties&rsquo; file and view its properties, 
+				then select the &lsquo;Security&rsquo; tab.
+			</para>
+			<para>
+				<imagedata fileref="images/install-windows-2-SecuritySettings.png" />
+			</para>
+			<para>
+				Within the security page select the &lsquo;Advanced&rsquo; options. On the &lsquo;Owner&rsquo; tab, choose the owner
+				that you are trying to run the @short.product.name@ as and select &lsquo;Apply&rsquo;.
+			</para>
+			<para>
+				<imagedata fileref="images/install-windows-3-AdvanceSettingsOwner.png" />
+			</para>
+			<para>
+				Once this is done select &lsquo;OK&rsquo; to return to the &lsquo;Security&rsquo; tab 
+				and now add the owner to the list of groups and users that have permission to edit the file.
+			</para>
+			<para>
+				<imagedata fileref="images/install-windows-4-AllSetReadAndExecute.png" />
+			</para>
+			<para>
+				Once all these steps are complete you can proceed to start the @short.product.name@.
+			</para>
+			<screen>C:\dev\virgo-web-server-2.0.1.BUILD-20091208094124>bin\tstartup.bat
+[2009-12-08 13:09:09.545] startup-tracker              &lt;KE0001I&gt; Kernel starting.</screen>
+		</section>
+	</section>
+</chapter>

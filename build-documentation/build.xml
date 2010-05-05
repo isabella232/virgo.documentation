@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-documentation" default="build-doc">
+
+	<path id="bundles">
+		<pathelement location="${basedir}/../user-guide"/>
+		<pathelement location="${basedir}/../programmer-guide"/>
+		<pathelement location="${basedir}/../getting-started"/>
+	</path>
+
+	<property file="${basedir}/../build.properties"/>
+	<import file="${basedir}/../virgo-build/multi-bundle/default.xml"/>
+
+	<target name="precommit" depends="clean, clean-integration, doc"
+		description="Performs a CI server-like build, should be run prior to performing a Git push"/>
+
+	<target name="doc">
+		<all-bundles target="doc"/>
+	</target>
+
+	<target name="publish-static" depends="publish-static.init">
+		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
+				command="mkdir /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/${bundle.version}"/>
+		<all-bundles target="publish-static"/>
+		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}" failonerror="false"
+				command="rm /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/2.0.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/${bundle.version} /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/2.0.x"/>
+	</target>
+
+
+<!-- Other targets -->
+	<target name="publish-static.init">
+		<fail message="The 'username' property must be set">
+			<condition>
+				<not>
+					<isset property="username"/>
+				</not>
+			</condition>
+		</fail>
+		<fail message="The 'key.file' property must be set">
+			<condition>
+				<not>
+					<isset property="key.file"/>
+				</not>
+			</condition>
+		</fail>
+		<fail message="The 'passphrase' property must be set">
+			<condition>
+				<not>
+					<isset property="passphrase"/>
+				</not>
+			</condition>
+		</fail>
+	</target>
+
+</project>

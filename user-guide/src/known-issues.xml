@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<appendix id="known-issues">
+	<title>Known Issues</title>
+
+	<para>This section describes two known issues that you might run into, along with corresponding workarounds.  </para>
+
+	<para>For the full list of known issues, see the <ulink url="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;order=Importance;classification=RT;product=Virgo">Eclipse Issue Tracker for the @umbrella.product.name@</ulink>.  The issues are organised by component as well as by release.  You can also use the Issue Tracker application to enter a new issue if you cannot find an existing issue that describes the problem you are running into.</para>
+
+	<section id="known-issues-firewall-timeout">
+		<title>Timeout During Startup Due to Firewall Settings</title>
+		<para>
+			The @short.product.name@ will fail to start correctly if it is prevented from 
+			connecting to needed ports by the firewall. Typically this manifests 
+			as error <literal>SPPM0003E</literal> . Configuring the firewall to
+			allow the @short.product.name@ process to bind to the necessary ports will prevent
+			this error from occurring.
+		</para>
+	</section>
+	<section id="known-issues-perm-gen-sun-vm">
+		<title>OutOfMemoryError: PermGen space running on Sun VM</title>
+		<para>
+			As a result of Sun Java bug
+			<ulink url="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4957990">4957990</ulink>,
+			the @product.name@ may consume more PermGen space than expected when running with the
+			server HotSpot compiler. This problem may be resolved by configuring the
+			<literal>JAVA_OPTS</literal> environment variable to specify an increased
+			<literal>MaxPermSize</literal>, for example <literal>-XX:MaxPermSize=128M</literal>.
+		</para>
+	</section>
+</appendix>

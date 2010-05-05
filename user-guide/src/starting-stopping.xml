@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="starting-stopping">
+	  <title>Starting and Stopping @product.name@</title>
+        <titleabbrev>Starting and Stopping @short.product.name@</titleabbrev>
+	  <section>
+	    <title>Starting @product.name@</title>
+	    <para>
+	      To start @product.name@ run the <literal>startup.sh</literal> (Linux) or <literal>startup.bat</literal> (Windows) script.  
+	      For both platforms, the script is located in the <literal>SERVER_HOME/bin</literal> directory.
+	    </para>
+	    <section>
+	      <title>Linux</title>
+	      <para>
+	        To start @product.name@, open a terminal window and run <literal>startup.sh</literal>:
+	      </para>
+	      <screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh</screen>
+	      <para>
+	        Once @product.name@ has started, the console will display a log message
+	        similar to the one shown below, along with other status messages:
+	      </para>
+
+	      <screen>[2009-11-30 12:12:12.111] Thread-2   &lt;UR0001I&gt; User region ready.</screen>
+	      <para>The preceding message indicates that you can start using @short.product.name@.</para>
+	    </section>
+	    <section>
+	      <title>Microsoft Windows</title>
+	      <para>
+	        To start @product.name@, open a command-window and run <literal>startup.bat</literal>:
+	      </para>
+	      <screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat</screen>
+	      <para>
+	        Once @product.name@ has started console will display a log message
+	        similar to the one shown below:
+	      <screen>[2009-11-30 12:12:12.111] Thread-2   &lt;UR0001I&gt; User region ready.</screen>
+	      <para>The preceding message indicates that you can start using @short.product.name@.</para>
+	      </para>
+	    </section>
+	  </section>
+	  <section>
+	    <title>Starting in Clean Mode</title>
+	    <para>
+			When you start @product.name@ in clean mode, the startup script removes the <literal>SERVER_HOME/work</literal> directory (and hence all
+			running applications) as well as all trace, log and dump files.  It leaves the
+			<literal>SERVER_HOME/repository</literal> and <literal>SERVER_HOME/pickup</literal> directories untouched,
+			which means that any applications previously hot deployed will be automatically reinstalled.
+	    </para>
+	    <section>
+	      <title>Linux</title>
+	      <para>
+	        To start @product.name@ in clean mode, open a terminal window and run <literal>startup.sh -clean</literal>:
+	      </para>
+	      <screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh -clean </screen>
+	    </section>
+	    <section>
+	      <title>Microsoft Windows</title>
+	      <para>
+	        To start @product.name@ in clean mode, open a command window and run <literal>startup.bat -clean</literal>:
+	      </para>
+	      <screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat -clean</screen>
+	    </section>
+	  </section>
+	  <section>
+	    <title>Starting in Debug Mode</title>
+	    <section>
+	      <title>Linux</title>
+	      <para>
+	        To start @product.name@ in debug mode, run
+	        <literal>startup.sh</literal> passing in the
+	        <literal>-debug</literal> argument:
+	      </para>
+	      <screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh -debug</screen>
+	      <para>
+	        This will start the debug agent listening on port
+	        <literal>8000</literal> which is the default remote debug port used
+	        by Eclipse. To start in debug mode with a specific port number, pass
+	        this in as the value for the <literal>-debug</literal> argument:
+	      </para>
+	      <screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh -debug 8001</screen>
+	      <para>
+	        This will start the debug agent listening on port
+	        <literal>8001</literal>. To start in debug mode and suspend the VM
+	        until a debugger attaches, pass in the <literal>-suspend</literal>
+	        argument along with the <literal>-debug</literal> argument:
+	      </para>
+	      <screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh -debug -suspend</screen>
+	      <para>
+	        This starts the debug agent, but prevents @product.name@ from actually
+	        starting until a debugger attaches to the agent. This can be useful
+	        when trying to diagnose problems that occur during startup.
+	      </para>
+	    </section>
+	    <section>
+	      <title>Microsoft Windows</title>
+	      <para>
+	        To start @product.name@ in debug mode, run
+	        <literal>startup.bat</literal> passing in the
+	        <literal>-debug</literal> argument:
+	      </para>
+	      <screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat -debug</screen>
+	      <para>
+	        This will start the debug agent listening on port
+	        <literal>8000</literal> which is the default remote debug port used
+	        by Eclipse. To start in debug mode with a specific port number, pass
+	        this in as the value for the <literal>-debug</literal> argument:
+	      </para>
+	      <screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat -debug 8001</screen>
+	      <para>
+	        This will start the debug agent listening on port
+	        <literal>8001</literal>. To start in debug mode and suspend the VM
+	        until a debugger attaches, pass in the <literal>-suspend</literal>
+	        argument along with the <literal>-debug</literal> argument:
+	      </para>
+	      <screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat -debug -suspend</screen>
+	      <para>
+	        This starts the debug agent, but prevents @product.name@ from actually
+	        starting until a debugger attaches to the agent. This can be useful
+	        when trying to diagnose problems that occur during startup.
+	      </para>
+	    </section>
+	  </section>
+		  <section>
+		    <title>Starting with JMX Access Modifications</title>
+			The @product.name@ always starts with JMX access enabled, allowing you to use a management tool such as JConsole 
+			to attach to the Web Server instance.
+			By default both local access and remote access over SSL with username and password
+			authentication are provided. The default port for secure JMX access is <literal>9875</literal> 
+			and the default username and password are <literal>admin</literal> and <literal>springsource</literal>.
+			<section>
+				<title>Linux</title>
+				<para>
+					To start @product.name@ with default JMX access enabled, run <literal>startup.sh</literal> passing
+					in no arguments:
+				</para>
+				<screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh </screen>
+				<para>
+					To start JConsole, run the <literal>jconsole.sh</literal> script, located in the <literal>bin</literal> directory, as shown: 
+				</para>
+				<screen>prompt$ cd $SERVER_HOME
+prompt$ bin/jconsole.sh </screen>
+				<para>
+					The following image shows how to specify a local connection using JConsole.
+				</para>
+				<para>
+					<imagedata fileref="images/jmx-local-attach.png"/>
+				</para>
+				<para>
+					The following image shows how to specify a remote connection in JConsole that uses SSL with the default 
+					username/password (<literal>admin/springsource</literal> and default secure port of <literal>9875</literal>).
+				</para>
+				<para>
+					<imagedata fileref="images/jmx-remote-attach-default.png"/>
+				</para>
+				<para>
+					To start with the JMX remote access on a specific port number other than the default <literal>9875</literal>, 
+					pass this port number in as the value
+					of the <literal>-jmxport</literal> argument:
+				</para>
+				<screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh -jmxport 9090</screen>
+				<para>
+					This will start the @product.name@ with JMX enabled for remote connections on port <literal>9090</literal>.
+				</para>
+				<para>
+					<imagedata fileref="images/jmx-remote-attach-jmxport.png"/>
+				</para>
+
+		                <para>To start the JMX remote access with a custom username and password, update the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the custom username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart @short.product.name@ for the changes to take effect.</para>
+	 <para>For example, if you want change the JMX remote access username to <literal>zebedee</literal> with password <literal>florence</literal>, change the file as follows: 
+		</para>
+       		<programlisting>##################
+# User definitions
+##################
+user.zebedee=florence
+
+
+##################
+# Role definitions
+##################
+role.admin=zebedee</programlisting>
+			 	<para>Specify the custom username in JConsole as shown.  </para>
+				<para>
+					<imagedata fileref="images/jmx-remote-attach-jmxusers.png"/>
+				</para>
+				<para>
+					To start the JMX remote access using a custom SSL certificate, edit the file located at
+					<literal>$SERVER_HOME/config/keystore</literal>. If you wish to use a different keystore,
+					pass this filename in as the value for the <literal>-keystore</literal> argument and the keystore
+					password in as the value for the <literal>-keystorePassword</literal> argument:
+				</para>
+				<screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh -keystore customKeystore -keystorePassword customKeystorePassword</screen>
+				<para>
+					This will start the @product.name@ with JMX enabled for remote connections using an SSL certificate from
+					<literal>customKeystore</literal> with a password of <literal>customKeystorePassword</literal>.
+				</para>
+			</section>
+		    <section>
+		      <title>Microsoft Windows</title>
+				<para>
+					To start @product.name@ with default JMX access enabled, run <literal>startup.bat</literal> passing
+					in no arguments:
+				</para>
+				<screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat</screen>
+				<para>
+					To start JConsole, run the <literal>jconsole.bat</literal> script, located in the <literal>bin</literal> directory, as shown: 
+				</para>
+				<screen>prompt> cd %SERVER_HOME%
+prompt> bin\jconsole.bat </screen>
+				<para>
+					The following image shows how to specify a local connection using JConsole. 
+				</para>
+				<para>
+					<imagedata fileref="images/jmx-local-attach.png"/>
+				</para>
+				<para>
+					The following image shows how to specify a remote connection in JConsole that uses SSL with the default 
+					username/password (<literal>admin/springsource</literal> and default secure port of <literal>9875</literal>). 
+				</para>
+				<para>
+					<imagedata fileref="images/jmx-remote-attach-default.png"/>
+				</para>
+				<para>
+					To start with the JMX remote access on a specific port number other than the default <literal>9875</literal>, 
+					pass this port number in as the value of the <literal>-jmxport</literal> argument: 
+				</para>
+				<screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat -jmxport 9090</screen>
+				<para>
+					This will start the @product.name@ with JMX enabled for remote connections on port
+					<literal>9090</literal>.
+				</para>
+				<para>
+					<imagedata fileref="images/jmx-remote-attach-jmxport.png"/>
+				</para>
+		                <para>To start the JMX remote access with a custom username and password, update the <literal>%SERVER_HOME%\config\org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the custom username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart @short.product.name@ for the changes to take effect.</para>
+	 <para>For example, if you want change the JMX remote access username to <literal>zebedee</literal> with password <literal>florence</literal>, change the file as follows: 
+		</para>
+       		<programlisting>##################
+# User definitions
+##################
+user.zebedee=florence
+
+
+##################
+# Role definitions
+##################
+role.admin=zebedee</programlisting>
+			 	<para>Specify the custom username in JConsole as shown.  </para>
+				<para>
+					<imagedata fileref="images/jmx-remote-attach-jmxusers.png"/>
+				</para>
+				<para>
+					To start the JMX remote access using a custom SSL certificate, edit the file located at
+					<literal>%SERVER_HOME%\config\keystore</literal>. If you wish to use a different
+					keystore, pass this filename in as the value for the <literal>-keystore</literal> argument and the
+					keystore password in as the value for the <literal>-keystorePassword</literal> argument:
+				</para>
+				<screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat -keystore customKeystore -keystorePassword customKeystorePassword</screen>
+				<para>
+					This will start the @product.name@ with JMX enabled for remote attach using an SSL certificate from
+					<literal>customKeystore</literal> with a password of <literal>customKeystorePassword</literal>.
+				</para>
+		</section>
+	</section>
+	<section>
+		<title>Starting With a Custom Configuration Directory</title>
+		<para>
+			Use the <literal>-configDir</literal> option to specify an alternate <literal>config</literal> directory, different from the
+			default <literal>SERVER_HOME/config</literal> directory. This option allows you to use the same @product.name@ 
+			installation to run multiple instances of Web Server . Simply create a config directory for each
+			instance, specify unique port numbers, logging and tracing directories, and so on. and then specify that directory
+			when starting @product.name@.
+		</para>
+		<para>
+			If you specify a relative path for the <literal>-configDir</literal> parameter, 
+			the startup script interprets the path as relative to the root of the @product.name@ installation, 
+			and not relative to the directory from which you execute the <literal>startup</literal> script. 
+		</para>
+		<section>
+			<title>Linux</title>
+			To start @product.name@ using a config directory of <literal>/config/node1</literal>:
+			<screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh -configDir /config/node1</screen>
+		</section>
+		<section>
+			<title>Windows</title>
+			To start @product.name@ using a config directory of <literal>c:\config\node1</literal>:
+			<screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat -configDir c:\config\node1</screen>
+		</section>
+	</section>
+	  <section>
+	    <title>Stopping @product.name@</title>
+	    <section>
+	      <title>Linux</title>
+	      <para>
+	        To stop a running instance of @product.name@, start a new terminal window and the run <literal>shutdown.sh</literal> script:
+	      </para>
+	      <screen>prompt$ cd $SERVER_HOME
+prompt$ bin/shutdown.sh</screen>
+	      <para>
+	        To stop a running instance of @product.name@ immediately, bypassing normal shutdown
+		processing, run <literal>shutdown.sh</literal> with the <literal>-immediate</literal> option:
+	      </para>
+	      <screen>prompt$ cd $SERVER_HOME
+prompt$ bin/shutdown.sh -immediate</screen>
+	      <para>
+	        If, when you started the Web Server instance, you used the <literal>-jmxport</literal> option to specify a non-default JMX port number, 
+	        then you must pass this port number to the <literal>-jmxport</literal> of the <literal>shutdown.sh</literal> script 
+	        to gracefully shut it down.  
+	        For example, if you specified <literal>9090</literal> as the JMX port, use the following to shut down the Web Server instance:
+	      </para>
+	      <screen>prompt$ cd $SERVER_HOME
+prompt$ bin/shutdown.sh -jmxport 9090</screen>
+	    </section>
+	    <section>
+	      <title>Microsoft Windows</title>
+	      <para>
+	        To stop a running instance of @product.name@, start a new console window and run the <literal>shutdown.bat</literal> script:
+	      </para>
+	      <screen>prompt> cd %SERVER_HOME%
+prompt> bin\shutdown.bat</screen>
+	      <para>
+	        To stop a running instance of @product.name@ immediately, bypassing normal shutdown
+			processing, run <literal>shutdown.bat</literal> with the <literal>-immediate</literal> option:
+	      </para>
+	      <screen>prompt> cd %SERVER_HOME%
+prompt> bin\shutdown.bat -immediate</screen>
+	      <para>
+	        If, when you started the Web Server instance, you used the <literal>-jmxport</literal> option to specify a non-default JMX port number, 
+	        then you must pass this port number to the <literal>-jmxport</literal> of the <literal>shutdown.bat</literal> script to gracefully shut it down.  
+	        For example, if you specified <literal>9090</literal> as the JMX port, use the following to shut down the Web Server instance:
+	      </para>
+	      <screen>prompt> cd %SERVER_HOME%
+prompt> bin\shutdown.bat -jmxport 9090</screen>
+	    </section>
+	  </section>
+	<section>
+	    <title>Starting @product.name@ When the Operating System Starts</title>
+	    <para>
+		  If you need @product.name@ to start automatically when the operating system starts, you should run @product.name@ as a
+		  Windows service or a UNIX background process.
+		  You can do this by using a service wrapper script provided with @product.name@.
+		</para>
+		<para>
+		  The <literal>SERVER_HOME/bin/service</literal> directory contains a service wrapper script for each supported operating system. Before running the
+		  appropriate script, you must either set the <literal>SERVER_HOME</literal> environment variable to point to the @product.name@
+		  installation directory or edit the file <literal>SERVER_HOME/bin/service/conf/wrapper.conf</literal>.
+	    </para>
+	    <para>
+		  If you run the service wrapper script with no option, it will display the available options.
+		  The most useful options are described in the following table.
+		<table id="wrapper-script-arguments" colsep="1" frame="all" rowsep="1">
+	    	  <title>Service Wrapper Options</title>
+		  <tgroup cols="2">
+		    <thead>
+			<row>
+				<entry>Option</entry>
+				<entry>Description</entry>
+			</row>
+		     </thead>
+		     <tbody>
+			<row>
+				<entry><literal>console</literal></entry>
+				<entry>Starts @product.name@ in the foreground. Useful for validating that the service wrapper
+					   is configured correctly. </entry>
+			</row>
+			<row>
+				<entry><literal>install</literal></entry>
+				<entry><emphasis>Windows only.</emphasis> Installs @product.name@ as a Windows service.</entry>
+			</row>
+			<row>
+				<entry><literal>start</literal></entry>
+				<entry>Starts @product.name@ in the background. On UNIX operating systems, you may call
+				       the wrapper script with this option during initialization, for example as part of <literal>init.d</literal> processing.
+				       @product.name@ console output appears in <literal>SERVER_HOME/wrapper.log</literal>.</entry>
+			</row>
+			<row>
+				<entry><literal>stop</literal></entry>
+				<entry>Stops the @product.name@ background process. On UNIX operating systems, you may call
+				       the wrapper script with this option during termination, for example as part of <literal>init.d</literal> processing.</entry>
+			</row>
+			<row>
+				<entry><literal>remove</literal></entry>
+				<entry><emphasis>Windows only.</emphasis> Removes @product.name@ as a Windows service.</entry>
+			</row>
+		    </tbody>
+		 </tgroup>
+		</table>
+		</para>
+	</section>
+	
+</chapter>
+

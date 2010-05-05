@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="known-issues">
+	<title>Known Issues</title>
+	<section id="known-issues-jpa">
+		<title>JPA Entity Scanning</title>
+		<para>
+			Classpath scanning for JPA entities annotated with <literal>@Entity</literal> does
+			not work. Describing entities with <literal>@Entity</literal> will work, but the
+			entities need to be listed explicitly.
+		</para>
+	</section>
+	<section id="known.issues.proxy">
+		<title><classname>ClassNotFoundError</classname> When Creating a Proxy</title>
+		<para>
+			When creating proxies at runtime, there are circumstances where <classname>ClassNotFoundErrors</classname>
+			can be generated. These errors happen because the proxy creating bundle does not have visibility into every
+			type on the interface of the proxy. You can either put in import statements for all the relevant types or
+			add use a service (with visibility of all pertinent types) to create the proxy. Please see
+			<ulink url="http://www.osgi.org/blog/2008/08/classy-solutions-to-tricky-proxies.html">this blog entry</ulink>
+			for more details.
+		</para>
+	</section>
+	<section id="known.issues.cglib">
+		<title>Creating proxies with CGLIB for package-protected types</title>
+		<para>
+			In traditional Java EE applications user types are loaded by the same <classname>ClassLoader</classname> as
+			CGLIB. This allows CGLIB to proxy package-protected types. In OSGi environments, user types and CGLIB will
+			most likely be packaged in separate bundles. This results in the user types and CGLIB being loaded by 
+			different <classname>ClassLoaders</classname>. This prevents CGLIB from proxying any package-protected types.
+		</para>
+		<para>
+			The workaround for this issue is to make all types that require proxying public.
+		</para>
+	</section>
+	<section id="known-issues-tomcat-restrictions">
+		<title>Tomcat Restrictions</title>
+		<para>
+			The following Tomcat features are not supported.
+			<itemizedlist>
+				<listitem>
+					<literal>&lt;Context&gt;</literal> elements.
+				</listitem>	
+			</itemizedlist>
+		</para>
+	</section>
+</chapter>

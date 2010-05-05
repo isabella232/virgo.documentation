@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="admin-console">
+	<title>The Web Admin Console</title>
+	<titleabbrev>The Admin Console</titleabbrev>
+	<para>The Web Server Admin Console is a Web application for managing a single instance of Web Server.  Using the Admin Console, you can:</para>
+	<itemizedlist>
+		<listitem><link linkend="admin-console-login">View an overview of the Web Server properties</link>.</listitem>
+		<listitem><link linkend="admin-console-manage-artifacts">View and manage the lifecycle </link> of artifacts already deployed to the Web Server instance.  Artifacts include bundles, configuration files, PARs, and plans.  Lifecycle management tasks include starting, stopping, refreshing, and uninstalling the artifacts.  </listitem>
+		<listitem><link linkend="admin-console-install-artifacts">Install new artifacts to Web Server. </link>. </listitem>
+		<listitem><link linkend="admin-console-view-properties">View the properties of the configuration artifacts</link> deployed to Web Server. </listitem>
+	        <listitem><link linkend="admin-console-view-dumps">View details of dump files</link> that Web Server might have generated after encountering a problem.  This feature is particularly valuable if Web Server fails to install a new artifact due to resolution failures; the dump inspector can help you discover the exact artifact causing the resolution failure.</listitem>
+		<listitem><link linkend="admin-console-view-osgi-state">View an overview and details of the OSGi State</link> of Web Server, or in other words, a list of all bundles currently installed in Web Server and their state.  You can then then drill down into the details of each bundle, such as its symbolic name, packages it imports and exports, services it provides and consumes, and so on.  You can also view the bundles that were deployed when an exception that generated a dump occurred.</listitem>
+	</itemizedlist>
+
+	<section id="admin-console-login">
+		<title>Invoking the Admin Console</title>
+		<para>
+			To use the Admin Console, start the
+			@product.name@ and then enter the following URL in your 
+			browser of choice.
+		</para>
+		<screen>http://localhost:8080/admin</screen>
+		<para>
+			Replace <literal>localhost</literal> with the hostname of the computer on which the @product.name@ is running if it is not the same as the computer on which you are running your browser.  </para>
+		<para>The Admin Console uses basic authentication, therefore you will need to enter the default administration ID and password.
+		</para>
+		<screen>ID: admin 
+Password: springsource</screen>
+
+		<para>The following graphic shows the main page of the Admin Console.</para>
+		<imagedata fileref="images/console-main-page.png" />
+
+		<para>Use the links at the top of the console to perform various tasks, such as viewing and managing artifacts (<emphasis role="bold">Artifacts</emphasis>), viewing the properties of deployed configuration artifacts (<emphasis role="bold">Configuration</emphasis>), viewing details of dumps (<emphasis role="bold">Dump Inspector</emphasis>), and viewing the OSGi state of the Web Server instance (<emphasis role="bold">OSGi State</emphasis>).</para>
+
+		<para>You can always return to the main Admin Console page by clicking <emphasis role="bold">Information</emphasis> in the top right-hand corner.</para>
+
+	         <para>The <literal>Server Properties</literal> section provides information about Web Server itself, such as details about the Java Virtual Machine (JVM), the operating system on which Web Server is installed, the time zone configured for the computer, and the complete version of Web Server.</para>
+
+	    <section id="admin-console-auth">
+		<title>Changing the Admin User</title>
+		<para>
+			To change the ID and password for the Admin Console, update the <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the administration username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart Web Server for the changes to take effect.</para>
+	 <para>For example, if you want change the administration username to <literal>juliet</literal> with password <literal>capulet</literal>, change the file as follows: 
+		</para>
+       		<programlisting>##################
+# User definitions
+##################
+user.juliet=capulet
+
+
+##################
+# Role definitions
+##################
+role.admin=juliet</programlisting>
+		<para>
+			The Admin Console always runs against the <literal>admin</literal> role.
+		</para>
+	    </section>
+	
+	</section>
+
+        <section id="admin-console-tasks">
+	    <title>Typical Admin Console Use Cases</title>
+	    <para>The following use cases describe the typical tasks that can perform with the Web Server Admin Console:</para>
+	    <itemizedlist>
+	      <listitem><link linkend="admin-console-manage-artifacts">View and Manage the Lifecycle of Deployed Artifacts</link></listitem>
+	      <listitem><link linkend="admin-console-install-artifacts">Install a New Artifact</link></listitem>
+	      <listitem><link linkend="admin-console-view-properties">View the Properties of Deployed Configuration Artifacts</link></listitem>
+	      <listitem><link linkend="admin-console-view-dumps">View Details of Dump Files</link></listitem>
+	      <listitem><link linkend="admin-console-view-osgi-state">View Overview and Details of the OSGi State</link></listitem>
+	    </itemizedlist>
+	
+	    <section id="admin-console-manage-artifacts">
+		<title>Viewing and Managing the Lifecycle of Deployed Artifacts</title>
+		<para>The following procedure describes how to view the list of artifacts that are currently deployed in the user region of Web Server.  It then describes how to stop, start, refresh, and uninstall the deployed artifacts.</para>
+		<orderedlist numeration="arabic">
+		  <listitem>
+		    <para>From the main Admin Console page, click the <emphasis role="bold">Artifacts</emphasis> link at the top.</para>
+		     <para>In the lower part of the page, the console displays a tree structure that displays the four kinds of artifacts that you can deploy to the user region of Web Server: bundles, configuration files, PARs, and plans.  When you first install Web Server, there will already be a number of artifacts deployed related to the Admin console itself, the main splash screen, the repository, and so on.  </para>
+		    <para>The following graphic shows an expanded tree that displays a few of the deployed artifacts:</para>
+
+		    <para><imagedata fileref="images/console-artifacts.png" /></para>
+
+		  </listitem>
+
+		  <listitem>
+		    <para>To view details of a particular artifact, click the "+" to the left of the artifact to expand the tree.  The following graphic shows an expanded <literal>org.eclipse.virgo.apps.admin.web</literal> bundle:</para>
+
+		    <para><imagedata fileref="images/console-bundle-details.png" /></para>
+
+		    <para>The particular details that the Admin Console displays depends on the artifact.  For example, for all artifacts you can view their state and how it was installed (such as by a user using the Admin Console or programmatically).  The two most common states are Active (running and ready to be used) and Resolved (all dependencies resolved but you must start it before you can use it.)  An artifact can also be in one of the transition states, such as Starting and Stopping.  </para>
+		   <para>As shown in the preceding graphic, the Admin Console provides a link for Web modules that you can click on to actually invoke the application (<literal>org.eclipse.virgo.server.web.contextPath:/config-properties</literal> in the example above.)</para>
+		    <para>For PARs and plans, the Admin Console also displays whether the artifact is:</para>
+		    <itemizedlist>
+		       <listitem><emphasis role="bold">Scoped</emphasis>. Scoping specifies whether Web Server should deploy the members of the PAR/plan in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</listitem>
+		        <listitem><emphasis role="bold">Atomic</emphasis>. When a PAR/plan is atomic, Web Server manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Web Server starts all the PAR/plan artifacts. If one artifact fails to start, then Web Server stops all other artifacts in the PAR/plan.</listitem>
+		    </itemizedlist>
+		    <para>The following graphic shows details of a PAR, in particular that it is both scoped and atomic:</para>
+
+		    <para><imagedata fileref="images/console-par-details.png" /></para>
+
+		    <para>Finally, for bundles, PARs, and plans, you can see the list of bundles that they depend on; this typically means the bundles that contain the packages that they import.</para>
+		  </listitem>
+		  <listitem>
+		    <para>To manage the lifecycle of an artifact, click on its name in the expanded tree to enable the lifecycle buttons.   Then, depending on the current state of the artifact, you can: </para>
+		    <itemizedlist>
+			<listitem>Start the artifact.  All dependencies of the artifcat must have been resolved for you to start it.  After successfully starting the artifact, it is in the Active state and you can use the application associated with the artifact.</listitem>
+			<listitem>Stop the artifact.  This moves the artifact from an Active to Resolved state, and you cannot use the application associated with the artifact.  </listitem>
+			<listitem>Refresh the artifact.  This action updates the physical contents of the artifact; use this button when you have changed the artifact in some way and you want your changes to take effect.</listitem>
+			<listitem>Uninstall the artifact.  This action removes the artifact from Web Server and it does not show up in the Admin Console anymore.  To use the application associated with this artifact, you must re-install the artifact.</listitem>
+		    </itemizedlist>
+		  </listitem>
+		</orderedlist>
+	    </section>
+
+	    <section id="admin-console-install-artifacts">
+		<title>Installing a New Artifact</title>
+		<para>The following procedure describes how to install a new artifact (bundle, PAR, plan, or configuration file.)  The procedure is similar for all types of artifacts; the procedure uses a WAR file as an example.</para>
+		<orderedlist>
+		  <listitem>
+		   <para>From the main Admin Console page, click the <emphasis role="bold">Artifacts</emphasis> link at the top.</para>
+		  </listitem>
+		  <listitem>
+		   <para>Click the <emphasis role="bold">Browse</emphasis> button to invoke the file loader application for your platform.  Note that the Browse button searches the computer that is running the browser in which you invoked the Admin Console and <emphasis>not</emphasis> the computer on which Web Server is running, in the case where they are different.</para>
+		    <para>Use the file loader to find the artifact.  This can be a WAR file bundle, a configuration artifact that contains properties, an XML file that corresponds to a plan, or a PAR file.</para>
+		  </listitem>
+		  <listitem>
+		   <para>Click <emphasis role="bold">Upload</emphasis> to actually upload the artifact to Web Server.  </para>
+		    <para>Web Server automatically attempts to resolve all dependencies, and then puts the artifact in an Active state if possible.  If all is successful, the message <literal>Artifact Deployed</literal> appears next to the <emphasis role="bold">Artifact Console</emphasis> header.    If there is an error, a message to that effect is display; to get more details about the error, see the terminal window from which you started Web Server.</para>
+		  </listitem>
+		  <listitem>
+		   <para>Expand the artifact tree to view your newly deployed artifact.  If Web Server installed it without errors, it should show up in the appropriate section and be in an Active state.</para>
+		  </listitem>
+		</orderedlist>
+	    </section>
+
+	    <section id="admin-console-view-properties">
+		<title>Viewing Properties of Deployed Configuration Artifacts</title>
+		<para>The following procedure describes how you can view the list of configuration artifacts that are currently deployed to Web Server, and then view the specific properties that are defined for a particular configuration artifact.  </para>
+		<orderedlist>
+		  <listitem>
+		   <para>From the main Admin Console page, click the <emphasis role="bold">Configuration</emphasis> link at the top.</para>
+		    <para>The Admin Console displays all the configuration artifacts that are currently deployed, as shown in the following graphic:</para>
+		
+		    <para><imagedata fileref="images/console-configuration-details.png" /></para>
+		  </listitem>
+		  <listitem>
+		    <para>To view the properties defined for a particular configuration artifact click the arrow to the left of its name. </para>
+		  </listitem>
+		</orderedlist>
+	    </section>
+
+	    <section id="admin-console-view-dumps">
+		<title>Viewing the Details of Dump Files</title>
+		<para>The following procedure describes how to view the details of any service dumps that have occurred in Web Server.   Each time a dump is triggered for Web Server, the server creates a directory in <literal>$SERVER_HOME/serviceability/dump</literal> with a name corresponding to the time the dump occurred, and then the server populates the directory with detailed information.  Using the Admin Console, you can easily view this information.</para>
+               <para> A service dump is triggered when there is either a failure in the Web Server code or Web Server detects a thread deadlock in either its own code or a user application.  The service dump contains a snapshot of all the important state from the running Web Server instance. <emphasis role="bold">NOTE:</emphasis> This snapshot is not intended for end user consumption but is useful for service personnel.</para>
+
+		<orderedlist>
+		  <listitem>
+		   <para>From the main Admin Console page, click the <emphasis role="bold">Dump Inspector</emphasis> link at the top.</para>
+		  </listitem>
+		  <listitem>
+		    <para>In the drop-down box on the left, select the dump you want to inspect based on its timestamp.</para>
+		  </listitem>
+		  <listitem>
+		    <para>Click <emphasis role="bold">Select Dump</emphasis>.</para>
+		  </listitem>
+		  <listitem>
+		    <para>In the right drop-down box, select the type of dump information you want to view.</para>
+		     <para>For example, <literal>summary.txt</literal> provides a short summary of why the dump might have occurred.  The <literal>thread.txt</literal> option provides information about the state of the Web Server threads at the time of the dump, including any that were deadlocked.  The <literal>repository</literal> options provide information about what was in the external and user repositories at the time of the dump. The <literal>configurationAdmin.properties</literal> option provides a snapshot of the complete configuration of Web Server, including the kernel and repositories.</para>
+		  </listitem>
+		  <listitem>
+		    <para>Click <emphasis role="bold">Select Entry</emphasis>.</para>
+		    <para>The Admin Console displays the information in the Dump Entry Viewer, as shown in the following graphic:</para>
+		    <para><imagedata fileref="images/console-dump-details.png" /></para>
+		  </listitem>
+		</orderedlist>
+
+	    </section>
+
+	    <section id="admin-console-view-osgi-state">
+		<title>Viewing Overview and Details of the OSGi State</title>
+		<para>The following procedure describes how you can view the OSGi state of the Web Server, either currently or at the time that a particular service dump occurred.  The OSGi state is a list of bundles that are currently installed as well as a list of all the services that are provided by these bundles.  </para>
+		<orderedlist>
+		  <listitem>
+		   <para>From the main Admin Console page, click the <emphasis role="bold">OSGi State</emphasis> link at the top.</para>
+		   <para>By default, the Admin Console displays the complete list of bundles that are currently installed in Web Server.</para>
+		   <para>For each bundle, the console displays its internal ID, its symbolic name, its version, and its current state (usually either Active or Resolved.)</para>
+		  </listitem>
+		  <listitem>
+		    <para>To view the bundles that were installed at the time of a service dump, select it based on its timestamp from the drop-down box on the right and click <emphasis role="bold">Go</emphasis>. </para>
+		  </listitem>
+		  <listitem>
+		    <para>To view details about a particular bundle, click on its bundle ID. A full description of the bundle is displayed, as shown in the following graphic:</para>
+		    <para><imagedata fileref="images/console-osgi-state.png" /></para>
+		    <para>The console displays again the symbolic name, version, and internal ID of the bundle. It then displays whether the bundle is Spring powered and the exact physical location of the bundle JAR file on the computer that hosts Web Server.</para>
+		    <para>The console then displays the full list of packages that the bundle imports, as well as the bundles that in turn export these imported packages. The console also displays the packages that the current bundle exports, and then in turn the list of other installed bundles that are currently importing these exported packages. For each package, you can drill down and view details of the corresponding bundle.</para>
+		    <para>Similarly, the console displays the consumed and provided OSGi services.  </para>
+		    <para>Finally, the console also displays information about the Spring context, if the bundle is Spring powered.  </para>
+		  </listitem>
+		  <listitem>
+		    <para>To view the full list of OSGi services, click the <literal>Services Overview</literal> link from the main OSGi state page</para>
+		  </listitem>
+		  <listitem>
+		    <para>Typically, the list of bundles and services can be very long, making it difficult to find a particular bundle.  Use the <emphasis role="bold">Search</emphasis> box at the top right corner to narrow down the list of displayed bundles.</para>
+		  </listitem>
+		</orderedlist>
+	    </section>
+
+	</section>
+
+</chapter>

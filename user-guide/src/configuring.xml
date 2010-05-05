@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="configuring">
+    <title>Configuring the @product.name@</title>
+    <titleabbrev>Configuring @short.product.name@</titleabbrev>
+
+	<para>You use configuration files in the <literal>SERVER_HOME/config</literal> directory to configure @short.product.name@.   This section divides the configuration of the server into the following high-level tasks:</para>
+
+	<itemizedlist> 
+	  <listitem><link linkend="configuring-kernel">Configuring the kernel and the user region.</link></listitem>
+	  <listitem><link linkend="configuring-tomcat">Configuring embedded Tomcat servlet container.</link></listitem>
+	  <listitem><link linkend="configuring-serviceability">Configuring serviceability.</link></listitem>
+	  <listitem><link linkend="configuring-provisioning-repository">Configuring the local provisioning repository.</link></listitem>
+	  <listitem><link linkend="configuring-hosted-repo">Configuring the hosted repository.</link></listitem>
+	</itemizedlist> 
+
+    <section id="configuring-kernel" >
+	<title>Configuring the @kernel.product.name@ and User Region</title>
+	<para>This section provides information about configuring the @short.product.name@ kernel and the user region by updating the following files in the <literal>SERVER_HOME/config</literal> directory:</para>
+
+	<table id="configuring-kernel-table" colsep="1" frame="all" rowsep="1">
+	    <title>Kernel Configuration Files </title>
+		<tgroup cols="2">
+		   <thead>
+			<row>
+				<entry>Property File</entry>
+				<entry>Description</entry>
+			</row>
+		  </thead>
+		  <tbody>
+			<row>
+				<entry><literal>org.eclipse.virgo.kernel.properties</literal></entry>
+				<entry>Configures <link linkend="configuring-deployment">kernel deployment</link> and the <link linkend="configuring-admin-shell">Admin Shell</link> of @short.product.name@. </entry>
+			</row>
+			<row>
+				<entry><literal>org.eclipse.virgo.kernel.userregion.properties</literal></entry>
+				<entry>Configures the <link linkend="configuring-user-region">user region</link> of @short.product.name@.</entry>
+			</row>
+			<row>
+				<entry><literal>org.eclipse.virgo.kernel.users.properties</literal></entry>
+				<entry>Configures the <link linkend="configuring-authentication">users that are allowed to access</link> the Admin Shell and Admin Console, and roles to which they map. </entry>
+			</row>
+			<row>
+				<entry><literal>org.eclipse.virgo.kernel.jmxremote.access.properties</literal></entry>
+				<entry>Configures the <link linkend="configuring-authentication">permissions for users</link> that are allowed to access the Admin Shell and Admin Console. </entry>
+			</row>
+	     		<row>
+				<entry><literal>org.eclipse.virgo.kernel.authentication.config</literal></entry>
+				<entry>Configures the <link linkend="configuring-authentication">Java Authentication and Authorization Service (JAAS)</link> for the Tomcat server users.</entry>
+			</row>
+		  </tbody>
+		</tgroup>
+	  </table>
+
+    <section id="configuring-deployment">
+	<title>Configuring Deployment</title>
+
+	<para>You can configure three properties of deployment: the pickup directory into which you copy applications for hot-deployment, the deployment timeout, and whether automatic cloning of deployed bundles is enabled.  </para>
+	<para>To change any of these properties, edit the <literal>deployer.XXX</literal> properties of the <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file.  The following table describes these properties.  </para>
+	<table id="configuring-deployment-table" colsep="1" frame="all" rowsep="1">
+	    	  <title>Deployment Configuration Properties</title>
+		  <tgroup cols="2">
+		    <thead>
+			<row>
+				<entry>Property</entry>
+				<entry>Description</entry>
+			</row>
+		     </thead>
+		     <tbody>
+			<row>
+				<entry><literal>deployer.timeout</literal></entry>
+				<entry>Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to deploy a bundle, library, or plan.  The default value is <literal>300</literal>.  If you want to disable deployment timeout, specify <literal>0</literal>.</entry>
+			</row>
+			<row>
+				<entry><literal>deployer.pickupDirectory</literal></entry>
+				<entry>Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.  Relative paths are relative to <literal>SERVER_HOME</literal>.  The default value is <literal>./target/pickup.</literal>.</entry>
+			</row>
+		    </tbody>
+		 </tgroup>
+		</table>
+
+                 <para>The following listing displays the default configuration distributed with the @short.product.name@; only relevant sections of the <literal>org.eclipse.virgo.kernel.properties</literal> file are shown. </para>
+
+		<programlisting><![CDATA[deployer.timeout=300
+deployer.pickupDirectory=pickup]]></programlisting>
+
+		<para>As the default configuration shows, the default pickup directory is <literal>SERVER_HOME/pickup</literal> and the deployment timeout is 300 seconds. 
+		</para>
+	</section>
+
+	<section id="configuring-admin-shell">
+		<title>Configuring the Admin Shell</title>
+		<para>
+			The Admin Shell is a command line utility that allows you to examine artifacts currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shutdown the server.  For complete documentation on the Admin Shell, see <xref linkend="admin-shell" />.
+		</para>	
+		<para>
+			You configure the Admin Shell by updating the <literal>shell.XXX</literal> properties in the <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file, as described in the following table:
+		</para>
+
+	 	<table id="configuring-admin-shell-table" colsep="1" frame="all" rowsep="1">
+	    	  <title>Admin Shell Configuration Properties</title>
+		  <tgroup cols="2">
+		    <thead>
+			<row>
+				<entry>Property</entry>
+				<entry>Description</entry>
+			</row>
+		     </thead>
+		     <tbody>
+			<row>
+				<entry><literal>shell.enabled</literal></entry>
+				<entry>Specifies whether the Admin Shell is enabled or not.  Valid values are <literal>true</literal> or <literal>false</literal>.</entry>
+			</row>
+			<row>
+				<entry><literal>shell.port</literal></entry>
+				<entry>Defines the port on which you can remotely access the Admin Shell. If not set, the shell is only available from stdout of the @short.product.name@ process.</entry>
+			</row>
+		    </tbody>
+		 </tgroup>
+		</table>
+		<para>The following example shows the default Admin Shell configuration in a freshly-installed <literal>org.eclipse.virgo.kernel.properties</literal> file; only the relevant section of the file is shown. </para>
+		<programlisting><![CDATA[shell.enabled=true
+shell.port=2401]]></programlisting>
+		<para>The example shows that the Admin Shell is enabled by default, and you connect to it remotely using the port <literal>2401</literal>.</para>
+	</section>
+
+	<section id="configuring-user-region">
+		<title>Configuring the User Region</title>
+		<para>The user region is the subsystem of @short.product.name@ that supports deployed applications, both your own user applications and those of the server itself, such as the Admin Console.  The user region is deliberately isolated from the kernel, which makes it much simpler for you to manage your applications with the Admin Console or Admin Shell because the internal server bundles are not visible.  </para>
+		<para>
+			You configure the user region by updating properties in the <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.userregion.properties</literal> file; these properties are described in the following table.  
+		</para>
+		<para>
+			<emphasis role="bold">WARNING:</emphasis> We strongly recommends that you update only the <literal>initialArtifacts</literal> property; updating the other properties could cause @short.product.name@ to fail.  These properties are documented for your information only.
+		</para>
+
+	 	<table id="configuring-user-region-table" colsep="1" frame="all" rowsep="1">
+	    	  <title>User Region Configuration Properties</title>
+		  <tgroup cols="2">
+		    <thead>
+			<row>
+				<entry>Property</entry>
+				<entry>Description</entry>
+			</row>
+		     </thead>
+		     <tbody>
+			<row>
+				<entry><literal>baseBundles</literal></entry>
+				<entry>Specifies the hard-coded list of bundles that @short.product.name@ installs directly into the user region. @product.name@ does not perform any automatic dependency satisfaction for these bundles; in other words, you only get the bundles in the list and nothing more. </entry>
+			</row>
+			<row>
+				<entry><literal>packageImports</literal></entry>
+				<entry>Specifies the packages that exist in the kernel that @short.product.name@ imports into the user region so that they are in turn available to be imported by bundles in the user region. This property supports a <literal>.*</literal> wildcard.  For example, <literal>com.springsource.util.*</literal> will import all packages that start with <literal>com.springsource.util</literal>.</entry>
+			</row>
+			<row>
+				<entry><literal>serviceImports</literal></entry>
+				<entry>Specifies the services in the kernel that are imported into the user region so that they're available to bundles in the user region.  </entry>
+			</row>
+			<row>
+				<entry><literal>serviceExports</literal></entry>
+				<entry>Specifies the services in the user region that are imported into the kernel so that they're available to bundles in the kernel.  </entry>
+			</row>
+			<row>
+				<entry><literal>inheritedFrameworkProperties</literal></entry>
+				<entry>Specifies the framework properties, configured in the <literal>SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file, that will also be set on the user region's nested framework.</entry>
+			</row>
+			<row>
+				<entry><literal>initialArtifacts</literal></entry>
+				<entry>Specifies the artifacts that @short.product.name@ deploys into the user region when the server starts. @product.name@ performs dependency satisfaction when it deploys these artifacts.  This means that you only need to list the top-level artifacts that you care about; @short.product.name@ automatically installs any other artifacts upon which they depend from the repository.
+				<para>You can use this property to convert a @short.product.name@ into a @kernel.product.name@ by removing the <literal>repository:plan/org.eclipse.virgo.server.web</literal> plan.  </para>
+				</entry>
+			</row>
+		    </tbody>
+		  </tgroup>
+		</table>
+	</section>
+
+	<section id="configuring-authentication">
+		<title>Configuring Authentication</title>
+		<para>@product.name@ uses the <ulink url="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html">Java Authentication and Authorization Service (JAAS)</ulink> framework to authenticate the administration user that connects to Web Servers using the Admin Console or Admin Shell. This section describes how the authentication mechanism is configured by default, and the files that you need to update if you want to change the administration user, change their password,  and so on. </para>
+		<para>The <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.authentication.config</literal> file configures the underlying authentication technology for @short.product.name@.  The short file consists of the following entry:</para>
+
+		<programlisting>dm-kernel {
+        org.eclipse.virgo.kernel.authentication.KernelLoginModule REQUIRED;
+};</programlisting>
+
+		<para>The entry is named <literal>dm-kernel</literal>.  This name corresponds to the <literal>&lt;Realm&gt;</literal> element in the <literal>SERVER_HOME/config/tomcat-server.xml</literal> file that configures the JAAS authentication mechanism for the <literal>Catalina</literal> service of the <link linkend="configuring-tomcat">Tomcat servlet container</link>.  The <literal>dm-kernel</literal> entry specifies that the JAAS LoginModule that @short.product.name@ uses to authenticate users is <literal>org.eclipse.virgo.kernel.authentication.KernelLoginModule</literal> and that this <literal>KernelLoginModule</literal> is required to "succeed" in order for authentication to be considered successful. The <literal>KernelLoginModule</literal> succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for Web Server is <literal>admin/springsource</literal>. </para>
+
+	       <para>You configure the administration user in the <literal>org.eclipse.virgo.kernel.users.properties</literal> file.  The default file for a freshly installed @short.product.name@ is as follows:</para>
+
+		<programlisting>##################
+# User definitions
+##################
+user.admin=springsource
+
+##################
+# Role definitions
+##################
+role.admin=admin</programlisting>
+	
+		<para>The administration user that connect to the Admin Console and Admin Shell must have the <literal>admin</literal> role.  The preceding file shows how, by default, the <literal>admin</literal> role is assigned the <literal>admin</literal> user with password <literal>springsource</literal>.</para>
+
+		<para>If you want to change the administration user, update the <literal>org.eclipse.virgo.kernel.users.properties</literal> file.  For example, if you want the <literal>juliet</literal> user, with password <literal>supersecret</literal>, to be the new adminstration user, update the file as shown:</para>
+
+
+		<programlisting>##################
+# User definitions
+##################
+user.juliet=supersecret
+
+##################
+# Role definitions
+##################
+role.admin=juliet</programlisting>
+	
+		<para>Be sure to restart @short.product.name@ after you make this change for it to take effect.</para>
+
+		<para>The final file involved in @short.product.name@ authentication is <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.jmxremote.access.properties</literal>.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:</para>
+		<programlisting>admin=readwrite</programlisting>
+		<para>The only other value you can enter is <literal>readonly</literal>, which means that the adminstration user would only be able to view information using the Admin Console and Admin Shell.</para>
+	</section>
+
+
+    </section>
+
+    <section id="configuring-serviceability">
+      <title>Configuring Serviceability</title>
+
+	<para>The serviceability sub-system of @short.product.name@ allows you to gather and view data and information that you can then use to diagnose problems and failures.  Serviceability includes data from:</para>
+	<itemizedlist>
+		<listitem>Service dumps: Contain a snapshot of all the important state from the running @short.product.name@ instance when an internal failure or thread deadlock is detected.
+  	             <para>You configure service dumps for @product.name@ using the <link linkend="configuring-serviceability-medic">com.springsource.medic.properties</link> file in the <literal>SERVER_HOME/config</literal> directory.  This file also includes some additional logging configuration.</para>
+		</listitem>
+		<listitem>Event logs and server/application logging (previously called tracing): Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>.  This means that you now have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
+  	             <para>You configure logging for @product.name@ using the <link linkend="configuring-serviceability-logback">serviceability.xml</link> file in the <literal>SERVER_HOME/config</literal> directory.  This file is essentially the Logback <literal>logback.xml</literal> (or <literal>logback-test.xml</literal>) configuration file but renamed for @short.product.name@. </para>
+		</listitem>
+	</itemizedlist>
+
+	<para>For additional conceptual information about the serviceability subsystem, see <xref linkend="serviceability" />. </para>
+
+	<section id="configuring-serviceability-medic">
+	  <title>The com.springsource.medic.properties File</title>
+
+	  <para>The <literal>SERVER_HOME/config/com.springsource.medic.properties</literal> file configures @short.product.name@ service dumps and whether you want to capture <literal>System.out</literal> and <literal>System.err</literal> output to your application's trace file. </para>
+	  <para>The service dump support provides an in-memory buffer of log output. Whenever a dump is triggered this in-memory buffer is written out as part of the dump.</para>
+  	  <para>The following table describes the properties you can include in the <literal>SERVER_HOME/config/com.springsource.medic.properties</literal> file. This file configures serviceability properties that @short.product.name@ includes in addition to those supplied by the Logback, configured in the <literal>serviceability.xml</literal> file.</para>
+
+          <table id="medic-properties-table" colsep="1" frame="all" rowsep="1">
+            <title>Serviceability Properties</title>
+	    <tgroup cols="2">
+	      <thead>
+	        <row>
+	  	<entry>Property</entry>
+	  	<entry>Description</entry>
+	        </row>
+	      </thead>
+	      <tbody>
+  
+  	        <row>
+  	  	  <entry><literal>dump.root.directory</literal></entry>
+  	  	  <entry>Specifies the directory to which @short.product.name@ writes the service dumps.  The directory name is relative to <literal>SERVER_HOME</literal>.  </entry>
+	        </row>
+
+	        <row>
+		  <entry><literal>log.wrapSysOut</literal></entry>
+		  <entry>Specifies whether you want to capture <literal>System.out</literal> output from your applications to the application trace file.  The output is logged by @short.product.name@'s root logger, which captures <literal>INFO</literal> level and above. 
+			<para>Valid values for this property are <literal>true</literal> to capture <literal>System.out</literal> output, or <literal>false</literal> to disable the capture.</para>
+			<para>For more information, see <link linkend="sysout-and-syserr">System.out and System.err</link>.</para>
+		  </entry>
+	        </row>
+
+	        <row>
+		  <entry><literal>log.wrapSysErr</literal></entry>
+		  <entry>Specifies whether you want to capture <literal>System.err</literal> output from your applications to the application trace file.  The output is logged by @short.product.name@'s root logger, which captures <literal>INFO</literal> level and above. 
+			<para>Valid values for this property are <literal>true</literal> to capture <literal>System.err</literal> output, or <literal>false</literal> to disable the capture.</para>
+			<para>For more information, see <link linkend="sysout-and-syserr">System.out and System.err</link>.</para>
+		  </entry>
+	        </row>
+
+	        <row>
+		  <entry><literal>log.dump.level</literal></entry>
+		  <entry>Specifies the log-level of the entries that are captured in the in-memory buffer.
+			<para>Valid values of this property are the same as the log-levels offered by Logback: TRACE, DEBUG, INFO, WARN and ERROR.  For more details about these levels, see <ulink url="http://logback.qos.ch/manual/architecture.html">Logback Architecture</ulink>.</para></entry>
+	        </row>
+
+	        <row>
+		  <entry><literal>log.dump.bufferSize</literal></entry>
+		  <entry>Specifies the number of entries will be held in the in-memory buffer. Once the buffer is full, it wraps so that oldest entries start to be overwritten by newer entries; in other words, the buffer is circular.</entry>
+	        </row>
+
+	        <row>
+		  <entry><literal>log.dump.pattern</literal></entry>
+		  <entry>Specifies the formatting of the entries when they're written out as part of the service dump. Use the same pattern layout as for Logback logs; see <ulink url="http://logback.qos.ch/manual/layouts.html">Layouts</ulink> in the Logback documentation.</entry>
+	        </row>
+
+	      </tbody>
+	    </tgroup>
+	  </table>
+
+	  <para>The following sample <literal>com.springsource.medic.properties</literal> is from a freshly-installed @short.product.name@:</para>
+	  <programlisting>dump.root.directory=serviceability/dump
+log.wrapSysOut=true
+log.wrapSysErr=true
+log.dump.level=DEBUG
+log.dump.bufferSize=10000
+log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</programlisting>
+	</section>
+	<section id="configuring-serviceability-logback">
+	  <title>The serviceability.xml File</title>
+		<para>Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>, which is a successor of the log4j project. The Logback logging framework is faster, more reliable, and easier to use than log4j and other logging systems.</para>
+  	        <para>You configure logging for @product.name@ using the <literal>SERVER_HOME/config/serviceability.xml</literal> file.  This file is the standard Logback <literal>logback.xml</literal> or <literal>logback-test.xml</literal> configuration file, but renamed for @short.product.name@ due to internal requirements. </para>
+		<para>The following listing shows the default <literal>serviceability.xml</literal> file in a freshly-installed @short.product.name@; see the text after the listing for a brief overview of the file:</para>
+		<programlisting language="xml"><![CDATA[<configuration>
+
+    <appender name="SIFTED_LOG_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <Key>applicationName</Key>
+            <DefaultValue>dm-server</DefaultValue>
+	</discriminator>
+	<sift>
+	    <appender name="${applicationName}_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>serviceability/logs/${applicationName}/log.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+		    <FileNamePattern>serviceability/logs/${applicationName}/log_%i.log</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>4</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+		  <MaxFileSize>10MB</MaxFileSize>
+		</triggeringPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+		    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
+		</layout>
+	    </appender>
+	</sift>
+    </appender>
+	
+    <appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<file>serviceability/logs/log.log</file>
+	<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+	    <FileNamePattern>serviceability/logs/log_%i.log</FileNamePattern>
+	    <MinIndex>1</MinIndex>
+	    <MaxIndex>4</MaxIndex>
+	</rollingPolicy>
+	<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+	    <MaxFileSize>10MB</MaxFileSize>
+	</triggeringPolicy>
+	<layout class="ch.qos.logback.classic.PatternLayout">
+	    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
+	</layout>
+    </appender>
+
+    <appender name="EVENT_LOG_STDOUT" class="com.springsource.osgi.medic.log.logback.ReroutingAwareConsoleAppender">
+	<layout class="ch.qos.logback.classic.PatternLayout">
+ 	    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &lt;%X{medic.eventCode}&gt; %msg %ex%n</Pattern>
+	</layout>
+    </appender>
+
+    <appender name="EVENT_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<file>serviceability/eventlogs/eventlog.log</file>
+	<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+	    <FileNamePattern>serviceability/eventlogs/eventlog_%i.log</FileNamePattern>
+	    <MinIndex>1</MinIndex>
+	    <MaxIndex>4</MaxIndex>
+	</rollingPolicy>
+	<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+	    <MaxFileSize>10MB</MaxFileSize>
+	</triggeringPolicy>
+	<layout class="ch.qos.logback.classic.PatternLayout">
+	    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &lt;%X{medic.eventCode}&gt; %msg %ex%n</Pattern>
+	</layout>
+    </appender>
+
+    <logger level="INFO" additivity="false" name="com.springsource.osgi.medic.eventlog.localized">
+	<appender-ref ref="EVENT_LOG_STDOUT" />
+	<appender-ref ref="EVENT_LOG_FILE" />
+    </logger>
+	
+    <logger level="INFO" additivity="false" name="com.springsource.osgi.medic.eventlog.default">
+	<appender-ref ref="SIFTED_LOG_FILE" />
+	<appender-ref ref="LOG_FILE" />
+    </logger>
+
+    <root level="WARN">
+	<appender-ref ref="SIFTED_LOG_FILE" />
+	<appender-ref ref="LOG_FILE" />
+    </root>
+
+</configuration>]]></programlisting>
+
+	<para>Logback allows @short.product.name@ to use logger, appender, and layout objects to log messages according to message type and level and to format these messages and define where they are written.  The default <literal>serviceability.xml</literal> file shown above includes four appenders and three loggers (two user and one root.)</para>
+
+	<para>The main information to get from this file is that @short.product.name@ writes log messages to four different locations that map to the four appenders:</para>
+	<itemizedlist>
+		<listitem><para>The <literal>SIFTED_LOG_FILE</literal> appender logs both global and application-specific messages to the <literal>SERVER_HOME/serviceability/logs/<emphasis>applicationName</emphasis>/log.log</literal> file, where <literal><emphasis>applicationName</emphasis></literal> refers to the name of the application.   The log messages for the @short.product.name@ itself are logged to the <literal>SERVE_HOME/serviceability/logs/dm-server/log.log</literal> file. Because this appender creates different log files for each application, it is called a <emphasis>sifting appender</emphasis>.   </para>
+		   <para>When @short.product.name@ creates the first log file, it calls it <literal>log.log</literal>; however, when this file reaches a size of 10MB, @short.product.name@ creates a new log file called <literal>log_1.log</literal>, and so on up to 4.  At that point, the cycle starts again and @short.product.name@ overwrites the existing <literal>log.log</literal>. This is called its <emphasis>rolling policy</emphasis>. </para>
+		<para>The <literal>&lt;Pattern&gt;</literal> element defines the format of each log message;  messages include the timestamp, the thread that generated the log message, the context-specific event code, and a stack trace of the exception, if any.  For example:</para>
+		 <para><literal>[2008-05-15 09:09:46.940] server-dm-2 org.apache.coyote.http11.Http11Protocol I Initializing Coyote HTTP/1.1 on http-48080</literal></para>
+		</listitem>
+		<listitem><para>The <literal>LOG_FILE</literal> appender is very similar to the first one, but it logs <emphasis>all</emphasis> log messages to the <literal>SERVER_HOME/serviceability/log/log.log</literal> file rather than sifting application-specific messages to their own log file.  The rolling policy and message format for this appender is similar to that of the <literal>SIFTED_LOG_FILE</literal> appender.</para></listitem>
+		<listitem><para>The <literal>EVENT_LOG_STDOUT</literal> appender does not log messages to a file, but rather to the console window from which you started @short.product.name@.  The format of the messages is similar to that of the preceding appenders, although with slightly less information. For example:</para>
+		 <para><literal>[2009-08-25 15:04:57.044] server-dm-7   &lt;OF0001I&gt; OSGi telnet console available on port 2401.</literal></para>
+		</listitem>
+
+		<listitem><para>The <literal>EVENT_LOG_FILE</literal> appender logs only important events to the <literal>SERVER_HOME/serviceability/eventlogs/eventlog.log</literal> file, and thus the volume of information is much lower than with the first two appenders. The rolling policy for the event log is the same as with the first two appenders, but the format of the messages is similar to that of the <literal>EVENT_LOG_STDOUT</literal> appender. </para> </listitem>
+	</itemizedlist>
+
+	<para>The loggers and root logger specify the level of log that is written for each of the referenced appenders.</para>
+
+	<para>Typically, the default logging configuration as specified by the <literal>serviceability.xml</literal> file is adequate for all @short.product.name@ environments.  However, if you want to customize the logging framework even further, you can edit this file as well as the <literal>com.springsource.medic.properties.</literal>.  See the <ulink url="http://logback.qos.ch/manual/index.html">logback documentation</ulink> for detailed information about the architecture and the configuration of Logback.</para>
+	</section>
+
+
+    </section>
+
+	<section id="configuring-tomcat">
+		<title>Configuring the Embedded Tomcat Servlet Container</title>
+		<para>
+			@product.name@
+			embeds an OSGi-enhanced version of the <ulink url="http://tomcat.apache.org/">Tomcat Servlet Container</ulink>
+			in order to provide support for deploying Java EE WARs and <emphasis>Web Bundles</emphasis>. 
+			You configure the embedded Servlet container using the standard Apache Tomcat configuration.   The main difference is that the configuration file is called <filename>tomcat-server.xml</filename> rather than <literal>server.xml</literal>.  As with the other @short.product.name@ configuration files, the <literal>tomcat-server.xml</literal> file is located in the <literal>$SERVER_HOME/config</literal> directory. 
+		</para>
+		<para>Here's an extract of the default configuration distributed with the @short.product.name@.
+		</para>
+		<programlisting language="xml"><![CDATA[<?xml version='1.0' encoding='utf-8'?>
+<Server port="8005" shutdown="SHUTDOWN">
+
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JasperListener" />
+  <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+
+  <Listener className="org.eclipse.virgo.server.web.tomcat.ServerLifecycleLoggingListener"/>
+
+  <Service name="Catalina">
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+	       redirectPort="8443" />
+
+    <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
+	       maxThreads="150" scheme="https" secure="true"
+	       clientAuth="false" sslProtocol="TLS"
+	       keystoreFile="config/keystore"
+	       keystorePass="changeit"/>
+
+    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+
+    <Engine name="Catalina" defaultHost="localhost">
+
+      <Realm className="org.apache.catalina.realm.JAASRealm" appName="dm-kernel"
+	     userClassNames="org.eclipse.virgo.kernel.authentication.User"
+	     roleClassNames="org.eclipse.virgo.kernel.authentication.Role"/>
+
+      <Host name="localhost"  appBase="webapps"
+	    unpackWARs="true" autoDeploy="true"
+	    xmlValidation="false" xmlNamespaceAware="false">
+
+        <Valve className="org.apache.catalina.valves.AccessLogValve" 
+               directory="serviceability/logs/access"
+	       prefix="localhost_access_log." suffix=".txt" pattern="common" 
+               resolveHosts="false"/>
+					
+        <Valve className="org.eclipse.virgo.server.web.tomcat.ApplicationNameTrackingValve"/>
+      </Host>
+    </Engine>
+  </Service>
+</Server>]]></programlisting>
+
+	<section id="overview-tomcat-servlet-container">
+	  <title>Description of the Default Apache Tomcat Configuration</title>
+		<para>
+		  The following bullets describe the main elements and attributes in the default <literal>tomcat-server.xml</literal> file; for details about updating this file to further configure the embedded Apache Tomcat server, see the <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/config/index.html">Apache Tomcat Configuration Reference</ulink>.
+		</para>
+
+		<tip>
+		  <title>Relative paths</title>
+		  <para>If the configured path to a directory or file does not represent an absolute path, @short.product.name@ typically interprets it as a path relative to the <filename>SERVER_HOME</filename> directory.</para>
+		</tip>
+
+		<itemizedlist>
+		  <listitem><para>The root element of the <literal>tomcat-server.xml</literal> file is <literal>&lt;Server&gt;</literal>. The attributes of this element represent the characteristics of the entire embedded Tomcat servlet container. The <literal>shutdown</literal> attribute specifies the command string that the shutdown port number receives via a TCP/IP connection in order to shut down the servlet container. The <literal>port</literal> attribute specifies the TCP/IP port number that listens for a shutdown message.</para></listitem>
+
+      		  <listitem><para>The <literal>&lt;Listener&gt;</literal> XML elements specify the list of lifecycle listeners that monitor and manage the embedded Tomcat servlet container. Each listener class is a Java Management Extensions (JMX) MBean that listens to a specific component of the servlet container and has been programmed to do something at certain lifecycle events of the component, such as before starting up, after stopping, and so on.</para>
+			<para> The first four <literal>&lt;Listener&gt;</literal> elements configure standard Tomcat lifecycle listeners. The listener implemented by the <literal>org.eclipse.virgo.server.web.tomcat.ServerLifecycleLoggingListener</literal> class is specific to @product.name@ and manages server lifecycle logging.
+		</para> </listitem>
+
+		<listitem><para>The <literal>&lt;Service&gt;</literal> XML element groups together one or more connectors and a single engine. Connectors define a transport mechanism, such as HTTP, that clients use to to send and receive messages to and from the associated service. There are many transports that a client can use, which is why a <literal>&lt;Service&gt;</literal> element can have many <literal>&lt;Connector&gt;</literal> elements. The engine then defines how these requests and responses that the connector receives and sends are in turn handled by the servlet container; you can defined only a single <literal>&lt;Engine&gt;</literal> element for any given <literal>&lt;Service&gt;</literal> element.</para>
+
+		<para> The sample <literal>tomcat-server.xml</literal> file above includes three <literal>&lt;Connector&gt;</literal> elements: one for the HTTP transport, one for the HTTPS transport, and one for the AJP transport. The file also includes a single <literal>&lt;Engine&gt;</literal> element, as required.
+		</para></listitem>
+
+		<listitem><para>The first connector listens for HTTP requests at the <literal>8080</literal> TCP/IP port. The connector, after accepting a connection from a client, waits for a maximum of 20000 milliseconds for a request URI; if it does not receive one from the client by then, the connector times out. If this connector receives a request from the client that requires the SSL transport, the servlet container automatically redirects the request to port <literal>8443</literal>. </para>
+		</listitem>
+
+		<listitem><para>The second connector is for HTTPS requests.  The TCP/IP port that users specify as the secure connection port is <literal>8443</literal>. Be sure that you set the value of the <literal>redirectPort</literal> attribute of your non-SSL connectors to this value to ensure that users that require a secure connection are redirected to the secure port, even if they initially start at the non-secure port.  The <literal>SSLEnabled</literal> attribute specifies that SSL is enabled for this connector.  The <literal>secure</literal> attribute ensures that a call to <literal>request.isSecure()</literal> from the connecting client always returns <literal>true</literal>. The <literal>scheme</literal> attribute ensures that a call to <literal>request.getScheme()</literal> from the connecting client always returns <literal>https</literal> when clients use this connector. </para>
+		<para>The <literal>maxThreads</literal> attribute specifies that the servlet container creates a maximum of 150 request processing threads, 
+		which determines the maximum number of simultaneous requests that can be handled. 
+		The <literal>clientAuth</literal> attribute specifies that the servlet container does not require a certificate chain 
+		unless the client requests a resource protected by a security constraint that uses CLIENT-CERT authentication.  
+		</para>
+                <para>The <literal>keystoreFile</literal> attribute specifies the name of the file that contains the servlet container&rsquo;s 
+                private key and public certificate used in the SSL handshake, encryption, and decryption. 
+                You use an alias and password to access this information. 
+                In the example, this file is <literal>SERVER_HOME/config/keystore</literal>.  
+                The <literal>keystorePass</literal> attributes specify the password used to access the keystore. 
+                </para></listitem>
+
+		<listitem><para>The third AJP Connector element represents a Connector component that communicates with a web connector via the AJP protocol. 
+		</para></listitem>
+		<listitem><para>The engine has a logical name of <literal>Catalina</literal>; 
+		this is the name used in all log and error messages so you can easily identify problems. 
+		The value of the <literal>defaultHost</literal> attribute refers to the name of a <literal>&lt;Host&gt;</literal> 
+		child element of <literal>&lt;Engine&gt;</literal>; 
+		this host processes requests directed to host names on this servlet container.
+		</para>
+		</listitem>
+
+		<listitem> <para>The <literal>&lt;Realm&gt;</literal> child element of <literal>&lt;Engine&gt;</literal> represents a database of 
+		users, passwords, and mapped roles used for authentication in this service.  Virgo Web Server uses an implementation of the Tomcat 6 Realm interface that authenticates users through the Java Authentication and Authorization Service (JAAS) framework which is provided as part of the standard J2SE API.</para>
+		   <para>With the JAASRealm, you can combine practically any conceivable security realm with Tomcat's container managed authentication.  For details, see <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/realm-howto.html">Realm Configuration</ulink>.</para>
+
+		</listitem>
+		<listitem><para>The <literal>&lt;Host&gt;</literal> child element represents a virtual host, 
+		which is an association of a network name for a server (such as <literal>www.mycompany.com</literal>) with the particular 
+		server on which Catalina is running.  
+		The servlet container unpacks Web applications into a directory hierarchy if they are deployed as WAR files. 
+		The <literal>xmlValidation</literal> attribute specifies that the servlet container does not validate XML files when parsing them, 
+		or in other words, it accepts invalid XML. 
+		The <literal>xmlNamespaceAware</literal> attribute specifies that the servlet container does not take namespaces into account 
+		when reading XML files. 
+		</para></listitem>
+
+		<listitem><para>Finally, the <literal>org.apache.catalina.valves.AccessLogValve</literal> valve creates log files 
+		in the same format as those created by standard web servers.   
+		The servlet container creates the log files in the <literal>SERVER_HOME/serviceability/logs/access</literal> directory.  
+		The log files are prefixed with the string <literal>localhost_access_log.</literal>, have a suffix of <literal>.txt</literal>, 
+		use a standard format for identifying what should be logged, and do not include DNS lookups of the IP address of the remote host.
+		</para> </listitem>
+
+		</itemizedlist>
+	</section>
+
+		<section id="configuring-tomcat-connectors">
+			<title>Connector Configuration</title>
+			<para> The @product.name@ supports the configuration of any connector supported by Apache Tomcat. 
+			See the default configuration above for syntax examples, and for further details on the configuration properties 
+			supported for various <literal>&lt;Connector&gt;</literal> implementations, 
+			consult the official <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/config/http.html">Tomcat HTTP Connector</ulink> documentation.
+			</para>
+			<tip>
+				<title>Configuring SSL for Tomcat</title>
+				<para> The @product.name@ distribution includes a preconfigured <filename>SERVER_HOME/config/keystore</filename> 
+				file that contains a single self-signed SSL Certificate. 
+				The password for this <filename>keystore</filename> file is <literal>changeit</literal>.  
+				This <filename>keystore</filename> file is intended for testing purposes only. 
+				For detailed instructions on how to configure Tomcat&rsquo;s SSL support, 
+				consult the official <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/ssl-howto.html">Tomcat SSL Configuration HOW-TO</ulink>.
+				</para>
+			</tip>
+		</section>
+
+		<section id="configuring-tomcat-clustering">
+			<title>Cluster Configuration</title>
+			<para>
+				@product.name@ supports standard Apache Tomcat cluster configuration.
+				By default, clustering of the embedded servlet container is disabled, 
+				and the default configuration does not include any clustering information.  
+				See  <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/cluster-howto.html">Tomcat Clustering/Session Replication HOW-TO</ulink> 
+				for detailed information about enabling and configuring clustering.
+			</para>
+		</section>
+
+	</section>
+
+	<section id="configuring-provisioning-repository">
+		<title>Configuring the Local Provisioning Repository</title>
+		<para>
+		    You configure the locations that @product.name@ includes in its provisioning repository 
+		    by editing the <literal>com.springsource.repository.properties</literal> file in the <literal>$SERVER_HOME/config</literal> directory.  
+		    </para>
+		<para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
+		<itemizedlist>
+		 	<listitem><literal>repository-name</literal> refers to the name of the local repository.</listitem>
+    			<listitem><literal>property</literal> refers to the name of a particular property.</listitem>
+    			<listitem><literal>value</literal> refers to the value of the property. </listitem>
+		</itemizedlist>
+		</para>
+
+		<para>For example, <literal>ext.type=external</literal> specifies that the <literal>type</literal> property of the repository 
+		with name <literal>ext</literal> is <literal>external</literal>.  
+                </para>
+		<para>For each specific repository, you configure a number of properties, 
+		such as its type (external, watched, or remote) and its searchpath, watched directory, 
+		or URI that specifies the actual location of the artifacts (OSGi bundles, libraries, PARs, plans, or configuration files.) 
+		The particular properties that configure these options are listed in the table after the example.
+		</para>
+		<para>
+			The <literal>chain</literal> property specifies the order in which @product.name@ searches the searchpaths 
+			when it looks for dependencies; 
+			the first path listed specifies the first actual directory that @product.name@ searches, until the last listed path.  
+			The <literal>chain</literal> property uses the names of the searchpaths as specified in the individual repository properties; 
+			for example, in the property <literal>ext.type=external</literal>, the name of the repository is <literal>ext</literal>.
+		</para>
+		<para>
+			The default repository configuration for a newly installed @product.name@ is as follows:
+			<programlisting><![CDATA[ext.type=external
+ext.searchPattern=repository/ext/{artifact}
+
+usr.type=watched
+usr.watchDirectory=repository/usr
+
+chain=ext,usr]]></programlisting>
+		</para>
+
+        
+        <para>
+		The default configuration shown above has two searchpaths corresponding to the two default sub-directories of the <literal>SERVER_HOME/repository</literal> directory created when you first install @short.product.name@: <literal>ext</literal> and <literal>usr</literal>.    @product.name@ searches each of these searchpaths when locating entries for inclusion in the repository.  </para>
+	 <para>
+	        The <literal>chain</literal> property shows the order in which @product.name@ searches the searchpaths: first <literal>ext</literal> and then <literal>usr</literal>. 
+	</para>
+	<para>
+		The following table lists all the available properties that you can use to describe a named path and the 
+		repository search chain in the <literal>com.springsource.repository.properties</literal> file.
+		<table id="repository-options-table" colsep="1" frame="all" rowsep="1">
+		<title>Repository Properties in repository.properties</title>
+		  <tgroup cols="2">
+ 		    <thead>
+		      <row>
+			<entry>Property</entry>
+			<entry>Description</entry>
+		      </row>
+		    </thead>
+		    <tbody>
+		      <row>
+			<entry><literal><emphasis>repository-name</emphasis>.type</literal></entry>
+			<entry> 
+                          <para>
+                            Specifies the type of path.  You can set this property to one of the following three valid values:
+			    <itemizedlist>
+				<listitem><literal>external</literal>: Specifies that this path points to a number of directories that satisfy a given search pattern 
+				and are local to the current @product.name@ instance. 
+				Use the <literal>searchPattern</literal> property to specify the directory search pattern.
+				</listitem>
+				<listitem><literal>watched</literal>: Specifies that this path points to a single directory, local to the current @product.name@ instance.  
+				@product.name@ regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
+				Use the <literal>watchDirectory</literal> property to specify the watched directory 
+				and the <literal>watchInterval</literal> property 
+				to specify how often @short.product.name@ checks the directory.
+				</listitem>
+				<listitem><literal>remote</literal>: Specifies that the path points to a remotely-hosted repository, 
+				hosted by a remote instance of @product.name@.  
+				Use the <literal>uri</literal> property to specify the full URI of the remote repository.  
+				You can also specify the optional <literal>indexRefreshInterval</literal> property. 
+				</listitem>
+			    </itemizedlist>
+                          </para> 
+
+			  <para>See <link linkend="configuring-repository-watched-versus-external">Watched or External Repository?</link> 
+			  for additional information about when to configure watched or external repositories for your particular environment.
+			  </para>
+			</entry>
+		      </row>
+		      <row>
+			<entry><literal><emphasis>repository-name</emphasis>.searchPattern</literal></entry>
+			<entry> <para>Specifies the pattern that an external repository uses when deciding which local directories it should search 
+			when identifying artifacts.  Use this property together with <literal><emphasis>repository-name</emphasis>.type=external</literal>. 
+			See <link linkend="configuring-provisioning-repository-search-paths" >Search Paths: Additional Information</link> 
+			for detailed information about specifying a search pattern.  
+			</para> </entry>
+		      </row>
+		      <row>
+			<entry><literal><emphasis>repository-name</emphasis>.watchDirectory</literal></entry>
+			<entry> <para>Specifies the single directory of a watched repository. 
+			You can specify either an absolute or relative pathname for the directory.  
+			If you specify a relative pathname, it is relative  to the root of the @short.product.name@ installation (<literal>SERVER_HOME</literal>).  
+			Use this property together with <literal><emphasis>repository-name</emphasis>.type=watched</literal>.
+			</para></entry>
+		      </row>
+		      <row>
+			<entry><literal><emphasis>repository-name</emphasis>.watchInterval</literal></entry>
+			<entry> <para>Specifies the interval in seconds between checks of a watched directory by a watched repository.  
+			This property is optional, if it is not specified the default interval of 5 seconds is used.  
+			Use this property together with <literal><emphasis>repository-name</emphasis>.type=watched</literal>. 
+			</para> </entry>
+		      </row>
+		      <row>
+			<entry><literal><emphasis>repository-name</emphasis>.uri</literal></entry>
+			<entry> <para>Specifies the URI of the hosted repository to which a remote repository connects.  
+			The value of this property takes the following format:
+			</para>
+                      <para><literal>http://<emphasis>host</emphasis>:<emphasis>port</emphasis>/org.eclipse.virgo.server.repository/<emphasis>remote-repository-name</emphasis></literal></para>
+                      <para>where:
+			<itemizedlist>
+				<listitem><literal><emphasis>host</emphasis></literal> refers to the computer on which the remote @short.product.name@ instance hosts the remote repository.
+				</listitem>
+				<listitem><literal><emphasis>port</emphasis></literal> refers to Tomcat listen port of the remote @short.product.name@ instance which hosts the remote repository.
+				</listitem>
+				<listitem><literal><emphasis>remote-repository-name</emphasis></literal> refers to the name of the remote repository, 
+				as specified in the <literal>hostedRepository.properties</literal> file of the remote @short.product.name@ instance.
+				</listitem>
+			</itemizedlist>
+                       </para>
+                       <para>Use this property together with <literal><emphasis>repository-name</emphasis>.type=remote</literal>.
+                       </para> </entry>
+		      </row>
+		      <row>
+			<entry><literal><emphasis>repository-name</emphasis>.indexRefreshInterval</literal></entry>
+			<entry>
+				<para>
+					Specifies the interval in seconds between checks by a remote repository that 
+					its local copy of the hosted repository index is up-to-date 
+					(a remote repository acts as a proxy for a hosted repository and thus it holds a local copy of the hosted repository&rsquo;s index). 
+					This property is optional,
+					if it is not specified the default interval of 5 seconds is used.
+				</para> 
+				<para>Use this property together with <literal><emphasis>repository-name</emphasis>.type=remote</literal>.</para> </entry>
+		      </row>
+		    </tbody>
+		  </tgroup>
+		</table>
+	</para>
+	<section id="configuring-repository-watched-versus-external">
+		<title>Should I Configure a Watched or External Repository?</title>
+		<para>The main difference between a watched and an external repository is that @product.name@ regularly scans watched directories 
+		and automatically picks up any changed artifacts, 
+		while @short.product.name@ scans external directories only at startup, and then only if there is no cached index available.  
+		This means that @short.product.name@ always performs a scan of an external repository when you start the server 
+		with the <literal>-clean</literal> (as this deletes the index) and only scans during a normal startup if the index isn&rsquo;t there because, 
+		for example, this is the first time you start the server. 
+		</para>
+		<para>There is a performance cost associated with using a watched repository due to @short.product.name@ using resources 
+		to scan the directory at the configured interval.  
+		The cost is small if the watched repository contains just a few artifacts; however, 
+		the performance cost increases as the number of artifacts increases.
+		</para>
+		<para> For this reason, we recommend that you put most of your dependencies in external repositories, 
+		even when in development mode. 
+		If you make any changes to the artifacts in the external repositories, 
+		remember to restart @short.product.name@ with the <literal>-clean</literal> option so that the server picks up any changes.  
+		Use watched directories for artifacts that you are prototyping, actively updating, or when adding new dependencies 
+		so that @short.product.name@ quickly and easily picks them up.  
+		To increase performance even during development, however, you can use an external repository for most of your dependencies, 
+		in particular the ones that are fairly static. 
+		</para>
+
+		<para>In production environments, where dependencies should not change, 
+		we recommend that you use <emphasis>only</emphasis> external repositories.
+		</para>
+	</section>
+
+        <section id="configuring-provisioning-repository-search-paths">
+            <title>Search Paths: Additional Information</title>
+            <para>
+	            The <literal><emphasis>repository-name</emphasis>.searchPattern</literal> and 
+	            <literal><emphasis>repository-name</emphasis>.watchDirectory</literal> properties specify search paths 
+	            for external and watched repositories, respectively, 
+	            that define a physical location that @product.name@ searches when looking for a library or bundle dependency. 
+	            If a search path is relative, its location is relative to the root of the installation, 
+	            in other words, the <literal>SERVER_HOME</literal> directory.
+   	        </para>
+            <section id="configuring-provisioning-repository-search-paths-wildcards">
+	            <title>Using Wildcards</title>
+            	<para>
+		            Search paths specified with the <literal><emphasis>repository-name</emphasis>.searchPattern</literal> property 
+		            provide support for wildcards. 
+		            In the entries above, the path segments surrounded by curly braces, 
+		            for example <literal>{bundle}</literal> and <literal>{library}</literal>, 
+		            are wildcards entries for a directory with any name. 
+		            Allowing wildcards to be named in this way is intended to improve the readability of search path configuration.
+		        </para>
+		        <para>
+			        In addition to supporting the above-described form of wildcards, @product.name@ also supports Ant-style paths, 
+			        that is <literal>*</literal> and <literal>**</literal> can be used to represent any directory and 
+			        any series of directories, respectively. 
+			        For example, <literal>repository/usr/{bundle}</literal> and <literal>repository/usr/*</literal> 
+			        are directly equivalent.
+			    </para>
+			    <para>
+				    A common usage of the <literal>**</literal> wildcard is to allow dependencies stored in a directory structure of varying depth, 
+				    such as a local Maven repository, to be provisioned by the @product.name@.
+				</para>
+			</section>
+		</section>
+        <section id="configuring-provisioning-repository-using-system-properties">
+			<title>Using System properties</title>
+			<para>
+				You can use system properties when specifying the values of the <literal><emphasis>repository-name</emphasis>.searchPattern</literal>, 
+				<literal><emphasis>repository-name</emphasis>.watchDirectory</literal>,
+				<literal><emphasis>repository-name</emphasis>.watchInterval</literal> <literal><emphasis>repository-name</emphasis>.uri</literal>, 
+				and <literal><emphasis>repository-name</emphasis>.indexRefreshInterval</literal>
+				properties. 
+				You reference system properties as <literal>${system.property.name}</literal>; 
+				for example, a search path of <literal>${user.home}/repository/bundles</literal> references the
+				<literal>repository/bundles</literal> directory in the user&rsquo;s home directory.
+			</para>
+		</section>		                 
+        <section id="configuring-provisioning-repository-examples">
+	        <title>Example repository configurations</title>
+	        <para>
+		        The following examples provide sample configuration that could be used for some common use cases.
+		    </para>
+		    <section id="configuring-provisioning-repository-examples-ivy">
+		        <title>Add an Ivy cache repository</title>
+			<para>The following example shows how to add an external repository whose location is actually an Ivy cache.</para>
+			<programlisting><![CDATA[ext.type=external
+ext.searchPattern=repository/ext/{artifact}
+
+usr.type=watched
+usr.watchDirectory=repository/usr
+
+ivy-repo.type=external
+ivy-repo.searchPattern=${user.home}/.ivy2/cache/{org}/{name}/{version}/{bundle}.jar
+
+chain=ext,usr,ivy-repo]]></programlisting>
+
+            </section>
+            <section id="configuring-provisioning-repository-examples-maven">		    
+		        <title>Add a Maven local repository</title>
+			<para>The following example shows how to add an external repository whose location is actually a Maven repository.</para>
+			<programlisting><![CDATA[ext.type=external
+ext.searchPattern=repository/ext/{artifact}
+
+usr.type=watched
+usr.watchDirectory=repository/usr
+
+maven-repo.type=external
+maven-repo.searchPattern=${user.home}/.m2/repository/**/{bundle}.jar
+
+chain=ext,usr,maven-repo]]></programlisting>
+
+            </section>
+	    <section id="configuring-repository-examples-remote-watched">
+	        <title>Add remote and watched repositories</title>
+		<para>The following example shows the default <literal>com.springsource.repository.properties</literal> file 
+		from a freshly-installed @short.product.name@, but then updated to include new remote and watched repositories.  
+		Both of these repositories are part of the repository chain. 
+		</para>
+		<para>The remote repository is called <literal>remote-repo</literal>.  
+		The URI of the hosted repository from which <literal>remote-repo</literal> gets its artifacts is 
+		<literal>http://my-host:8080/org.eclipse.virgo.server.repository/my-hosted-repo</literal>; 
+		this means that there is a @short.product.name@ instance running on host <literal>my-host</literal> 
+		whose Tomcat server listens at the default port, <literal>8080</literal>, 
+		and this server instance hosts a repository called <literal>my-hosted-repo</literal>, 
+		configured in the <literal>hostedRepository.properties</literal> file of the remote server instance.  
+		The remote repository checks for changes in the hosted repository every 30 seconds.
+		</para>
+		<para>The watched repository is called <literal>watched-repo</literal> and the directory that holds the artifacts 
+		is <literal>repository/watched</literal>, 
+		relative to the installation directory of the @short.product.name@ instance.  
+		The server checks for changes in this watched repository every 5 seconds.
+		</para>
+		<programlisting><![CDATA[ext.type=external
+ext.searchPattern=repository/ext/{artifact}
+
+usr.type=watched
+usr.watchDirectory=repository/usr
+
+remote-repo.type=remote
+remote-repo.uri=http://my-host:8080/org.eclipse.virgo.server.repository/my-hosted-repo
+remote-repo.indexRefreshInterval=30
+
+watched-repo.type=watched
+watched-repo.watchedDirectory=repository/watched
+watched-repo.watchedInterval=5
+
+chain=ext,usr,remote-repo,watched-repo]]></programlisting>
+            </section>
+	</section>
+   </section>
+
+	<section id="configuring-hosted-repo">
+		<title>Configuring a Hosted Repository</title>
+		<para>You configure a @short.product.name@ instance to host a repository 
+		by editing the <literal>SERVER_HOME/config/com.springsource.repository.hosted.properties</literal> file; 
+		remote clients can then access the artifacts in this hosted repository and use them locally.
+		</para>
+              <para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
+             <itemizedlist> 
+		<listitem><literal>repository-name</literal> refers to the name of the hosted repository.</listitem>
+		<listitem><literal>property</literal> refers to the name of a particular property.  </listitem>
+		<listitem><literal>value</literal> refers to the value of the property.  </listitem>
+             </itemizedlist> 
+              </para>
+             <para>For example, <literal>my-hosted-repo.type=external</literal> specifies that the <literal>type</literal> property 
+             of the <literal>my-hosted-repository</literal> repository is <literal>external</literal>.
+             </para>
+		<para>The following table lists the properties that you can include in the <literal>hostedRepository.properties</literal> file. 
+		</para>
+	        <table id="hosted-repository-properties-table" colsep="1" frame="all" rowsep="1">
+	          <title>Hosted Repository Properties</title>
+		  <tgroup cols="2">
+		   <thead>
+			<row>
+				<entry>Property</entry>
+				<entry>Description</entry>
+			</row>
+		  </thead>
+		  <tbody>
+			<row>
+				<entry><literal><emphasis>repository-name</emphasis>.type</literal></entry>
+				<entry>Specifies the type of path of the hosted repository.  
+				All paths are local to the current @short.product.name@ instance. 
+				You can set this property to one of the following valid values:
+	<itemizedlist>
+
+    	<listitem><literal>external</literal>: Specifies that this path points to a number of directories that satisfy a given search pattern. 
+    	Use the <literal>searchPattern</literal> property to specify the directory search pattern.
+    	</listitem>
+	<listitem><literal>watched</literal>: Specifies that this path points to a single directory. 
+	@product.name@ regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
+	Use the <literal>watchDirectory</literal> property to specify the actual watched directory and the <literal>watchInterval</literal> property 
+	to specify how often @short.product.name@ checks the directory.
+	</listitem>
+	</itemizedlist>
+			  <para>See <link linkend="configuring-repository-watched-versus-external">Watched or External Repository?</link> 
+			  for additional information about when to configure watched or external repositories for your particular environment.
+			  </para>
+				</entry>
+			</row>
+			<row>
+				<entry><literal><emphasis>repository-name</emphasis>.searchPattern</literal></entry>
+			<entry> <para>Specifies the pattern that an external hosted repository uses when deciding which 
+			local directories it should search when identifying artifacts.  
+			Use this property when <literal>repository-name.type=external</literal>. 
+			See <link linkend="configuring-provisioning-repository-search-paths" >Search Paths: Additional Information</link> 
+			for detailed information about specifying a search pattern.  
+			</para> </entry>
+			</row>
+			<row>
+				<entry><literal><emphasis>repository-name</emphasis>.watchDirectory</literal></entry>
+			<entry> <para>Specifies the single directory of a watched hosted repository. 
+			You can specify either an absolute or relative pathname for the directory.  
+			If you specify a relative pathname, it is relative to the root of the @short.product.name@ installation (<literal>SERVER_HOME</literal>).  
+			Use this property when <literal>repository-name.type=watched</literal>.
+			</para></entry>
+			</row>
+			<row>
+				<entry><literal><emphasis>repository-name</emphasis>.watchInterval</literal></entry>
+			<entry> <para>Specifies the interval in seconds between checks of a watched directory by a watched hosted repository.  
+			This property is optional.  Use this property when <literal>repository-name.type=watched</literal>. 
+			</para> </entry>
+			</row>
+		   </tbody>
+		  </tgroup>
+		</table>
+		<para>The following sample shows a <literal>com.springsource.repository.hosted.properties</literal> file with a single external repository 
+		called <literal>my-hosted-repo</literal> with search pattern <literal>SERVER_HOME/repository/hosted/*</literal>.
+		<programlisting><![CDATA[my-hosted-repo.type=external
+my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
+		</para>
+
+	<para>See <link linkend="configuring-repository-examples-remote-watched">Example of watched and remote repositories</link> 
+	for details on how a local repository can remotely access the artifacts in this hosted repository.
+	</para>
+	</section>
+
+</chapter>

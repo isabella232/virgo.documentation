@@ -1,0 +1,461 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC  "-//OASIS//DTD DocBook XML V4.5//EN"  
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<!--========================================================================-->
+<chapter id="concepts">
+
+<title>Concepts</title>
+
+<para>@virgo@ @webserv@ is a Java application server composed of a
+collection of modules which supports applications which are also composed of a
+collection of modules.
+These may be traditional Java web applications packaged as Web ARchive (<literal>.war</literal>)
+files as well as other modular applications.</para>
+
+<para>This chapter introduces concepts
+necessary for developing @webserv@ applications.
+These concepts will become clearer as the @greenpages@ application is explored
+in later chapters.</para>
+
+<!--========================================================================-->	
+<section id="concepts.osgi">
+	
+<title>OSGi concepts</title>
+
+<para>Modules in @webserv@ are represented using a standard Java
+module system known as <emphasis>OSGi</emphasis>.
+Modules consist of programs and resources organised by Java package together
+with metadata which declares imported and exported packages.
+A module <emphasis>exports</emphasis> a package to make the corresponding programs and resources
+available for use by other modules.
+A module <emphasis>imports</emphasis> a package to use the corresponding programs and resources of
+another module.</para>
+
+<para>
+Representing a program as a collection of modules makes it easier for the
+programmer to manage it and modify it and for teams of programmers to divide
+responsibilities between themselves.
+A module is similar to a Java class in this respect. Rules similar to those for
+organising data and programs into classes can be applied
+to organising applications into modules.</para>
+
+<para>An industry consortium known as the
+<emphasis>OSGi Alliance</emphasis> (see <xref linkend="further.resources.projects"/>) develops the OSGi
+specification, reference implementation, and compliance tests.
+@webserv@ is built on the Equinox OSGi framework which is also
+the reference implementation for OSGi.</para>
+
+<!--========================================================================-->
+<section>
+	
+<title>Bundles</title>
+
+<para>Modules in OSGi are known as <emphasis>bundles</emphasis>.
+Each bundle conforms to the JAR file format and
+can contain Java classes, a manifest (in <literal>META-INF/MANIFEST.MF</literal>),
+and further resource files.</para>
+
+<para>The OSGi framework enables bundles to be installed and run.</para>
+
+<para>OSGi identifies bundles <quote>by name</quote> or <quote>by identifier</quote> (id).</para>
+
+<para>The <emphasis>symbolic name</emphasis> and 
+<emphasis>version</emphasis> of a bundle is an attribute of the bundle itself and uniquely identifies that bundle (by name) in an OSGi framework.
+A bundle usually declares its <emphasis>symbolic name</emphasis> and <emphasis>version</emphasis>
+in its manifest (a file called <literal>MANIFEST.MF</literal>) like this:
+<programlisting>Bundle-SymbolicName: org.foo.bundle
+Bundle-Version: 1.2.3.BUILD-2009-06-04
+</programlisting>
+</para>
+
+<para>Additionally, the OSGi framework
+assigns a distinct number, known as a <emphasis>bundle id</emphasis>, to each bundle
+as it is installed. Bundles may be referred to <quote>by identifier</quote> using this number.
+The OSGi framework itself resides in a
+bundle with bundle id <literal>0</literal>.</para>
+
+<para>The
+dependencies between bundles are expressed statically in terms of packages and
+dynamically in terms of services. A package is familiar to Java programmers.
+For example, a Java program may depend on a class <literal>org.foo.X</literal>, 
+from package <literal>org.foo</literal>, and a bundle
+containing that program
+would either need to contain <literal>org.foo.X</literal> or depend on the
+package <literal>org.foo</literal>.
+Package dependencies are specified in the bundle manifest, for example:
+<programlisting>Import-Package: org.foo
+</programlisting>
+</para>
+
+<para>A bundle which provides a package for use by other bundles <emphasis>must</emphasis>
+export the package in its manifest. For example:
+<programlisting>Export-Package: org.foo
+</programlisting>
+</para>
+
+<para>The OSGi framework ensures that a given bundle&rsquo;s package dependencies
+can be <emphasis>satisfied</emphasis> before the bundle runs. This process is known as
+<emphasis>resolution</emphasis>.</para>
+
+<para>After a bundle is resolved, its classes and resources are available for
+loading.
+In OSGi, bundles and their packages do not appear on the application classpath.
+Instead, each bundle has a class loader which loads its own classes and loads classes belonging to each of its
+imported packages by deferring to the bundle class loader that exported the package.</para>
+
+</section>
+
+<!--========================================================================-->
+<section>
+	
+<title>Life cycle</title>
+
+<para>The OSGi framework manages the <emphasis>life cycle</emphasis> of each bundle. A bundle is
+first of all <emphasis>install</emphasis>ed and will be in the INSTALLED state.
+If a request is made to <emphasis>start</emphasis> the bundle, the OSGi framework <emphasis>resolve</emphasis>s the bundle
+and, if resolution was successful, will subsequently move the bundle to the ACTIVE state.
+If a request is made to <emphasis>stop</emphasis> the bundle, the OSGi framework will move the
+bundle back to the INSTALLED state. A request may then be made to <emphasis>uninstall</emphasis>
+the bundle.</para>
+
+<para>While the bundle is INSTALLED or ACTIVE, it may be <emphasis>updated</emphasis> to pick up
+some changes. These changes are not detected by bundles which were depending
+on the bundle before it was updated.
+A <quote>refresh packages</quote> operation may be performed to ripple the
+changes out to those bundles. (See <xref linkend="concepts.services"/>.)</para>
+<para>The life cycle of a bundle can be summarised by a state transition diagram.
+This diagram shows some more of the intermediate states of a bundle not described in the overview above:
+<figure>
+<title>Bundle life cycle</title>
+	<mediaobject>
+		<imageobject role="fo">
+    		<imagedata fileref="images/concepts/bundle-lifecycle.png" format="PNG" align="center" width="120mm"/>
+    	</imageobject>
+		<imageobject role="html">
+			<imagedata fileref="images/concepts/bundle-lifecycle.png" format="PNG" align="center"/>
+		</imageobject>
+	</mediaobject>
+</figure></para>
+
+</section>
+
+<!--========================================================================-->
+<section id="concepts.services" xreflabel="Services concepts">
+	
+<title>Services</title>
+
+<para>Bundles may publish Java objects, known as <emphasis>services</emphasis>, 
+to a registry managed by the OSGi framework. Other bundles running in
+the same OSGi framework can then find and use those services. Services
+are typically instances of some shared Java interface. A bundle which
+provides a service need not export the package containing the
+<emphasis>implementation</emphasis>
+class of the service.
+</para>
+
+<para>For example, a bundle could export a package containing the interface
+<literal>org.bar.SomeInterface</literal>, thus:
+
+<programlisting>Export-Package: org.bar
+</programlisting>
+</para>
+
+<para>…implement the interface with a class <literal>SomeImpl</literal>:
+
+<programlisting>package org.bar.impl;
+
+class SomeImpl implements SomeInterface {
+	…
+}
+</programlisting>
+</para>
+
+<para>…create an instance of <literal>SomeImpl</literal> and 
+then publish this instance (as an instance of the interface <literal>SomeInterface</literal>).
+</para>
+
+<para>OSGi publishes a number of standard services. For example, the 
+<emphasis>Package Admin</emphasis> service provides the <quote>refresh packages</quote> life cycle operation
+mentioned above.</para>
+
+<para>OSGi provides an <glossterm>API</glossterm> which can be used to publish and find services,
+but it is much simpler to use Spring DM to accomplish this. (See <xref linkend="concepts.springdm"/>.)</para>
+
+</section>
+
+<!--========================================================================-->
+<section>
+	
+<title>Versioning</title>
+
+<para>OSGi allows different versions of bundles, packages, and several other entities, to co-exist
+and provides some mechanisms for managing these versions.</para>
+
+<section>
+
+<title>Version numbers</title>
+
+<para>An OSGi <emphasis>version number</emphasis> consists of up to three numeric components, 
+or exactly three
+numeric components followed by a string component. These components are
+separated by a period (<quote><literal>.</literal></quote>) and
+are called the <emphasis>major</emphasis>, <emphasis>minor</emphasis>, <emphasis>micro</emphasis>,
+and <emphasis>qualifier</emphasis> components, respectively.
+</para>
+<para>For example, the version <literal>2.4.1.ga</literal> has major component <literal>2</literal>, minor component
+<literal>4</literal>, micro component <literal>1</literal>,
+and a qualifier component <literal>ga</literal>. (There are restrictions on the characters that can appear in
+a qualifier. For example: letters, digits, underscores and hyphens are allowed; periods and commas are not.)</para>
+
+<para>Trailing components may be omitted along with their period (<literal>.</literal>). So, for example, the version
+numbers <literal>2</literal>, <literal>2.0</literal>, and <literal>2.0.0</literal>
+all denote the same version. This example demonstrates that <literal>0</literal> is assumed if a numeric component is omitted, 
+and the empty string is assumed for an omitted qualifier.</para>
+
+</section>
+
+<section>
+
+<title>Version ranges</title>
+
+<para>Dependencies on bundles and packages have an associated <emphasis>version range</emphasis>
+which is specified using an interval notation: a square bracket
+<quote><literal>[</literal></quote> or <quote><literal>]</literal></quote> denotes
+an <emphasis>inclusive</emphasis> end of the range and a round bracket
+<quote><literal>(</literal></quote> or <quote><literal>)</literal></quote> denotes
+an <emphasis>exclusive</emphasis> end of the range. Where one end of the range is to be included and the other excluded, it is permitted to
+pair a round bracket with a square bracket.
+The examples below make this clear.</para>
+
+<para>If a single version number is used where a version <emphasis>range</emphasis> is
+required this does <emphasis>not</emphasis> indicate a single version, but the range <emphasis>starting</emphasis> from that version and 
+including all higher versions.</para>
+
+<para>There are three common cases:
+
+<itemizedlist>
+<listitem><para>A <quote>strict</quote> version range, such as <literal>[1.2,1.2]</literal>, which
+denotes that version and only that version.</para></listitem>
+<listitem><para>A <quote>half-open</quote> range, such as
+<literal>[1.2,2)</literal>, which has an inclusive lower limit
+and an exclusive upper limit, denoting version <literal>1.2.0</literal> and any version later than this, up 
+to, <emphasis>but not including</emphasis>, version <literal>2.0.0</literal>.
+</para></listitem>
+<listitem><para>An <quote>unbounded</quote> version range, such as <literal>1.2</literal>, which
+denotes version <literal>1.2</literal> and <emphasis>all</emphasis> later versions.</para></listitem>
+</itemizedlist>
+
+</para>
+
+</section>
+
+<section>
+<title>Versioning policies</title>
+<para>A <emphasis>versioning policy</emphasis> is a way of using version numbers to indicate compatible
+and incompatible changes.
+OSGi does not mandate a particular versioning policy.
+Instead, a specific versioning policy may be implemented using version ranges.</para>
+<para>Strict and half-open version ranges are most useful in representing versioning
+policies.
+Unbounded version ranges can lead to problems as they (unrealistically) assume that
+compatibility will be preserved indefinitely.</para>
+
+<para>For example, a conservative versioning policy might assume that any change, other than
+in the qualifier component of a version, implies an incompatible
+change to the object.
+Such a policy would employ version ranges such as <literal>[1.2.1.beta,1.2.2)</literal>
+which accept any version from <literal>1.2.1.beta</literal> (inclusive) up to but not including
+<literal>1.2.2</literal> (exclusive).
+</para>
+<para>Alternatively, a relaxed versioning policy might assume that only changes in the major component of
+a version denote an incompatible change.
+Such a policy would employ version ranges such as <literal>[1.2,2)</literal> to capture this.</para>
+
+</section>
+
+<!--========================================================================-->
+<section>
+
+<title>Bundle version</title>
+
+<para>Each bundle has a version.
+The bundle&rsquo;s version may be specified in the manifest using a
+<literal>Bundle-Version</literal> header:
+
+<informalexample>
+<programlisting>Bundle-Version: 1.4.3.BUILD-20090302
+</programlisting>
+</informalexample>
+If not specified the bundle version is assumed to be <literal>0</literal>.
+</para>
+
+</section>
+
+<!--========================================================================-->
+<section>
+
+<title>Package version</title>
+
+<para>Each exported package has a version.
+The exported package&rsquo;s version may be specified on the Export-Package manifest header. For example
+
+<informalexample>
+<programlisting>Export-Package: org.foo;version="2.9",org.bar;version="1"
+</programlisting>
+</informalexample>
+
+exports two packages: <literal>org.foo</literal>, at version <literal>2.9.0</literal> and 
+<literal>org.bar</literal>, at version <literal>1.0.0</literal>.
+</para>
+
+<para>If the version attribute is omitted the version is assumed to be <literal>0</literal>.</para>
+
+<para>Each package <emphasis>import</emphasis> has a version <emphasis>range</emphasis>.
+The package import version range may be specified on the <literal>Import-Package</literal> manifest header.
+If interval notation is used, the version range must be enclosed in double quotes, for example:
+<informalexample>
+<programlisting>Import-Package: org.foo;version="[2,3)",org.bar;version="[1,1]"</programlisting>
+</informalexample>
+seeks to import a package <literal>org.foo</literal> in the range <literal>[2.0.0,3.0.0)</literal> and a package
+<literal>org.bar</literal> with the (exact) version <literal>1.0.0</literal>.
+</para>
+
+<para>If a version range is not specified on an import, the range <literal>0</literal> is assumed, meaning that 
+any version of this package would satisfy the import.</para>
+
+</section>
+
+<!--========================================================================-->
+<section>
+
+<title>Bundle manifest version</title>
+
+<para>Bundle manifests have a version which is <literal>1</literal> by default,
+indicating OSGi Release 3 semantics.
+@webserv@ is based on OSGi Release 4 and therefore expects bundle manifests to be
+at version <literal>2</literal>, indicating OSGi Release 4 semantics. (See <xref linkend="further.resources.projects"/>.)
+The bundle manifest&rsquo;s version should be specified on the Bundle-ManifestVersion manifest header, exactly as follows:
+<informalexample>
+<programlisting>Bundle-ManifestVersion: 2
+</programlisting>
+</informalexample>
+</para>
+
+</section>
+
+<!--========================================================================-->
+<section>
+
+<title>Manifest version</title>
+
+<para>Manifests themselves also have a version which <emphasis>must</emphasis> be specified as <literal>1.0</literal>.
+This is not an OSGi definition but part of the JAR file specification
+(<ulink url="http://java.sun.com/javase/6/docs/technotes/guides/jar/jar.html">http://java.sun.com/javase/6/docs/technotes/guides/jar/jar.html</ulink>).
+
+<informalexample>
+<programlisting>Manifest-Version: 1.0
+</programlisting>
+</informalexample>
+
+</para>
+
+</section>
+
+</section>
+
+</section>
+
+<!--========================================================================-->
+<section id="concepts.springdm" xreflabel="Spring DM concepts">
+	
+<title>Spring DM concepts</title>
+
+<para>Spring DM is a project which enables <emphasis>services</emphasis> to be published and consumed
+using descriptions written in XML.
+@webserv@ has Spring DM built-in.</para>
+
+<para>The XML descriptions reside in files with extension <literal>.xml</literal> in the
+bundle&rsquo;s <literal>META-INF/spring</literal> sub-directory.</para>
+
+<para>To publish a service, an <literal>&lt;osgi:service&gt;</literal> tag is used, specifying the
+implementation class of the service and the interface class to be used.
+Spring DM constructs an instance of the implementation class like any other
+Spring bean and then publishes that instance in the OSGi service registry under the interface when the bundle is started.
+</para>
+
+<para>To consume a service, an <literal>&lt;osgi:reference&gt;</literal> tag is used and the
+service may be passed into other Spring beans using Spring&rsquo;s dependency
+injection facilities.</para>
+
+<para>Spring DM automatically creates proxies for OSGi services so that the actual service
+object may come and go at runtime.
+If a service disappears, any proxies to the service will wait for the service to re-appear.
+This effect is known as <emphasis>damping</emphasis>.</para>
+
+<para>When a bundle is started, Spring DM builds the application contexts
+specified by the XML descriptions, creates proxies for the specified services, and publishes
+the specified services to the OSGi service registry.</para>
+
+<para>When a bundle is stopped, Spring DM retracts any services it published on behalf of the bundle
+and closes the bundle&rsquo;s application contexts.
+Web Server turns off damping of a service proxy while the proxy&rsquo;s application context
+is being closed.</para>
+
+</section>
+
+<!--========================================================================-->
+<section id="concepts.dmserver">
+	
+<title>@webserv@ concepts</title>
+
+<para>Several @webserv@ concepts are essential for developing an application.</para>
+
+<section>
+		
+<title>PAR files</title>
+
+<para>@webserv@ provides a way of grouping together a collection
+of OSGi bundles which comprise a single application.
+These bundles are placed in a JAR file with extension <quote><literal>.par</literal></quote>. This is called a PAR file.</para>
+
+<para>All the bundles in a PAR file are resolved together and so mutual dependencies are permitted.</para>
+
+<para>At runtime a PAR file provides a <emphasis>scope</emphasis> in the sense that bundles
+inside the PAR file may depend on packages and services outside the PAR file,
+but bundles outside the PAR file may not depend on packages and services
+provided by the PAR file.</para>
+
+</section>
+
+<section>
+		
+<title>Deployment</title>
+
+<para>PAR files or individual bundles are <emphasis>deployed</emphasis> into @webserv@ by dropping them into a <quote>pickup</quote>
+directory or using the Administration Console web application provided with @webserv@.
+During deployment, the bundle or bundles are installed into OSGi, resolved together, and then started together.</para>
+
+</section>
+
+<section>
+		
+<title>Personalities</title>
+
+<para>@webserv@ supports multiple application programming models known as <emphasis>personalities</emphasis>.
+Each bundle of an application has a personality. For example, a bundle providing a servlet has the 
+<emphasis>web</emphasis> personality. Bundles which provide packages and services using the OSGi and Spring 
+DM programming models have the <emphasis>bundle</emphasis> personality.</para> 
+
+<para>When a bundle is deployed into @webserv@, personality-specific transformations
+are applied to the bundle&rsquo;s contents, including its manifest, and the bundle is made available for use in
+a personality-specific way.
+For example, a bundle with the web personality has some package imports added to its manifest and its servlet is automatically 
+made available
+for dispatching from HTTP requests.</para>
+
+</section>
+
+</section>
+
+</chapter>

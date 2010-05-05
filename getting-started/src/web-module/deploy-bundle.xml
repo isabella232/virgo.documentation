@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="deploy.bundle">
+	<title>Deploying a bundle</title>
+	<para>
+		During development time, it can be helpful to run an application inside of the deployment container. In the case
+		of @greenpages@, this means deploying the <literal>greenpages.web</literal> bundle to the @virgo@ @webserv@.
+	</para>
+
+	<section id="deploy.bundle.deploy.and.start">
+		<title>Deploying the <literal>greenpages.web</literal> bundle and starting the @webserv@</title>
+		<para>
+			The @webserv@ can be used while working in Eclipse. 
+			In this step the <literal>greenpages.web</literal> bundle is deployed and the @webserv@ instance is started.
+		</para>
+		
+		<para>
+			Drag the <literal>greenpages.web</literal> project from the <emphasis>Package Explorer</emphasis> and drop it
+			on the @webserv@ instance in the <emphasis>Servers</emphasis> view.
+			Because <literal>greenpages.web</literal> is a web bundle the server will start automatically, and
+			a browser window may open.
+			Expand the @webserv@ instance and the bundle <literal>greenpages.web</literal>will be listed as a child.
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/web-module/web-bundle-deployed.png" format="PNG" align="center" width="11cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/web-module/web-bundle-deployed.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+		</para>
+		
+		<para>
+			(Eclipse may open its internal web browser as this is a web project. You can choose to use this or just 
+			close it and use another browser later.)
+		</para>
+		
+		<para>
+			If deployment has gone successfully the console will contain the message 
+			<literal>&lt;DE0005I&gt; Started bundle 'greenpages.web' version '2.0.0'.</literal>
+		</para>
+		<para>
+			 Leave the server instance running and go to the next step.
+		</para>
+	</section>
+
+	<section id="deploy.bundle.web.module.manifest">
+		<title>Creating web module metadata</title>
+		<para>
+			The @webserv@ has special knowledge of web application bundles. In this step web bundle
+			metadata is added to the bundle and a web browser is used to navigate to it.
+		</para>
+		
+		<para>
+			Open a web browser and navigate to
+			<ulink url="http://localhost:8080/greenpages">http://localhost:8080/greenpages</ulink>.
+			If the link is not currently served by any bundle in the @webserv@ there may be an error displayed:
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/web-module/greenpages-home-fail.png" format="PNG" align="center" width="12cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/web-module/greenpages-home-fail.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+			or else there is a blank page displayed. No pages are served.
+		</para>
+
+		<para>
+			To fix this issue the <literal>greenpages.web</literal> bundle must be declared to be a web bundle and a
+			context path defined.
+		</para>
+		
+		<para>
+			Open the <filename>template.mf</filename> file (at the top level under the <literal>greenpages.web</literal> project)
+			and add (and save) the following entry (using the <emphasis>template.mf</emphasis> pane of the editor):
+<programlisting><![CDATA[Web-ContextPath: greenpages]]>
+</programlisting>
+			Be careful not to insert any blank lines or trailing spaces in this file.
+		</para>
+		
+		<para>
+			Once added, right-click on the <literal>greenpages.web</literal> project and select 
+			<menuchoice><guimenu>Spring Tools</guimenu><guimenuitem>Run generation of MANIFEST.MF file</guimenuitem></menuchoice>. 
+			This will use a tool called Bundlor (included in @sts.short@) to update the OSGi metadata in the
+			<filename>MANIFEST.MF</filename> file. Once Bundlor has finished running, open the
+			<filename>META-INF/MANIFEST.MF</filename> file in the <literal>src/main/webapp</literal> folder.
+			</para>
+			
+			<para>It should look something like the following:
+<programlisting><![CDATA[Manifest-Version: 1.0
+Bundle-Name: GreenPages Web
+Import-Library: org.springframework.spring;version="[3.0, 3.1)"
+Import-Bundle: com.springsource.org.apache.taglibs.standard;version="[
+ 1.1.2,1.3)"
+Web-ContextPath: greenpages
+Import-Package: org.eclipse.virgo.server.web.dm;version="[2.0.0, 3.0.0)
+ ",freemarker.cache;version="[2.3.15,2.3.15]",javax.servlet.jsp.jstl.c
+ ore;version="[1.1.2,1.2.0)",javax.sql,org.apache.commons.dbcp,org.spr
+ ingframework.core.io,org.springframework.stereotype,org.springframewo
+ rk.web.bind.annotation,org.springframework.web.context,org.springfram
+ ework.web.servlet
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: greenpages.web
+Tool: Bundlor 1.0.0.M6
+Bundle-Version: 2.0]]>
+</programlisting>
+			although the order of the entries may be different.
+		</para>
+		<para>
+			The server (if it is still running) will track these changes and automatically refresh
+			(or restart) the <literal>greenpages.web</literal> bundle as required.
+			Observe the context path for the web bundle being announced
+			(it should now be <literal>'/greenpages'</literal>
+			whereas previously it would have been a default context path
+			derived from the bundle name: <literal>'/greenpages.web'</literal>).
+		</para>
+		
+		<para>
+			By default, Bundlor generates <literal>Import-Package</literal> entries with no version range specified.
+			In the absence of a version range, the OSGi default (which denotes <emphasis>any</emphasis> version) is used.
+			While this is very flexible it is generally a good idea to restrict an import by specifying a narrower range.
+			This can be achieved by providing Bundlor with some additional information in the manifest template,
+			as in the next step.
+		</para>
+		
+		<para>
+			Add (and save) the following entry to the <filename>template.mf</filename> file:
+<programlisting><![CDATA[Import-Template: 
+ org.springframework.*;version="[3.0.0, 3.1.0)"]]>
+</programlisting>
+			(Again, be careful not to leave trailing spaces on lines or insert blank lines in this file.)
+		</para>
+		
+		<para>
+			Re-run the MANIFEST.MF generation as described earlier.
+			In the <filename>MANIFEST.MF</filename> file the <literal>Import-Package</literal> entry
+			should now have version ranges on each of the <literal>springframework</literal> packages:
+<programlisting><![CDATA[Import-Package: org.eclipse.virgo.server.web.dm;version="[2.0.0, 3.0.0)
+ ",freemarker.cache;version="[2.3.15,2.3.15]",javax.servlet.jsp.jstl.c
+ ore;version="[1.1.2,1.2.0)",javax.sql,org.apache.commons.dbcp,org.spr
+ ingframework.core.io;version="[3.0.0, 3.1.0)",org.springframework.ste
+ reotype;version="[3.0.0, 3.1.0)",org.springframework.web.bind.annotat
+ ion;version="[3.0.0, 3.1.0)",org.springframework.web.context;version=
+ "[3.0.0, 3.1.0)",org.springframework.web.servlet;version="[3.0.0, 3.1
+ .0)"]]>
+</programlisting>
+		</para>
+		
+		<para>
+			Behind the scenes the @webserv@ Tools have refreshed the deployed bundle as changes were made. Once again
+			navigate to
+			<ulink url="http://localhost:8080/greenpages">http://localhost:8080/greenpages</ulink>.
+			This page now displays an entry field.
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/web-module/greenpages-home-success.png" format="PNG" align="center" width="12cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/web-module/greenpages-home-success.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+			Put any characters into the entry field and press <emphasis>Submit</emphasis>. 
+			This should display a <quote>404</quote> error page with the description:
+<programlisting><![CDATA[description   The requested resource () is not available.]]></programlisting>
+			This is because there is no search page (<literal>search.htm</literal>) to process this request yet.
+			The next section will address this.
+		</para>
+	</section>
+</section>

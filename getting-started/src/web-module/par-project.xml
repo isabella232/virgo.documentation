@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="par.project">
+	<title>Creating a PAR</title>
+	<para>
+		At the end of the previous step, the @webserv@ instance was started 
+    	and the <literal>greenpages.web</literal> bundle deployed.
+		This bundle shows a static home page but a search value causes an error. 
+		The error appears because the URL for that search is not serviced by the controller.
+		The application logic behind the search request is not in the <literal>greenpages.web</literal> project but 
+		in another project called <literal>greenpages.app</literal>.
+		This section creates the <literal>greenpages.app</literal> project
+		and then combines the two projects into a PAR so as to deploy them together as a single unit.
+	</para>
+	
+	<para>
+		While executing these instructions it is not necessary to remove bundles from the @webserv@ instance, 
+		nor to stop the instance.
+		As changes are made the bundle will be refreshed (or redeployed) and the server instance
+		may report errors if the changes are incomplete.
+		These may safely be ignored.
+		Alternatively, the <literal>greenpages.web</literal> bundle can be removed from the @webserv@ instance, 
+		or the server can be stopped while these changes are made.
+	</para>
+
+	<section id="par.project.importing.project">
+		<title>Importing the <literal>greenpages.app</literal> project</title>
+		<para>
+			In this step, the <literal>greenpages.app</literal> project is imported which contains the business
+			interfaces (and stub implementations of these interfaces).
+		</para>
+
+		<para>
+			In the same way that the starting <literal>greenpages.web</literal> project was imported
+			(see <xref linkend="controller"/>)
+			import the <literal>$GREENPAGES_HOME/start/greenpages.app</literal> project.
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/web-module/import-greenpages-app.png" format="PNG" align="center" width="12cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/web-module/import-greenpages-app.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+		</para>
+		<para>
+			When Eclipse finishes importing the project, go to the next step.
+		</para>
+	</section>
+
+	<section id="par.project.add.implementation">
+		<title>Adding the controller implementation</title>
+		<para>
+			The controller implementation will depend on the <interfacename>Directory</interfacename> and
+			<interfacename>Listing</interfacename> interfaces found in the <literal>greenpages.app</literal> project. In
+			this step, the implementation is added.
+		</para>
+
+		<para>
+			Open the <classname>@greenpages@Controller</classname> class. 
+			Add the following field and methods to the class:
+<programlisting language="java"><![CDATA[@Autowired
+private Directory directory;
+
+@RequestMapping("/search.htm")
+public List<Listing> search(@RequestParam("query") String query) {
+  return this.directory.search(query);
+}
+
+@RequestMapping("/entry.htm")
+public Listing entry(@RequestParam("id") int id) {
+  return this.directory.findListing(id);
+}]]>
+</programlisting>
+			Add the (<emphasis>Quick Fix</emphasis>) suggested imports for the annotations <classname>Autowired</classname> 
+			and <classname>RequestParam</classname>, 
+			and choose the import for <classname>List&lt; &gt;</classname> from <classname>java.util.List</classname>.
+		</para>
+		<para>
+			Eclipse will not be able to suggest import statements for the
+			<interfacename>Listing</interfacename> and <interfacename>Directory</interfacename> types. This is because
+			the <literal>greenpages.web</literal> and <literal>greenpages.app</literal> projects are not linked together
+			and therefore cannot see each other&rsquo;s types.
+		</para>
+		<para>
+			Proceed to the next step.
+		</para>
+	</section>
+
+	<section id="par.project.new.par">
+		<title>Creating a PAR project</title>
+		<para>
+			In @webserv@, applications consisting of multiple bundles can be packaged as part of a PAR.
+			In this step a PAR project
+			containing the <literal>greenpages.web</literal> and <literal>greenpages.app</literal> bundles is 
+			created and deployed to the server.
+		</para>
+		
+		<para>
+			Right-click in the <emphasis>Package Explorer</emphasis> and select <menuchoice><guimenu>New</guimenu>
+			<guimenuitem>Project…</guimenuitem></menuchoice>. In the dialog that opens select
+			<menuchoice><guimenu>@virgo@ @webserv@</guimenu><guimenuitem>PAR Project</guimenuitem></menuchoice> and press
+			<emphasis>Next</emphasis>:
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/web-module/new-par-project.png" format="PNG" align="center" width="9cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/web-module/new-par-project.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+		</para>
+		<para>
+			In the New PAR Project dialog, ensure the <emphasis>Use default location</emphasis> option is unchecked,
+			name the project <literal>greenpages</literal>, set the location to
+			<filename>$GREENPAGES_HOME/start/greenpages</filename> and press <emphasis>Next</emphasis>.
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/web-module/create-par-project.png" format="PNG" align="center" width="9cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/web-module/create-par-project.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+		</para>
+		<para>
+			In the next dialog, some of the PAR properties are pre-populated.
+			Change the Application Name to <literal>Greenpages PAR</literal> and the Version to
+			<literal>2.0.0</literal>, then
+			ensure that the <emphasis>Target Runtime</emphasis>
+			is set to <emphasis>Virgo Web Server (Runtime) v2.0</emphasis> and press <emphasis>Next</emphasis>.
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/web-module/par-content.png" format="PNG" align="center" width="10cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/web-module/par-content.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+		</para>
+		
+		<para>
+			In the next dialog, select the <literal>greenpages.app</literal> and <literal>greenpages.web</literal>
+			bundles so that they are contained in the PAR and press <emphasis>Finish</emphasis>.
+			<mediaobject>
+				<imageobject role="fo">
+					<imagedata fileref="images/web-module/bundle-references.png" format="PNG" align="center" width="9cm"/>
+				</imageobject>
+				<imageobject role="html">
+					<imagedata fileref="images/web-module/bundle-references.png" format="PNG" align="center"/>
+				</imageobject>
+			</mediaobject>
+			The project <literal>greenpages.web</literal> still shows errors; these are soon to be fixed.
+		</para>
+		
+		<para>
+			The package explorer view will now show the following:
+			<mediaobject>
+				<imageobject role="fo">
+					<imagedata fileref="images/web-module/package-explorer-par.png" format="PNG" align="center" width="7cm"/>
+				</imageobject>
+				<imageobject role="html">
+					<imagedata fileref="images/web-module/package-explorer-par.png" format="PNG" align="center"/>
+				</imageobject>
+			</mediaobject>
+		</para>
+
+		<para>
+			PAR project creation is complete, go to the next section.
+		</para>
+	</section>
+</section>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="introduction">
+	<title>Introduction to the @product.name@</title>
+    <titleabbrev>Introduction to @short.product.name@</titleabbrev>
+	<section id="introduction-preface">
+		<title>Overview</title>
+		<para>
+			In this chapter, we provide an overview of the @product.name@ focusing
+			on what it is, what benefits it provides to developers and administrators,
+			and why you should use it. 
+		</para>
+	</section>
+	<section id="introduction-what">
+		<title>What is the @product.name@?</title>
+		<para>
+	  	    The @product.name@, or @short.product.name@ for short, is the runtime portion of the @umbrella.product.name@.
+	        It is a lightweight, modular, OSGi-based runtime that provides a complete packaged solution for developing,
+	        deploying, and managing enterprise applications. 
+			By leveraging several best-of-breed technologies and improving upon
+			them, the @short.product.name@ offers a compelling solution to develop and deploy
+			enterprise applications. 
+		</para>
+		<section id="introduction-constituents">
+			<title>What makes up the @product.name@?</title>
+			<para>
+				The @product.name@ is built on top of the following core technologies: 
+			</para>
+			<itemizedlist>
+				<listitem><ulink url="http://www.springframework.org/">Spring Framework</ulink>, obviously!</listitem>
+				<listitem><ulink url="http://tomcat.apache.org/">Tomcat</ulink> as the web container.</listitem>
+				<listitem><ulink url="http://www.osgi.org/Specifications/HomePage">OSGi R4.2</ulink>.</listitem>
+				<listitem><ulink url="http://www.eclipse.org/equinox/">Equinox</ulink> as the OSGi implementation.</listitem>
+				<listitem><ulink url="http://www.springframework.org/osgi/">Spring Dynamic Modules for OSGi</ulink> for working with OSGi in a Spring application.</listitem>
+				<listitem><ulink url="http://www.springsource.com/products/sts">SpringSource Tool Suite</ulink> for developing applications.</listitem>
+			</itemizedlist>
+			<para>
+				Note, however, that the @product.name@ isn&rsquo;t just a combination
+				of these technologies. Rather, it integrates and extends these
+				technologies to provide many features essential for developing,
+				deploying, and managing today&rsquo;s enterprise Java applications.
+			</para>
+		</section>
+		<para>
+			The following diagram presents a high-level overview of the @short.product.name@&rsquo;s architecture. 
+		</para>
+		<para>
+			<imagedata fileref="images/introduction-architecture.png"/>
+		</para>
+		<para>
+			At the heart of the @product.name@ is the @kernel.product.name@ or @kernel.product.name.short@. 
+			The @kernel.product.name.short@ is an OSGi-based kernel that takes full advantage of the modularity 
+			and versioning of the OSGi platform. The @kernel.product.name.short@ builds on Equinox and extends its capabilities for
+			provisioning and library management, as well as providing core functionality for the @short.product.name@.
+		</para>
+		<para>
+			To maintain a minimal runtime footprint, OSGi bundles are installed on demand by the
+			@kernel.product.name.short@ provisioning subsystem. This allows for an application to be installed into a running
+			@short.product.name@ and for its dependencies to be satisfied from an external repository. Not only
+			does this remove the need to manually install all your application dependencies, which
+			would be tedious, but it also keeps memory usage to a minimum.
+		</para>
+		<para>
+			As shown in the figure, @kernel.product.name.short@ runs on top of Equinox within a standard Java
+			Virtual Machine. Above the @kernel.product.name.short@ is a layer of subsystems which contribute functionality
+			to the @short.product.name@. Subsystems are configured to run for various <emphasis>profiles</emphasis>
+			and typically provide additional services to the basic OSGi container
+			such as serviceability,	management, and personality-specific deployment.
+		</para>
+		<para>
+			In the @product.name@, applications are modular and each module has a
+			personality that describes what kind of module it is: web, batch, web service, etc. 
+			The @short.product.name@ deploys modules of each personality in a personality-specific manner. 
+			For example, web modules are configured in Tomcat with web context. 
+			Each module in the application can be updated independently of the other modules 
+			whilst retaining the identity of being part of the larger application. 
+			Whatever kind of application you are building, the programming model remains standard
+			Spring and Spring DM.
+		</para>
+		<para>
+			Version @bundle.version@ of the @product.name@ supports the <emphasis>bundle</emphasis>,
+			<emphasis>web</emphasis>, and <emphasis>WAR</emphasis> personalities, which enable
+			you to build sophisticated web applications. The WAR personality includes support for
+			standard Java EE WARs, "shared library" WARs, and "shared services" WARs, each of
+			which will be covered in greater detail in <xref linkend="architecture" />. Future
+			releases will include support for more personalities such as batch, web services, etc.
+		</para>
+	</section>
+
+	<section id="introduction-why">
+		<title>Why the @product.name@?</title>
+		<para>
+			You could deploy a web application in a stand-alone servlet engine or application server.
+			Or you could even deploy directly in an OSGi container such as Equinox. However,
+			deploying in the @product.name@ offers a number of key benefits that make it both more
+			appealing and more suitable for enterprise application development.
+		</para>
+
+		<section id="introduction-unified-deployment">
+			<title>Deployment options and migration paths</title>
+			<para>
+				While many applications deployed in the @product.name@ will take advantage
+				of OSGi capabilities, not all applications need such sophistication.
+				For example, development teams may initially choose to continue packaging
+				existing web applications as standard WAR files and then gradually migrate
+				toward a fully OSGi-based packaging and deployment model. The @product.name@
+				makes such migrations easy for developers by supporting multiple packaging
+				and deployment formats. These formats and migration strategies are discussed
+				in greater detail in <xref linkend="migrating-to-osgi" /> and
+				<xref linkend="formtags-case-study" />. 
+			</para>
+		</section>
+
+		<section id="introduction-simplified-deployment">
+			<title>Simplified development and deployment of OSGi-based applications</title> 
+			<para>
+				Prior to the release of the @product.name@, developing and deploying OSGi
+				applications involved inherent complexity such as:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<emphasis>Obtaining OSGi bundles for popular Java libraries:</emphasis>
+					For optimal benefits, every technology you use in an OSGi application must
+					be packaged as OSGi bundles. Currently, this involves manually converting
+					JAR files into bundles and making sure that any libraries needed by those
+					bundles are also available as OSGi bundles.
+				</listitem>
+				<listitem>
+					<emphasis>Package management complexity:</emphasis>
+					OSGi bundles use other bundles through <code>Import-Package</code> manifest headers.
+					Many applications use a set of common technologies (e.g., an ORM solution,
+					a web framework, etc.). Combining these two characteristics leads to duplicated
+					configuration in the form of repeated and verbose <code>Import-Package</code> statements.
+				</listitem>
+				<listitem>
+					<emphasis>Lack of application-level isolation:</emphasis>
+					In OSGi everything is a bundle, and all bundles share the same OSGi Service Registry.
+					To highlight how conflicts can arise between applications and their services in this
+					shared service registry, consider the following scenarios.
+					<itemizedlist>
+						<listitem>
+							Application <code>A</code> is comprised of bundles <code>B</code> and <code>C</code>. 
+							In a standard OSGi environment, if you attempt to install two instances of the same
+							version of application <code>A</code> (i.e., two sets of bundles <code>B</code> and
+							<code>C</code>), a clash will occur, because you cannot deploy multiple bundles with
+							the same <code>Bundle-SymbolicName</code> and <code>Bundle-Version</code> combination.
+						</listitem>
+						<listitem>
+							Application <code>A1</code> is comprised of bundles <code>B1</code> and <code>C1</code>. 
+							Similarly, application <code>A2</code> is comprised of bundles <code>B2</code> and <code>C2</code>.
+							Each bundle has a unique combination of <code>Bundle-SymbolicName</code> and <code>Bundle-Version</code>.
+							Bundles <code>B1</code> and <code>B2</code> both export service <code>S</code> which
+							is imported by both <code>C1</code> and <code>C2</code>. In contrast to the previous
+							example, there is no conflict resulting from duplicate 
+							<code>Bundle-SymbolicName</code>/<code>Bundle-Version</code> combinations; however,
+							there is a clash for the exported service <code>S</code>. 
+							Which service <code>S</code> will bundles <code>C1</code> and <code>C2</code> end up
+							using once they are installed?
+							Assuming bundles <code>B1</code> and <code>C1</code> are intended to work together, 
+							you would not want bundle <code>C1</code> to get a reference to service <code>S</code>
+							from bundle <code>B2</code>, because it is installed in a different logical application.
+							On the contrary, you typically want bundle <code>C1</code> to get a reference to 
+							service <code>S</code> exported by bundle <code>B1</code>, but in a standard OSGi environment
+							this may not be the case.
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</itemizedlist>
+			<para>
+				Furthermore, since standard OSGi does not define a notion of an application as a set of bundles,
+				you cannot deploy or undeploy an application and its constituent bundles as a single unit.
+			</para>
+			<para>
+				The @product.name@ introduces a number of features to solve these issues:
+			</para>
+			<itemizedlist>
+				<listitem>
+					A full set of OSGi bundles for many popular Java libraries to get you
+					started quickly with creating OSGi applications.
+				</listitem>
+				<listitem>
+					An OSGi library concept that obviates the need to
+					duplicate verbose <code>Import-Package</code> statements.
+				</listitem>
+				<listitem>
+					The PAR packaging format which offers
+					application-level isolation and deployment.
+				</listitem>
+				<listitem>
+					The concept of a plan, which is an XML file that lists a collection of bundles that @product.name@ should load together as a single application.  Conceptually, plans are very like PARs, except that a plan describes the contents of the application rather than a PAR that actually contains them.
+				</listitem>
+			</itemizedlist>
+		</section>
+
+		<section id="introduction-diagnostics">
+			<title>Enhanced diagnostics during deployment and in production</title>
+			<para>
+			    Identifying why an application won&rsquo;t deploy or which particular library
+			    dependencies are unsatisfied is the cause of many headaches!
+			    Similarly, production time errors that don&rsquo;t identify the root cause are
+			    all too familiar to Java developers. The @short.product.name@ was designed from the
+			    ground up to enable tracing and First Failure Data Capture (FFDC) that
+			    empower developers with precise information at the point of failure to
+			    fix the problem quickly.
+			</para>
+		</section>
+
+	</section>
+</chapter>

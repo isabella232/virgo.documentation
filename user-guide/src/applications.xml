@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="deployment">
+	<title>Working with Applications</title>
+
+	<section id="deployment-deploying">
+		<title>Deploying Artifacts</title>
+		<para>
+			In the context of @product.name@, <emphasis>deploying</emphasis> refers to installing an artifact to the server and then starting it to make it available to users.  Typically, when you install an artifact, @short.product.name@ automatically starts it as long as the server is able to successfully resolve all its dependencies.  For this reason, the terms <emphasis>deploying</emphasis> and <emphasis>installing</emphasis> are often used interchangeably. 
+		</para>
+		<para>You deploy artifacts to @product.name@ using either the hot-deploy directory on the file system or by using the Admin Console.  The artifacts that you can deploy to @short.product.name@ are:
+		</para>
+		<itemizedlist>
+		  <listitem>Bundles, including Web applications</listitem>
+		  <listitem>PARs</listitem>
+		  <listitem>Plans</listitem>
+		  <listitem>Configuration Files</listitem>
+		</itemizedlist>
+		<section id="deployment-deploying-hot">
+			<title>Hot Deploy</title>
+			<para>
+				To hot deploy an artifact, copy it into the pickup directory (by default <literal>$SERVER_HOME/pickup</literal>):
+			</para>
+			<programlisting>prompt$ cd /home/applications
+prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
+			<para>
+				When the artifact is hot deployed, messages similar to the following appear in the log file:
+			</para>
+			<screen>[2009-12-10 06:41:01.021] fs-watcher          &lt;HD0001I&gt; Hot deployer processing 'CREATED' event for file 'helloWorld.war'.
+[2009-12-10 06:41:01.087] fs-watcher          &lt;DE0000I&gt; Installing bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:41:01.274] fs-watcher          &lt;DE0001I&gt; Installed bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:41:01.397] fs-watcher          &lt;DE0004I&gt; Starting bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:41:01.414] Thread-3            &lt;WE0000I&gt; Starting web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2009-12-10 06:41:01.537] Thread-3            &lt;WE0001I&gt; Started web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2009-12-10 06:41:01.550] start-signalling-1  &lt;DE0005I&gt; Started bundle 'helloWorld' version '0.0.0'.</screen>
+			<para>
+				If there is a problem with the deployment, such as the server being unable to resolve all dependencies, the console and log both show an error message to help you with troubleshooting.
+			</para>
+			<para>If there are no problems, @short.product.name@ automatically starts the artifact so that it is immediately available to users.
+			</para>
+		</section>
+
+		<section id="deployment-deploying-manual">
+			<title>Deploying Using the Admin Console</title>
+			<para>
+				The Admin Console allows you to upload a file, which will be deployed automatically, from your local file system to the @product.name@. As soon as @product.name@ deploys the artifact,  it appears in the list of artifacts in the Admin Console.  Note that the GUI for uploading varies according to the browser and operating system you use.
+			</para>
+
+			<para>See <link linkend="admin-console-install-artifacts">Installing a New Artifact</link> for details about using the Admin Console to install (deploy) an artifact.  See <link linkend="admin-console">The Web Admin Console</link> for general informatin about the Admin Console.</para> 
+		</section>
+
+		<section id="deployment-deploying-happens">
+			<title>What Happens When You Deploy</title>
+			<para>
+				When you deploy an artifact, either using hot-deployment or the Admin Console, Web Server copies the file to its work directory (<literal>SERVER_HOME/work</literal>) and registers it in its internal registry. 
+				The server then checks any dependencies the artifact might have to see if
+				deployment can go ahead, and if all dependencies are resolved, @product.name@ starts the artifact.
+				Because of all these additional internal activities, you should NOT simply copy the artifact into the <literal>work</literal> directory and assume it will be deployed, because @product.name@ will not do so.
+			</para>
+		</section>
+		<section id="deployment-deploying-ordering">
+			<title>Deployment Ordering</title>
+			<para>
+				When deploying bundles that have dependencies, it is important 
+				that you deploy them in the correct order. @product.name@ 
+				honors this ordering when it redeploys the artifacts on startup. 
+			</para>
+			<para>
+				If you use hot deployment to deploy your artifacts, be sure to copy the corresponding files into the pickup
+				directory one-by-one. Copying the files in one group, for example by using a single <literal>cp</literal> command. provides no guarantees of ordering.
+			</para> 
+		</section>
+		<section id="deployment-deploying-restrictions">
+			<title>Restrictions</title>
+			<para>
+				The
+				@product.name@
+				does not support deploying fragment bundles.
+			</para>
+		</section>
+	</section>
+
+	<section id="deployment-undeploy">
+		<title>Undeploying Artifacts</title>
+		<para>
+			You undeploy artifacts from @product.name@ by using either the hot-deploy directory on the file system, or the Admin Console.
+		</para>
+		<para><emphasis role="bold">Note:</emphasis>  As with deploying, in this guide the terms <emphasis>undeploying</emphasis> and <emphasis>uninstalling</emphasis> are used interchageably.</para>
+
+		<section id="deployment-undeploy-hot">
+			<title>Hot Undeploy</title>
+			<para>
+				To hot-undeploy an artifact, remove the corresponding file from the pickup directory (by default <literal>$SERVER_HOME/pickup</literal>):
+			</para>
+			<programlisting>prompt$ cd $SERVER_HOME/pickup
+prompt$ rm helloWorld.war</programlisting>
+			<para>
+				When @product.name@ completes the undeployment of the artifact, messages similar to the following appear in the log:
+			</para>
+			<screen>[2009-12-10 06:46:33.254] fs-watcher   &lt;HD0001I&gt; Hot deployer processing 'DELETED' event for file 'helloWorld.war'.
+[2009-12-10 06:46:33.259] Thread-3     &lt;WE0002I&gt; Stopping web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2009-12-10 06:46:33.285] Thread-3     &lt;WE0003I&gt; Stopped web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2009-12-10 06:46:33.290] fs-watcher   &lt;DE0010I&gt; Stopping bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:46:33.295] fs-watcher   &lt;DE0011I&gt; Stopped bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:46:33.302] fs-watcher   &lt;DE0013I&gt; Uninstalling bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:46:33.319] fs-watcher   &lt;DE0014I&gt; Uninstalled bundle 'helloWorld' version '0.0.0'.</screen>
+
+		</section>
+
+		<section id="deployment-undeploy-manual">
+			<title>Undeploying Using the Admin Console</title>
+			<para>
+				You can undeploy only whole artifacts from the Admin Console, or in other words, you cannot undeploy the separate modules or bundles that make up an artifact.</para>
+			<para>
+				The only artifact that you cannot undeploy from the Admin Console is the Admin Console itself. If you need to undeploy this application, you must remove it from the pickup directory (by default <literal>SERVER_HOME/pickup</literal>); the name of the artifact is <literal>org.eclipse.virgo.server.admin-2.0.0.0.plan</literal>.
+			</para>
+			<para>See <link linkend="admin-console-manage-artifacts">Viewing and Managing the Lifecycle of Deployed Artifacts</link> for details about uninstalling (undeploying) an artifact using the Admin Console.  The high-level steps are to highlight the artifact in the artifact tree then click <literal>Uninstall</literal>. </para>
+		</section>
+	</section>
+
+</chapter>

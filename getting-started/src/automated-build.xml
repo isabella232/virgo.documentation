@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="automated.build">
+	<title>Automated Build</title>
+
+	<section id="automated.build.introduction">
+		<title>Introduction</title>
+		<para>
+			One of the most important components in application development is the automated build. This permits
+			application artifacts to be created outside of the developer&rsquo;s IDE. The application can be
+			created and tested in a variety of environments including continuous integration.
+		</para>
+	</section>
+
+	<section id="automated.build.setup">
+		<title>Setting up for Automated Build</title>
+		<para>
+			Before building and deploying from the command line, it is important to clean up the artifacts that Eclipse
+			has deployed. In this section the @greenpages@ application will be undeployed within Eclipse and all of
+			the @greenpages@ bundles built from the command line.
+		</para>
+
+		<para>
+			Right-click on the <literal>greenpages</literal> application in the <literal>Servers</literal> view and
+			select <emphasis>Remove</emphasis>. Once this is complete close Eclipse: it is no longer needed.
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/automated-build/remove-application.png" format="PNG" align="center" width="9cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/automated-build/remove-application.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+		</para>
+    
+		<para>
+			Run the following command from a command prompt with the <filename>$GREENPAGES_HOME/start</filename> as the current directory. This will build
+			the individual bundles that make up the @greenpages@ application:
+			<programlisting>mvn clean install</programlisting>
+		</para>
+
+		<para>
+			The first time this is run will cause Maven to download quite a few packages. It is likely also that 
+            this does not build successfully on the first try, due to warnings from Bundlor. These warnings are due to
+            the lack of information regarding some of the packages required by <literal>greenpages.db</literal> and <literal>greenpages.web</literal>.
+            For example warnings like the following may be issued:
+<programlisting>[WARNING] Bundlor Warnings:
+[WARNING]     &lt;SB0001W&gt;: The import of package javax.sql does not specify a version.
+[WARNING]     &lt;SB0001W&gt;: The import of package org.apache.commons.dbcp does not specify a version.
+[INFO] ------------------------------------------------------------------------
+[ERROR] BUILD ERROR
+[INFO] ------------------------------------------------------------------------
+[INFO] Bundle transformer returned warnings.
+       Please fix manifest template at '/opt/greenpages-@greenpages.version@/start/greenpages.db/template.mf'
+       and try again.
+</programlisting>
+            which indicate that there is no information in the <literal>template.mf</literal> file in the <literal>greenpages.db</literal> project
+            to inform Bundlor what version of these packages to generate in the <literal>MANIFEST.MF</literal> for that bundle.
+        </para>
+
+        <para>
+            To correct these problems add the following lines to the <literal>template.mf</literal> file for 
+            the <literal>greenpages.db</literal> bundle:
+<programlisting>Import-Template: javax.sql;version="0",
+ org.apache.commons.dbcp;version="[1.2.2.osgi, 1.2.2.osgi]"
+</programlisting>
+			and, if further warnings are issued, in the <literal>template.mf</literal> file of other bundles (for example, <literal>greenpages.jpa</literal>).
+        </para>
+
+        <para>
+            When the <literal>mvn</literal> command returns successfully, go to the next step.
+		</para>
+	</section>
+
+	<section id="automated.build.create.pom">
+		<title>Create POM</title>
+		<para>
+			All of the projects except the PAR project have Maven POM files for building. In this step
+			an initial POM file for the PAR is created.
+		</para>
+
+		<para>
+			Using a text editor create a file called <filename>$GREENPAGES_HOME/start/greenpages/pom.xml</filename>.
+			Open this file and add the following skeleton to it:
+<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+    <groupId>com.springsource.dmserver</groupId>
+    <artifactId>greenpages.parent</artifactId>
+    <version>@app.version@</version>
+    <relativePath>../parent</relativePath>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.springsource.dmserver</groupId>
+  <artifactId>greenpages</artifactId>
+  <name>@greenpages@ PAR</name>
+  <packaging>par</packaging>
+
+  <dependencies>
+  </dependencies>
+
+  <build>
+    <plugins>
+    </plugins>
+  </build>
+
+</project>]]>
+</programlisting>
+			ensuring that the version numbers are consistent 
+			(for example, <literal>2.0.0.RELEASE</literal> might be <literal>2.0.1.SNAPSHOT</literal> 
+			depending on which version of <literal>greenpages</literal> being developed).
+		</para>
+		
+		<para>
+			This skeleton defines a basic configuration with a parent POM. Notice that the <literal>packaging</literal>
+			type is <literal>par</literal>. When you have created this file execute the following command from the
+			<filename>$GREENPAGES_HOME/start/greenpages</filename> directory.
+			<programlisting>mvn clean package</programlisting>
+		</para>
+		<para>
+			This command returns an error indicating that Maven does not know how to build a PAR:
+<programlisting><![CDATA[[INFO] ------------------------------------------------------------------------
+[ERROR] BUILD ERROR
+[INFO] ------------------------------------------------------------------------
+[INFO] The plugin 'org.apache.maven.plugins:maven-par-plugin' does not exist
+[INFO] or no valid version could be found
+[INFO] ------------------------------------------------------------------------]]>
+</programlisting>
+            The next step will correct this.
+		</para>
+	</section>
+
+	<section id="automated.build.par.plugin">
+		<title>Adding the <literal>par</literal> plugin</title>
+		<para>
+			Thorsten Maus contributed a Maven plugin to SpringSource (see <xref linkend="further.resources.documentation"/>) 
+			that builds a PAR file from a list of dependencies. In this step the Maven <literal>par</literal> plugin is added 
+			to properly build a PAR artifact type.
+		</para>
+		<para>
+			In the <literal><![CDATA[<build><plugins>…</plugins></build>]]></literal> section, add a plugin declaration for the
+			<literal>par</literal> plugin.
+<programlisting language="xml"><![CDATA[<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-par-plugin</artifactId>
+	<version>1.0.0.RELEASE</version>
+	<configuration>
+		<applicationSymbolicName>greenpages</applicationSymbolicName>
+		<applicationDescription>GreenPages</applicationDescription>
+	</configuration>
+</plugin>]]>
+</programlisting>
+		</para>
+		<para>
+			Declare the list of bundles to be packaged in the PAR as dependencies of the PAR project.
+<programlisting language="xml"><![CDATA[<dependency>
+  <groupId>com.springsource.dmserver</groupId>
+  <artifactId>greenpages.app</artifactId>
+  <version>${project.version}</version>
+</dependency>
+<dependency>
+  <groupId>com.springsource.dmserver</groupId>
+  <artifactId>greenpages.jpa</artifactId>
+  <version>${project.version}</version>
+</dependency>
+<dependency>
+  <groupId>com.springsource.dmserver</groupId>
+  <artifactId>greenpages.db</artifactId>
+  <version>${project.version}</version>
+</dependency>
+<dependency>
+  <groupId>com.springsource.dmserver</groupId>
+  <artifactId>greenpages.web</artifactId>
+  <version>${project.version}</version>
+  <type>war</type>
+</dependency>]]>
+</programlisting>
+		</para>
+		<para>
+		Now, run the following command.
+<programlisting>mvn clean package</programlisting>
+		</para>
+		<para>
+			This command will now complete successfully and build a PAR into <filename>target/</filename>:
+<programlisting><![CDATA[			[INFO] Scanning for projects...
+			[INFO] ------------------------------------------------------------------------
+			[INFO] Building GreenPages PAR
+			[INFO]    task-segment: [clean, package]
+			[INFO] ------------------------------------------------------------------------
+			[INFO] [clean:clean {execution: default-clean}]
+			[INFO] [resources:resources {execution: default-resources}]
+			[INFO] [par:par {execution: default-par}]
+			[INFO] Assembling Artifacts for PAR '…/start/greenpages/target/greenpages-2.0.1.SNAPSHOT.par'
+			[INFO]   Added 'greenpages.app.jar'
+			[INFO]   Added 'greenpages.jpa.jar'
+			[INFO]   Added 'greenpages.db.jar'
+			[INFO]   Added 'greenpages.web.war'
+			[INFO] [com.springsource.bundlor.:transform {execution: bundlor}]
+			[INFO] Ignored project with non-bundle packaging: [par]
+			[INFO] ------------------------------------------------------------------------
+			[INFO] BUILD SUCCESSFUL
+			[INFO] ------------------------------------------------------------------------]]>
+</programlisting>
+			Proceed to the next step.
+		</para>
+	</section>
+
+	<section id="automated.build.dependency.plugin">
+		<title>Adding the <literal>dependency</literal> plugin</title>
+		<para>
+			Maven now successfully builds the PAR for your application, however the dependencies of the PAR
+			are not apparent. 
+			In this step the Maven <literal>dependency</literal> plugin is added to
+			collect the transitive dependency graph for the PAR.
+		</para>
+		
+		<para>
+			In the <literal><![CDATA[<build><plugins>…</plugins></build>]]></literal> section 
+			(after the <literal>par</literal> plugin
+			declaration), add a plugin declaration for the <literal>dependency</literal> plugin:
+<programlisting language="xml"><![CDATA[<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-dependency-plugin</artifactId>
+  <executions>
+    <execution>
+      <id>copy-dependencies</id>
+      <phase>package</phase>
+      <goals>
+        <goal>copy-dependencies</goal>
+      </goals>
+      <configuration>
+        <outputDirectory>${project.build.directory}/par-provided</outputDirectory>
+        <overWriteIfNewer>true</overWriteIfNewer>
+		<excludeGroupIds>com.springsource.dmserver,org.apache.log4j</excludeGroupIds>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>]]>
+</programlisting>
+		</para>
+		<para>
+			A dependency on Freemarker needs to be added to the other dependancies.
+			This is required to ensure the Web 
+			bundle has the correct set of dependancies as well as the other bundles.
+			Normally they would simply be resolved 
+			transitively from the bundle projects but the &lsquo;war&rsquo; project does not pass on its dependancies; 
+			it expects 
+			them to be contained in its &lsquo;lib&rsquo; directory. 
+			For this reason its dependancies must be given explicitly. 	
+<programlisting language="xml"><![CDATA[<!-- Required for the web bundle as dependancies are not propagated up from war build types -->
+<dependency>
+	<groupId>org.freemarker</groupId>
+	<artifactId>com.springsource.freemarker</artifactId>
+	<scope>provided</scope>
+</dependency>]]>
+</programlisting>
+		</para>
+		<para>
+			The next step is to stop the Web bundle including its dependancies in a lib directory as they will be provided 
+			by the runtime enviroment. Add the following build section to the <literal>greenpages.web</literal> POM file.
+<programlisting language="xml"><![CDATA[<build>
+	<plugins>
+		<plugin>
+			<artifactId>maven-war-plugin</artifactId>
+			<version>2.1-beta-1</version>
+			<configuration>
+				<packagingExcludes>WEB-INF/lib/**</packagingExcludes>
+			</configuration>
+		</plugin>
+	</plugins>
+</build>]]></programlisting> 
+		</para>
+		<para>
+			Run the following command.
+<programlisting>mvn clean package</programlisting>
+		</para>
+		<para>
+			When the command has completed, it will have copied all of the PAR&rsquo;s dependencies into the
+			<filename>target/par-provided</filename> directory.
+            The output from Maven should include lines like these
+<programlisting><![CDATA[[INFO] [par:par]
+[INFO] Assembling Artifacts for PAR '/Users/chrisfrost/Repos/GIT/greenpages/solution/
+       greenpages/target/greenpages-solution-2.0.0.SNAPSHOT.par'
+[INFO]   Added 'greenpages.app-solution.jar'
+[INFO]   Added 'greenpages.jpa-solution.jar'
+[INFO]   Added 'greenpages.db-solution.jar'
+[INFO]   Added 'greenpages.web-solution.war']]>
+</programlisting>
+            If the dependencies are produced, proceed to the next step.
+		</para>
+	</section>
+	
+	<section id="running.tests">
+		<title>Automatically running the tests</title>
+		<para>
+			Although the application is built, and dependencies produced for separate deployment, the tests
+			are not run as part of that build.
+		</para>
+		
+		<para>
+			Add (or replace) the following plug-in entry in the <literal>pom.xml</literal> file in the <literal>parent</literal>
+			directory under <literal>start</literal>:
+<programlisting language="xml"><![CDATA[<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<configuration>
+		<includes>
+			<include>**/*Tests.java</include>
+		</includes>
+		<excludes>
+			<exclude>**/Abstract*.java</exclude>
+		</excludes>
+		<junitArtifactName>org.junit:com.springsource.org.junit</junitArtifactName>
+		<argLine>-javaagent:${user.home}/.m2/repository/org/springframework/org.springframework.instrument/3.0.0.M3/org.springframework.instrument-3.0.0.M3.jar</argLine>
+	</configuration>
+</plugin>]]></programlisting>
+			where the location of the user Maven repository is hard-coded.
+		</para>
+		
+		<para>
+			Now run <literal>mvn clean install</literal> from the <literal>start</literal> directory.
+			Observe that the tests we constructed before are now run.
+		</para>
+	</section>
+
+	<section id="automated.build.deploy.application">
+		<title>Deploying the application</title>
+		<para>
+			Maven can now build both the PAR application and the collection of dependencies required for the
+			application. In this step the PAR and dependencies are copied to the @webserv@ and the PAR is started.
+		</para>
+
+		<para>
+			Copy the JARs in the <filename>target/par-provided</filename> directory into the
+			<filename>$DMS_HOME/repository/bundles/usr/</filename> directory.
+		</para>
+		
+		<para>
+            Copy the PAR (<literal>greenpages-@app.version@.par</literal>) in the <filename>target/</filename> directory 
+            into the <filename>$DMS_HOME/pickup</filename> directory.
+		</para>
+		
+		<para>
+			Start the @webserv@. You should see output similar to:
+<programlisting><![CDATA[<DE0010I> Deployment of 'greenpages' version '@app.version@' completed.]]>
+</programlisting>
+        </para>
+
+        <para>
+        	Once deployment of the @greenpages@ application has completed, navigate to
+			<ulink url="http://localhost:8080/greenpages">http://localhost:8080/greenpages</ulink>.
+		</para>
+		
+        <para>
+            The @greenpages@ application has been built from the command line, 
+            with a complete dependency set generated for independent deployment.
+        </para>
+
+        <para>
+            The automated build and test procedure is to run <literal>mvn clean install</literal> from the 
+            base directory, generating the component bundles, and then to run <literal>mvn clean package</literal> from 
+            the <literal>greenpages</literal> directory to generate the PAR and produce all its dependencies.
+        </para>
+	</section>
+</chapter>

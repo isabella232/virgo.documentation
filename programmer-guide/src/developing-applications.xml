@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="developing-applications">
+	<title>Developing Applications</title>
+	<para>
+		Applications that take advantage of the OSGi capabilities of the @product.name@
+		are typically comprised of multiple bundles. Each bundle may have dependencies on
+		other bundles. Furthermore, each bundle exposes only certain packages and
+		services. In this chapter, we look at how to create bundles, import and export
+		appropriate functionality, and create artifacts to deploy web applications on the @product.name@. 
+	</para>
+	<section id="developing-applications-bundle">
+		<title>Anatomy of a bundle</title>
+		<tip>
+			<para>
+				This is an abbreviated introduction to OSGi bundles. Please refer to the
+				<ulink url="http://static.springframework.org/osgi/docs/current/reference/html/"> 
+				Spring Dynamic Modules for OSGi documentation</ulink> for full details.
+			</para>
+		</tip>
+		<para>
+			An OSGi bundle is simply a jar file with metadata that describe
+			additional characteristics such as version and imported and exported packages.
+		</para>
+		<para>
+			A bundle exports types and publishes services to be used by other bundles:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Types</emphasis>:
+					via the OSGi <code>Export-Package</code> directive,
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">Services</emphasis>:
+					via Spring-DM&rsquo;s <code>&lt;service ... /&gt;</code> XML namespace element.
+				</para>
+			</listitem>
+		</itemizedlist>
+
+		<para>
+			A bundle may import types and services exported by other bundles:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para><emphasis role="bold">Types</emphasis>:
+				via the OSGi <code>Import-Package</code> directive,</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Services</emphasis>:
+				via Spring-DM&rsquo;s <code>&lt;reference ... /&gt;</code> XML namespace element.</para>
+			</listitem>
+		</itemizedlist>
+
+		<para>
+			Let&rsquo;s see an example from the PetClinic sample application. The following listing shows the
+			<filename>MANIFEST.MF</filename> file for the <code>org.springframework.petclinic.infrastructure.hsqldb</code> bundle.
+		</para>
+		<programlisting>
+Manifest-Version: 1.0
+<emphasis role="bold">Bundle-ManifestVersion</emphasis>: 2
+<emphasis role="bold">Bundle-Name</emphasis>: PetClinic HSQL Database Infrastructure
+<emphasis role="bold">Bundle-SymbolicName</emphasis>: org.springframework.petclinic.infrastructure.hsqldb
+<emphasis role="bold">Bundle-Version</emphasis>: 1.0
+<emphasis role="bold">Import-Library</emphasis>: org.springframework.spring;version="[2.5,2.6]"
+<emphasis role="bold">Import-Bundle</emphasis>: com.springsource.org.apache.commons.dbcp;version="[1.2.2.osgi,1.2.2.osgi]",
+ com.springsource.org.hsqldb;version="[1.8.0.9,1.8.0.9]"
+<emphasis role="bold">Import-Package</emphasis>: javax.sql
+<emphasis role="bold">Export-Package</emphasis>: org.springframework.petclinic.infrastructure
+		</programlisting>
+		<para>
+			The <code>org.springframework.petclinic.infrastructure.hsqldb</code> bundle expresses its dependencies on
+			the <code>javax.sql</code> package, the Commons DBCP and HSQLDB bundles, and the Spring library (we will examine
+			the details of the library artifact in <xref linkend="developing-applications-defining-libraries"/>). The Commons DBCP 
+			bundle is imported at a version of exactly 1.2.2.osgi and the HSQLDB bundle is imported at a version of exactly
+			1.8.0.9. The Spring library is imported at a version between 2.5 inclusive and 2.6 exclusive.
+		</para>
+		
+		<para>
+			Note that you do not specify the bundle that will provide the imported packages.
+			The @product.name@ will examine the available bundles and satisfy the required dependencies. 
+		</para>
+		<para>
+			The following <filename>osgi-context.xml</filename> file from the PetClinic sample&rsquo;s
+			<code>org.springframework.petclinic.repository.jdbc</code> bundle declares a service published by the bundle and
+			references a service published by another bundle.
+		</para>
+		<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/osgi"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/osgi  
+        http://www.springframework.org/schema/osgi/spring-osgi.xsd
+        http://www.springframework.org/schema/beans   
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <service id="osgiClinic" ref="clinic" interface="org.springframework.petclinic.repository.Clinic" />
+    <reference id="dataSource" interface="javax.sql.DataSource"/>
+
+</beans:beans>]]></programlisting>
+		<para>
+			The <code>service</code> element publishes the <code>clinic</code> bean
+			(a regular Spring bean declared in the <filename>module-context.xml</filename> file) and specifies
+			<code>org.springframework.petclinic.repository.Clinic</code> as the type
+			of the published service.
+		</para>
+		<para>The <code>reference</code> elements define a <code>dataSource</code> bean that references
+		    a service published by another bundle with a an interface type of <code>javax.sql.DataSource</code>.
+		</para>
+	</section>
+  
+	<section id="developing-applications-packaging">
+		<title>Creating PARs and WARs</title>
+		<para>
+			The @product.name@ supports two OSGi-oriented ways of packaging applications: the PAR format 
+			and application modules (including personality-specific modules). The @short.product.name@ also supports three
+			distinct WAR deployment and packaging formats: standard Java EE WAR, Shared Libraries WAR, Shared Services WAR.
+		</para>
+		<para>
+			The @short.product.name@ also supports plans as a way to describe an application. This method is similar to a PAR in that it encapsulates all the artifacts of an application as a single unit, but differs in that a plan simply lists the bundles in an XML file rather than packaging all the bundles in a single JAR file.  The use of plans offers additional benefits to using PARs; for this reason, we recommend their use.  For details, see <link linkend="developing-applications-plans">Creating Plans</link>.
+		</para>
+		<section id="developing-applications-packaging-par">
+			<title>PARs</title>
+			<para>
+				An OSGi application is packaged as a JAR file, with extension <literal>.par</literal>. A PAR artifact offers several benefits:
+				<itemizedlist>
+					<listitem>A PAR file has an application name, version, symbolic name, and description.</listitem>
+					<listitem>The modules of a PAR file are scoped so that they cannot
+						be shared accidentally by other applications. The scope forms a boundary for automatic
+						propagation of load time weaving and bundle refresh.</listitem>
+					<listitem>The modules of a PAR have their exported packages imported by the
+						synthetic context bundle which is used for thread context class loading. So,
+						for example, hibernate will be able to load classes of any of the exported
+						packages of the modules in a PAR file using <code>Class.forName()</code> (or equivalent).</listitem>
+					<listitem>The PAR file is visible to management interfaces.</listitem>
+					<listitem>The PAR file can be undeployed and redeployed as a unit.</listitem>
+				</itemizedlist>
+			</para>	
+			<para>
+				A PAR includes one or more application bundles and its manifest specifies the following
+				manifest headers:
+				<table id="developing-applications-packaging-par-headers-table" colsep="1" frame="all" rowsep="1">
+					<title>PAR file headers</title>
+					<tgroup cols="2">
+						<colspec colwidth="2*" />
+						<colspec colwidth="3*" />
+						<thead>
+							<row>
+								<entry>Header</entry>
+								<entry>Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry><literal>Application-SymbolicName</literal></entry>
+								<entry>Identifier for the application which, in combination with Application-Version, uniquely identifies an application</entry>
+							</row>
+							<row>
+								<entry><literal>Application-Name</literal></entry>					
+								<entry>Human readable name of the application</entry>
+							</row>
+							<row>
+								<entry><literal>Application-Version</literal></entry>
+								<entry>Version of the application</entry>
+							</row>
+							<row>
+								<entry><literal>Application-Description</literal></entry>
+								<entry>Short description of the application</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+			</para>	
+			<para>
+				The following code shows an example MANIFEST.MF in a PAR file:
+			<programlisting><emphasis role="bold">Application-SymbolicName</emphasis>: com.example.shop
+<emphasis role="bold">Application-Version</emphasis>: 1.0
+<emphasis role="bold">Application-Name</emphasis>: Online Shop
+<emphasis role="bold">Application-Description</emphasis>: Example.com&rsquo;s Online Shopping Application</programlisting>
+			</para>
+		</section>
+		<section id="developing-applications-packaging-web-modules">
+			<title>Web Modules</title>
+			<para>
+				As discussed earlier, Web Modules are no longer supported in @short.product.name@. Instead, we recommend that you 
+				use Shared Service WARs or Web Bundles that are compliant with the OSGi Web Container specification.
+			</para>
+			<section id="developing-applications-packaging-web-module-to-war">
+				<title>Migrating to a Web Bundle from a Web Module</title>
+				<para>
+					To move from a Web Module to a Web Container-compliant Web Bundle you need to follow these four steps:
+					<orderedlist>
+						<listitem>Remove the <literal>Module-Type</literal> manifest header</listitem>
+						<listitem>Replace any <literal>Web-DispatcherServletUrlPatterns</literal> header with the corresponding 
+						servlet entries in <literal>web.xml</literal></listitem>
+						<listitem>Replace any <literal>Web-FilterMappings</literal> header with the corresponding filter 
+						entries in <literal>web.xml</literal></listitem>
+						<listitem>Move all content in <literal>MODULE-INF</literal> to the root of the WAR</listitem>
+					</orderedlist>
+				</para>
+				<section id="developing-applications-packaging-web-module-to-war-ds">
+					<title>Removing <literal>Web-DispatcherServletUrlPatterns</literal></title>
+					<para>
+						To remove a <literal>Web-DispatcherServletUrlPatterns</literal> header such as
+						<literal>Web-DispatcherServletUrlPatterns: *.htm</literal>, start by declaring 
+						a <classname>DispatcherServlet</classname> in <literal>web.xml</literal>:
+					</para>
+					<programlisting language="java"><![CDATA[<servlet>
+    <servlet-name>dispatcher.myapp</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+</servlet>]]></programlisting>
+					<para>
+						For every mapping in the <literal>DispatcherServletUrlPatterns</literal> header, create the 
+						corresponding <literal>servlet-mapping</literal>:
+					</para>
+					<programlisting language="java"><![CDATA[<servlet-mapping>
+    <servlet-name>dispatcher.myapp</servlet-name>
+    <url-pattern>*.htm</url-pattern>
+</servlet-mapping>]]></programlisting>
+				</section>
+				<section id="developing-applications-packaging-web-module-to-war-filter">
+					<title>Removing <literal>Web-FilterMappings</literal></title>
+					<para>
+						To remove a <literal>Web-FilterMappings</literal> header such as
+						<literal>Web-FilterMappings: myfilter;url-patterns:="*.htm"</literal>, start by declaring 
+						<classname>DelegatingFilterProxy</classname> in <literal>web.xml</literal> for each filter listed:
+					</para>
+					<programlisting language="java"><![CDATA[<filter>
+	<filter-name>myfilter</filter-name>
+	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>]]></programlisting>
+					<para>
+						For every mapping listed for the filter create the 
+						corresponding <literal>filter-mapping</literal>:
+					</para>
+					<programlisting language="java"><![CDATA[<filter-mapping>
+    <filter-name>myfilter</filter-name>
+    <url-pattern>*.htm</url-pattern>
+</filter-mapping>]]></programlisting>
+				</section>
+			</section>
+		</section>
+
+    </section><!-- end packaging -->
+
+	<section id="developing-applications-plans">
+		<title>Creating Plans</title>
+		<para>
+			Plans are similar to PARs in that they encapsulate the artifacts of an application as a single unit. As a consequence, they have similar benefits; for details of the benefits common to PARs and plans, see <link linkend="developing-applications-packaging-par">PARs</link>.
+		</para>
+		<para>
+			Plans have the following additional benefits, which is why we recommend that you use plans rather than PARs when defining an application:
+		</para>
+		<itemizedlist>
+			<listitem>@product.name@ deploys the artifacts in the plan in the order in which they are listed in the XML file, which gives you complete control over deployment order.  With a PAR, the order of deployment of the included artifacts is not guaranteed.</listitem>
+			<listitem>Plans describe their contents by reference (using an XML file) as opposed to PARs that are JAR files that physically contain the included artifacts.   For this reason, it is easier to share content between plans as well as update individual parts of a plan without having to physically repackage (re-JAR) it.</listitem>
+			<listitem>You can enable or disable whether a plan is scoped or atomic; PARs are always scoped and atomic.</listitem>
+		</itemizedlist>
+
+		<para>
+			Plans always get their dependencies from the @short.product.name@ repository.  This means, for example, that if you drop one of the plan&rsquo;s dependencies in the <code>pickup</code> directory rather than adding it to the repository, the plan will fail to deploy because it will not find the dependency.
+		</para>
+
+		<section id="developing-applications-plans-create">
+			<title>Creating the Plan XML File</title>
+			<para>
+				Plans are XML files that have a <code>.plan</code> file extension, such as <code>multi-artifact.plan</code>.  
+				The structure of the XML file is simple: 
+				the root element is <code>&lt;plan&gt;</code> with attributes specifying the name of the plan, the version, atomicity, and scoping. 
+				Then, for each artifact that makes up your application, 
+				you add a <code>&lt;artifact&gt;</code> element, using its attributes to specify the type of artifact and its name and version.  
+				The following is a simple example of a plan&rsquo;s XML file:
+			</para>
+			<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<plan name="multi-artifact.plan" version="1.0.0" scoped="true" atomic="true"
+        xmlns="http://www.springsource.org/schema/dm-server/plan"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.springsource.org/schema/dm-server/plan 
+            http://www.springsource.org/schema/dm-server/plan/springsource-dm-server-plan.xsd">
+
+    <artifact type="configuration" name="app-properties" version="1.0.0"/>
+    <artifact type="bundle" name="com.springsource.exciting.app" version="[2.0.0, 3.1.0)"/>
+
+</plan>]]></programlisting>
+			<para>
+				In the preceding example, the name of the plan is <code>multi-artifact.plan</code> and its version is <code>1.0.0</code>.  
+				The plan is both scoped and atomic.    The plan contains two artifacts: one is a bundle called <code>com.springsource.exciting.app</code> and the other is a configuration file called <code>app-properties</code>.  
+			</para>
+			<para>
+				The following table describes the attributes of the <code>&lt;plan&gt;</code> element.
+			</para>
+
+			<table id="developing-applications-plans-create-plan-attributes" colsep="1" frame="all" rowsep="1">
+				<title>Attributes of the &lt;plan&gt; Element</title>
+				<tgroup cols="3">
+					<colspec colwidth="1*" />
+					<colspec colwidth="3*" />
+					<colspec colwidth="1*" />
+					<thead>
+						<row>
+							<entry>Attribute</entry>
+							<entry>Description</entry>
+							<entry>Required?</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry><literal>name</literal></entry>
+							<entry>Specifies the name of this plan.  @product.name@ uses the name as one component of the unique identifier of this plan. </entry>
+							<entry>Yes.</entry>
+						</row>
+						<row>
+							<entry><literal>version</literal></entry>
+							<entry>Specifies the version of this plan.  You must use OSGi version specification syntax, such as <code>2.1.0</code>. @product.name@ uses the version as one component of the unique identifier of this plan. </entry>
+							<entry>Yes.</entry>
+						</row>
+						<row>
+							<entry><literal>scoped</literal></entry>
+							<entry>Specifies whether @product.name@ should install the artifacts into plan-specific scope so that only the application described by this plan has access to the artifacts. If you disable scoping, then @product.name@ installs the artifacts into the global scope, which means they are then available for access by all other deployed artifacts.  Set the attribute to <code>true</code> to enable scoping or <code>false</code> to disable it.</entry>
+							<entry>Yes.</entry>
+						</row>
+						<row>
+							<entry><literal>atomic</literal></entry>
+							<entry>Specifies whether you want to tie together the lifecycle of the artifacts in this plan. Making a plan atomic means that if you install, start, stop, or uninstall a single artifact in the plan, @product.name@ escalates the event to all artifacts in the plan. Also, in an atomic plan, @product.name@ prevents artifacts from being in inconsistent states. For example, if one artifact should fail to start, then @product.name@ stops all artifacts in the plan.  Set this attribute to <code>true</code> to enable atomicity or <code>false</code> to disable it. </entry>
+							<entry>Yes.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			<para>
+				The following table describes the attributes of the <code>&lt;artifact&gt;</code> element.
+			</para>
+			<table id="developing-applications-plans-create-artifact-attributes" colsep="1" frame="all" rowsep="1">
+				<title>Attributes of the &lt;artifact&gt; Element</title>
+				<tgroup cols="3">
+					<colspec colwidth="1*" />
+					<colspec colwidth="3*" />
+					<colspec colwidth="1*" />
+					<thead>
+						<row>
+							<entry>Attribute</entry>
+							<entry>Description</entry>
+							<entry>Required?</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry><literal>type</literal></entry>
+							<entry>Specifies the type of the artifact.  Valid values are: 
+		<itemizedlist>
+		  <listitem><code>bundle</code>: Specifies an OSGi bundle.  Use this artifact type for WAR files. </listitem>
+		  <listitem><code>configuration</code>: Specifies that the artifact is a configuration file.  Configuration files contain name/value pairs that set initial values for configuration properties of a bundle.  </listitem>
+		  <listitem><code>plan</code>: Specifies that the artifact is a plan. </listitem>
+		  <listitem><code>par</code>: Specifies that the artifact is a PAR. </listitem>
+		</itemizedlist>
+		</entry>
+
+							<entry>Yes.</entry>
+						</row>
+						<row>
+							<entry><literal>name</literal></entry>
+							<entry>Specifies the name of the artifact. 
+
+		<para>See <link linkend="artifact-names">Artifact Names</link> for guidelines for determining the name of an artifact.</para>
+							</entry>
+							<entry>Yes.</entry>
+						</row>
+						<row>
+							<entry><literal>version</literal></entry>
+							<entry>Specifies the version or range of versions of this artifact that @short.product.name@ should look up in its repositories and then install and deploy.  You must use OSGi version specification syntax, such as <code>[1.0.0, 2.0.0)</code>. </entry>
+							<entry>No.  If not specified, defaults to <code>0</code>, which in OSGi means 0 to infinity, or any version.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</section>
+
+		<section id="names-of-artifacts">
+		  	<title>Artifact Names</title>
+
+			<para>When you create a plan, you use the <code>name</code> attribute of the <code>&lt;artifact&gt;</code> element to specify the name of all the plan&rsquo;s dependencies.  This section describes how to determine the name of an artifact, which is not always obvious.</para>
+			<para>Use the following guidelines to determine the name of an artifact:</para>
+		<itemizedlist>
+		  <listitem><para><emphasis role="bold">Bundle</emphasis>: In this context, a <emphasis>bundle</emphasis> refers to a standard OSGi bundle as well as a Web application WAR file.   The name of a bundle is the value of the <code>Bundle-SymbolicName</code> header in the <code>META-INF/MANIFEST.MF</code> file of the <code>*.jar</code> or <code>*.war</code> file.   The following <code>MANIFEST.MF</code> snippet shows a bundle with name <code>com.springsource.exciting.app</code>:</para>
+		  <screen>Bundle-SymbolicName: com.springsource.exciting.app</screen>
+		  <para>If the bundle does not contain a <code>META-INF/MANIFEST.MF</code> file, then the name of the bundle is its filename minus the <code>.jar</code> or <code>.war</code> extension.</para>
+ </listitem>
+		  <listitem><para><emphasis role="bold">Configuration File</emphasis>: The name of a configuration file is its filename minus the <code>.properties</code> extension. </para></listitem>
+		  <listitem><para><emphasis role="bold">Plan</emphasis>: The name of a plan is the value of the required <code>name</code> attribute of the <code>&lt;plan&gt;</code> element in the plan&rsquo;s XML file.  In the following XML snippet, the plan name is <code>multi-artifact.plan</code>:</para> 
+		<screen>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plan name="<emphasis role="bold">multi-artifact.plan</emphasis>" version="1.0.0" scoped="true" atomic="true"
+        xmlns="http://www.springsource.org/schema/dm-server/plan"
+...</screen>
+		  </listitem>
+		  <listitem><para><emphasis role="bold">PAR</emphasis>: The name of a PAR is the value of the <code>Application-SymbolicName</code> header in the <code>META-INF/MANIFEST.MF</code> file of the <code>*.par</code> file.   The following <code>MANIFEST.MF</code> snippet shows a PAR with name <code>com.springsource.my.par</code>:</para>
+		  <screen>Application-SymbolicName: com.springsource.my.par</screen>
+		  <para>If the PAR does not contain a <code>META-INF/MANIFEST.MF</code> file, then the name of the PAR is its filename minus the <code>.par</code> extension.</para>
+		  </listitem>
+		</itemizedlist>
+		</section>
+
+		<section id="developing-applications-plans-use">
+			<title>Using the Plan</title>
+			<para>
+				Because a plan is a list of artifacts, rather than a physical file that contains the artifacts, there are a few additional steps you must perform before you deploy it to @short.product.name@.  
+			</para>
+			<orderedlist>
+				<listitem><para>Copy the artifacts that make up the plan to the <code>usr</code> repository, which by default is the <code>$DMS_HOME/repository/usr</code> directory, where <code>$DMS_HOME</code> refers to the top-level installation directory of @short.product.name@.  Note that you might have configured the server differently; in which case, copy the artifacts to your custom repository directory.</para></listitem>
+				<listitem><para>Restart @short.product.name@.</para></listitem>
+				<listitem><para>After the server has started, either use the Admin Console to deploy the plan, or manually deploy it by copying the plan&rsquo;s XML file into the <code>$DMS_HOME/pickup</code> directory. </para>
+				<para>This results in @short.product.name@ deploying the plan with the same semantics as a PAR file.</para></listitem>
+				<listitem><para>To undeploy the plan, use the Admin Console, or simply delete it from the <code>$DMS_HOME/pickup</code> directory.</para></listitem>
+			</orderedlist>
+		</section>
+
+		<section id="developing-applications-plans-scoping">
+		  <title>Plans and Scoping</title>
+		  <para>As described in previous sections, you can specify that a plan be <emphasis>scoped</emphasis>.  This means that @product.name@ installs the artifacts that make up the plan into a plan-specific scope so that only the application described by the plan has access to the artifacts. If you disable scoping, then @product.name@ installs the artifacts into the global scope, which means they are available for access by all other deployed artifacts. This section describes scoping in a bit more detail.  It also describes how you can change the default behavior of scoping, with respect to services, so that a service that is in a scope can be made globally available. </para>
+
+		   <para>If a bundle in a given scope imports a package and a bundle in the same scope exports the package, then the import may only be satisfied by the bundle in the scope, and not by any bundles outside the scope, including the global scope.   Similarly, package exports from bundles in a scope are not visible to bundles in the global scope.</para>
+
+		   <para>If a bundle in a scope uses Spring DM (or the blueprint service) to obtain a service reference and a bundle in the same scope uses Spring DM (or the blueprint service) to publish a matching service, then the service reference may only bind to the service published in the scope (and not to any services outside the scope).  Services published by bundles in a scope are not visible to bundles in the global scope. </para>
+
+		    <para>However, sometimes it is useful to make a service in a scope globally available to artifacts outside the scope.  To do this, publish the service with the <literal>com.springsource.service.scope</literal> service property set to <literal>global</literal>.  Use the <literal>&lt;service-properties&gt;</literal> child element of <literal>&lt;service&gt;</literal>, as shown in the following example: </para>
+
+		     <programlisting>&lt;service id="publishIntoGlobal" interface="java.lang.CharSequence"&gt;
+  <emphasis role="bold">&lt;service-properties&gt;
+    &lt;beans:entry key="com.springsource.service.scope" value="global" /&gt;
+  &lt;/service-properties&gt;</emphasis>
+  &lt;beans:bean class="java.lang.String"&gt;
+    &lt;beans:constructor-arg value="foo"/&gt;
+  &lt;/beans:bean&gt;
+&lt;/service&gt;</programlisting>
+
+		</section>
+
+	</section><!-- end plans -->
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+
+	<section id="developing-applications-configuration-artifacts">
+		<title>Creating and Using Configuration Artifacts</title>
+		<para>Applications typically include some sort of configuration data that might change depending on the environment in which the application is deployed.  For example, if an application connects to a database server using JDBC, the configuration data would include the JDBC URL of the database server, the JDBC drvier, and the username and password that the application uses to connect to the database server.    This information often changes as the application is deployed to different computers or the application moves from the testing phase to the production phase.</para>
+		<para>@product.name@ provides a feature called <emphasis>configuration artifacts</emphasis> that makes it very easy for you to manage this configuration data.  A configuration artifact is simply a properties file that is made available at runtime using the OSGi <literal>ConfigurationAdmin</literal> service.   When you create this properties file, you set the values of the properties for the specific environment in which you are going to deploy your application, and then update the metadata of your Spring application to use the properties file.  You then deploy the application and properties file together, typically as a <link linkend="developing-applications-plans">plan</link>.  @product.name@ automatically creates a configuration artifact from the properties file, and you can manage the lifecycle of this configuration artifact in the same way you manage the lifecycle of PARs, bundles, and plans, using both the Admin Shell and Admin Console.  Additionally, @short.product.name@ subscribes your application for notification of any refresh of the configuration artifact and the application can then adapt accordingly, which means you can easily <emphasis>change</emphasis> the configuration of your application without redeploying it.  </para>
+		<para>In sum, configuration artifacts, especially when combined with plans, provide an excellent mechanism for managing external configuration data for your applications.</para>
+
+		<para>The following sections describe the format of the configuration artifact, how to update the Spring application context file of your application so that it knows about the configuration artifact, and finally how to include it in a plan alongside your application.  </para>
+
+	        <para>As an example to illustrate the configuration artifact feature, assume that you have a Spring bean called <literal>PropertiesController</literal> whose constructor requires that four property values be passed to it, as shown in the following snippet of Java code:</para>
+	  <programlisting>@Controller
+public class PropertiesController {
+
+    private final String driverClassName;
+    private final String url;
+    private final String username;
+    private final String password;
+
+    public PropertiesController(String driverClassName, String url, String username, String password) {
+        this.driverClassName = driverClassName;
+        this.url = url;
+        this.username = username;
+        this.password = password;
+}</programlisting>
+
+	  <para>In the preceding example, the <literal>PropertiesController</literal> constructor requires four property values: <literal>driverClassName</literal>, <literal>url</literal>, <literal>username</literal>, and <literal>password</literal>.  Note that the example shows just one way that a class might require property values; your application may code it another way.</para>
+
+	  <para>Additionally, assume that the following snippet of the associated Spring application context XML file shows how the <literal>PropertiesController</literal> bean is configured:</para>
+
+	   <programlisting>&lt;bean class="com.springsource.configuration.properties.PropertiesController"&gt;
+                &lt;constructor-arg value="${driverClassName}"/&gt;
+                &lt;constructor-arg value="${url}"/&gt;
+                &lt;constructor-arg value="${username}"/&gt;
+                &lt;constructor-arg value="${password}"/&gt;
+&lt;/bean&gt;</programlisting>
+
+	 <para>The rest of this section describes how the bean can get these property values using a configuration artifact.</para>
+
+	<section id="developing-applications-configuration-artifacts-propfile">
+	  <title>Creating the Properties File</title>
+
+	  <para>To create a properties file that in turn will become a configuration artifact when deployed to @short.product.name@ from which a Spring bean, such as the <literal>PropertiesController</literal> bean, will get the actual property values, follow these guidelines:</para>
+	  <itemizedlist>
+		<listitem><para>Create a text file in which each property is listed as a name/value pair, one pair per line.  Precede comments with a <literal>#</literal>.  For example:</para>
+		  <screen># Properties for the com.springsource.configuration.properties sample
+
+driverClassName   = org.w3.Driver
+url               = http://www.springsource.com
+username          = joe
+password          = secret</screen>
+		  <para>The example shows four properties whose name correspond to the constructor arguments of the <literal>PropertiesController</literal> Spring bean.</para></listitem>
+		<listitem><para>Name the file anything you want, as long as it has a <literal>.properties</literal> extension, such as <literal>app-properties.properties</literal>.</para></listitem>
+	  </itemizedlist>
+	</section>
+
+	<section id="developing-applications-configuration-artifacts-app">
+	  <title>Updating Your Application</title>
+	  <para>To update your application so that it "knows" about the configuration artifact, you update the application's Spring application context XML file, typically located in the <literal>WEB-INF</literal> directory.</para>
+
+	   <para>You use the <literal>&lt;context:property-placeholder&gt;</literal> element to specify that you want to use the @short.product.name@ mechanism for substituting values into bean properties.  The <literal>properties-ref</literal> attribute of this element points to a <literal>&lt;osgi-compendium:cm-properties&gt;</literal> element which you use to specify the configuration artifact that contains the property values.  You set the value of the <literal>persistent-id</literal> attribute of this element equal to the name of the configuration artifact, which is the name of the properties file <emphasis>minus</emphasis> the <literal>.properties</literal> extension. </para>
+	    <para>The following sample Spring application context XMl file shows everything wired together; only relevant parts of the file are shown:</para>
+
+	    <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:osgi-compendium="http://www.springframework.org/schema/osgi-compendium"
+  xsi:schemaLocation="http://www.springframework.org/schema/osgi 
+    http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/osgi-compendium 
+    http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium-1.2.xsd"&gt;
+
+...
+
+        &lt;bean class="com.springsource.configuration.properties.PropertiesController"&gt;
+                &lt;constructor-arg value="${driverClassName}"/&gt;
+                &lt;constructor-arg value="${url}"/&gt;
+                &lt;constructor-arg value="${username}"/&gt;
+                &lt;constructor-arg value="${password}"/&gt;
+        &lt;/bean&gt;
+
+        &lt;context:property-placeholder properties-ref="configAdminProperties"/&gt;
+
+        &lt;osgi-compendium:cm-properties id="configAdminProperties" persistent-id="app-properties"/&gt;
+
+...
+
+&lt;/beans&gt; </programlisting>
+
+	</section>
+
+	<para>The preceding example shows how the id <literal>configAdminProperites</literal> wires the <literal>&lt;context:property-placeholder&gt;</literal> and <literal>&lt;osgi-compendium:cm-properties&gt;</literal> elements together.  Based on the value of the <literal>persistent-id</literal> attribute, you must also deploy a properties file called <literal>app-properties.properties</literal> which @short.product.name@ installs as a configuration artifact.</para>
+
+	<section id="developing-applications-configuration-artifacts-plan">
+	  <title>Adding the Configuration Artifact to a Plan</title>
+	  <para>Although you can always deploy your application and associated configuration artifact using the <literal>pickup</literal> directory, we recommends that you group the two together in a plan, add the two artifacts to the repository, and then deploy the plan using the <literal>pickup</literal> directory.  The following sample plan includes the two artifacts:</para>
+	  <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plan name="multi-artifact.plan" version="1.0.0" 
+         scoped="false" atomic="false"
+        xmlns="http://www.springsource.org/schema/dm-server/plan"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.springsource.org/schema/dm-server/plan
+            http://www.springsource.org/schema/dm-server/plan/springsource-dm-server-plan.xsd"&gt;
+
+    &lt;artifact type="configuration" name="app-properties" version="0"/&gt;
+    &lt;artifact type="bundle" name="org.eclipse.virgo.configuration.properties" version="1.0.0"/&gt;
+&lt;/plan&gt;</programlisting> 
+
+	  <para>For additional information about plans, see <link linkend="developing-applications-plans">Creating Plans</link>.</para>
+
+	</section>
+
+	</section> <!-- end of configuration artifacts -->
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+
+	<section id="developing-applications-programmatic-access">
+		<title>Programmatic Access to Personality-specific Features</title>
+		<para>
+			Module personalities typically provide automatic access to features
+			specific to the personality via custom manifest headers or other
+			configuration mechanisms. There may be situations, however, for which
+			programmatic access to such features is desirable or necessary.
+			This section describes how to programmatically access personality-specific
+			features from application code in a module. 
+		</para>
+		<section id="developing-applications-programmatic-access-web">
+			<title>Programmatic Access to Web Personality Features</title>
+
+			<section id="developing-applications-programmatic-access-web-application-context">
+				<title>Programmatic Access to the WebApplicationContext</title>
+				<para>
+					The @product.name@ automatically creates a <literal>WebApplicationContext</literal>
+					for Web Bundles and WAR files. When used in conjuction with an
+					an auto-configured Spring MVC <literal>DispatcherServlet</literal>,
+					there is generally no need to access the <literal>WebApplicationContext</literal>
+					programmatically, since all components of the web application are configured
+					within the scope of the <literal>WebApplicationContext</literal>
+					itself. However, if you wish to access the <literal>WebApplicationContext</literal>
+					you can do so via the web application&rsquo;s <literal>ServletContext</literal>.
+					The Web Personality subsystem stores the bundle&rsquo;s
+					<literal>WebApplicationContext</literal> in the ServletContext under
+					the attribute name "<literal>BSN-ApplicationContext</literal>", where
+					<literal>BSN</literal> is the <literal>Bundle-SymbolicName</literal>
+					of your WAR or Web Bundle.
+				</para>
+				<para>
+					Alternatively, since the Web Personality subsystem also stores the
+					<literal>WebApplicationContext</literal> under the attribute name
+					with the value of the <literal>WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE</literal>
+					constant, you may choose to use Spring MVC&rsquo;s WebApplicationContextUtils&rsquo;
+					<literal>getWebApplicationContext(servletContext)</literal>
+					or
+					<literal>getRequiredWebApplicationContext(servletContext)</literal>
+					methods to access the <literal>WebApplicationContext</literal> without providing
+					an explicit attribute name. 
+				</para>				
+			</section>
+
+			<section id="developing-applications-programmatic-access-web-bundle-context">
+				<title>Programmatic Access to the BundleContext</title>
+				<para>
+					As required by the OSGi Web Container specification, you can access the
+					<literal>BundleContext</literal> of your WAR or Web Bundle via the web application&rsquo;s
+					<literal>ServletContext</literal>. The bundle context is stored in the
+					<literal>ServletContext</literal> under the attribute name <literal>osgi-bundlecontext</literal>.
+				</para>
+			</section>
+
+<!--			<note>-->
+<!--				<para>-->
+<!--					<literal>ServerOsgiBundleXmlWebApplicationContext</literal>-->
+<!--					resides in the <literal>org.eclipse.virgo.server.web.dm</literal>-->
+<!--					package which is-->
+<!--					<link linkend="developing-applications-automatic-imports">automatically imported</link>-->
+<!--					in your Web Module&rsquo;s or Shared Services WAR&rsquo;s bundle manifest.-->
+<!--				</para>-->
+<!--			</note>-->
+
+		</section>
+	</section>
+
+	<section id="developing-applications-automatic-imports">
+		<title>Automatic Imports</title>
+		<para>
+			The @product.name@ generates automatic package imports (i.e., via the
+			<literal>Import-Package</literal> manifest header) for various 
+			module personalities. This section lists which packages are automatically
+			generated for each personality.
+		</para>
+		<section id="developing-applications-automatic-imports-web">
+			<title>Automatic Imports for the Web Personality</title>
+			
+			<para>
+				As required by the OSGi Web Container specification all WARs and Web Bundles will
+				automatically import the following packages:
+			</para>
+			
+			<itemizedlist>
+				<listitem>
+					<literal>javax.servlet;version="2.5"</literal>
+				</listitem>
+				<listitem>
+					<literal>javax.servlet.http;version="2.5"</literal>
+				</listitem>
+				<listitem>
+					<literal>javax.servlet.jsp";version="2.1"</literal>
+				</listitem>
+				<listitem>	
+					<literal>javax.servlet.jsp.el;version="2.1"</literal>
+				</listitem>
+				<listitem>	
+					<literal>javax.servlet.jsp.tagext;version="2.1"</literal>
+				</listitem>	
+				<listitem>	
+					<literal>javax.el";version="1.0"</literal>
+				</listitem>	
+			</itemizedlist>
+
+			<para>
+				In addition to the above-described imports, @short.product.name@ will also
+				generate automatic imports for all of the packages that are exported by the system
+				bundle, unless an import for the package already exists in the artifact&rsquo;s manifest,
+				or the artifact contains the package, i.e. within <literal>WEB-INF/classes</literal>,
+				or in a jar file in <literal>WEB-INF/lib</literal>. When an import is generated, it
+				is versioned such that it exactly matches the version or versions of the package that
+				are exported from the system bundle. For example, a package that&rsquo;s exported only at
+				version <literal>1.0.0</literal> will generate an import with a version of
+				<literal>[1.0.0,1.0.0]</literal>, and a package that&rsquo;s exported at version
+				<literal>1.0.0</literal> and version <literal>2.0.0</literal> will generate an import 
+				with a version of <literal>[1.0.0,2.0.0]</literal>.
+			</para>
+			
+			<tip>
+				<title>System Bundle Package Exports</title>
+				<para>
+					For further details on which packages are exported by the
+					OSGi system bundle, consult the <filename>java6-server.profile</filename>
+					file located in the <literal>SERVER_HOME/lib</literal> directory.
+				</para>
+			</tip>
+
+		</section>
+	</section>
+
+	<section id="developing-applications-dependencies">
+		<title>Working with dependencies</title>
+		<para>Complex enterprise frameworks such a Spring and Hibernate are typically divided into many, many different
+			packages. Traditionally, if an OSGi bundle wished to make extensive use of such a framework its manifest would
+			have to import a huge number of different packages. This can be an error-prone and tedious process. Furthermore,
+			application developers are used to thinking in terms of their application using a framework, such as Spring, as a
+			whole, rather than a long list of all the different packages that comprise the framework.
+		</para>
+		<para>The following figure provides a simple illustration of the complexity of only using <code>Import-Package</code>:
+		</para>
+		<para>
+			<imagedata fileref="images/import-package.png"/>
+		</para>			
+		<para>The @product.name@ reduces the need for long lists of imported packages by introducing two new manifest
+			headers; <code>Import-Bundle</code> and <code>Import-Library</code>. The following figure provides an
+			illustration of the simplification that these new headers offer:
+	    </para>
+		<para>
+			<imagedata fileref="images/import-bundle_import-library.png"/>			
+		</para>
+		<para>
+			As you can see, use of <code>Import-Bundle</code> and <code>Import-Library</code> can lead to a dramatic reduction
+			in the number of imports that you need to include in an application bundle&rsquo;s manifest. Furthermore, <code>Import-Bundle</code>
+			and <code>Import-Library</code> are simply aliases for <code>Import-Package</code>; at deployment time <code>Import-Bundle</code>
+			and <code>Import-Library</code> header entries are automatically expanded into numerous <code>Import-Package</code> entries. This
+			means that you retain the exact same semantics of using <code>Import-Package</code>, without having to go through the labourious
+			process of doing so.
+		</para>
+		<section id="developing-applications-importing-libraries">
+		    <title>Importing libraries</title>	
+			<para>A bundle in an application can declare a dependency on a library by using the
+				@product.name@-specific <code>Import-Library</code> header. This header specifies a
+				comma-separated list of library symbolic names and version ranges that determine which libraries
+				are imported. By default a dependency on a library is mandatory but this can be
+				controlled through use of the resolution directive in exactly the same way as
+				it can with <code>Import-Package</code>.
+			</para>
+			<programlisting>
+<emphasis role="bold">Import-Library</emphasis>: org.springframework.spring;version="[2.5.4, 3.0)",
+ org.aspectj;version="[1.6.0,1.6.0]";resolution:="optional"
+            </programlisting>
+            <para>
+                This example <code>Import-Library</code> header declares a mandatory dependency on the Spring
+                library at a version from 2.5.4 inclusive to 3.0 exclusive. It also declares an
+                optional dependency on the AspectJ library at exactly 1.6.0.
+            </para>
+       </section>
+       <section id="developing-applications-importing-bundles">
+	       <title>Importing bundles</title>
+	       <para>A bundle in an application can declare a dependency on a bundle by using the
+		   @product.name@-specific <code>Import-Bundle</code> header. The header specifies a comma-separated 
+		   list of bundle symbolic names, version ranges, and scope declarmations that determine which bundles are imported and the scope of their dependency. By default a dependency
+		   on a bundle is mandatory but this can be controlled through use of the resolution directive in exactly
+		   the same way as it can with <code>Import-Package</code>.
+		   </para>
+			<programlisting>
+<emphasis role="bold">Import-Bundle</emphasis>: com.springsource.org.apache.commons.dbcp;version="[1.2.2.osgi, 1.2.2.osgi]"
+           </programlisting>
+           <para>
+	           This example <code>Import-Bundle</code> header declares a mandatory dependency on the Apache Commons
+	           DBCP bundle at exactly 1.2.2.osgi.
+	       </para>
+	   </section>
+
+   	   <section id="developing-applications-scoping-libraries-bundles">
+	     <title>Scoping Bundles in an Application</title>	
+	    <para>
+           When working with a scoped application, such as a PAR file or a plan, you might run into a situation where one of the bundles in the application (call it <code>bundleA</code>) depends on another bundle (<code>bundleB</code>) that performs a runtime task (such as class generation) that a third bundle (<code>bundleC</code>) might need to know about, although <code>bundleC</code> does not explicitly depend on <code>bundleB</code>.  
+	    </para>
+	    <para>
+ 		For example, Hibernate uses CGLIB (code generation library) at runtime to generate proxies for persistent classes.  Assume that a domain bundle in your application uses Hibernate for its persistent objects, and thus its <code>Import-Bundle</code> manifest header includes the Hibernate bundle.  Further assume that a separate Web bundle uses reflection in its data-binding code, and thus needs to reflect on the persistent classes generated by Hibernate at runtime.  The Web bundle now has an indirect dependency on the Hibernate bundle because of these dynamically generated classes, although the Web bundle does not typically care about the details of how these classes are persisted.  One way to solve this dependency problem is to explicitly add the Hibernate bundle to the <code>Import-Bundle</code> header of the Web bundle; however, this type of explicit-specified dependency breaks the modularity of the application and is not a programming best practice.
+           </para>
+	   <para>
+           A better way to solve this problem is to specify that @product.name@ itself dynamically import 
+		the bundle (Hibernate in the example above) to all bundles in the application at runtime.  
+		You do this by adding the <code>import-scope:=application</code> directive to the <code>Import-Bundle</code> header 
+		of the bundle that has the direct dependency (the domain bundle in our example).  At runtime, although the Web bundle 
+		does not explicitly import the Hibernate bundle, @product.name@ implicitly imports it and thus its classes are available 
+		to the Web bundle.  This mechanism allows you to declare the dependencies you need to make your application run,
+		 without having to make changes to your application that might limit its flexibility. 
+           </para>
+	   <para>
+	   	The following example shows how to use the <code>import-scope</code> directive with the <code>Import-Bundle</code> header:
+	   </para>
+	   <programlisting>
+Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";<emphasis role="bold">import-scope:=application</emphasis></programlisting>
+	    <para>
+		You can also set the <code>import-scope</code> directive to the (default) value <code>bundle</code>; in this case, the scope of the bundle is just the bundle itself and thus @product.name@ does not perform any implicit importing into other bundles of the application.  
+	    </para>
+	    <para>
+		Note that use of the <code>import-scope:=application</code> directive of the <code>Import-Bundle</code> header only makes sense when the bundle is part of a scoped application (PAR or plan);  if the bundle is not part of a scoped application, then this directive has no effect.
+	    </para>
+	    <para>
+		Finally, because <code>import-scope:=application</code> implicitly adds a bundle import to each bundle of the PAR or plan, the impact of subsequently refreshing the imported bundle is, in general, broader than it would have been if you had not used <code>import-scope:=application</code>. This may well affect the performance of refresh.
+	    </para>
+	   </section>
+
+	   <section id="developing-applications-defining-libraries">
+		    <title>Defining libraries</title>
+			<para>
+			    Libraries are defined in a simple text file, typically with a <code>.libd</code> suffix. This file identifies the
+			    library and lists all of its constituent bundles. For example, the following is the library definition for
+			    Spring 2.5.4:
+			    <programlisting><emphasis role="bold">Library-SymbolicName</emphasis>: org.springframework.spring
+<emphasis role="bold">Library-Version</emphasis>: 2.5.4
+<emphasis role="bold">Library-Name</emphasis>: Spring Framework
+<emphasis role="bold">Import-Bundle</emphasis>: org.springframework.core;version="[2.5.4,2.5.5)",
+ org.springframework.beans;version="[2.5.4,2.5.5)",
+ org.springframework.context;version="[2.5.4,2.5.5)",
+ org.springframework.aop;version="[2.5.4,2.5.5)",
+ org.springframework.web;version="[2.5.4,2.5.5)", 
+ org.springframework.web.servlet;version="[2.5.4,2.5.5)",
+ org.springframework.jdbc;version="[2.5.4,2.5.5)",
+ org.springframework.orm;version="[2.5.4,2.5.5)",
+ org.springframework.transaction;version="[2.5.4,2.5.5)",
+ org.springframework.context.support;version="[2.5.4,2.5.5)",
+ org.springframework.aspects;version="[2.5.4,2.5.5)",
+ com.springsource.org.aopalliance;version="1.0"</programlisting>
+			</para>
+			<para>
+				The following table lists all of the headers that may be used in a library definition:
+			</para>
+			<table id="developing-applications-defining-libraries-library-headers-table" colsep="1" frame="all" rowsep="1">
+				<title>Library definition headers</title>
+				<tgroup cols="2">
+				   <colspec colwidth="2*" />
+		           <colspec colwidth="5*" />
+					<thead>
+						<row>
+							<entry>Header</entry>
+							<entry>Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>Library-SymbolicName</entry>
+							<entry>Identifier for the library</entry>
+						</row>
+						<row>
+							<entry>Library-Version</entry>
+							<entry>Version number for the library</entry>
+						</row>
+						<row>
+							<entry>Import-Bundle</entry>
+							<entry>A comma separated list of bundle symbolic names. 
+							Each entry may optionally specify a version (using the <code>version=</code> directive) 
+							and the scope of the import (using the <code>import-scope</code> directive).</entry>
+						</row>
+						<row>
+							<entry>Library-Name</entry>
+							<entry>Optional. The human-readable name of the library</entry>
+						</row>
+						<row>
+							<entry>Library-Description</entry>
+							<entry>Optional. A human-readable description of the library</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</section>	
+		<section id="developing-applications-installing-dependencies">
+		    <title>Installing dependencies</title>
+		    <para>
+			    Rather than encouraging the packaging of all an application&rsquo;s dependencies within the application itself, @product.name@
+			    uses a local provisioning repository of bundles and libraries upon which an application can depend. When the @product.name@
+			    encounters an application with a particular dependency, it will automatically provide, from its provisioning repository,
+			    the appropriate bundle or library.
+			</para>
+			<para>
+			    Making a dependency available for provisioning is simply a matter of copying it to the appropriate location in the
+			    @short.product.name@&rsquo;s local provisioning repository. By default this is
+			    <literal>SERVER_HOME/repository/bundles/usr</literal> for bundles, and 
+			    <literal>SERVER_HOME/repository/libraries/usr</literal> for libraries. A more detailed discussion of the provisioning
+			    repository can be found in the <ulink url="../../user-guide/html/index.html">User Guide</ulink>.
+			</para>
+	    </section>
+	</section>
+	<section id="developing-applications-application-trace">
+		<title>Application trace</title>
+	    <para>
+		    As described in the <ulink url="../../user-guide/html/index.html">User Guide</ulink> @product.name@ provides support for
+		    per-application trace. @product.name@ provides SLF4J with Logback logging for Event Logging and Tracing. 
+		    Application trace is configured in the <literal>serviceability.xml</literal> file.
+		    See the <ulink url="../../user-guide/html/index.html">User Guide</ulink> for more details.
+		</para> 
+    </section> 
+       <section id="developing-applications-versioning">
+        <title>Application versioning</title>
+        <para>
+	        In much the same way that individual OSGi bundles can be versioned, @product.name@ allows applications to be versioned. How exactly you do this depends on how you have packaged the application:  
+		<itemizedlist>
+	        	<listitem>If you package your application using a PAR, you version the application by using the <literal>Application-Version</literal> header in the <code>MANIFEST.MF</code> file of the PAR file.</listitem>
+			<listitem>If you use a plan to describe the artifacts that make up your application, you version it by using the <code>version</code> attribute of the <code>&lt;plan&gt;</code> root element of the plan&rsquo;s XML file.</listitem>
+	        	<listitem>If your application consists of a single bundle, you version it in the standard OSGi way: by using the <literal>Bundle-Version</literal> header of the <code>MANIFEST.MF</code> file of the bundle.</listitem>
+		</itemizedlist>
+        </para>
+        <para>@product.name@ uses an application&rsquo;s version to prevent clashes when multiple versions of the same application are deployed at
+	        the same time. For example, the application trace support described in <xref linkend="developing-applications-application-trace"/>,
+	        includes the application&rsquo;s name and version in the file path. This ensures that each version of the same application has its
+	        own trace or logging file.
+	    </para>
+	</section>
+</chapter>

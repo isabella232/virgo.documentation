@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="publish-documentation">
+
+<!-- Main targets -->
+	<target name="publish-static" depends="publish-static.init">
+		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
+				command="mkdir /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/${bundle.version}/${ant.project.name}"/>
+		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/s2-dmserver/${bundle.version}/${ant.project.name}"
+				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
+			<fileset dir="${docbook.output.dir}" />
+		</scp>
+	</target>
+	
+<!-- Other targets -->
+	<target name="publish-static.init">
+		<fail message="The 'username' property must be set">
+			<condition>
+				<not>
+					<isset property="username"/>
+				</not>
+			</condition>
+		</fail>
+		<fail message="The 'key.file' property must be set">
+			<condition>
+				<not>
+					<isset property="key.file"/>
+				</not>
+			</condition>
+		</fail>
+		<fail message="The 'passphrase' property must be set">
+			<condition>
+				<not>
+					<isset property="passphrase"/>
+				</not>
+			</condition>
+		</fail>
+	</target>
+
+</project>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<preface id="preface">
+	<title>Preface</title>
+	<para>
+		Increasing complexity in modern enterprise applications is a fact of life.
+		You not only have to deal with complex business logic, but also a myriad
+		of other concerns such as security, auditing, exposing business
+		functionality to external applications, and managing the evolution of
+		that functionality and technologies. The Spring Framework and Spring
+		Portfolio products address these needs by offering a Plain-Old Java Object
+		(POJO) based solution that lets you focus on your business logic.
+	</para>
+	<para>
+		Complex applications pose problems that go beyond using the right set of
+		technologies. You need to take into account other considerations such as
+		a simplified development process, easy deployment, monitoring deployed
+		applications, and managing changes in response to changing business needs.
+		This is where the @umbrella.product.name@ comes into play. It offers a simple yet
+		comprehensive platform to develop, deploy, and service enterprise
+		applications. In this Programmer Guide, we explore the runtime portion of the
+		@umbrella.product.name@, the @product.name@, and learn how to develop
+		applications to benefit from its capabilities.
+	</para>
+</preface>
