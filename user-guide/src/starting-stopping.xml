@@ -350,60 +350,6 @@ prompt> bin\shutdown.bat -immediate</screen>
 prompt> bin\shutdown.bat -jmxport 9090</screen>
 	    </section>
 	  </section>
-	<section>
-	    <title>Starting @product.name@ When the Operating System Starts</title>
-	    <para>
-		  If you need @product.name@ to start automatically when the operating system starts, you should run @product.name@ as a
-		  Windows service or a UNIX background process.
-		  You can do this by using a service wrapper script provided with @product.name@.
-		</para>
-		<para>
-		  The <literal>SERVER_HOME/bin/service</literal> directory contains a service wrapper script for each supported operating system. Before running the
-		  appropriate script, you must either set the <literal>SERVER_HOME</literal> environment variable to point to the @product.name@
-		  installation directory or edit the file <literal>SERVER_HOME/bin/service/conf/wrapper.conf</literal>.
-	    </para>
-	    <para>
-		  If you run the service wrapper script with no option, it will display the available options.
-		  The most useful options are described in the following table.
-		<table id="wrapper-script-arguments" colsep="1" frame="all" rowsep="1">
-	    	  <title>Service Wrapper Options</title>
-		  <tgroup cols="2">
-		    <thead>
-			<row>
-				<entry>Option</entry>
-				<entry>Description</entry>
-			</row>
-		     </thead>
-		     <tbody>
-			<row>
-				<entry><literal>console</literal></entry>
-				<entry>Starts @product.name@ in the foreground. Useful for validating that the service wrapper
-					   is configured correctly. </entry>
-			</row>
-			<row>
-				<entry><literal>install</literal></entry>
-				<entry><emphasis>Windows only.</emphasis> Installs @product.name@ as a Windows service.</entry>
-			</row>
-			<row>
-				<entry><literal>start</literal></entry>
-				<entry>Starts @product.name@ in the background. On UNIX operating systems, you may call
-				       the wrapper script with this option during initialization, for example as part of <literal>init.d</literal> processing.
-				       @product.name@ console output appears in <literal>SERVER_HOME/wrapper.log</literal>.</entry>
-			</row>
-			<row>
-				<entry><literal>stop</literal></entry>
-				<entry>Stops the @product.name@ background process. On UNIX operating systems, you may call
-				       the wrapper script with this option during termination, for example as part of <literal>init.d</literal> processing.</entry>
-			</row>
-			<row>
-				<entry><literal>remove</literal></entry>
-				<entry><emphasis>Windows only.</emphasis> Removes @product.name@ as a Windows service.</entry>
-			</row>
-		    </tbody>
-		 </tgroup>
-		</table>
-		</para>
-	</section>
 	
 </chapter>
 
