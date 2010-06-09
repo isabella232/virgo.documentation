@@ -59,7 +59,7 @@
         	do so using Spring-Build. Take a look at
              the <literal>README.TXT</literal> file in each of the folders under
              the <literal>projects</literal> directory in the
-             <literal>dm-server-formtags</literal> samples directories for instructions.
+             Form Tags sample for instructions.
         </tip>
     </para>
     <section id="formtags-case-study-introduction">
@@ -102,7 +102,7 @@
             Form Tags application using the standard WAR format. As you can see,
             there is no deviation from the standard structure and layout, and as
             you would expect, all of the web application&rsquo;s third-party dependencies
-            (for example, Spring. Commons Logging) are packaged as JARs in
+            (for example: Spring, Commons Logging) are packaged as JARs in
             <literal>WEB-INF/lib</literal>.
         </para>
         <para><imagedata fileref="images/formtags-case-study-exploded-war.png" format="PNG"/></para>
