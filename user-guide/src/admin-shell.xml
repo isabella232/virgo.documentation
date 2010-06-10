@@ -2,9 +2,9 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="admin-shell">
-	<title>The Admin Shell</title>
+	<title>Equinox Console Extension</title>
 
-	<para>The Admin Shell is a command line utility that allows you to examine artifacts currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shutdown the server.   You can install, examine, and manage the lifecycle of the following artifacts:</para>
+	<para>Virgo provides an extension to the Equinox console that allows you to examine artifacts currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shutdown the server.   You can install, examine, and manage the lifecycle of the following artifacts:</para>
 	<itemizedlist>
 	  <listitem>Bundles</listitem>
 	  <listitem>Configuration Artifacts</listitem>
@@ -13,70 +13,42 @@
 	  <listitem>Plans</listitem>
 	  <listitem>Services installed in the OSGi registry</listitem>
 	</itemizedlist>
-	<para>You can run the Admin Shell locally or remotely by using <literal>ssh</literal>.  The Admin Shell is similar to the Equinox shell, but with added features such as tab completion and command history.  Tab completion allows you to enter a partial command, and then press the Tab key and let the Admin Shell show you a list of possible commands.  To get a command history, simply use the up and down arrows.</para>
+	<para>You can run the Equinox console via telnet to the configured port (2401 by default):</para>
+	<programlisting><![CDATA[prompt$ telnet localhost 2401
+Trying ::1...
+Connected to localhost.
+Escape character is '^]'.
+
+osgi> ]]></programlisting>
 
 	<section id="admin-shell-using">
-		<title>Using the Admin Shell </title>
-		<para>You invoke the Admin Shell locally by passing the <literal>-shell</literal> flag to the <literal>startup.sh</literal> (Unix) or <literal>startup.bat</literal> (Windows) command that starts up Web Server.  For example, on Unix:</para>
-		<programlisting>prompt$ SERVER_HOME/bin/startup.sh -shell</programlisting>
-		<para>You will see status messages for the @kernel.product.name@ starting, and then the Admin Shell commmand line utility takes over.  You can still view the console log messages by looking at the <literal>$SERVER_HOME/serviceability/eventlogs/event.log</literal> file.  After you get the Admin Shell splash screen, you can enter commands at the <literal>:&gt; </literal> prompt.  Enter <literal>help</literal> for a list of all available commands.  For example:</para>
-		<programlisting><![CDATA[prompt$ cd $SERVER_HOME/bin
-prompt$ ./startup.sh -shell
-[11:34:42.710] startup-tracker              <KE0001I> Kernel starting. 
-[11:34:47.719] kernel-dm-11                 <SH0001I> Kernel ssh shell available on port 2401. 
+		<title>Using the Equinox Console Extension</title>
+		<para>You invoke the Equinox Console Extension using the <literal>vsh</literal> command. For example:</para>
+		<programlisting><![CDATA[
+osgi> vsh help
 
-    _    ___
-   | |  / (_)________ _____
-   | | / / / ___/ __ `/ __ \
-   | |/ / / /  / /_/ / /_/ /
-   |___/_/_/   \__, /\____/
-              /____/
 
-Type 'help' to see the available commands.
+    bundle   - Management and examination of bundle artifacts
+    config   - Management and examination of configuration artifacts
+    exit     - Exit the kernel shell environment
+    help     - Get help on commands
+    install  - Install (deploy) an artifact to the server
+    package  - Management and examination of exported packages
+    par      - Management and examination of PAR artifacts
+    plan     - Management and examination of plan artifacts
+    service  - Examination of services
+    shutdown - Shutdown Virgo Kernel
 
-:> help
 
-    bundle  
-    config  
-    exit    
-    help    
-    install 
-    package 
-    par     
-    plan    
-    service 
-    shutdown
-
-:>]]></programlisting>
-
-		<para>To invoke Admin Shell remotely, use the <literal>ssh</literal> command with the following parameters:</para>  
-		
-		<itemizedlist>
-		  <listitem>Use the <literal>-p <emphasis>shell.port</emphasis></literal> option to pass the port number where the Admin Shell listens; the default value is <literal>2401</literal>.  You can change this port by editing the value of the <literal>shell.port</literal> property in the <literal>$SERVER_HOME/conf/org.eclipse.virgo.kernel.properties</literal> configuration file.  </listitem>
-		   <listitem>Use the <literal><emphasis>user</emphasis>@<emphasis>host</emphasis></literal> parameter to specify the administration user; you will be prompted for a password.  The default administration user/password is <literal>admin/springsource</literal>.  You can change the administration user by updating the <literal>role.admin</literal> value in the <literal>$SERVER_HOME/conf/org.eclipse.virgo.kernel.users.properties</literal> file.  Use the <literal>user.admin</literal> to change the administration user's password.</listitem>
-		</itemizedlist>
-
-		<para>The following example shows how to invoke the Admin Shell using <literal>ssh</literal> on the local computer using the default port, user, and password:</para>
-		<programlisting><![CDATA[prompt$ ssh -p 2401 admin@localhost
-admin@localhost's password:
-
-    _    ___
-   | |  / (_)________ _____
-   | | / / / ___/ __ `/ __ \
-   | |/ / / /  / /_/ / /_/ /
-   |___/_/_/   \__, /\____/
-              /____/
-
-Type 'help' to see the available commands.
-:>]]></programlisting>
+osgi> ]]></programlisting>
 
 	    <section id="admin-shell-using-command-list">
-		<title>Available Admin Shell Commands</title>
+		<title>Equinox Console Extension Commands</title>
 
-		<para>The following table lists the Admin Shell commands; each command in turn has a variety of options that you can specify, depending on what you want to do, such as start a bundle or refresh a plan. The reference documentation about each command provides the full list of available options. </para>
+		<para>The following table lists the Equinox Console Extension commands; each command in turn has a variety of options that you can specify, depending on what you want to do, such as start a bundle or refresh a plan. The reference documentation about each command provides the full list of available options. </para>
 
         	<table id="admin-shell-commands-table" colsep="1" frame="all" rowsep="1">
-            	  <title>Admin Shell Commands</title>
+            	  <title>Equinox Console Extension Commands</title>
                     <tgroup cols="2">
                       <thead>
                         <row>
@@ -85,10 +57,6 @@ Type 'help' to see the available commands.
                         </row>
                       </thead>
                       <tbody>
-                        <row>
-				<entry><link linkend="admin-shell-exit-command">exit</link></entry>
-                                <entry>Exit from the Admin Shell session.</entry>
-                        </row>
                         <row>
 				<entry><link linkend="admin-shell-bundle-command">bundle</link></entry>
                                 <entry>Used to manage and display information about bundle artifacts.</entry>
@@ -119,12 +87,16 @@ Type 'help' to see the available commands.
                         </row>
                         <row>
 				<entry><link linkend="admin-shell-shutdown-command">shutdown</link></entry>
-                                <entry>Shuts down the Web Server instance to which the Admin Shell is connected.</entry>
+                                <entry>Shuts down the Web Server instance to which the Equinox Console Extension is connected.</entry>
                         </row>
                         <row>
 				<entry><link linkend="admin-shell-help-command">help</link></entry>
                                 <entry>Display help about the list of available commands, as well as more detailed help about individual commands.</entry>
                         </row>
+		                <row>
+				<entry><link linkend="admin-shell-exit-command">exit</link></entry>
+		                        <entry>Return to the Equinox console with no effect.</entry>
+		                </row>
 
 		      </tbody>
                     </tgroup>
@@ -134,11 +106,10 @@ Type 'help' to see the available commands.
 	</section>
 
 	<section id="admin-shell-command-reference">
-	  <title>Admin Shell Command Reference</title>
+	  <title>Equinox Console Extension Command Reference</title>
 
-	  <para>This section contains reference information about the following Admin Shell commands:</para>
+	  <para>This section contains reference information about the following Equinox Console Extension commands:</para>
 	  <itemizedlist>
-		<listitem><link linkend="admin-shell-exit-command">exit</link></listitem>
 		<listitem><link linkend="admin-shell-bundle-command">bundle</link></listitem>
 		<listitem><link linkend="admin-shell-config-command">config</link></listitem>
 		<listitem><link linkend="admin-shell-package-command">package</link></listitem>
@@ -148,13 +119,8 @@ Type 'help' to see the available commands.
 		<listitem><link linkend="admin-shell-install-command">install</link></listitem>
 		<listitem><link linkend="admin-shell-shutdown-command">shutdown</link></listitem>
 		<listitem><link linkend="admin-shell-help-command">help</link></listitem>
+		<listitem><link linkend="admin-shell-exit-command">exit</link></listitem>
 	  </itemizedlist>
-
-	  <section id="admin-shell-exit-command">
-		<title>exit Command</title>
-		<para>Use the <literal>exit</literal> command to exit from the Admin Shell session.  </para>
-		<para>The <literal>exit</literal> command does not have any options.</para>
-	  </section>
 
 	  <section id="admin-shell-bundle-command">
 		<title>bundle Command</title>
@@ -233,36 +199,66 @@ Type 'help' to see the available commands.
 
 		<para>The following examples show how to use this command.</para>
 
-		<para>First, use the <literal>bundle list</literal> command to view all the installed bundles; note the last one that is in a <literal>Resolved</literal> state (and many entries have been removed for simplicity):</para>
+		<para>First, use the <literal>bundle list</literal> command to view all the installed bundles:</para>
 
-		<programlisting>:> bundle list
+		<programlisting>osgi> vsh bundle list
 
-Id   Name                                       Version                State 
+Id   Name                                 Version                          State
+0    org.eclipse.osgi                     3.5.1.R35x_v20091005            ACTIVE
+1    org.eclipse.virgo.region.user        0.0.0                           ACTIVE
+2    org.eclipse.virgo.kernel.userregion  2.1.0.BUILD-20100609153042      ACTIVE
+3    org.eclipse.virgo.kernel.osgicommand 2.1.0.BUILD-20100609153042      ACTIVE
+4    org.springframework.osgi.core        1.2.1                           ACTIVE
+5  S org.springframework.osgi.extender    1.2.1                           ACTIVE
+6    org.springframework.osgi.io          1.2.1                           ACTIVE
+7    org.eclipse.virgo.kernel.agent.dm    2.1.0.BUILD-20100609153042      ACTIVE
+8  S org.eclipse.virgo.kernel.deployer.dm 2.1.0.BUILD-20100609153042      ACTIVE
+9    com.springsource.org.aopalliance     1.0.0                           ACTIVE
+10   org.eclipse.virgo.kernel.dmfragment  2.1.0.BUILD-20100609153042    RESOLVED
+11   org.springframework.aop              3.0.0.RELEASE                   ACTIVE
+12   org.springframework.asm              3.0.0.RELEASE                   ACTIVE
+13   org.springframework.beans            3.0.0.RELEASE                   ACTIVE
+14   org.springframework.context          3.0.0.RELEASE                   ACTIVE
+15   org.springframework.core             3.0.0.RELEASE                   ACTIVE
+16   org.springframework.expression       3.0.0.RELEASE                   ACTIVE
 
-0    org.eclipse.osgi                           3.5.1.R35x_v20091005   ACTIVE
-1    com.springsource.region.user               0.0.0                  ACTIVE
-2    org.springframework.aop                    3.0.0.RC1              RESOLVED
-3    org.springframework.asm                    3.0.0.RC1              RESOLVED
+osgi> </programlisting>
 
-(entries removed...)
+		<para>The following example shows how to view the headers of the <literal>org.springframework.osgi.extender</literal> bundle (only the first few lines are shown):</para>
 
-60   swf-booking-mvc.war                        0.0.0                  RESOLVED</programlisting>
+		<programlisting>osgi> vsh bundle examine 5
 
-		<para>Then use the <literal>bundle start</literal> to start the <literal>swf-booking-mvc.war</literal> bundle:</para>
+Id:              5
+Name:            org.springframework.osgi.extender
+Version          1.2.1
+State:           ACTIVE
+Spring Powered:  true
+Bundle Location: file:&lt;... omitted ...&gt;/org.springframework.osgi.extender-1.2.1.jar/
 
-		<programlisting>:> bundle start 60
+Imported Packages:
+    org.springframework.osgi.context [1.2.1, 1.2.1]
+        exported by org.springframework.osgi.core 1.2.1 [4]
+    &lt;... remainder omitted ...&gt;
+	
+Exported Packages:
+    org.springframework.osgi.extender 1.2.1
+    &lt;... remainder omitted ...&gt;
 
-bundle swf-booking-mvc.war:0.0.0 started successfully</programlisting>
+Published services:
+     58 org.springframework.beans.factory.xml.NamespaceHandlerResolver
+        consumed by org.springframework.osgi.extender 1.2.1 [5]
+        consumed by org.eclipse.virgo.kernel.deployer.dm 2.1.0.BUILD-20100609153042 [8]
+    &lt;... remainder omitted ...&gt;
 
-		<para>The following example shows how to view the headers of the <literal>swf-booking-mvc.war</literal> bundle (only the first few lines are shown):</para>
+Consumed services:
+     34 org.eclipse.virgo.kernel.shim.serviceability.TracingService
+        published by org.eclipse.virgo.region.user 0.0.0 [1]
+    &lt;... remainder omitted ...&gt;
 
-		<programlisting>:> bundle headers 60
+Fragments:
+    org.eclipse.virgo.kernel.dmfragment 2.1.0.BUILD-20100609153042 [10]
 
-Manifest-Version: 1.0
-Ant-Version: Apache Ant 1.7.0
-Implementation-Title: swf-booking-mvc
-Implementation-Version: 2.0.3.RELEASE
-....</programlisting>
+osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-config-command">
@@ -322,28 +318,24 @@ Implementation-Version: 2.0.3.RELEASE
 		</table>
 
 		<para>The following example shows how to use this command to list the installed configuration artifacts.</para>
-		<programlisting>:> config list
+		<programlisting>osgi> vsh config list
 
 Name                                      Version                          State
-org.eclipse.virgo.kernel                   0.0.0                           ACTIVE
-org.eclipse.virgo.kernel.jmxremote.access  0.0.0                           ACTIVE
-org.eclipse.virgo.kernel.region            0.0.0                           ACTIVE
-org.eclipse.virgo.kernel.users             0.0.0                           ACTIVE
-com.springsource.osgi.medic               0.0.0                           ACTIVE
-com.springsource.repository               0.0.0                           ACTIVE
-org.eclipse.virgo.server.repository.hosted 0.0.0                           ACTIVE</programlisting>
+org.eclipse.virgo.kernel                  0.0.0                           ACTIVE
+org.eclipse.virgo.kernel.jmxremote.access 0.0.0                           ACTIVE
+org.eclipse.virgo.kernel.userregion       0.0.0                           ACTIVE
+org.eclipse.virgo.kernel.users            0.0.0                           ACTIVE
+org.eclipse.virgo.medic                   0.0.0                           ACTIVE
+org.eclipse.virgo.repository              0.0.0                           ACTIVE
 
-		<para>The next example shows how to refresh the configuration artifact <literal>com.springsource.osgi.medic</literal>:</para>
-		<programlisting>:> config refresh com.springsource.osgi.medic
+osgi> </programlisting>
 
-configuration com.springsource.osgi.medic:0.0.0 refreshed successfully</programlisting>
+		<para>To view the properties of a configuration artifact, and their current values, use <literal>config examine</literal>:</para>
 
-		<para>Finally, to view the properties of a configuration artifact, and their current values, use <literal>config examine</literal>:</para>
-
-		<programlisting>:> config examine com.springsource.osgi.medic
+		<programlisting>osgi> vsh config examine org.eclipse.virgo.medic
 
 Factory pid:     
-Bundle Location: file:lib/kernel/org.eclipse.virgo.kernel.shell-2.0.0.D-20091107203259.jar
+Bundle Location: file:lib/kernel/org.eclipse.virgo.kernel.shell-2.1.0.BUILD-20100609153042.jar
 
 Properties:
     dump.root.directory:
@@ -359,7 +351,9 @@ Properties:
     log.wrapSysOut:
         true
     service.pid:
-        com.springsource.osgi.medic</programlisting>
+        org.eclipse.virgo.medic
+
+osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-package-command">
@@ -400,48 +394,46 @@ Properties:
 		   </tgroup>
 		</table>
 
-		<para>The following example shows how to list all the exported packages for all bundles installed on Web Server:</para>
-		<programlisting>:> package list
+		<para>The following example shows how to list all the exported packages for all bundles installed:</para>
+		<programlisting>osgi> vsh package list
 
-Name                                          Version                   Providing Bundle
+Name                                                        Version                    Providing Bundle
+javax.accessibility                                         0.0.0                      0      
+javax.activation                                            0.0.0                      0      
+javax.activation                                            1.1.1                      0   
+&lt;... remainder omitted ...&gt;   
 
-org.eclipse.virgo.kernel.agent.dm              2.0.0.D-20091110110152    6  
-org.eclipse.virgo.kernel.artifact.bundle       2.0.0                     1  
-org.eclipse.virgo.kernel.artifact.library      2.0.0                     1  
-org.eclipse.virgo.kernel.core                  2.0.0.D-20091110110152    1  
-org.eclipse.virgo.kernel.deployer.app.spring   2.0.0.D-20091110110152    7  
-org.eclipse.virgo.kernel.deployer.core         2.0.0.D-20091110110152    1  
-org.eclipse.virgo.kernel.deployer.core.event   2.0.0.D-20091110110152    1  
-org.eclipse.virgo.kernel.dmfragment            2.0.0.D-20091110110152    16
-org.eclipse.virgo.kernel.install.artifact      2.0.0.D-20091110110152    1  
-org.eclipse.virgo.kernel.install.environment   2.0.0.D-20091110110152    1  
-...
-[data removed for clarity]</programlisting>
+osgi> </programlisting>
 
 		<para>The following example shows how to examine a particular exported package:</para>
-		<programlisting>:> package examine org.springframework.web.servlet 3.0.0.RC1
+		<programlisting>osgi> vsh package examine org.slf4j 1.5.10
 
-Providing Bundle: org.springframework.web.servlet 3.0.0.RC1 [55]
+Exporter: org.eclipse.virgo.region.user 0.0.0 [1]
 
 Attributes:
+    None
 
 Directives:
     uses:
-        javax.servlet, javax.servlet.http, org.springframework.beans,
-        org.springframework.context, org.springframework.context.event,
-        org.springframework.context.i18n, org.springframework.ui,
-        org.springframework.ui.context, org.springframework.util,
-        org.springframework.web.context, org.springframework.web.multipart
+        org.slf4j.impl, org.slf4j.spi
     x-equinox-ee:
         -1
     x-internal:
         false
 
-Imported By:
-    org.eclipse.virgo.server.splash 2.0.0.D-20091110115520 [59] at [3.0.0, 3.1.0)
-    org.eclipse.virgo.server.repository.hosted-2.0.0.D-20091109225604-org.eclipse.virgo.server.repository.hosted.web 2.0.0.D-20091109225604 [56] at [2.5.6, 3.1.0)
-    org.springframework.js 2.0.8.RELEASE [54] at [2.5.6.SEC01, 3.1.0)
-    org.eclipse.virgo.server.admin.web 2.0.0.D-20091110115520 [50] at [3.0.0, 3.1.0) </programlisting>
+Importer(s):
+    org.eclipse.virgo.kernel.userregion 2.1.0.BUILD-20100609153042 [2]
+        Import-Package attributes:
+            bundle-version:
+                0.0.0
+            version:
+                [1.5.10,2.0.0)
+        Import-Package directives:
+            resolution:
+                static
+    &lt;... remainder omitted ...&gt; 
+
+osgi> </programlisting>
 
 
 	  </section>
@@ -502,14 +494,16 @@ Imported By:
 		</table>
 
 		<para>The following example shows how to list the PARs that have been installed in Web Server:</para>
-		<programlisting>:> par list
+		<programlisting>osgi> vsh par list
 
 Name                                         Version                      State
 
-org.eclipse.virgo.server.repository.hosted    2.0.0.D-20091109225604          ACTIVE</programlisting>
+org.eclipse.virgo.server.repository.hosted    2.0.0.D-20091109225604          ACTIVE
+
+osgi> </programlisting>
 
 		<para>The following example shows how to examine a particular PAR file:</para>
-		<programlisting>:> par examine org.eclipse.virgo.server.repository.hosted 2.0.0.D-20091109225604
+		<programlisting>osgi> vsh par examine org.eclipse.virgo.server.repository.hosted 2.0.0.D-20091109225604
 
 State:  ACTIVE
 Scoped: true
@@ -518,12 +512,16 @@ Atomic: true
 Children:
     bundle org.eclipse.virgo.server.repository.hosted.core 2.0.0.D-20091109225604
     bundle org.eclipse.virgo.server.repository.hosted.web 2.0.0.D-20091109225604
-    bundle org.eclipse.virgo.server.repository.hosted-synthetic.context 2.0.0.D-20091109225604</programlisting>
+    bundle org.eclipse.virgo.server.repository.hosted-synthetic.context 2.0.0.D-20091109225604
+
+osgi> </programlisting>
 
 		<para>Finally, the following example shows how to refresh an installed PAR file:</para>
-		<programlisting>:> par refresh my.exciting.par 1.2.0
+		<programlisting>osgi> vsh par refresh my.exciting.par 1.2.0
 
-par my.exciting.par 1.2.0 refreshed successfully</programlisting>
+par my.exciting.par 1.2.0 refreshed successfully
+
+osgi> </programlisting>
 
 	  </section>
 
@@ -584,37 +582,45 @@ par my.exciting.par 1.2.0 refreshed successfully</programlisting>
 		</table>
 
 		<para>The following example shows how to list the plans that have been installed in Web Server:</para>
-		<programlisting>:> plan list
+		<programlisting>osgi> vsh plan list
 
 Name                                    Version                            State
 org.eclipse.virgo.kernel.region.springdm 2.0.0                             ACTIVE
 org.eclipse.virgo.server.admin.plan      2.0.0                             ACTIVE
-org.eclipse.virgo.server.web             2.0.0                             ACTIVE</programlisting>
+org.eclipse.virgo.server.web             2.0.0                             ACTIVE
+
+osgi> </programlisting>
 
 		<para>The following example shows how to examine a particular plan:</para>
-		<programlisting>:> plan examine org.eclipse.virgo.server.web 2.0.0
+		<programlisting>osgi> vsh plan examine org.eclipse.virgo.kernel.userregion.springdm 2.1.0
 
 State:  ACTIVE
 Scoped: false
 Atomic: false
 
 Children:
-    bundle com.springsource.osgi.webcontainer.tomcat 1.0.0.CI-85
-    bundle com.springsource.osgi.webcontainer.core 1.0.0.CI-85
-    bundle org.eclipse.virgo.server.web.tomcat 2.0.0.D-20091109223734
-    bundle org.eclipse.virgo.server.web.core 2.0.0.D-20091109223734
-    bundle org.eclipse.virgo.server.web.dm 2.0.0.D-20091109223734</programlisting>
+    bundle org.eclipse.virgo.kernel.deployer.dm 2.1.0.BUILD-20100609153042
+    bundle org.springframework.osgi.io 1.2.1
+    bundle org.springframework.osgi.extender 1.2.1
+    bundle org.springframework.osgi.core 1.2.1
+    bundle org.eclipse.virgo.kernel.agent.dm 2.1.0.BUILD-20100609153042
+
+osgi> </programlisting>
 
 		<para>The following example shows how to stop a currently Active plan:</para>
-		<programlisting>:> plan stop org.eclipse.virgo.server.web 2.0.0   
+		<programlisting>osgi> vsh plan stop org.eclipse.virgo.server.web 2.0.0   
 
-plan org.eclipse.virgo.server.web:2.0.0 stopped successfully</programlisting>
+plan org.eclipse.virgo.server.web:2.0.0 stopped successfully
+
+osgi> </programlisting>
 
 		<para>The following example shows how to start a plan:</para>
 
-		<programlisting>:> plan start org.eclipse.virgo.server.web 2.0.0
+		<programlisting>osgi> vsh plan start org.eclipse.virgo.server.web 2.0.0
 
-plan org.eclipse.virgo.server.web:2.0.0 started successfully</programlisting>
+plan org.eclipse.virgo.server.web:2.0.0 started successfully
+
+osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-service-command">
@@ -648,7 +654,7 @@ plan org.eclipse.virgo.server.web:2.0.0 started successfully</programlisting>
 		</table>
 
 		<para>The following example shows how to use list the services currently registered in the OSGi service registry:</para>
-		<programlisting>:> service list
+		<programlisting>osgi> vsh service list
 
 Id  Object Class(es)                                            Providing Bundle
 
@@ -659,16 +665,17 @@ Id  Object Class(es)                                            Providing Bundle
 5   java.lang.ClassLoader                                                      0
 6   org.eclipse.osgi.framework.log.FrameworkLog                                0
 7   org.eclipse.osgi.framework.log.FrameworkLog                                0
-
-... (entries removed)
+&lt;... remainder omitted ...&gt; 
 
 65 com.springsource.osgi.webcontainer.core.spi.ServletContainer               35
 66 com.springsource.osgi.webcontainer.core.WebContainer                       34
 67 org.eclipse.virgo.server.web.core.WebApplicationRegistry                    36
-... (entries removed)</programlisting>
+&lt;... remainder omitted ...&gt; 
+
+osgi> </programlisting>
 
 		<para>The following example shows how to examine a particular service:</para>
-		<programlisting>:> service examine 38
+		<programlisting>osgi> vsh service examine 38
 
 Properties:
     Bundle-SymbolicName:
@@ -685,7 +692,9 @@ Properties:
 Publisher: com.springsource.region.user 0.0.0 [1]
 
 Consumer(s):
-    org.eclipse.virgo.kernel.userregion 2.0.0.D-20091110110152 [2]</programlisting>
+    org.eclipse.virgo.kernel.userregion 2.0.0.D-20091110110152 [2]
+
+osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-install-command">
@@ -699,7 +708,7 @@ Consumer(s):
 
 		<para>After you execute the <literal>install</literal> command, Web Server attempts to resolve the artifact's dependencies, and if it is successful, puts it in the <literal>Resolved</literal> state.  At that point, you must start the artifact to be able to actually use it. </para>
 
-		<para>The following example shows how to install a bundle called <literal>swf-booking-mvc.war</literal> located in the <literal>/home/apps</literal> directory of the computer on which the Admin Shell is being run:</para>
+		<para>The following example shows how to install a bundle called <literal>swf-booking-mvc.war</literal> located in the <literal>/home/apps</literal> directory of the computer on which the Equinox Console Extension is being run:</para>
 
 		<programlisting>:> install file://home/apps/swf-booking-mvc.war
 
@@ -707,32 +716,33 @@ Artifact bundle swf-booking-mvc.war 0.0.0 installed</programlisting>
 
 		<para>The following example shows how to use the <literal>bundle list</literal> command to ensure that the bundle was indeed installed to Web Server; if you had installed a different kind of artifact, for example a plan, then you would use the appropriate command (such as <literal>plan list</literal>):</para>
 
-		<programlisting>:> bundle list
+		<programlisting>osgi> vsh bundle list
 
 Id   Name                             Version                State 
 
 0    org.eclipse.osgi                 3.5.1.R35x_v20091005   ACTIVE
 1    com.springsource.region.user     0.0.0                  ACTIVE
-
-... (entries removed for clarity)
+&lt;... remainder omitted ...&gt; 
 
 59   org.eclipse.virgo.server.splash   2.0.0.D-20091110115520 ACTIVE 
-60   swf-booking-mvc.war              0.0.0                  RESOLVED </programlisting>
+60   swf-booking-mvc.war              0.0.0                  RESOLVED
+
+osgi> </programlisting>
 
 		<para>Note that the <literal>swf-booking-mvc.war</literal> file is in the <literal>Resolved</literal> state.   The following examples start the bundle, and then examine it to ensure that it is in the <literal>Active</literal> state:</para>
-		<programlisting>:> bundle start 60
+		<programlisting>osgi> vsh bundle start 60
 
 bundle swf-booking-mvc.war:0.0.0 started successfully
 
 
-:> bundle examine 60
+osgi> vsh bundle examine 60
 
 Id:              60
 Name:            swf-booking-mvc.war
 Version          0.0.0
 State:           ACTIVE
 Spring Powered:  true
-Bundle Location: file:/home/juliet/dmServer2.0/virgo-web-server-2.0.1.CI-468/work/org.eclipse.virgo.kernel.deployer_2.0.0.D-20091110110152/deployer.staging/1642D0F2E664A7826F85ABC0DF360C81087D45F3/swf-booking-mvc.war/
+Bundle Location: file:&lt;... omitted ...&gt;/swf-booking-mvc.war/
 
 Imported Packages:
     javax.crypto.interfaces [0.0.0, 0.0.0]
@@ -741,7 +751,9 @@ Imported Packages:
         exported by org.eclipse.osgi 3.5.1.R35x_v20091005 [0]
     org.omg.DynamicAny.DynAnyFactoryPackage [0.0.0, 0.0.0]
         exported by org.eclipse.osgi 3.5.1.R35x_v20091005 [0]
-    ... </programlisting>
+    &lt;... remainder omitted ...&gt; 
+
+osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-shutdown-command">
@@ -761,24 +773,25 @@ prompt$</programlisting>
 	  <section id="admin-shell-help-command">
 		<title>help Command</title>
 
-		<para>Use the <literal>help</literal> command on its own to get a list of all available Admin Shell commands.  If you specify a particular command to the <literal>help</literal> command, then you will get the list of options that you can pass to the command. </para>
+		<para>Use the <literal>help</literal> command on its own to get a list of all available Equinox Console Extension commands.  If you specify a particular command to the <literal>help</literal> command, then you will get the list of options that you can pass to the command. </para>
 
 		<para>For example:</para>
-		<programlisting>:> help
+		<programlisting>osgi> vsh help
 
 
-    bundle - Management and examination of bundle artifacts
-    config - Management and examination of configuration artifacts
-    help
-    install - Install (deploy) an artifact to the server
-    package - Management and examination of exported packages
-    par - Management and examination of PAR artifacts
-    plan - Management and examination of plan artifacts
-    service - Examination of services
-    shutdown
+    bundle   - Management and examination of bundle artifacts
+    config   - Management and examination of configuration artifacts
+    exit     - Exit the kernel shell environment
+    help     - Get help on commands
+    install  - Install (deploy) an artifact to the server
+    package  - Management and examination of exported packages
+    par      - Management and examination of PAR artifacts
+    plan     - Management and examination of plan artifacts
+    service  - Examination of services
+    shutdown - Shutdown Virgo Kernel
 
 
-:> help bundle
+osgi> vsh help bundle
 
 bundle list                            - List all bundle artifacts that are
                                          currently installed
@@ -795,10 +808,19 @@ bundle refresh   [ id | name version ] - Refresh a bundle artifact. Refreshing
 bundle uninstall [ id | name version ] - Uninstall a bundle artifact
 bundle diag      [ id | name version ] - Provide diagnostics for a bundle
                                          artifact
-bundle headers   [ id | name version ] - Show the headers for a bundle artifact</programlisting>
+bundle headers   [ id | name version ] - Show the headers for a bundle artifact
+
+osgi> </programlisting>
 
 
 	  </section>
+	  <section id="admin-shell-exit-command">
+		<title>exit Command</title>
+		<para>This returns to the Equinox console and otherwise has no effect.</para>
+		<para>The <literal>exit</literal> command does not have any options.</para>
+	  </section>
+
+	
 
 	</section>
 </chapter>
