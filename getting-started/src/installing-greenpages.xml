@@ -139,18 +139,18 @@ prompt$ export GREENPAGES_HOME=/opt/springsource/samples/@greenpages.expanded.di
             can then be installed into the @webserv@ repository. Dependencies are gathered automatically during the
 			<code>package</code> phase. These dependencies can be found in
 			<literal>$GREENPAGES_HOME/solution/greenpages/target/par-provided</literal>. To install dependencies
-            simply copy all the <code>*.jar</code> files from this directory into <literal>$DMS_HOME/repository/usr</literal>.
+            simply copy all the <code>*.jar</code> files from this directory into <literal>$VWS_HOME/repository/usr</literal>.
       </para>
 
 <para>Installing dependencies on Windows:
 <programlisting>prompt> cd %GREENPAGES_HOME%\solution\greenpages 
-prompt> copy target\par-provided\* %DMS_HOME%\repository\usr
+prompt> copy target\par-provided\* %VWS_HOME%\repository\usr
 </programlisting>
 </para>
 
 <para>Installing Dependencies on UNIX:
 <programlisting>prompt$ cd $GREENPAGES_HOME/solution/greenpages 
-prompt$ cp target/par-provided/* $DMS_HOME/repository/usr
+prompt$ cp target/par-provided/* $VWS_HOME/repository/usr
 </programlisting>
 </para>
 <para>
@@ -197,17 +197,17 @@ You only to need run these commands once to start a database server for H2; the 
 
 <para>To install the @greenpages@ PAR into @webserv@ and start it:
           <orderedlist>
-              <listitem><para>Copy the @greenpages@ PAR  to the <code>$DMS_HOME/pickup</code> directory.  On Unix:</para>
-		<programlisting>prompt$ cd $DMS_HOME
+              <listitem><para>Copy the @greenpages@ PAR  to the <code>$VWS_HOME/pickup</code> directory.  On Unix:</para>
+		<programlisting>prompt$ cd $VWS_HOME
 prompt$ cp $GREENPAGES_HOME/solution/greenpages/target/greenpages-solution-@app.version@.par pickup/</programlisting>
 		<para>On Windows:</para>
-		<programlisting>prompt> cd %DMS_HOME%
+		<programlisting>prompt> cd %VWS_HOME%
 prompt> copy %GREENPAGES_HOME%\solution\greenpages\target\greenpages-solution-@app.version@.par pickup\</programlisting>
               </listitem>
               <listitem><para>Start @webserv@ with the <literal>-clean</literal> option.  On Unix:</para>
-              <programlisting>prompt$ $DMS_HOME/bin/startup.sh -clean</programlisting> 
+              <programlisting>prompt$ $VWS_HOME/bin/startup.sh -clean</programlisting> 
 	      <para>On Windows:</para>
-              <programlisting>prompt> "%DMS_HOME%"\bin\startup.bat -clean</programlisting> 
+              <programlisting>prompt> "%VWS_HOME%"\bin\startup.bat -clean</programlisting> 
               </listitem>
               <listitem>
 <para>Verify that @greenpages@ starts correctly by checking in the @webserv@ output for the log message:
@@ -374,7 +374,7 @@ There may be compilation errors at this stage.
 </para>
               </listitem>
               <listitem>
-<para>Click <guibutton>Browse</guibutton> and select the <code>$DMS_HOME</code> directory. Ensure that a JRE is selected
+<para>Click <guibutton>Browse</guibutton> and select the <code>$VWS_HOME</code> directory. Ensure that a JRE is selected
 supporting Java 1.6 or above.
 Click <guibutton>Finish</guibutton> to complete creation of the server:
     <mediaobject>
@@ -422,11 +422,11 @@ It is safe to ignore these.
           <para>
               Now that @greenpages@ is successfully imported into Eclipse, you can run the project directly from within the IDE. </para>
            <para>If you previously deployed the @greenpages@ PAR to @webserv@ by copying the PAR file to the <literal>pickup</literal> directory, be sure you now remove it so that it does not conflict with the deployment of the Eclipse project.  On Unix:</para>
-	  <programlisting>prompt$ cd $DMS_HOME/pickup
+	  <programlisting>prompt$ cd $VWS_HOME/pickup
 prompt$ rm greenpages-solution-@app.version@.par</programlisting>
 	
 	  <para>On Windows:</para>
-	  <programlisting>prompt> cd %DMS_HOME%\pickup
+	  <programlisting>prompt> cd %VWS_HOME%\pickup
 prompt> del greenpages-solution-@app.version@.par</programlisting>
 
 	  <para>Also, to prevent conflicts with the server configured in Eclipse, stop a currently-running @webserv@ by typing <literal>Control-C</literal> in the console window from which you started the server.  </para>

@@ -23,7 +23,7 @@ in later chapters.</para>
 	
 <title>OSGi concepts</title>
 
-<para>Modules in @webserv@ are represented using a standard Java
+<para>Modules in @virgo@ are represented using a standard Java
 module system known as <emphasis>OSGi</emphasis>.
 Modules consist of programs and resources organised by Java package together
 with metadata which declares imported and exported packages.
@@ -41,10 +41,10 @@ organising data and programs into classes can be applied
 to organising applications into modules.</para>
 
 <para>An industry consortium known as the
-<emphasis>OSGi Alliance</emphasis> (see <xref linkend="further.resources.projects"/>) develops the OSGi
-specification, reference implementation, and compliance tests.
-@webserv@ is built on the Equinox OSGi framework which is also
-the reference implementation for OSGi.</para>
+<emphasis>OSGi Alliance</emphasis> (see <xref linkend="further.resources.projects"/>) develops OSGi
+specifications, reference implementations, and compliance tests.
+@virgo@ @webserv@ is built on the Equinox OSGi framework which is also
+the reference implementation for the OSGi framework specification.</para>
 
 <!--========================================================================-->
 <section>
@@ -402,6 +402,9 @@ and closes the bundle&rsquo;s application contexts.
 Web Server turns off damping of a service proxy while the proxy&rsquo;s application context
 is being closed.</para>
 
+<para>Note that, at the time of writing, Spring DM is in the process of being contributed to Eclipse
+as the Gemini Blueprint service.</para>
+
 </section>
 
 <!--========================================================================-->
@@ -425,6 +428,9 @@ These bundles are placed in a JAR file with extension <quote><literal>.par</lite
 inside the PAR file may depend on packages and services outside the PAR file,
 but bundles outside the PAR file may not depend on packages and services
 provided by the PAR file.</para>
+
+<para>@virgo@ also provides another way of grouping bundles and other artifacts into an application: plans.
+A plan is a XML file listing a collection of artifacts. This Guide makes no further reference to plans.</para>
 
 </section>
 

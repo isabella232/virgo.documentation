@@ -338,12 +338,12 @@
 
 		<para>
 			Copy the JARs in the <filename>target/par-provided</filename> directory into the
-			<filename>$DMS_HOME/repository/bundles/usr/</filename> directory.
+			<filename>$VWS_HOME/repository/bundles/usr/</filename> directory.
 		</para>
 		
 		<para>
             Copy the PAR (<literal>greenpages-@app.version@.par</literal>) in the <filename>target/</filename> directory 
-            into the <filename>$DMS_HOME/pickup</filename> directory.
+            into the <filename>$VWS_HOME/pickup</filename> directory.
 		</para>
 		
 		<para>

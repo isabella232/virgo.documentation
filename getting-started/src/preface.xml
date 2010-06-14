@@ -7,9 +7,9 @@
 	<title>Preface</title>
 
 	<para>
-		This Guide explains how to install @virgo@ @webserv@
-		and the associated Eclipse<trademark class="trade"/> tools and how a small
-		application is developed and tested.
+		This Guide introduces some basic concepts, explains how to install @virgo@ @webserv@
+		and the associated Eclipse<trademark class="trade"/> tools, and examines a sample
+		web application in detail, including how the application is built and tested.
 	</para>
 
 	<para>It is intended for Spring application programmers and assumes little or no

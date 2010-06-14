@@ -47,7 +47,7 @@
 		
 		<para>
 			In the next dialog, set the <emphasis>Virgo Web Server installation directory</emphasis> field to the
-			<emphasis>value</emphasis> of <literal>$DMS_HOME</literal> and 
+			<emphasis>value</emphasis> of <literal>$VWS_HOME</literal> and 
 			check that the <emphasis>JRE:</emphasis> option is set to Java 1.6 or above. 
 			<emphasis>This may not be the workbench default.</emphasis>
 			When complete, press <emphasis>Finish</emphasis>.
