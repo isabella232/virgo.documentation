@@ -169,8 +169,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 <programlisting><![CDATA[<CC0001W> Mandatory reference '&directory' in bundle
   'greenpages-1-greenpages.web' version '2.0.0' is waiting for service with filter
   '(&(objectClass=greenpages.Directory)(!(org.eclipse.virgo.server.app.name=*)))'.]]>
-</programlisting>
-		</para> -->
+</programlisting> -->
+		</para>
 		<para>
 			This is because there is no provider of a <interfacename>greenpages.Directory</interfacename> in
 			the Service Registry. The next step will address this.
