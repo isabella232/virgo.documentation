@@ -34,7 +34,7 @@
 	<abstract role="fo">
 		<warning>
 			<para>
-				Please note that this document is based on dm Server 2.0.x and needs to be updated for @virgo@.
+				Please note that this document was based on dm Server 2.0.x and has only been updated for @virgo@ up to and including chapter 4.
 			</para>
 		</warning>
 		<para>
