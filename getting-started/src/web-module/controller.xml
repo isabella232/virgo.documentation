@@ -65,7 +65,7 @@
 		</para>
 		
 		<para>
-			The following code should be inserted:
+			The code should be edited to look like this:
 <programlisting language="java"><![CDATA[@Controller
 public class GreenPagesController {
 	…

@@ -129,7 +129,7 @@ public Listing entry(@RequestParam("id") int id) {
 			Change the Application Name to <literal>Greenpages PAR</literal> and the Version to
 			<literal>2.0.0</literal>, then
 			ensure that the <emphasis>Target Runtime</emphasis>
-			is set to <emphasis>Virgo Web Server (Runtime) v2.0</emphasis> and press <emphasis>Next</emphasis>.
+			is set to <emphasis>Virgo Web Server (Runtime) v2.1</emphasis> and press <emphasis>Next</emphasis>.
 		<mediaobject>
 			<imageobject role="fo">
 				<imagedata fileref="images/web-module/par-content.png" format="PNG" align="center" width="10cm"/>

@@ -24,8 +24,8 @@
 <programlisting><![CDATA[Excluded-Exports: 
  greenpages.internal]]>
 </programlisting>
-			(As before, be careful not to leave trailing spaces on the ends of lines and not to add any blank lines to the file.
-			The second line of this entry has a leading space—do not omit it.)
+			(As before, be careful not to leave trailing spaces on the ends of lines, except for the one space after the colon,
+			and not to add any blank lines to the file. The second line of this entry has a leading space—do not omit it.)
 		</para>
 		
 		<para>
@@ -108,7 +108,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 		<para>
 			Right-click on the @webserv@ in the <emphasis>Servers</emphasis> view, and select
-			<emphasis>Add and Remove Projects…</emphasis>.  In the dialog that opens, remove the
+			<emphasis>Add and Remove…</emphasis>.  In the dialog that opens, remove the
 			<literal>greenpages.web</literal> bundle and add the <literal>greenpages</literal> PAR to the server. When
 			the configuration is complete, press <emphasis>Finish</emphasis>.
 		<mediaobject>
@@ -165,14 +165,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 			The tools will automatically redeploy the <literal>greenpages.web</literal> bundle when the change to the
 			bean definition has been saved. 
 			The web bundle will not completely start.
-			After some time, the following error should occur:
+			<!-- After some time, the following error should occur:
 <programlisting><![CDATA[<CC0001W> Mandatory reference '&directory' in bundle
   'greenpages-1-greenpages.web' version '2.0.0' is waiting for service with filter
   '(&(objectClass=greenpages.Directory)(!(org.eclipse.virgo.server.app.name=*)))'.]]>
 </programlisting>
-		</para>
+		</para> -->
 		<para>
-			This error indicates that there is no provider of a <interfacename>greenpages.Directory</interfacename> in
+			This is because there is no provider of a <interfacename>greenpages.Directory</interfacename> in
 			the Service Registry. The next step will address this.
         </para>
     <para>

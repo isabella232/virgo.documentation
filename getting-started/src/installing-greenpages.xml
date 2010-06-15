@@ -335,7 +335,7 @@ There may be compilation errors at this stage.
       <section id="installing.greenpages.tools.configuring">
           <title>Configuring @webserv@ target runtime</title>
           <para>
-              Projects for @webserv@ are associated with a @webserv@ runtime environment in Eclipse. This is to allow
+              Projects for @webserv@ are associated with a @virgo@ @webserv@ runtime environment in Eclipse. This is to allow
               launching and testing from within Eclipse, and also to allow classpath construction in Eclipse to
               mirror the dynamic classpath in the @webserv@ runtime.
           </para>
@@ -369,7 +369,7 @@ There may be compilation errors at this stage.
               </listitem>
               <listitem>
 <para>In the <emphasis>New Server</emphasis> dialog, choose 
-<menuchoice><guimenu>Virgo</guimenu><guimenuitem>Virgo Web Server v2.0</guimenuitem></menuchoice> 
+<menuchoice><guimenu>EclipseRT</guimenu><guimenuitem>Virgo Web Server</guimenuitem></menuchoice> 
     and click <emphasis>Next</emphasis>.
 </para>
               </listitem>

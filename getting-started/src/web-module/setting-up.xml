@@ -32,8 +32,8 @@
 		<para>
 			In @sts.short@ open <menuchoice><guimenu>Preferences</guimenu><guimenuitem>Server</guimenuitem>
 			<guimenuitem>Runtime Environments</guimenuitem></menuchoice>. Select <emphasis>Add…</emphasis> to create a
-			new reference to an instance of @webserv@. In the dialog that opens, select the <emphasis>Virgo Web Server</emphasis>
-			runtime environment (v2.0) and check the box to <emphasis>Create a new local server.</emphasis>
+			new @webserv@ runtime environment. In the dialog that opens, select the <emphasis>Virgo Web Server
+			(runtime) v2.1</emphasis> and check the box to <emphasis>Create a new local server</emphasis>.
 			When complete, press <emphasis>Next</emphasis>.
 		<mediaobject>
 			<imageobject role="fo">
@@ -53,10 +53,10 @@
 			When complete, press <emphasis>Finish</emphasis>.
 		<mediaobject>
 			<imageobject role="fo">
-				<imagedata fileref="images/web-module/springsource-dm-server.png" format="PNG" align="center" width="11cm"/>
+				<imagedata fileref="images/web-module/virgo-web-server.png" format="PNG" align="center" width="11cm"/>
 			</imageobject>
 			<imageobject role="html">
-				<imagedata fileref="images/web-module/springsource-dm-server.png" format="PNG" align="center"/>
+				<imagedata fileref="images/web-module/virgo-web-server.png" format="PNG" align="center"/>
 			</imageobject>
 		</mediaobject>
 		</para>

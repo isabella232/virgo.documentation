@@ -20,7 +20,7 @@
 			on the @webserv@ instance in the <emphasis>Servers</emphasis> view.
 			Because <literal>greenpages.web</literal> is a web bundle the server will start automatically, and
 			a browser window may open.
-			Expand the @webserv@ instance and the bundle <literal>greenpages.web</literal>will be listed as a child.
+			Expand the @webserv@ instance and the bundle <literal>greenpages.web</literal> will be listed as a child.
 		<mediaobject>
 			<imageobject role="fo">
 				<imagedata fileref="images/web-module/web-bundle-deployed.png" format="PNG" align="center" width="11cm"/>
@@ -130,7 +130,8 @@ Bundle-Version: 2.0]]>
 <programlisting><![CDATA[Import-Template: 
  org.springframework.*;version="[3.0.0, 3.1.0)"]]>
 </programlisting>
-			(Again, be careful not to leave trailing spaces on lines or insert blank lines in this file.)
+			(Again, be careful not to leave trailing spaces on lines or insert blank lines in this file, except that there
+			must be one trailing space after the colon to indicate that the header continues on the next line.)
 		</para>
 		
 		<para>
