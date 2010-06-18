@@ -17,6 +17,8 @@
 		<all-bundles target="doc"/>
 	</target>
 
+	<!-- Other targets -->
+	
 	<target name="publish-static" depends="publish-static.init">
 		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
 				command="mkdir /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/${bundle.version}"/>
@@ -25,8 +27,6 @@
 				command="rm /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/2.0.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/${bundle.version} /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/2.0.x"/>
 	</target>
 
-
-<!-- Other targets -->
 	<target name="publish-static.init">
 		<fail message="The 'username' property must be set">
 			<condition>
