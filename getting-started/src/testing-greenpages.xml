@@ -34,6 +34,10 @@
 			from a live database. In this step a test case for the <classname>JpaDirectory</classname>
 			class is created.
 		</para>
+		
+		<para>
+			Before proceeding, stop any @webserv@ instance that was previously running.
+		</para>
 
 		<para>
 			Open the <classname>greenpages.jpa.JpaDirectorySpringContextTests</classname> class in the
@@ -122,6 +126,7 @@ public class JpaDirectorySpringContextTests {
 		<para>
 			Once again use the <literal>JpaDirectorySpringContextTests</literal> JUnit profile to run the test class.
 			Now that there is a <interfacename>DataSource</interfacename> being contributed, the test will pass.
+			If the test fails, check that the H2 database server is still running in the background.
 		</para>
 		
 		<para>
@@ -181,7 +186,7 @@ public class JpaDirectorySpringContextTests {
 public class @greenpages@SpringContextTests {
 …]]>
 </programlisting>
-			It may be necessary to click on Update the <literal>MANIFEST.MF</literal> on the template overview pane
+			It may be necessary to click on Update <literal>MANIFEST.MF</literal> on the template overview pane
 			and <emphasis>Update Dependencies</emphasis> from the <emphasis>Maven</emphasis> menu,
 			before Eclipse will suggest appropriate imports here.
 		</para>
@@ -208,6 +213,10 @@ public class @greenpages@SpringContextTests {
 			Because of
 			this all of the internal dependencies are satisfied by the beans created directly by the bundles.
 		</para>
+		
+		<para>
+			The test should pass. If it doesn't, try the usual Eclipse dance steps of opening and closing the project and doing a clean rebuild to clear the problem.
+	    </para>
 		
 		<para>
 			There are warnings output by this test concerning <literal>log4j</literal>:

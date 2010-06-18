@@ -188,7 +188,7 @@ private EntityManager em;
 
 		<para>
 			Now create a new file named <literal>orm.xml</literal> also in the <literal>META-INF</literal> folder
-			as <literal>persistence.xml</literal>. Add the following contents to the new file and then save it:
+			alongside <literal>persistence.xml</literal>. Add the following contents to the new file and then save it:
 <programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
 <entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

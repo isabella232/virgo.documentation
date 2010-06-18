@@ -138,6 +138,8 @@ template file <literal>template.mf</literal>) we should check that the manifest 
  greenpages;version="[2.0,2.1)",
  javax.persistence;version="[1.0.0,1.0.0]"
 </programlisting>
+            If there is already an <literal>Import-Template</literal> header in the template, extend it to include the
+            above package version range specifications.
     	</para>
  		<para>
  			This header tells Bundlor that all imports of <literal>org.springframework</literal> packages

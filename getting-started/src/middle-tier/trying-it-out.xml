@@ -9,7 +9,7 @@
 		as the Web bundle is still using the stub <literal>Directory</literal> implementation provided by the
 		<literal>greenpages.app</literal> module, rather than the JPA-based implementation that is provided
 		by <literal>greenpages.jpa</literal>. 
-		This can be confirmed by using the @webserv@ shell, or the web-based admin console to examine the services being used
+		This can be confirmed by using the Equinox console or the web-based admin console to examine the services being used
 		by <literal>greenpages.web</literal>.
 	</para>
 	

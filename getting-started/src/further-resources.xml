@@ -6,9 +6,11 @@
   <section id="further.resources.projects" xreflabel="the appendix Projects">
     <title>Projects</title>
     <orderedlist numeration="loweralpha">
+	  <listitem><para>Virgo
+	        (<ulink url="http://www.eclipse.org/virgo">http://www.eclipse.org/virgo</ulink>) — homepage for Virgo.</para>
+	  </listitem>
       <listitem><para>SpringSource.org
-        (<ulink url="http://www.springsource.org">http://www.springsource.org</ulink>) — homepage for Virgo Web Server and
-        Spring Framework.</para>
+        (<ulink url="http://www.springsource.org">http://www.springsource.org</ulink>) — homepage for Spring Framework.</para>
       </listitem>
       <listitem><para>OSGi
         (<ulink url="http://www.osgi.org">http://www.osgi.org</ulink>) — homepage for OSGi.</para>

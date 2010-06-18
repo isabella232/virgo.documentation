@@ -15,7 +15,8 @@
 			Create a new project by right-clicking in the <emphasis>Package Explorer</emphasis> view and selecting 
 			<menuchoice><guimenu>New</guimenu><guimenuitem>Project…</guimenuitem></menuchoice>. In the resulting
 			dialog select <menuchoice><guimenu>Virgo Web Server</guimenu><guimenuitem>Bundle
-			Project</guimenuitem></menuchoice> and press <emphasis>Next</emphasis>:
+			Project</guimenuitem></menuchoice> (or, with early builds of the Virgo tools, <menuchoice><guimenu>SpringSource dm Server</guimenu><guimenuitem>Bundle
+			Project</guimenuitem></menuchoice>) and press <emphasis>Next</emphasis>:
 		<mediaobject>
 			<imageobject role="fo">
 				<imagedata fileref="images/middle-tier/new-bundle-project.png" format="PNG" align="center" width="8cm"/>
@@ -51,9 +52,8 @@
 		<para>
 			Change the <literal>Bundle-Name</literal> to <quote><literal>@greenpages@ DataSource</literal></quote> to more accurately
 			describe the bundle&rsquo;s purpose. An option to select a &lsquo;Bundle Classpath Container&rsquo; is already selected. It should 
-			be de-selected, as a Maven Classpath container will be configured later. Lastly, check the target runtime JVM version 
-			is appropriately configured; it should specify a JVM version 
-			of 1.6 or later. Click <emphasis>Finish</emphasis>.
+			be de-selected, as a Maven Classpath container will be configured later. Ensure that the <emphasis>Target Runtime</emphasis>
+			is set to <emphasis>Virgo Web Server (Runtime) v2.1</emphasis>. Click <emphasis>Finish</emphasis>.
 		<mediaobject>
 			<imageobject role="fo">
 				<imagedata fileref="images/middle-tier/config-bundle-project.png" format="PNG" align="center" width="9cm"/>
@@ -220,7 +220,7 @@
 			<menuchoice><guimenu>New </guimenu><guimenuitem>Spring Bean Configuration File</guimenuitem></menuchoice> again. 
 			This time specify
 			a name of <literal>osgi-context.xml</literal>, click <emphasis>Next</emphasis>, and add the <literal>osgi</literal>
-			namespace declaration. 
+			namespace declaration (ensure that the resultant schema location string contains the URL <literal>http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd</literal> as <literal>http://www.springframework.org/schema/osgi/spring-osgi-2.0-m1.xsd</literal> with result in an obscure deployment failure due to an invalid 'cacheTarget' property). 
 			Click <emphasis>Finish</emphasis> and then add the following to the new file to publish the
 			<literal>DataSource</literal> as a service:
 <programlisting language="xml"><![CDATA[    <!--

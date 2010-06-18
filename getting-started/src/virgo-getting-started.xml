@@ -32,11 +32,6 @@
 		<author><firstname>Andy</firstname>			<surname>Wilkinson</surname>	</author>
 	</authorgroup>
 	<abstract role="fo">
-		<warning>
-			<para>
-				Please note that this document was based on dm Server 2.0.x and has only been updated for @virgo@ up to and including chapter 4.
-			</para>
-		</warning>
 		<para>
 		Spring application programmers are introduced to @virgo@ @webserv@
 		by installing the @webserv@ and examining a small application called @greenpages@.

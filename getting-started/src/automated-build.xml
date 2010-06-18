@@ -245,15 +245,15 @@
 </programlisting>
 		</para>
 		<para>
-			A dependency on Freemarker needs to be added to the other dependancies.
+			A dependency on Freemarker needs to be added to the other dependencies.
 			This is required to ensure the Web 
-			bundle has the correct set of dependancies as well as the other bundles.
+			bundle has the correct set of dependencies as well as the other bundles.
 			Normally they would simply be resolved 
-			transitively from the bundle projects but the &lsquo;war&rsquo; project does not pass on its dependancies; 
+			transitively from the bundle projects but the &lsquo;war&rsquo; project does not pass on its dependencies; 
 			it expects 
 			them to be contained in its &lsquo;lib&rsquo; directory. 
-			For this reason its dependancies must be given explicitly. 	
-<programlisting language="xml"><![CDATA[<!-- Required for the web bundle as dependancies are not propagated up from war build types -->
+			For this reason its dependencies must be given explicitly. 	
+<programlisting language="xml"><![CDATA[<!-- Required for the web bundle as dependencies are not propagated up from war build types -->
 <dependency>
 	<groupId>org.freemarker</groupId>
 	<artifactId>com.springsource.freemarker</artifactId>
@@ -262,7 +262,7 @@
 </programlisting>
 		</para>
 		<para>
-			The next step is to stop the Web bundle including its dependancies in a lib directory as they will be provided 
+			The next step is to stop the Web bundle including its dependencies in a lib directory as they will be provided 
 			by the runtime enviroment. Add the following build section to the <literal>greenpages.web</literal> POM file.
 <programlisting language="xml"><![CDATA[<build>
 	<plugins>
@@ -335,10 +335,14 @@
 			Maven can now build both the PAR application and the collection of dependencies required for the
 			application. In this step the PAR and dependencies are copied to the @webserv@ and the PAR is started.
 		</para>
+		
+		<para>
+			Change directory to <literal>start/greenpages</literal>.
+		</para>
 
 		<para>
 			Copy the JARs in the <filename>target/par-provided</filename> directory into the
-			<filename>$VWS_HOME/repository/bundles/usr/</filename> directory.
+			<filename>$VWS_HOME/repository/usr/</filename> directory.
 		</para>
 		
 		<para>
@@ -348,7 +352,7 @@
 		
 		<para>
 			Start the @webserv@. You should see output similar to:
-<programlisting><![CDATA[<DE0010I> Deployment of 'greenpages' version '@app.version@' completed.]]>
+<programlisting><![CDATA[<DE0005I> Started par 'greenpages' version '@app.version@'.]]>
 </programlisting>
         </para>
 
