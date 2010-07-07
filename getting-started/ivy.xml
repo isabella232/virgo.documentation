@@ -13,7 +13,7 @@
 	</configurations>
 
 	<publications>
-		<artifact name="${ant.project.name}" ext="pdf" type="pdf"/>
+		<!-- <artifact name="${ant.project.name}" ext="pdf" type="pdf"/> -->
 		<artifact name="${ant.project.name}" ext="zip" type="zip"/>
 		<artifact name="${ant.project.name}-single" ext="zip" type="zip"/>
 	</publications>

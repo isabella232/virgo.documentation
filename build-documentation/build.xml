@@ -16,6 +16,10 @@
 	<target name="doc">
 		<all-bundles target="doc"/>
 	</target>
+	
+	<target name="doc-html">
+		<all-bundles target="doc-html"/>
+	</target>
 
 	<!-- Other targets -->
 	
