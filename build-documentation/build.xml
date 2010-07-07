@@ -20,6 +20,17 @@
 	<target name="doc-html">
 		<all-bundles target="doc-html"/>
 	</target>
+	
+	<target name="package"
+			description="Creates a packaged distributable of the project.  Unless overridden, delegates to sub-bundles.">
+		<all-bundles target="package">
+			<property name="package.output.dir" value="${package.output.dir}"/>
+		</all-bundles>
+		<mkdir dir="${artifacts.dir}"/>
+		<zip destfile="${package.output.file}">
+			<zipfileset dir="${package.dir}"/>
+		</zip>
+	</target>
 
 	<!-- Other targets -->
 	
