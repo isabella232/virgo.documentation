@@ -5,7 +5,7 @@
     <title>Configuring the @product.name@</title>
     <titleabbrev>Configuring @short.product.name@</titleabbrev>
 
-	<para>You use configuration files in the <literal>SERVER_HOME/config</literal> directory to configure @short.product.name@.   This section divides the configuration of the server into the following high-level tasks:</para>
+	<para>You use configuration files in the <literal>$SERVER_HOME/config</literal> directory to configure @short.product.name@.   This section divides the configuration of the server into the following high-level tasks:</para>
 
 	<itemizedlist> 
 	  <listitem><link linkend="configuring-kernel">Configuring the kernel and the user region.</link></listitem>
@@ -17,7 +17,7 @@
 
     <section id="configuring-kernel" >
 	<title>Configuring the @kernel.product.name@ and User Region</title>
-	<para>This section provides information about configuring the @short.product.name@ kernel and the user region by updating the following files in the <literal>SERVER_HOME/config</literal> directory:</para>
+	<para>This section provides information about configuring the @short.product.name@ kernel and the user region by updating the following files in the <literal>$SERVER_HOME/config</literal> directory:</para>
 
 	<table id="configuring-kernel-table" colsep="1" frame="all" rowsep="1">
 	    <title>Kernel Configuration Files </title>
@@ -57,7 +57,7 @@
 	<title>Configuring Deployment</title>
 
 	<para>You can configure three properties of deployment: the pickup directory into which you copy applications for hot-deployment, the deployment timeout, and whether automatic cloning of deployed bundles is enabled.  </para>
-	<para>To change any of these properties, edit the <literal>deployer.XXX</literal> properties of the <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file.  The following table describes these properties.  </para>
+	<para>To change any of these properties, edit the <literal>deployer.XXX</literal> properties of the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file.  The following table describes these properties.  </para>
 	<table id="configuring-deployment-table" colsep="1" frame="all" rowsep="1">
 	    	  <title>Deployment Configuration Properties</title>
 		  <tgroup cols="2">
@@ -74,7 +74,7 @@
 			</row>
 			<row>
 				<entry><literal>deployer.pickupDirectory</literal></entry>
-				<entry>Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.  Relative paths are relative to <literal>SERVER_HOME</literal>.  The default value is <literal>./target/pickup.</literal>.</entry>
+				<entry>Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.  Relative paths are relative to <literal>$SERVER_HOME</literal>.  The default value is <literal>./target/pickup.</literal>.</entry>
 			</row>
 		    </tbody>
 		 </tgroup>
@@ -85,7 +85,7 @@
 		<programlisting><![CDATA[deployer.timeout=300
 deployer.pickupDirectory=pickup]]></programlisting>
 
-		<para>As the default configuration shows, the default pickup directory is <literal>SERVER_HOME/pickup</literal> and the deployment timeout is 300 seconds. 
+		<para>As the default configuration shows, the default pickup directory is <literal>$SERVER_HOME/pickup</literal> and the deployment timeout is 300 seconds. 
 		</para>
 	</section>
 
@@ -95,7 +95,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 			The Admin Shell is a command line utility that allows you to examine artifacts currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shutdown the server.  For complete documentation on the Admin Shell, see <xref linkend="admin-shell" />.
 		</para>	
 		<para>
-			You configure the Admin Shell by updating the <literal>shell.XXX</literal> properties in the <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file, as described in the following table:
+			You configure the Admin Shell by updating the <literal>shell.XXX</literal> properties in the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file, as described in the following table:
 		</para>
 
 	 	<table id="configuring-admin-shell-table" colsep="1" frame="all" rowsep="1">
@@ -129,7 +129,7 @@ shell.port=2401]]></programlisting>
 		<title>Configuring the User Region</title>
 		<para>The user region is the subsystem of @short.product.name@ that supports deployed applications, both your own user applications and those of the server itself, such as the Admin Console.  The user region is deliberately isolated from the kernel, which makes it much simpler for you to manage your applications with the Admin Console or Admin Shell because the internal server bundles are not visible.  </para>
 		<para>
-			You configure the user region by updating properties in the <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.userregion.properties</literal> file; these properties are described in the following table.  
+			You configure the user region by updating properties in the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.userregion.properties</literal> file; these properties are described in the following table.  
 		</para>
 		<para>
 			<emphasis role="bold">WARNING:</emphasis> We strongly recommends that you update only the <literal>initialArtifacts</literal> property; updating the other properties could cause @short.product.name@ to fail.  These properties are documented for your information only.
@@ -163,7 +163,7 @@ shell.port=2401]]></programlisting>
 			</row>
 			<row>
 				<entry><literal>inheritedFrameworkProperties</literal></entry>
-				<entry>Specifies the framework properties, configured in the <literal>SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file, that will also be set on the user region's nested framework.</entry>
+				<entry>Specifies the framework properties, configured in the <literal>$SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file, that will also be set on the user region's nested framework.</entry>
 			</row>
 			<row>
 				<entry><literal>initialArtifacts</literal></entry>
@@ -179,13 +179,13 @@ shell.port=2401]]></programlisting>
 	<section id="configuring-authentication">
 		<title>Configuring Authentication</title>
 		<para>@product.name@ uses the <ulink url="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html">Java Authentication and Authorization Service (JAAS)</ulink> framework to authenticate the administration user that connects to Web Servers using the Admin Console or Admin Shell. This section describes how the authentication mechanism is configured by default, and the files that you need to update if you want to change the administration user, change their password,  and so on. </para>
-		<para>The <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.authentication.config</literal> file configures the underlying authentication technology for @short.product.name@.  The short file consists of the following entry:</para>
+		<para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.authentication.config</literal> file configures the underlying authentication technology for @short.product.name@.  The short file consists of the following entry:</para>
 
 		<programlisting>dm-kernel {
         org.eclipse.virgo.kernel.authentication.KernelLoginModule REQUIRED;
 };</programlisting>
 
-		<para>The entry is named <literal>dm-kernel</literal>.  This name corresponds to the <literal>&lt;Realm&gt;</literal> element in the <literal>SERVER_HOME/config/tomcat-server.xml</literal> file that configures the JAAS authentication mechanism for the <literal>Catalina</literal> service of the <link linkend="configuring-tomcat">Tomcat servlet container</link>.  The <literal>dm-kernel</literal> entry specifies that the JAAS LoginModule that @short.product.name@ uses to authenticate users is <literal>org.eclipse.virgo.kernel.authentication.KernelLoginModule</literal> and that this <literal>KernelLoginModule</literal> is required to "succeed" in order for authentication to be considered successful. The <literal>KernelLoginModule</literal> succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for Web Server is <literal>admin/springsource</literal>. </para>
+		<para>The entry is named <literal>dm-kernel</literal>.  This name corresponds to the <literal>&lt;Realm&gt;</literal> element in the <literal>$SERVER_HOME/config/tomcat-server.xml</literal> file that configures the JAAS authentication mechanism for the <literal>Catalina</literal> service of the <link linkend="configuring-tomcat">Tomcat servlet container</link>.  The <literal>dm-kernel</literal> entry specifies that the JAAS LoginModule that @short.product.name@ uses to authenticate users is <literal>org.eclipse.virgo.kernel.authentication.KernelLoginModule</literal> and that this <literal>KernelLoginModule</literal> is required to "succeed" in order for authentication to be considered successful. The <literal>KernelLoginModule</literal> succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for Web Server is <literal>admin/springsource</literal>. </para>
 
 	       <para>You configure the administration user in the <literal>org.eclipse.virgo.kernel.users.properties</literal> file.  The default file for a freshly installed @short.product.name@ is as follows:</para>
 
@@ -216,7 +216,7 @@ role.admin=juliet</programlisting>
 	
 		<para>Be sure to restart @short.product.name@ after you make this change for it to take effect.</para>
 
-		<para>The final file involved in @short.product.name@ authentication is <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.jmxremote.access.properties</literal>.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:</para>
+		<para>The final file involved in @short.product.name@ authentication is <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.jmxremote.access.properties</literal>.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:</para>
 		<programlisting>admin=readwrite</programlisting>
 		<para>The only other value you can enter is <literal>readonly</literal>, which means that the adminstration user would only be able to view information using the Admin Console and Admin Shell.</para>
 	</section>
@@ -230,10 +230,10 @@ role.admin=juliet</programlisting>
 	<para>The serviceability sub-system of @short.product.name@ allows you to gather and view data and information that you can then use to diagnose problems and failures.  Serviceability includes data from:</para>
 	<itemizedlist>
 		<listitem>Service dumps: Contain a snapshot of all the important state from the running @short.product.name@ instance when an internal failure or thread deadlock is detected.
-  	             <para>You configure service dumps for @product.name@ using the <link linkend="configuring-serviceability-medic">com.springsource.medic.properties</link> file in the <literal>SERVER_HOME/config</literal> directory.  This file also includes some additional logging configuration.</para>
+  	             <para>You configure service dumps for @product.name@ using the <link linkend="configuring-serviceability-medic">com.springsource.medic.properties</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file also includes some additional logging configuration.</para>
 		</listitem>
 		<listitem>Event logs and server/application logging (previously called tracing): Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>.  This means that you now have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
-  	             <para>You configure logging for @product.name@ using the <link linkend="configuring-serviceability-logback">serviceability.xml</link> file in the <literal>SERVER_HOME/config</literal> directory.  This file is essentially the Logback <literal>logback.xml</literal> (or <literal>logback-test.xml</literal>) configuration file but renamed for @short.product.name@. </para>
+  	             <para>You configure logging for @product.name@ using the <link linkend="configuring-serviceability-logback">serviceability.xml</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file is essentially the Logback <literal>logback.xml</literal> (or <literal>logback-test.xml</literal>) configuration file but renamed for @short.product.name@. </para>
 		</listitem>
 	</itemizedlist>
 
@@ -242,9 +242,9 @@ role.admin=juliet</programlisting>
 	<section id="configuring-serviceability-medic">
 	  <title>The com.springsource.medic.properties File</title>
 
-	  <para>The <literal>SERVER_HOME/config/com.springsource.medic.properties</literal> file configures @short.product.name@ service dumps and whether you want to capture <literal>System.out</literal> and <literal>System.err</literal> output to your application's trace file. </para>
+	  <para>The <literal>$SERVER_HOME/config/com.springsource.medic.properties</literal> file configures @short.product.name@ service dumps and whether you want to capture <literal>System.out</literal> and <literal>System.err</literal> output to your application's trace file. </para>
 	  <para>The service dump support provides an in-memory buffer of log output. Whenever a dump is triggered this in-memory buffer is written out as part of the dump.</para>
-  	  <para>The following table describes the properties you can include in the <literal>SERVER_HOME/config/com.springsource.medic.properties</literal> file. This file configures serviceability properties that @short.product.name@ includes in addition to those supplied by the Logback, configured in the <literal>serviceability.xml</literal> file.</para>
+  	  <para>The following table describes the properties you can include in the <literal>$SERVER_HOME/config/com.springsource.medic.properties</literal> file. This file configures serviceability properties that @short.product.name@ includes in addition to those supplied by the Logback, configured in the <literal>serviceability.xml</literal> file.</para>
 
           <table id="medic-properties-table" colsep="1" frame="all" rowsep="1">
             <title>Serviceability Properties</title>
@@ -259,7 +259,7 @@ role.admin=juliet</programlisting>
   
   	        <row>
   	  	  <entry><literal>dump.root.directory</literal></entry>
-  	  	  <entry>Specifies the directory to which @short.product.name@ writes the service dumps.  The directory name is relative to <literal>SERVER_HOME</literal>.  </entry>
+  	  	  <entry>Specifies the directory to which @short.product.name@ writes the service dumps.  The directory name is relative to <literal>$SERVER_HOME</literal>.  </entry>
 	        </row>
 
 	        <row>
@@ -309,7 +309,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 	<section id="configuring-serviceability-logback">
 	  <title>The serviceability.xml File</title>
 		<para>Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>, which is a successor of the log4j project. The Logback logging framework is faster, more reliable, and easier to use than log4j and other logging systems.</para>
-  	        <para>You configure logging for @product.name@ using the <literal>SERVER_HOME/config/serviceability.xml</literal> file.  This file is the standard Logback <literal>logback.xml</literal> or <literal>logback-test.xml</literal> configuration file, but renamed for @short.product.name@ due to internal requirements. </para>
+  	        <para>You configure logging for @product.name@ using the <literal>$SERVER_HOME/config/serviceability.xml</literal> file.  This file is the standard Logback <literal>logback.xml</literal> or <literal>logback-test.xml</literal> configuration file, but renamed for @short.product.name@ due to internal requirements. </para>
 		<para>The following listing shows the default <literal>serviceability.xml</literal> file in a freshly-installed @short.product.name@; see the text after the listing for a brief overview of the file:</para>
 		<programlisting language="xml"><![CDATA[<configuration>
 
@@ -393,17 +393,17 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 
 	<para>The main information to get from this file is that @short.product.name@ writes log messages to four different locations that map to the four appenders:</para>
 	<itemizedlist>
-		<listitem><para>The <literal>SIFTED_LOG_FILE</literal> appender logs both global and application-specific messages to the <literal>SERVER_HOME/serviceability/logs/<emphasis>applicationName</emphasis>/log.log</literal> file, where <literal><emphasis>applicationName</emphasis></literal> refers to the name of the application.   The log messages for the @short.product.name@ itself are logged to the <literal>SERVE_HOME/serviceability/logs/dm-server/log.log</literal> file. Because this appender creates different log files for each application, it is called a <emphasis>sifting appender</emphasis>.   </para>
+		<listitem><para>The <literal>SIFTED_LOG_FILE</literal> appender logs both global and application-specific messages to the <literal>$SERVER_HOME/serviceability/logs/<emphasis>applicationName</emphasis>/log.log</literal> file, where <literal><emphasis>applicationName</emphasis></literal> refers to the name of the application.   The log messages for the @short.product.name@ itself are logged to the <literal>SERVE_HOME/serviceability/logs/dm-server/log.log</literal> file. Because this appender creates different log files for each application, it is called a <emphasis>sifting appender</emphasis>.   </para>
 		   <para>When @short.product.name@ creates the first log file, it calls it <literal>log.log</literal>; however, when this file reaches a size of 10MB, @short.product.name@ creates a new log file called <literal>log_1.log</literal>, and so on up to 4.  At that point, the cycle starts again and @short.product.name@ overwrites the existing <literal>log.log</literal>. This is called its <emphasis>rolling policy</emphasis>. </para>
 		<para>The <literal>&lt;Pattern&gt;</literal> element defines the format of each log message;  messages include the timestamp, the thread that generated the log message, the context-specific event code, and a stack trace of the exception, if any.  For example:</para>
 		 <para><literal>[2008-05-15 09:09:46.940] server-dm-2 org.apache.coyote.http11.Http11Protocol I Initializing Coyote HTTP/1.1 on http-48080</literal></para>
 		</listitem>
-		<listitem><para>The <literal>LOG_FILE</literal> appender is very similar to the first one, but it logs <emphasis>all</emphasis> log messages to the <literal>SERVER_HOME/serviceability/log/log.log</literal> file rather than sifting application-specific messages to their own log file.  The rolling policy and message format for this appender is similar to that of the <literal>SIFTED_LOG_FILE</literal> appender.</para></listitem>
+		<listitem><para>The <literal>LOG_FILE</literal> appender is very similar to the first one, but it logs <emphasis>all</emphasis> log messages to the <literal>$SERVER_HOME/serviceability/log/log.log</literal> file rather than sifting application-specific messages to their own log file.  The rolling policy and message format for this appender is similar to that of the <literal>SIFTED_LOG_FILE</literal> appender.</para></listitem>
 		<listitem><para>The <literal>EVENT_LOG_STDOUT</literal> appender does not log messages to a file, but rather to the console window from which you started @short.product.name@.  The format of the messages is similar to that of the preceding appenders, although with slightly less information. For example:</para>
 		 <para><literal>[2009-08-25 15:04:57.044] server-dm-7   &lt;OF0001I&gt; OSGi telnet console available on port 2401.</literal></para>
 		</listitem>
 
-		<listitem><para>The <literal>EVENT_LOG_FILE</literal> appender logs only important events to the <literal>SERVER_HOME/serviceability/eventlogs/eventlog.log</literal> file, and thus the volume of information is much lower than with the first two appenders. The rolling policy for the event log is the same as with the first two appenders, but the format of the messages is similar to that of the <literal>EVENT_LOG_STDOUT</literal> appender. </para> </listitem>
+		<listitem><para>The <literal>EVENT_LOG_FILE</literal> appender logs only important events to the <literal>$SERVER_HOME/serviceability/eventlogs/eventlog.log</literal> file, and thus the volume of information is much lower than with the first two appenders. The rolling policy for the event log is the same as with the first two appenders, but the format of the messages is similar to that of the <literal>EVENT_LOG_STDOUT</literal> appender. </para> </listitem>
 	</itemizedlist>
 
 	<para>The loggers and root logger specify the level of log that is written for each of the referenced appenders.</para>
@@ -476,7 +476,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 
 		<tip>
 		  <title>Relative paths</title>
-		  <para>If the configured path to a directory or file does not represent an absolute path, @short.product.name@ typically interprets it as a path relative to the <filename>SERVER_HOME</filename> directory.</para>
+		  <para>If the configured path to a directory or file does not represent an absolute path, @short.product.name@ typically interprets it as a path relative to the <filename>$SERVER_HOME</filename> directory.</para>
 		</tip>
 
 		<itemizedlist>
@@ -503,7 +503,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
                 <para>The <literal>keystoreFile</literal> attribute specifies the name of the file that contains the servlet container&rsquo;s 
                 private key and public certificate used in the SSL handshake, encryption, and decryption. 
                 You use an alias and password to access this information. 
-                In the example, this file is <literal>SERVER_HOME/config/keystore</literal>.  
+                In the example, this file is <literal>$SERVER_HOME/config/keystore</literal>.  
                 The <literal>keystorePass</literal> attributes specify the password used to access the keystore. 
                 </para></listitem>
 
@@ -534,7 +534,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 
 		<listitem><para>Finally, the <literal>org.apache.catalina.valves.AccessLogValve</literal> valve creates log files 
 		in the same format as those created by standard web servers.   
-		The servlet container creates the log files in the <literal>SERVER_HOME/serviceability/logs/access</literal> directory.  
+		The servlet container creates the log files in the <literal>$SERVER_HOME/serviceability/logs/access</literal> directory.  
 		The log files are prefixed with the string <literal>localhost_access_log.</literal>, have a suffix of <literal>.txt</literal>, 
 		use a standard format for identifying what should be logged, and do not include DNS lookups of the IP address of the remote host.
 		</para> </listitem>
@@ -551,7 +551,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 			</para>
 			<tip>
 				<title>Configuring SSL for Tomcat</title>
-				<para> The @product.name@ distribution includes a preconfigured <filename>SERVER_HOME/config/keystore</filename> 
+				<para> The @product.name@ distribution includes a preconfigured <filename>$SERVER_HOME/config/keystore</filename> 
 				file that contains a single self-signed SSL Certificate. 
 				The password for this <filename>keystore</filename> file is <literal>changeit</literal>.  
 				This <filename>keystore</filename> file is intended for testing purposes only. 
@@ -571,6 +571,52 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 				for detailed information about enabling and configuring clustering.
 			</para>
 		</section>
+		
+			<section id="configuring-tomcat-contexts">
+				<title>Context Configuration</title>
+				<para>
+					@product.name@ supports standard Apache Tomcat web application context configuration.
+					The <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/config/index.html">Apache Tomcat Configuration Reference</ulink> has a section on
+					<ulink url="http://tomcat.apache.org/tomcat-6.0-doc/config/context.html">The Context Container</ulink> which describes the mechanism that
+					is used in @short.product.name@ for searching context configuration files and details the context configuration properties.
+				</para>
+				<para>
+					The configuration files are located as follows:
+					<itemizedlist>
+						<listitem>
+							<literal>$SERVER_HOME/config/context.xml</literal> is the default context configuration file for all web applications.
+							</listitem>
+						<listitem>
+							The <literal>$SERVER_HOME/config/[enginename]/[hostname]</literal> directory contains:
+					  		<itemizedlist>
+								<listitem>
+									The default context configuration for all web applications of a given virtual host.
+								</listitem> 
+					   			<listitem>
+									Individual web applications' context configuration files.
+								</listitem>
+							</itemizedlist>
+							<literal>[enginename]</literal> is the name of Tomcat's engine ('Catalina' by default) and <literal>[hostname]</literal> names
+							a virtual host, both of which are configured in <literal>tomcat-server.xml</literal>.
+						</listitem>
+                    </itemizedlist>
+				</para>
+				<para>
+					Note that the following context configuration features are not supported in @product.name@:
+					<itemizedlist>
+						<listitem>
+							Custom class loaders.
+						</listitem>
+						<listitem>
+							Specifying the context path. This is specified using the <literal>Web-ContextPath</literal> header in the web application's
+							<literal>MANIFEST.MF</literal> file.
+						</listitem>
+						<listitem>
+							Specifying the document base directory.
+						</listitem>
+					</itemizedlist>
+				</para>
+			</section>
 
 	</section>
 
@@ -616,7 +662,7 @@ chain=ext,usr]]></programlisting>
 
         
         <para>
-		The default configuration shown above has two searchpaths corresponding to the two default sub-directories of the <literal>SERVER_HOME/repository</literal> directory created when you first install @short.product.name@: <literal>ext</literal> and <literal>usr</literal>.    @product.name@ searches each of these searchpaths when locating entries for inclusion in the repository.  </para>
+		The default configuration shown above has two searchpaths corresponding to the two default sub-directories of the <literal>$SERVER_HOME/repository</literal> directory created when you first install @short.product.name@: <literal>ext</literal> and <literal>usr</literal>.    @product.name@ searches each of these searchpaths when locating entries for inclusion in the repository.  </para>
 	 <para>
 	        The <literal>chain</literal> property shows the order in which @product.name@ searches the searchpaths: first <literal>ext</literal> and then <literal>usr</literal>. 
 	</para>
@@ -674,7 +720,7 @@ chain=ext,usr]]></programlisting>
 			<entry><literal><emphasis>repository-name</emphasis>.watchDirectory</literal></entry>
 			<entry> <para>Specifies the single directory of a watched repository. 
 			You can specify either an absolute or relative pathname for the directory.  
-			If you specify a relative pathname, it is relative  to the root of the @short.product.name@ installation (<literal>SERVER_HOME</literal>).  
+			If you specify a relative pathname, it is relative  to the root of the @short.product.name@ installation (<literal>$SERVER_HOME</literal>).  
 			Use this property together with <literal><emphasis>repository-name</emphasis>.type=watched</literal>.
 			</para></entry>
 		      </row>
@@ -758,7 +804,7 @@ chain=ext,usr]]></programlisting>
 	            for external and watched repositories, respectively, 
 	            that define a physical location that @product.name@ searches when looking for a library or bundle dependency. 
 	            If a search path is relative, its location is relative to the root of the installation, 
-	            in other words, the <literal>SERVER_HOME</literal> directory.
+	            in other words, the <literal>$SERVER_HOME</literal> directory.
    	        </para>
             <section id="configuring-provisioning-repository-search-paths-wildcards">
 	            <title>Using Wildcards</title>
@@ -873,7 +919,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 	<section id="configuring-hosted-repo">
 		<title>Configuring a Hosted Repository</title>
 		<para>You configure a @short.product.name@ instance to host a repository 
-		by editing the <literal>SERVER_HOME/config/com.springsource.repository.hosted.properties</literal> file; 
+		by editing the <literal>$SERVER_HOME/config/com.springsource.repository.hosted.properties</literal> file; 
 		remote clients can then access the artifacts in this hosted repository and use them locally.
 		</para>
               <para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
@@ -932,7 +978,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 				<entry><literal><emphasis>repository-name</emphasis>.watchDirectory</literal></entry>
 			<entry> <para>Specifies the single directory of a watched hosted repository. 
 			You can specify either an absolute or relative pathname for the directory.  
-			If you specify a relative pathname, it is relative to the root of the @short.product.name@ installation (<literal>SERVER_HOME</literal>).  
+			If you specify a relative pathname, it is relative to the root of the @short.product.name@ installation (<literal>$SERVER_HOME</literal>).  
 			Use this property when <literal>repository-name.type=watched</literal>.
 			</para></entry>
 			</row>
@@ -946,7 +992,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 		  </tgroup>
 		</table>
 		<para>The following sample shows a <literal>com.springsource.repository.hosted.properties</literal> file with a single external repository 
-		called <literal>my-hosted-repo</literal> with search pattern <literal>SERVER_HOME/repository/hosted/*</literal>.
+		called <literal>my-hosted-repo</literal> with search pattern <literal>$SERVER_HOME/repository/hosted/*</literal>.
 		<programlisting><![CDATA[my-hosted-repo.type=external
 my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 		</para>

@@ -54,9 +54,28 @@
 				<firstname>Steve</firstname>
 				<surname>Powell</surname>
 			</author>
+			<author>
+				<firstname>Violeta</firstname>
+				<surname>Georgieva</surname>
+			</author>
 		</authorgroup>
 
-		<legalnotice><para>Copyright &copy; 2009, 2010 VMware Inc.</para></legalnotice>
+		<legalnotice>
+			<para>
+				Copyright &copy; 2009, 2010 VMware Inc. and others
+			</para>
+			<para>
+				Contributors:
+				<itemizedlist>
+					<listitem>
+						VMware Inc. - initial contribution
+					</listitem>
+					<listitem>
+						Violeta Georgieva, SAP AG - Tomcat context configuration
+					</listitem>
+				</itemizedlist>
+			</para>
+		</legalnotice>
 	</bookinfo>
 
 	<toc />	
