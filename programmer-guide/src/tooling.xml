@@ -41,8 +41,7 @@
 				</listitem>
 				<listitem>
 					<para>
-						Install the Tools from <ulink url="http://static.springsource.com/projects/sts-dm-server/update/">
-						http://static.springsource.com/projects/sts-dm-server/update/</ulink> using the Eclipse Update Manager.</para>
+						Install the Tools from the update site (@dmst.update@) using the Eclipse Update Manager.</para>
 				</listitem>
 			</orderedlist>
 		</para>
