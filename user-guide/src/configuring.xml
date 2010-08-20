@@ -1023,7 +1023,7 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 			  <tbody>
 				<row>
 					<entry><literal>org.eclipse.virgo.suppress.heap.dumps</literal></entry>
-					<entry>Set to 'false' by default this property will prevent heap dumps being contributed to dumps taken during a First Failure Data Capture (FFDC) event. When the heap dumps are produced they will be located along with the other dump artifacts in the <literal>$SERVER_HOME/serviceability/dumps/</literal> folder.</entry>
+					<entry>Set to 'false' by default this property will prevent heap dumps being contributed to dumps taken during a First Failure Data Capture (FFDC) event. When the heap dumps are produced they will be located along with the other dump artifacts in the <literal>$SERVER_HOME/serviceability/dump/</literal> folder.</entry>
 				</row>
 			  </tbody>
 			</tgroup>
