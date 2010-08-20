@@ -5,7 +5,7 @@
     <title>Configuring the @product.name@</title>
     <titleabbrev>Configuring @short.product.name@</titleabbrev>
 
-	<para>You use configuration files in the <literal>$SERVER_HOME/config</literal> directory to configure @short.product.name@.   This section divides the configuration of the server into the following high-level tasks:</para>
+	<para>You use configuration files in the <literal>$SERVER_HOME/config</literal> directory to configure @short.product.name@.  You can also configure the Equinox framework properties using the <literal>$SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file. This section divides the configuration of the server into the following high-level tasks:</para>
 
 	<itemizedlist> 
 	  <listitem><link linkend="configuring-kernel">Configuring the kernel and the user region.</link></listitem>
@@ -13,8 +13,9 @@
 	  <listitem><link linkend="configuring-serviceability">Configuring serviceability.</link></listitem>
 	  <listitem><link linkend="configuring-provisioning-repository">Configuring the local provisioning repository.</link></listitem>
 	  <listitem><link linkend="configuring-hosted-repo">Configuring the hosted repository.</link></listitem>
+	  <listitem><link linkend="configuring-framework-properties">Configuring the framework properties.</link></listitem>
 	</itemizedlist> 
-
+	
     <section id="configuring-kernel" >
 	<title>Configuring the @kernel.product.name@ and User Region</title>
 	<para>This section provides information about configuring the @short.product.name@ kernel and the user region by updating the following files in the <literal>$SERVER_HOME/config</literal> directory:</para>
@@ -1000,6 +1001,33 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 	<para>See <link linkend="configuring-repository-examples-remote-watched">Example of watched and remote repositories</link> 
 	for details on how a local repository can remotely access the artifacts in this hosted repository.
 	</para>
+	</section>
+
+    <section id="configuring-framework-properties" >
+		<title>Configuring Framework Properties</title>
+		<para>
+			You specify the framework properties in the <literal>$SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file. These properties are described in the following table.
+		</para>
+		<para>
+			<emphasis role="bold">WARNING:</emphasis> We strongly recommends that you update only the <literal>org.eclipse.virgo.suppress.heap.dumps</literal> property; updating the other properties could cause @short.product.name@ to fail.  These properties are documented for your information only.
+		</para>
+		<table id="configuring-framework-properties-table" colsep="1" frame="all" rowsep="1">
+		    <title>Framework Properties</title>
+			<tgroup cols="2">
+			   <thead>
+				<row>
+					<entry>Property</entry>
+					<entry>Description</entry>
+				</row>
+			  </thead>
+			  <tbody>
+				<row>
+					<entry><literal>org.eclipse.virgo.suppress.heap.dumps</literal></entry>
+					<entry>Set to 'false' by default this property will prevent heap dumps being contributed to dumps taken during a First Failure Data Capture (FFDC) event. When the heap dumps are produced they will be located along with the other dump artifacts in the <literal>$SERVER_HOME/serviceability/dumps/</literal> folder.</entry>
+				</row>
+			  </tbody>
+			</tgroup>
+		  </table>
 	</section>
 
 </chapter>
