@@ -25,16 +25,49 @@
 		<para>
 		The @kernel.product.name@ encapsulates almost all of @short.product.name@ except for the deployment of Web applications.  In sum, the kernel provides the following @short.product.name@ features:
 		</para>
-		<itemizedlist>
-		  <listitem>Deployment of non-Web artifacts, such as OSGi bundles, PARs, plans, and configuration artifacts.</listitem>
-		  <listitem>Local and hosted repositories</listitem>
-		  <listitem>Scoping</listitem>
-		  <listitem>Hot deployment</listitem>
-		  <listitem>User region</listitem>
-		  <listitem>Auto-provisioning</listitem>
-		  <listitem>System and application tracing and dump support</listitem>
-		  <listitem>Spring beans and Spring DM support</listitem>
-		</itemizedlist>
+	<itemizedlist>
+		<listitem>
+			<para>
+			Deployment of non-Web artifacts, such as OSGi bundles, PARs, plans,
+			and configuration artifacts.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			Local and hosted repositories
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			Scoping
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			Hot deployment
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			User region
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			Auto-provisioning
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			System and application tracing and dump support
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			Spring beans and Spring DM support
+			</para>
+		</listitem>
+	</itemizedlist>
 
 		<para>See <link linkend="configuring">Configuring @short.product.name@</link> for details about configuring the default kernel to better suit your environment. </para>
 	</section>
@@ -42,8 +75,24 @@
 	<section id="user-region-overview">
 		<title>The @short.product.name@ User Region</title>
 		<para>
-		   The user region isolates the kernel from deployed applications, including both your own user applications and the user-oriented @short.product.name@ applications such as the Admin Console. This means that the kernel is mostly invisible to applications and to application management.  This is because most of the kernel bundles are not installed in the user region (apart from a few needed for region management). The necessary function to support the kernel runs in the OSGi framework, but the user region applications cannot see it, except for the services that are normally offered. </para>
-		<para>This way of implementing @short.product.name@ greatly simplifies the administration tasks you perform.  In particular, when you use the Admin Shell or the Admin Console to manage Web Server, you do not see the many bundles that are internal to the kernel.  The only exceptions are the kernel bundles that @short.product.name@ uses for region management, which are required to be installed in the user region.  </para>
+			The user region isolates the kernel from deployed applications,
+			including both your own user applications and the user-oriented
+			@short.product.name@ applications such as the Admin Console. This means
+			that the kernel is mostly invisible to applications and to application
+			management. This is because most of the kernel bundles are not
+			installed in the user region (apart from a few needed for region
+			management). The necessary function to support the kernel runs in the
+			OSGi framework, but the user region applications cannot see it, except
+			for the services that are normally offered.
+		</para>
+		<para>
+			This way of implementing @short.product.name@ greatly simplifies
+			the administration tasks you perform. In particular, when you use the
+			Admin Console to manage Web Server, you do not see all of 
+			the many bundles that are internal to the kernel. The only exceptions
+			are the kernel bundles that @short.product.name@ uses for region
+			management, which are required to be installed in the user region.
+		</para>
 
 		<para>This isolation has many other benefits. For example, it is no longer necessary for the kernel and user applications to use the same version of the Spring Framework. In fact the kernel installs only those parts of the Spring Framework that it needs.  If you update the kernel, it is far less likely that you will also need to upgrade or adjust the applications to accomodate a new version of the kernel. The kernel implementation is therefore much more stable and resilient and applications are much more likely to survive kernel upgrades between releases.  </para>
 		<para>When you install @short.product.name@, the kernel creates a single user region.  The configuration of the user region and the kernel is completely separate; see <link linkend="configuring">Configuring @short.product.name@</link> for details. </para>
