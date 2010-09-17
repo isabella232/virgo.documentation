@@ -3,9 +3,9 @@
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book xmlns:xi="http://www.w3.org/2001/XInclude">
 	<bookinfo>
-		<title>@product.name@ User Guide</title>
+		<title>@project.name@ User Guide</title>
 		<titleabbrev>User Guide</titleabbrev>
-		<productname>@product.name@</productname>
+		<productname>@project.name@</productname>
 		<releaseinfo>@bundle.version@</releaseinfo>
 
 		<mediaobject>
@@ -78,8 +78,10 @@
 		</legalnotice>
 	</bookinfo>
 
-	<toc />	
+	<toc />
+	<xi:include href="introduction.xml"/>	
 	<xi:include href="installing.xml"/>
+	<xi:include href="installing-kernel.xml"/>
 	<xi:include href="starting-stopping.xml"/>
 	<xi:include href="kernel-user-region.xml"/>
 	<xi:include href="admin-shell.xml"/>

@@ -16,8 +16,7 @@
 			<title>Downloading the ZIP file</title>
 			<para>
 				@product.name@ is distributed as a ZIP file. This can be downloaded from 
-				<ulink url="http://www.springsource.com/products/suite/applicationplatform">here</ulink>.
-				Follow the instructions to obtain a username and password.
+				<ulink url="http://www.eclipse.org/virgo/download/">here</ulink>.
 			</para>
 		</section>
 		<section id="installation-zip-installing">

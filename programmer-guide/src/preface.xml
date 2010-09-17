@@ -19,8 +19,15 @@
 		applications, and managing changes in response to changing business needs.
 		This is where the @umbrella.product.name@ comes into play. It offers a simple yet
 		comprehensive platform to develop, deploy, and service enterprise
-		applications. In this Programmer Guide, we explore the runtime portion of the
-		@umbrella.product.name@, the @product.name@, and learn how to develop
-		applications to benefit from its capabilities.
+		applications. In this Programmer Guide, we explore the runtime portions of the
+		@umbrella.product.name@, the @product.name@ and the @kernel.product.name@, and learn how to develop
+		applications to benefit from their capabilities.
 	</para>
+	<simplesect>
+		<title>A Note to @kernel.product.name@ Programmers</title>
+		<para>
+			Although this guide is written primarily for @product.name@ programmers, much of it is also useful for
+			@kernel.product.name@ programmers who should simply ignore the web-related sections.
+		</para>
+	</simplesect>
 </preface>

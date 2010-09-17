@@ -2,8 +2,8 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="configuring">
-    <title>Configuring the @product.name@</title>
-    <titleabbrev>Configuring @short.product.name@</titleabbrev>
+    <title>Configuration</title>
+    <titleabbrev>Configuration</titleabbrev>
 
 	<para>You use configuration files in the <literal>$SERVER_HOME/config</literal> directory to configure @short.product.name@.  You can also configure the Equinox framework properties using the <literal>$SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file. This section divides the configuration of the server into the following high-level tasks:</para>
 

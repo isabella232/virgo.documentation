@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="introduction">
+	
+	<title>Introduction</title>
+	
+	<para>
+		This User Guide covers both @product.name@ and @kernel.product.name@, although it emphasises the @product.name@ since that is likely
+		to apply to more users.
+	</para>
+	
+	<section>
+		<title>A Note for @kernel.product.name@ Users</title>
+	<para>
+		@kernel.product.name@ users can be reassured that the majority of the information
+		in this Guide is directly applicable to the @kernel.product.name@ and they can simply ignore the web-related sections.
+	</para>
+    </section>
+	
+</chapter>
