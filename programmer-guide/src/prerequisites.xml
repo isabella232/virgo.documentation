@@ -18,7 +18,7 @@
 			To make effective use of the @product.name@, you should also refer to the following guides:
 		</para>
 		<itemizedlist>
-			<listitem><ulink url="../../user-guide/html/index.html">@product.name@ User Guide</ulink></listitem>
+			<listitem><ulink url="../../user-guide/html/index.html">@project.name@ User Guide</ulink></listitem>
 			<listitem><ulink url="http://static.springframework.org/osgi/docs/current/reference/html/">Spring Dynamic Modules Reference Guide</ulink></listitem>
 			<listitem><ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/index.html">Spring Framework Reference Guide</ulink></listitem>
 		</itemizedlist>
