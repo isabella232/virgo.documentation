@@ -13,7 +13,15 @@
 	  <listitem>Plans</listitem>
 	  <listitem>Services installed in the OSGi registry</listitem>
 	</itemizedlist>
-	<para>You can run the Equinox console via telnet to the configured port (2401 by default):</para>
+	<para>
+		The Equinox console is not enabled by default.  To enable it place the setting
+<programlisting><![CDATA[osgi.console=2401]]></programlisting>
+		in the <literal>org.eclipse.virgo.kernel.userregion.properties</literal> file in the <literal>config</literal> directory.  
+		Any free port can be used, but 2401 is the usual default.
+	</para>
+	<para>
+		You can run the Equinox console via telnet to the configured port, for example:
+	</para>
 	<programlisting><![CDATA[prompt$ telnet localhost 2401
 Trying ::1...
 Connected to localhost.
@@ -108,19 +116,20 @@ osgi> ]]></programlisting>
 	<section id="admin-shell-command-reference">
 	  <title>Equinox Console Extension Command Reference</title>
 
-	  <para>This section contains reference information about the following Equinox Console Extension commands:</para>
-	  <itemizedlist>
-		<listitem><link linkend="admin-shell-bundle-command">bundle</link></listitem>
-		<listitem><link linkend="admin-shell-config-command">config</link></listitem>
-		<listitem><link linkend="admin-shell-package-command">package</link></listitem>
-		<listitem><link linkend="admin-shell-par-command">par</link></listitem>
-		<listitem><link linkend="admin-shell-plan-command">plan</link></listitem>
-		<listitem><link linkend="admin-shell-service-command">service</link></listitem>
-		<listitem><link linkend="admin-shell-install-command">install</link></listitem>
-		<listitem><link linkend="admin-shell-shutdown-command">shutdown</link></listitem>
-		<listitem><link linkend="admin-shell-help-command">help</link></listitem>
-		<listitem><link linkend="admin-shell-exit-command">exit</link></listitem>
-	  </itemizedlist>
+	  <para>
+	  	This section contains reference information about the Equinox Console Extension commands
+		<link linkend="admin-shell-bundle-command">bundle</link>, 
+		<link linkend="admin-shell-config-command">config</link>, 
+		<link linkend="admin-shell-package-command">package</link>, 
+		<link linkend="admin-shell-par-command">par</link>, 
+		<link linkend="admin-shell-plan-command">plan</link>, 
+		<link linkend="admin-shell-service-command">service</link>, 
+		<link linkend="admin-shell-install-command">install</link>, 
+		<link linkend="admin-shell-shutdown-command">shutdown</link>, 
+		<link linkend="admin-shell-help-command">help</link>, and
+		<link linkend="admin-shell-exit-command">exit</link>.
+	  </para>
+
 
 	  <section id="admin-shell-bundle-command">
 		<title>bundle Command</title>

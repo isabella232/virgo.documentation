@@ -82,7 +82,7 @@
 	<xi:include href="installing.xml"/>
 	<xi:include href="starting-stopping.xml"/>
 	<xi:include href="kernel-user-region.xml"/>
-<!--	<xi:include href="admin-shell.xml"/>-->
+	<xi:include href="admin-shell.xml"/>
 	<xi:include href="admin-console.xml"/>
 	<xi:include href="repository.xml"/>
 	<xi:include href="serviceability.xml"/>
