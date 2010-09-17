@@ -32,19 +32,19 @@
 		  <tbody>
 			<row>
 				<entry><literal>org.eclipse.virgo.kernel.properties</literal></entry>
-				<entry>Configures <link linkend="configuring-deployment">kernel deployment</link> and the <link linkend="configuring-admin-shell">Admin Shell</link> of @short.product.name@. </entry>
+				<entry>Configures <link linkend="configuring-deployment">kernel deployment</link>. </entry>
 			</row>
 			<row>
 				<entry><literal>org.eclipse.virgo.kernel.userregion.properties</literal></entry>
-				<entry>Configures the <link linkend="configuring-user-region">user region</link> of @short.product.name@.</entry>
+				<entry>Configures the <link linkend="configuring-user-region">user region</link> of @short.product.name@ and enables the OSGi console.</entry>
 			</row>
 			<row>
 				<entry><literal>org.eclipse.virgo.kernel.users.properties</literal></entry>
-				<entry>Configures the <link linkend="configuring-authentication">users that are allowed to access</link> the Admin Shell and Admin Console, and roles to which they map. </entry>
+				<entry>Configures the <link linkend="configuring-authentication">users that are allowed to access</link> the Admin Console, and roles to which they map. </entry>
 			</row>
 			<row>
 				<entry><literal>org.eclipse.virgo.kernel.jmxremote.access.properties</literal></entry>
-				<entry>Configures the <link linkend="configuring-authentication">permissions for users</link> that are allowed to access the Admin Shell and Admin Console. </entry>
+				<entry>Configures the <link linkend="configuring-authentication">permissions for users</link> that are allowed to access the Admin Console. </entry>
 			</row>
 	     		<row>
 				<entry><literal>org.eclipse.virgo.kernel.authentication.config</literal></entry>
@@ -90,50 +90,28 @@ deployer.pickupDirectory=pickup]]></programlisting>
 		</para>
 	</section>
 
-	<section id="configuring-admin-shell">
-		<title>Configuring the Admin Shell</title>
-		<para>
-			The Admin Shell is a command line utility that allows you to examine artifacts currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shutdown the server.  For complete documentation on the Admin Shell, see <xref linkend="admin-shell" />.
-		</para>	
-		<para>
-			You configure the Admin Shell by updating the <literal>shell.XXX</literal> properties in the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file, as described in the following table:
-		</para>
-
-	 	<table id="configuring-admin-shell-table" colsep="1" frame="all" rowsep="1">
-	    	  <title>Admin Shell Configuration Properties</title>
-		  <tgroup cols="2">
-		    <thead>
-			<row>
-				<entry>Property</entry>
-				<entry>Description</entry>
-			</row>
-		     </thead>
-		     <tbody>
-			<row>
-				<entry><literal>shell.enabled</literal></entry>
-				<entry>Specifies whether the Admin Shell is enabled or not.  Valid values are <literal>true</literal> or <literal>false</literal>.</entry>
-			</row>
-			<row>
-				<entry><literal>shell.port</literal></entry>
-				<entry>Defines the port on which you can remotely access the Admin Shell. If not set, the shell is only available from stdout of the @short.product.name@ process.</entry>
-			</row>
-		    </tbody>
-		 </tgroup>
-		</table>
-		<para>The following example shows the default Admin Shell configuration in a freshly-installed <literal>org.eclipse.virgo.kernel.properties</literal> file; only the relevant section of the file is shown. </para>
-		<programlisting><![CDATA[shell.enabled=true
-shell.port=2401]]></programlisting>
-		<para>The example shows that the Admin Shell is enabled by default, and you connect to it remotely using the port <literal>2401</literal>.</para>
-	</section>
-
 	<section id="configuring-user-region">
 		<title>Configuring the User Region</title>
-		<para>The user region is the subsystem of @short.product.name@ that supports deployed applications, both your own user applications and those of the server itself, such as the Admin Console.  The user region is deliberately isolated from the kernel, which makes it much simpler for you to manage your applications with the Admin Console or Admin Shell because the internal server bundles are not visible.  </para>
 		<para>
-			You configure the user region by updating properties in the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.userregion.properties</literal> file; these properties are described in the following table.  
+			The user region is the subsystem of @short.product.name@ that
+			supports deployed applications, both your own user applications and
+			those of the server itself, such as the Admin Console. The user region
+			is deliberately isolated from the kernel, which makes it much simpler
+			for you to manage your applications with the Admin Console 
+			because the internal server bundles are not visible.
 		</para>
 		<para>
-			<emphasis role="bold">WARNING:</emphasis> We strongly recommends that you update only the <literal>initialArtifacts</literal> property; updating the other properties could cause @short.product.name@ to fail.  These properties are documented for your information only.
+			You configure the user region by updating properties in the
+			<literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.userregion.properties</literal>
+			file; these properties are described in the following table.  
+		</para>
+		<para>
+			<emphasis role="bold">WARNING:</emphasis>
+			We strongly recommend that you update only the
+			<literal>initialArtifacts</literal>
+			property; updating the other properties could cause
+			@short.product.name@ to fail. These properties are documented for your
+			information only.
 		</para>
 
 	 	<table id="configuring-user-region-table" colsep="1" frame="all" rowsep="1">
@@ -179,7 +157,16 @@ shell.port=2401]]></programlisting>
 
 	<section id="configuring-authentication">
 		<title>Configuring Authentication</title>
-		<para>@product.name@ uses the <ulink url="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html">Java Authentication and Authorization Service (JAAS)</ulink> framework to authenticate the administration user that connects to Web Servers using the Admin Console or Admin Shell. This section describes how the authentication mechanism is configured by default, and the files that you need to update if you want to change the administration user, change their password,  and so on. </para>
+	<para>
+		@product.name@ uses the
+		<ulink
+			url="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html">Java Authentication and Authorization Service (JAAS)</ulink>
+		framework to authenticate the administration user that connects to Web
+		Servers using the Admin Console. This section describes
+		how the authentication mechanism is configured by default, and the
+		files that you need to update if you want to change the administration
+		user, change their password, and so on.
+	</para>
 		<para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.authentication.config</literal> file configures the underlying authentication technology for @short.product.name@.  The short file consists of the following entry:</para>
 
 		<programlisting>dm-kernel {
@@ -199,8 +186,17 @@ user.admin=springsource
 # Role definitions
 ##################
 role.admin=admin</programlisting>
-	
-		<para>The administration user that connect to the Admin Console and Admin Shell must have the <literal>admin</literal> role.  The preceding file shows how, by default, the <literal>admin</literal> role is assigned the <literal>admin</literal> user with password <literal>springsource</literal>.</para>
+
+	<para>
+		The administration user that connect to the Admin Console must have the
+		<literal>admin</literal>
+		role. The preceding file shows how, by default, the
+		<literal>admin</literal>
+		role is assigned the
+		<literal>admin</literal>
+		user with password
+		<literal>springsource</literal>.
+	</para>
 
 		<para>If you want to change the administration user, update the <literal>org.eclipse.virgo.kernel.users.properties</literal> file.  For example, if you want the <literal>juliet</literal> user, with password <literal>supersecret</literal>, to be the new adminstration user, update the file as shown:</para>
 
@@ -219,7 +215,11 @@ role.admin=juliet</programlisting>
 
 		<para>The final file involved in @short.product.name@ authentication is <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.jmxremote.access.properties</literal>.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:</para>
 		<programlisting>admin=readwrite</programlisting>
-		<para>The only other value you can enter is <literal>readonly</literal>, which means that the adminstration user would only be able to view information using the Admin Console and Admin Shell.</para>
+	<para>
+		The only other value you can enter is
+		<literal>readonly</literal>, which means that the adminstration user would only be able to <emphasis>view</emphasis>
+		information using the Admin Console.
+	</para>
 	</section>
 
 
