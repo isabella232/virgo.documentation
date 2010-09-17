@@ -3,11 +3,11 @@
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="kernel-regions-overview">
 
-	<title>Overview of the Web Server Kernel and User Region</title>
+	<title>Overview of the @kernel.product.name@ and User Region</title>
 	<para>Conceptually, @short.product.name@ can be divided into two separate subsystems, one of which actually encompases the other:</para>
 		<itemizedlist>
 		  <listitem>The <emphasis>kernel</emphasis>, which is the heart of @short.product.name@.  It makes up most of the @short.product.name@, except for the part that supports Web applications.  In other words, the kernel provides full OSGi modular support for your applications, as long as they are not Web-based. 
-			<para>See <link linkend="kernel-overview">The Web Server Kernel</link> for additional information.</para>
+			<para>See <link linkend="kernel-overview">The @kernel.product.name@</link> for additional information.</para>
 		</listitem>
 		  <listitem>The <emphasis>user region</emphasis> is the subsystem that manages user applications. It deliberately isolates the kernel from both your applications and those of the @short.product.name@ itself, such as the Admin Console, making it much easier for you to administer @short.product.name@. 
 			<para>See <link linkend="user-region-overview">The Web Server User Region</link> for additional information.</para>
@@ -21,7 +21,7 @@
 		<para>When you download and install @product.name@ you get both the kernel and a user region.  You can also <ulink url="http://www.eclipse.org/virgo/download/">download and use the kernel</ulink> on its own if you do not plan on deploying Web applications.  </para>
 
 	<section id="kernel-overview">
-		<title>The @short.product.name@ Kernel</title>
+		<title>The @kernel.product.name@</title>
 		<para>
 		The @kernel.product.name@ encapsulates almost all of @short.product.name@ except for the deployment of Web applications.  In sum, the kernel provides the following @short.product.name@ features:
 		</para>
