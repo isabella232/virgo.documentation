@@ -68,10 +68,14 @@
 				Contributors:
 				<itemizedlist>
 					<listitem>
+					<para>
 						VMware Inc. - initial contribution
+					</para>
 					</listitem>
 					<listitem>
+					<para>
 						Violeta Georgieva, SAP AG - Tomcat context configuration
+					</para>
 					</listitem>
 				</itemizedlist>
 			</para>

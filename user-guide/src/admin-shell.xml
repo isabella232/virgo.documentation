@@ -6,12 +6,12 @@
 
 	<para>Virgo provides an extension to the Equinox console that allows you to examine artifacts currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shutdown the server.   You can install, examine, and manage the lifecycle of the following artifacts:</para>
 	<itemizedlist>
-	  <listitem>Bundles</listitem>
-	  <listitem>Configuration Artifacts</listitem>
-	  <listitem>Exported packages</listitem>
-	  <listitem>PARs</listitem>
-	  <listitem>Plans</listitem>
-	  <listitem>Services installed in the OSGi registry</listitem>
+	  <listitem><para>Bundles</para></listitem>
+	  <listitem><para>Configuration Artifacts</para></listitem>
+	  <listitem><para>Exported packages</para></listitem>
+	  <listitem><para>PARs</para></listitem>
+	  <listitem><para>Plans</para></listitem>
+	  <listitem><para>Services installed in the OSGi registry</para></listitem>
 	</itemizedlist>
 	<para>
 		The Equinox console is not enabled by default.  To enable it place the setting
@@ -150,16 +150,16 @@ osgi> ]]></programlisting>
                         <row>
 				<entry>list</entry>
                                 <entry>Displays the list of bundles that are currently installed to the current Web Server instance.  With the exception of a few kernel bundles and their services, which Web Server uses to administer the user region, none of the kernel is visible to user installed artifacts; rather, only the bundles installed in the user region are visible.
-				  <para>Each bundle is identified by an internal <literal>ID</literal> which you can then use with the other <literal>bundle</literal> commands that manage a particular bundle, such as <literal>start <emphasis>id</emphasis></literal>.   The <literal>list</literal> command also displays the version of the bundle, along with its state, which is one of the following standard OSGi lifecycle states:</para>
+				  <para>Each bundle is identified by an internal <literal>ID</literal> which you can then use with the other <literal>bundle</literal> commands that manage a particular bundle, such as <literal>start </literal><emphasis><literal>id</literal></emphasis>.   The <literal>list</literal> command also displays the version of the bundle, along with its state, which is one of the following standard OSGi lifecycle states:</para>
 			        <itemizedlist>
-				  <listitem><emphasis role="bold">Installed</emphasis>: The bundle is installed but its dependencies have not yet been resolved.</listitem>
-				  <listitem><emphasis role="bold">Resolved</emphasis>: The bundle is resolved and you can now start it.</listitem>
-				  <listitem><emphasis role="bold">Uninstalled</emphasis>: The bundle is uninstalled and you can not use it. </listitem>
-				  <listitem><emphasis role="bold">Starting</emphasis>:  The bundle is in the process of starting. </listitem>
-				  <listitem><emphasis role="bold">Active</emphasis>: The bundle is running and you can now use it. </listitem>
-				  <listitem><emphasis role="bold">Stopping</emphasis>: The bundle is in the process of stopping. </listitem>
+				  <listitem><para><emphasis role="bold">Installed</emphasis>: The bundle is installed but its dependencies have not yet been resolved.</para></listitem>
+				  <listitem><para><emphasis role="bold">Resolved</emphasis>: The bundle is resolved and you can now start it.</para></listitem>
+				  <listitem><para><emphasis role="bold">Uninstalled</emphasis>: The bundle is uninstalled and you can not use it.</para></listitem>
+				  <listitem><para><emphasis role="bold">Starting</emphasis>:  The bundle is in the process of starting.</para></listitem>
+				  <listitem><para><emphasis role="bold">Active</emphasis>: The bundle is running and you can now use it.</para></listitem>
+				  <listitem><para><emphasis role="bold">Stopping</emphasis>: The bundle is in the process of stopping.</para></listitem>
 			        </itemizedlist>
-			     <para>Use one of the other <literal>bundle</literal> command to change the state of a bundle.  For example, use the <literal>bundle start <emphasis>id</emphasis></literal> command to change the state of a bundle from <literal>Installed</literal> to <literal>Active</literal>.</para>
+			     <para>Use one of the other <literal>bundle</literal> command to change the state of a bundle.  For example, use the <literal>bundle start </literal><emphasis><literal>id</literal></emphasis> command to change the state of a bundle from <literal>Installed</literal> to <literal>Active</literal>.</para>
 			   </entry>
                         </row>
                         <row>
@@ -384,7 +384,7 @@ osgi> </programlisting>
                       <tbody>
                         <row>
 				<entry>list</entry>
-                                <entry>Displays all the exported packages for all bundles in Web Server.  In addition to the package name, the command displays the version of the exported package and the <literal>id</literal> of the bundle that contains the exported package.  You can examine the bundle by using the command <literal>bundle examine <emphasis>id</emphasis></literal>.</entry>
+                                <entry>Displays all the exported packages for all bundles in Web Server.  In addition to the package name, the command displays the version of the exported package and the <literal>id</literal> of the bundle that contains the exported package.  You can examine the bundle by using the command <literal>bundle examine </literal><emphasis><literal>id</literal></emphasis>.</entry>
                         </row>
                         <row>
 				<entry>examine <emphasis>name version</emphasis></entry>
@@ -392,10 +392,10 @@ osgi> </programlisting>
 				  <para>This command provides the following additional information about the exported package:</para>
 
 				  <itemizedlist>
-				    <listitem>The name and version of the bundle that exports the package.  This means that the package name is explicitly listed in the bundle's <literal>MANIFEST.MF</literal> file as part of the <literal>Export-Package</literal> header. </listitem>
-				    <listitem>Any attributes that are part of the <literal>Export-Package</literal>, in addition to <literal>version</literal>.</listitem>
-				    <listitem>The directives that are part of the <literal>Export-Package</literal> header.  A typical directive is <literal>uses</literal>, which declares up-front constraints on a number of other packages.</listitem>
-				    <listitem>The list of all bundles that import the package.</listitem>
+				    <listitem><para>The name and version of the bundle that exports the package.  This means that the package name is explicitly listed in the bundle's <literal>MANIFEST.MF</literal> file as part of the <literal>Export-Package</literal> header.</para></listitem>
+				    <listitem><para>Any attributes that are part of the <literal>Export-Package</literal>, in addition to <literal>version</literal>.</para></listitem>
+				    <listitem><para>The directives that are part of the <literal>Export-Package</literal> header.  A typical directive is <literal>uses</literal>, which declares up-front constraints on a number of other packages.</para></listitem>
+				    <listitem><para>The list of all bundles that import the package.</para></listitem>
 				  </itemizedlist>
 				</entry>
                         </row>
@@ -471,10 +471,10 @@ osgi> </programlisting>
 				<entry>examine <emphasis>name version</emphasis></entry>
                                 <entry>Displays information about the specified PAR; you are required to identify the PAR with both its name and its version.  Use the <literal>par list</literal> command to view all installed PAR files and their versions.  The command displays the following information:
 			         <itemizedlist>
-				    <listitem>The current state of the PAR (see <link linkend="admin-shell-bundle-command">the bundle command</link> for the full list of possible states).  </listitem>
-				  <listitem>Whether the PAR is <emphasis>scoped</emphasis>.  Scoping specifies whether Web Server should deploy the members of the PAR in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</listitem>
-				  <listitem>Whether the PAR is <emphasis>atomic</emphasis>.  When a PAR is atomic, Web Server manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Web Server starts <emphasis>all</emphasis> the PAR artifacts. If one artifact fails to start, then Web Server stops all other artifacts in the PAR.</listitem>
-				  <listitem>The individual members, or children, of the PAR.  These could be other PARs, plans, bundles, configuration artifacts, and so on.</listitem>
+				    <listitem><para>The current state of the PAR (see <link linkend="admin-shell-bundle-command">the bundle command</link> for the full list of possible states).</para></listitem>
+				  <listitem><para>Whether the PAR is <emphasis>scoped</emphasis>.  Scoping specifies whether Web Server should deploy the members of the PAR in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</para></listitem>
+				  <listitem><para>Whether the PAR is <emphasis>atomic</emphasis>.  When a PAR is atomic, Web Server manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Web Server starts <emphasis>all</emphasis> the PAR artifacts. If one artifact fails to start, then Web Server stops all other artifacts in the PAR.</para></listitem>
+				  <listitem><para>The individual members, or children, of the PAR.  These could be other PARs, plans, bundles, configuration artifacts, and so on.</para></listitem>
 			         </itemizedlist>
 			   </entry>
                         </row>
@@ -559,10 +559,10 @@ osgi> </programlisting>
 				<entry>examine <emphasis>name version</emphasis></entry>
                                 <entry>Displays information about the specified plan; you are required to identify the plan with both its name and its version.  Use the <literal>plan list</literal> command to view all installed plans and their versions.  The command displays the following information:
 			         <itemizedlist>
-				    <listitem>The current state of the plan (see <link linkend="admin-shell-bundle-command">the bundle command</link> for the full list of possible states).  </listitem>
-				  <listitem>Whether the plan is <emphasis>scoped</emphasis>.  Scoping specifies whether Web Server should deploy the members of the plan in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</listitem>
-				  <listitem>Whether the plan is <emphasis>atomic</emphasis>.  When a plan is atomic, Web Server manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Web Server starts <emphasis>all</emphasis> the plan artifacts. If one artifact fails to start, then Web Server stops all other artifacts in the plan.</listitem>
-				  <listitem>The individual members, or children, of the plan.  These could be other plans, PARs, bundles, configuration artifacts, and so on.</listitem>
+						<listitem><para>The current state of the plan (see <link linkend="admin-shell-bundle-command">the bundle command</link> for the full list of possible states).</para></listitem>
+				    	<listitem><para>Whether the plan is <emphasis>scoped</emphasis>.  Scoping specifies whether Web Server should deploy the members of the plan in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</para></listitem>
+				    	<listitem><para>Whether the plan is <emphasis>atomic</emphasis>.  When a plan is atomic, Web Server manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Web Server starts <emphasis>all</emphasis> the plan artifacts. If one artifact fails to start, then Web Server stops all other artifacts in the plan.</para></listitem>
+				    	<listitem><para>The individual members, or children, of the plan.  These could be other plans, PARs, bundles, configuration artifacts, and so on.</para></listitem>
 			         </itemizedlist>
 			   </entry>
                         </row>
