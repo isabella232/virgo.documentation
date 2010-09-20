@@ -425,11 +425,11 @@ Manifest-Version: 1.0
 
 		   <para>If a bundle in a scope uses Spring DM (or the blueprint service) to obtain a service reference and a bundle in the same scope uses Spring DM (or the blueprint service) to publish a matching service, then the service reference may only bind to the service published in the scope (and not to any services outside the scope).  Services published by bundles in a scope are not visible to bundles in the global scope. </para>
 
-		    <para>However, sometimes it is useful to make a service in a scope globally available to artifacts outside the scope.  To do this, publish the service with the <literal>com.springsource.service.scope</literal> service property set to <literal>global</literal>.  Use the <literal>&lt;service-properties&gt;</literal> child element of <literal>&lt;service&gt;</literal>, as shown in the following example: </para>
+		    <para>However, sometimes it is useful to make a service in a scope globally available to artifacts outside the scope.  To do this, publish the service with the <literal>org.eclipse.virgo.service.scope</literal> service property set to <literal>global</literal>.  Use the <literal>&lt;service-properties&gt;</literal> child element of <literal>&lt;service&gt;</literal>, as shown in the following example: </para>
 
 		     <programlisting>&lt;service id="publishIntoGlobal" interface="java.lang.CharSequence"&gt;
   <emphasis role="bold">&lt;service-properties&gt;
-    &lt;beans:entry key="com.springsource.service.scope" value="global" /&gt;
+    &lt;beans:entry key="org.eclipse.virgo.service.scope" value="global" /&gt;
   &lt;/service-properties&gt;</emphasis>
   &lt;beans:bean class="java.lang.String"&gt;
     &lt;beans:constructor-arg value="foo"/&gt;
