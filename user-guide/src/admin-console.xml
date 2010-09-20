@@ -6,12 +6,12 @@
 	<titleabbrev>The Admin Console</titleabbrev>
 	<para>The Web Server Admin Console is a Web application for managing a single instance of Web Server.  Using the Admin Console, you can:</para>
 	<itemizedlist>
-		<listitem><link linkend="admin-console-login">View an overview of the Web Server properties</link>.</listitem>
-		<listitem><link linkend="admin-console-manage-artifacts">View and manage the lifecycle </link> of artifacts already deployed to the Web Server instance.  Artifacts include bundles, configuration files, PARs, and plans.  Lifecycle management tasks include starting, stopping, refreshing, and uninstalling the artifacts.  </listitem>
-		<listitem><link linkend="admin-console-install-artifacts">Install new artifacts to Web Server. </link>. </listitem>
-		<listitem><link linkend="admin-console-view-properties">View the properties of the configuration artifacts</link> deployed to Web Server. </listitem>
-	        <listitem><link linkend="admin-console-view-dumps">View details of dump files</link> that Web Server might have generated after encountering a problem.  This feature is particularly valuable if Web Server fails to install a new artifact due to resolution failures; the dump inspector can help you discover the exact artifact causing the resolution failure.</listitem>
-		<listitem><link linkend="admin-console-view-osgi-state">View an overview and details of the OSGi State</link> of Web Server, or in other words, a list of all bundles currently installed in Web Server and their state.  You can then then drill down into the details of each bundle, such as its symbolic name, packages it imports and exports, services it provides and consumes, and so on.  You can also view the bundles that were deployed when an exception that generated a dump occurred.</listitem>
+		<listitem><para><link linkend="admin-console-login">View an overview of the Web Server properties</link>.</para></listitem>
+		<listitem><para><link linkend="admin-console-manage-artifacts">View and manage the lifecycle</link> of artifacts already deployed to the Web Server instance.  Artifacts include bundles, configuration files, PARs, and plans.  Lifecycle management tasks include starting, stopping, refreshing, and uninstalling the artifacts.</para></listitem>
+		<listitem><para><link linkend="admin-console-install-artifacts">Install new artifacts to Web Server</link>.</para></listitem>
+		<listitem><para><link linkend="admin-console-view-properties">View the properties of the configuration artifacts</link> deployed to Web Server.</para></listitem>
+	    <listitem><para><link linkend="admin-console-view-dumps">View details of dump files</link> that Web Server might have generated after encountering a problem.  This feature is particularly valuable if Web Server fails to install a new artifact due to resolution failures; the dump inspector can help you discover the exact artifact causing the resolution failure.</para></listitem>
+		<listitem><para><link linkend="admin-console-view-osgi-state">View an overview and details of the OSGi State</link> of Web Server, or in other words, a list of all bundles currently installed in Web Server and their state.  You can then then drill down into the details of each bundle, such as its symbolic name, packages it imports and exports, services it provides and consumes, and so on.  You can also view the bundles that were deployed when an exception that generated a dump occurred.</para></listitem>
 	</itemizedlist>
 
 	<section id="admin-console-login">
@@ -29,8 +29,17 @@
 		<screen>ID: admin 
 Password: springsource</screen>
 
-		<para>The following graphic shows the main page of the Admin Console.</para>
-		<imagedata fileref="images/console-main-page.png" />
+		<para>The following graphic shows the main page of the Admin Console.
+		<mediaobject>
+		<imageobject role="fo">
+			<imagedata align="center" valign="bottom" fileref="images/console-main-page.png" format="PNG"/>
+		</imageobject>
+		<imageobject role="html">
+			<imagedata align="right" valign="bottom" fileref="images/console-main-page.png" format="PNG"/>
+		</imageobject>
+		</mediaobject>
+		
+		</para>
 
 		<para>Use the links at the top of the console to perform various tasks, such as viewing and managing artifacts (<emphasis role="bold">Artifacts</emphasis>), viewing the properties of deployed configuration artifacts (<emphasis role="bold">Configuration</emphasis>), viewing details of dumps (<emphasis role="bold">Dump Inspector</emphasis>), and viewing the OSGi state of the Web Server instance (<emphasis role="bold">OSGi State</emphasis>).</para>
 

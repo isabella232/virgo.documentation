@@ -8,12 +8,12 @@
 	<para>You use configuration files in the <literal>$SERVER_HOME/config</literal> directory to configure @short.product.name@.  You can also configure the Equinox framework properties using the <literal>$SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file. This section divides the configuration of the server into the following high-level tasks:</para>
 
 	<itemizedlist> 
-	  <listitem><link linkend="configuring-kernel">Configuring the kernel and the user region.</link></listitem>
-	  <listitem><link linkend="configuring-tomcat">Configuring embedded Tomcat servlet container.</link></listitem>
-	  <listitem><link linkend="configuring-serviceability">Configuring serviceability.</link></listitem>
-	  <listitem><link linkend="configuring-provisioning-repository">Configuring the local provisioning repository.</link></listitem>
-	  <listitem><link linkend="configuring-hosted-repo">Configuring the hosted repository.</link></listitem>
-	  <listitem><link linkend="configuring-framework-properties">Configuring the framework properties.</link></listitem>
+	  <listitem><para><link linkend="configuring-kernel">Configuring the kernel and the user region.</link></para></listitem>
+	  <listitem><para><link linkend="configuring-tomcat">Configuring embedded Tomcat servlet container.</link></para></listitem>
+	  <listitem><para><link linkend="configuring-serviceability">Configuring serviceability.</link></para></listitem>
+	  <listitem><para><link linkend="configuring-provisioning-repository">Configuring the local provisioning repository.</link></para></listitem>
+	  <listitem><para><link linkend="configuring-hosted-repo">Configuring the hosted repository.</link></para></listitem>
+	  <listitem><para><link linkend="configuring-framework-properties">Configuring the framework properties.</link></para></listitem>
 	</itemizedlist> 
 	
     <section id="configuring-kernel" >
@@ -25,29 +25,29 @@
 		<tgroup cols="2">
 		   <thead>
 			<row>
-				<entry>Property File</entry>
+				<entry>Property File (prefixed by <literal>org.eclipse.virgo</literal>)</entry>
 				<entry>Description</entry>
 			</row>
 		  </thead>
 		  <tbody>
 			<row>
-				<entry><literal>org.eclipse.virgo.kernel.properties</literal></entry>
-				<entry>Configures <link linkend="configuring-deployment">kernel deployment</link> and the <link linkend="configuring-admin-shell">Admin Shell</link> of @short.product.name@. </entry>
+				<entry><literal>.kernel.properties</literal></entry>
+				<entry>Configures <link linkend="configuring-deployment">kernel deployment</link>. </entry>
 			</row>
 			<row>
-				<entry><literal>org.eclipse.virgo.kernel.userregion.properties</literal></entry>
-				<entry>Configures the <link linkend="configuring-user-region">user region</link> of @short.product.name@.</entry>
+				<entry><literal>.kernel.userregion.properties</literal></entry>
+				<entry>Configures the <link linkend="configuring-user-region">user region</link> of @short.product.name@ and enables the OSGi console.</entry>
 			</row>
 			<row>
-				<entry><literal>org.eclipse.virgo.kernel.users.properties</literal></entry>
-				<entry>Configures the <link linkend="configuring-authentication">users that are allowed to access</link> the Admin Shell and Admin Console, and roles to which they map. </entry>
+				<entry><literal>.kernel.users.properties</literal></entry>
+				<entry>Configures the <link linkend="configuring-authentication">users that are allowed to access</link> the Admin Console, and roles to which they map. </entry>
 			</row>
 			<row>
-				<entry><literal>org.eclipse.virgo.kernel.jmxremote.access.properties</literal></entry>
-				<entry>Configures the <link linkend="configuring-authentication">permissions for users</link> that are allowed to access the Admin Shell and Admin Console. </entry>
+				<entry><literal>.kernel.jmxremote.access.properties</literal></entry>
+				<entry>Configures the <link linkend="configuring-authentication">permissions for users</link> that are allowed to access the Admin Console. </entry>
 			</row>
 	     		<row>
-				<entry><literal>org.eclipse.virgo.kernel.authentication.config</literal></entry>
+				<entry><literal>.kernel.authentication.config</literal></entry>
 				<entry>Configures the <link linkend="configuring-authentication">Java Authentication and Authorization Service (JAAS)</link> for the Tomcat server users.</entry>
 			</row>
 		  </tbody>
@@ -90,50 +90,28 @@ deployer.pickupDirectory=pickup]]></programlisting>
 		</para>
 	</section>
 
-	<section id="configuring-admin-shell">
-		<title>Configuring the Admin Shell</title>
-		<para>
-			The Admin Shell is a command line utility that allows you to examine artifacts currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shutdown the server.  For complete documentation on the Admin Shell, see <xref linkend="admin-shell" />.
-		</para>	
-		<para>
-			You configure the Admin Shell by updating the <literal>shell.XXX</literal> properties in the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file, as described in the following table:
-		</para>
-
-	 	<table id="configuring-admin-shell-table" colsep="1" frame="all" rowsep="1">
-	    	  <title>Admin Shell Configuration Properties</title>
-		  <tgroup cols="2">
-		    <thead>
-			<row>
-				<entry>Property</entry>
-				<entry>Description</entry>
-			</row>
-		     </thead>
-		     <tbody>
-			<row>
-				<entry><literal>shell.enabled</literal></entry>
-				<entry>Specifies whether the Admin Shell is enabled or not.  Valid values are <literal>true</literal> or <literal>false</literal>.</entry>
-			</row>
-			<row>
-				<entry><literal>shell.port</literal></entry>
-				<entry>Defines the port on which you can remotely access the Admin Shell. If not set, the shell is only available from stdout of the @short.product.name@ process.</entry>
-			</row>
-		    </tbody>
-		 </tgroup>
-		</table>
-		<para>The following example shows the default Admin Shell configuration in a freshly-installed <literal>org.eclipse.virgo.kernel.properties</literal> file; only the relevant section of the file is shown. </para>
-		<programlisting><![CDATA[shell.enabled=true
-shell.port=2401]]></programlisting>
-		<para>The example shows that the Admin Shell is enabled by default, and you connect to it remotely using the port <literal>2401</literal>.</para>
-	</section>
-
 	<section id="configuring-user-region">
 		<title>Configuring the User Region</title>
-		<para>The user region is the subsystem of @short.product.name@ that supports deployed applications, both your own user applications and those of the server itself, such as the Admin Console.  The user region is deliberately isolated from the kernel, which makes it much simpler for you to manage your applications with the Admin Console or Admin Shell because the internal server bundles are not visible.  </para>
 		<para>
-			You configure the user region by updating properties in the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.userregion.properties</literal> file; these properties are described in the following table.  
+			The user region is the subsystem of @short.product.name@ that
+			supports deployed applications, both your own user applications and
+			those of the server itself, such as the Admin Console. The user region
+			is deliberately isolated from the kernel, which makes it much simpler
+			for you to manage your applications with the Admin Console 
+			because the internal server bundles are not visible.
 		</para>
 		<para>
-			<emphasis role="bold">WARNING:</emphasis> We strongly recommends that you update only the <literal>initialArtifacts</literal> property; updating the other properties could cause @short.product.name@ to fail.  These properties are documented for your information only.
+			You configure the user region by updating properties in the
+			<literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.userregion.properties</literal>
+			file; these properties are described in the following table.  
+		</para>
+		<para>
+			<emphasis role="bold">WARNING:</emphasis>
+			We strongly recommend that you update only the
+			<literal>initialArtifacts</literal> and the <literal>osgi.console</literal>
+			properties; updating other properties could cause
+			@short.product.name@ to fail. These properties are documented for your
+			information.
 		</para>
 
 	 	<table id="configuring-user-region-table" colsep="1" frame="all" rowsep="1">
@@ -167,6 +145,13 @@ shell.port=2401]]></programlisting>
 				<entry>Specifies the framework properties, configured in the <literal>$SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file, that will also be set on the user region's nested framework.</entry>
 			</row>
 			<row>
+				<entry><literal>osgi.console</literal></entry>
+				<entry>Specifies the port number which the Equinox console will use. 
+				The usual port number is 2401. 
+				If specified, the Equinox console is enabled (with the Equinox Console Extension) during user region start. 
+				If not specified, the Equinox console is not available.</entry>
+			</row>
+			<row>
 				<entry><literal>initialArtifacts</literal></entry>
 				<entry>Specifies the artifacts that @short.product.name@ deploys into the user region when the server starts. @product.name@ performs dependency satisfaction when it deploys these artifacts.  This means that you only need to list the top-level artifacts that you care about; @short.product.name@ automatically installs any other artifacts upon which they depend from the repository.
 				<para>You can use this property to convert a @short.product.name@ into a @kernel.product.name@ by removing the <literal>repository:plan/org.eclipse.virgo.server.web</literal> plan.  </para>
@@ -179,7 +164,16 @@ shell.port=2401]]></programlisting>
 
 	<section id="configuring-authentication">
 		<title>Configuring Authentication</title>
-		<para>@product.name@ uses the <ulink url="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html">Java Authentication and Authorization Service (JAAS)</ulink> framework to authenticate the administration user that connects to Web Servers using the Admin Console or Admin Shell. This section describes how the authentication mechanism is configured by default, and the files that you need to update if you want to change the administration user, change their password,  and so on. </para>
+	<para>
+		@product.name@ uses the
+		<ulink
+			url="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html">Java Authentication and Authorization Service (JAAS)</ulink>
+		framework to authenticate the administration user that connects to Web
+		Servers using the Admin Console. This section describes
+		how the authentication mechanism is configured by default, and the
+		files that you need to update if you want to change the administration
+		user, change their password, and so on.
+	</para>
 		<para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.authentication.config</literal> file configures the underlying authentication technology for @short.product.name@.  The short file consists of the following entry:</para>
 
 		<programlisting>dm-kernel {
@@ -199,8 +193,17 @@ user.admin=springsource
 # Role definitions
 ##################
 role.admin=admin</programlisting>
-	
-		<para>The administration user that connect to the Admin Console and Admin Shell must have the <literal>admin</literal> role.  The preceding file shows how, by default, the <literal>admin</literal> role is assigned the <literal>admin</literal> user with password <literal>springsource</literal>.</para>
+
+	<para>
+		The administration user that connect to the Admin Console must have the
+		<literal>admin</literal>
+		role. The preceding file shows how, by default, the
+		<literal>admin</literal>
+		role is assigned the
+		<literal>admin</literal>
+		user with password
+		<literal>springsource</literal>.
+	</para>
 
 		<para>If you want to change the administration user, update the <literal>org.eclipse.virgo.kernel.users.properties</literal> file.  For example, if you want the <literal>juliet</literal> user, with password <literal>supersecret</literal>, to be the new adminstration user, update the file as shown:</para>
 
@@ -219,7 +222,11 @@ role.admin=juliet</programlisting>
 
 		<para>The final file involved in @short.product.name@ authentication is <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.jmxremote.access.properties</literal>.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:</para>
 		<programlisting>admin=readwrite</programlisting>
-		<para>The only other value you can enter is <literal>readonly</literal>, which means that the adminstration user would only be able to view information using the Admin Console and Admin Shell.</para>
+	<para>
+		The only other value you can enter is
+		<literal>readonly</literal>, which means that the adminstration user would only be able to <emphasis>view</emphasis>
+		information using the Admin Console.
+	</para>
 	</section>
 
 
@@ -230,10 +237,14 @@ role.admin=juliet</programlisting>
 
 	<para>The serviceability sub-system of @short.product.name@ allows you to gather and view data and information that you can then use to diagnose problems and failures.  Serviceability includes data from:</para>
 	<itemizedlist>
-		<listitem>Service dumps: Contain a snapshot of all the important state from the running @short.product.name@ instance when an internal failure or thread deadlock is detected.
+		<listitem><para>
+		Service dumps: Contain a snapshot of all the important state from the running @short.product.name@ instance when an internal failure or thread deadlock is detected.
+		</para>
   	             <para>You configure service dumps for @product.name@ using the <link linkend="configuring-serviceability-medic">com.springsource.medic.properties</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file also includes some additional logging configuration.</para>
 		</listitem>
-		<listitem>Event logs and server/application logging (previously called tracing): Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>.  This means that you now have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
+		<listitem><para>
+		Event logs and server/application logging (previously called tracing): Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>.  This means that you now have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
+		</para>
   	             <para>You configure logging for @product.name@ using the <link linkend="configuring-serviceability-logback">serviceability.xml</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file is essentially the Logback <literal>logback.xml</literal> (or <literal>logback-test.xml</literal>) configuration file but renamed for @short.product.name@. </para>
 		</listitem>
 	</itemizedlist>
@@ -394,7 +405,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 
 	<para>The main information to get from this file is that @short.product.name@ writes log messages to four different locations that map to the four appenders:</para>
 	<itemizedlist>
-		<listitem><para>The <literal>SIFTED_LOG_FILE</literal> appender logs both global and application-specific messages to the <literal>$SERVER_HOME/serviceability/logs/<emphasis>applicationName</emphasis>/log.log</literal> file, where <literal><emphasis>applicationName</emphasis></literal> refers to the name of the application.   The log messages for the @short.product.name@ itself are logged to the <literal>SERVE_HOME/serviceability/logs/dm-server/log.log</literal> file. Because this appender creates different log files for each application, it is called a <emphasis>sifting appender</emphasis>.   </para>
+		<listitem><para>The <literal>SIFTED_LOG_FILE</literal> appender logs both global and application-specific messages to the <literal>$SERVER_HOME/serviceability/logs/</literal><emphasis><literal>applicationName</literal></emphasis><literal>/log.log</literal> file, where <emphasis><literal>applicationName</literal></emphasis> refers to the name of the application.   The log messages for the @short.product.name@ itself are logged to the <literal>SERVE_HOME/serviceability/logs/dm-server/log.log</literal> file. Because this appender creates different log files for each application, it is called a <emphasis>sifting appender</emphasis>.   </para>
 		   <para>When @short.product.name@ creates the first log file, it calls it <literal>log.log</literal>; however, when this file reaches a size of 10MB, @short.product.name@ creates a new log file called <literal>log_1.log</literal>, and so on up to 4.  At that point, the cycle starts again and @short.product.name@ overwrites the existing <literal>log.log</literal>. This is called its <emphasis>rolling policy</emphasis>. </para>
 		<para>The <literal>&lt;Pattern&gt;</literal> element defines the format of each log message;  messages include the timestamp, the thread that generated the log message, the context-specific event code, and a stack trace of the exception, if any.  For example:</para>
 		 <para><literal>[2008-05-15 09:09:46.940] server-dm-2 org.apache.coyote.http11.Http11Protocol I Initializing Coyote HTTP/1.1 on http-48080</literal></para>
@@ -402,6 +413,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 		<listitem><para>The <literal>LOG_FILE</literal> appender is very similar to the first one, but it logs <emphasis>all</emphasis> log messages to the <literal>$SERVER_HOME/serviceability/log/log.log</literal> file rather than sifting application-specific messages to their own log file.  The rolling policy and message format for this appender is similar to that of the <literal>SIFTED_LOG_FILE</literal> appender.</para></listitem>
 		<listitem><para>The <literal>EVENT_LOG_STDOUT</literal> appender does not log messages to a file, but rather to the console window from which you started @short.product.name@.  The format of the messages is similar to that of the preceding appenders, although with slightly less information. For example:</para>
 		 <para><literal>[2009-08-25 15:04:57.044] server-dm-7   &lt;OF0001I&gt; OSGi telnet console available on port 2401.</literal></para>
+		 <para>might be seen when the Equinox Console is enabled (in the <literal>userregion.properties</literal> configuration file).</para>
 		</listitem>
 
 		<listitem><para>The <literal>EVENT_LOG_FILE</literal> appender logs only important events to the <literal>$SERVER_HOME/serviceability/eventlogs/eventlog.log</literal> file, and thus the volume of information is much lower than with the first two appenders. The rolling policy for the event log is the same as with the first two appenders, but the format of the messages is similar to that of the <literal>EVENT_LOG_STDOUT</literal> appender. </para> </listitem>
@@ -585,20 +597,28 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 					The configuration files are located as follows:
 					<itemizedlist>
 						<listitem>
+						<para>
 							<literal>$SERVER_HOME/config/context.xml</literal> is the default context configuration file for all web applications.
-							</listitem>
+						</para>
+						</listitem>
 						<listitem>
+						<para>
 							The <literal>$SERVER_HOME/config/[enginename]/[hostname]</literal> directory contains:
 					  		<itemizedlist>
 								<listitem>
+								<para>
 									The default context configuration for all web applications of a given virtual host.
-								</listitem> 
+								</para>
+								</listitem>
 					   			<listitem>
+					   			<para>
 									Individual web applications' context configuration files.
+					   			</para>
 								</listitem>
 							</itemizedlist>
 							<literal>[enginename]</literal> is the name of Tomcat's engine ('Catalina' by default) and <literal>[hostname]</literal> names
 							a virtual host, both of which are configured in <literal>tomcat-server.xml</literal>.
+						</para>
 						</listitem>
                     </itemizedlist>
 				</para>
@@ -606,14 +626,20 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 					Note that the following context configuration features are not supported in @product.name@:
 					<itemizedlist>
 						<listitem>
+						<para>
 							Custom class loaders.
+						</para>
 						</listitem>
 						<listitem>
+						<para>
 							Specifying the context path. This is specified using the <literal>Web-ContextPath</literal> header in the web application's
 							<literal>MANIFEST.MF</literal> file.
+						</para>
 						</listitem>
 						<listitem>
+						<para>
 							Specifying the document base directory.
+						</para>
 						</listitem>
 					</itemizedlist>
 				</para>
@@ -629,9 +655,9 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 		    </para>
 		<para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
 		<itemizedlist>
-		 	<listitem><literal>repository-name</literal> refers to the name of the local repository.</listitem>
-    			<listitem><literal>property</literal> refers to the name of a particular property.</listitem>
-    			<listitem><literal>value</literal> refers to the value of the property. </listitem>
+		 	<listitem><para><literal>repository-name</literal> refers to the name of the local repository.</para></listitem>
+    		<listitem><para><literal>property</literal> refers to the name of a particular property.</para></listitem>
+    		<listitem><para><literal>value</literal> refers to the value of the property.</para></listitem>
 		</itemizedlist>
 		</para>
 
@@ -681,25 +707,34 @@ chain=ext,usr]]></programlisting>
 		    </thead>
 		    <tbody>
 		      <row>
-			<entry><literal><emphasis>repository-name</emphasis>.type</literal></entry>
+			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.type</literal></entry>
 			<entry> 
                           <para>
                             Specifies the type of path.  You can set this property to one of the following three valid values:
 			    <itemizedlist>
-				<listitem><literal>external</literal>: Specifies that this path points to a number of directories that satisfy a given search pattern 
+				<listitem>
+				<para>
+				<literal>external</literal>: Specifies that this path points to a number of directories that satisfy a given search pattern 
 				and are local to the current @product.name@ instance. 
 				Use the <literal>searchPattern</literal> property to specify the directory search pattern.
+				</para>
 				</listitem>
-				<listitem><literal>watched</literal>: Specifies that this path points to a single directory, local to the current @product.name@ instance.  
+				<listitem>
+				<para>
+				<literal>watched</literal>: Specifies that this path points to a single directory, local to the current @product.name@ instance.  
 				@product.name@ regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
 				Use the <literal>watchDirectory</literal> property to specify the watched directory 
 				and the <literal>watchInterval</literal> property 
 				to specify how often @short.product.name@ checks the directory.
+				</para>
 				</listitem>
-				<listitem><literal>remote</literal>: Specifies that the path points to a remotely-hosted repository, 
+				<listitem>
+				<para>
+				<literal>remote</literal>: Specifies that the path points to a remotely-hosted repository, 
 				hosted by a remote instance of @product.name@.  
 				Use the <literal>uri</literal> property to specify the full URI of the remote repository.  
 				You can also specify the optional <literal>indexRefreshInterval</literal> property. 
+				</para>
 				</listitem>
 			    </itemizedlist>
                           </para> 
@@ -710,50 +745,59 @@ chain=ext,usr]]></programlisting>
 			</entry>
 		      </row>
 		      <row>
-			<entry><literal><emphasis>repository-name</emphasis>.searchPattern</literal></entry>
+			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.searchPattern</literal></entry>
 			<entry> <para>Specifies the pattern that an external repository uses when deciding which local directories it should search 
-			when identifying artifacts.  Use this property together with <literal><emphasis>repository-name</emphasis>.type=external</literal>. 
+			when identifying artifacts.  Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=external</literal>. 
 			See <link linkend="configuring-provisioning-repository-search-paths" >Search Paths: Additional Information</link> 
 			for detailed information about specifying a search pattern.  
 			</para> </entry>
 		      </row>
 		      <row>
-			<entry><literal><emphasis>repository-name</emphasis>.watchDirectory</literal></entry>
+			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.watchDirectory</literal></entry>
 			<entry> <para>Specifies the single directory of a watched repository. 
 			You can specify either an absolute or relative pathname for the directory.  
 			If you specify a relative pathname, it is relative  to the root of the @short.product.name@ installation (<literal>$SERVER_HOME</literal>).  
-			Use this property together with <literal><emphasis>repository-name</emphasis>.type=watched</literal>.
+			Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=watched</literal>.
 			</para></entry>
 		      </row>
 		      <row>
-			<entry><literal><emphasis>repository-name</emphasis>.watchInterval</literal></entry>
+			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.watchInterval</literal></entry>
 			<entry> <para>Specifies the interval in seconds between checks of a watched directory by a watched repository.  
 			This property is optional, if it is not specified the default interval of 5 seconds is used.  
-			Use this property together with <literal><emphasis>repository-name</emphasis>.type=watched</literal>. 
+			Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=watched</literal>. 
 			</para> </entry>
 		      </row>
 		      <row>
-			<entry><literal><emphasis>repository-name</emphasis>.uri</literal></entry>
+			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.uri</literal></entry>
 			<entry> <para>Specifies the URI of the hosted repository to which a remote repository connects.  
 			The value of this property takes the following format:
 			</para>
-                      <para><literal>http://<emphasis>host</emphasis>:<emphasis>port</emphasis>/org.eclipse.virgo.server.repository/<emphasis>remote-repository-name</emphasis></literal></para>
+                      <para><literal>http://</literal><emphasis><literal>host</literal></emphasis><literal>:</literal><emphasis><literal>port</literal></emphasis><literal>/org.eclipse.virgo.server.repository/</literal><emphasis><literal>remote-repository-name</literal></emphasis></para>
                       <para>where:
 			<itemizedlist>
-				<listitem><literal><emphasis>host</emphasis></literal> refers to the computer on which the remote @short.product.name@ instance hosts the remote repository.
+				<listitem>
+				<para>
+				<emphasis><literal>host</literal></emphasis> refers to the computer on which the remote @short.product.name@ instance hosts the remote repository.
+				</para>
 				</listitem>
-				<listitem><literal><emphasis>port</emphasis></literal> refers to Tomcat listen port of the remote @short.product.name@ instance which hosts the remote repository.
+				<listitem>
+				<para>
+				<emphasis><literal>port</literal></emphasis> refers to Tomcat listen port of the remote @short.product.name@ instance which hosts the remote repository.
+				</para>
 				</listitem>
-				<listitem><literal><emphasis>remote-repository-name</emphasis></literal> refers to the name of the remote repository, 
+				<listitem>
+				<para>
+				<emphasis><literal>remote-repository-name</literal></emphasis> refers to the name of the remote repository, 
 				as specified in the <literal>hostedRepository.properties</literal> file of the remote @short.product.name@ instance.
+				</para>
 				</listitem>
 			</itemizedlist>
                        </para>
-                       <para>Use this property together with <literal><emphasis>repository-name</emphasis>.type=remote</literal>.
+                       <para>Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=remote</literal>.
                        </para> </entry>
 		      </row>
 		      <row>
-			<entry><literal><emphasis>repository-name</emphasis>.indexRefreshInterval</literal></entry>
+			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.indexRefreshInterval</literal></entry>
 			<entry>
 				<para>
 					Specifies the interval in seconds between checks by a remote repository that 
@@ -762,7 +806,7 @@ chain=ext,usr]]></programlisting>
 					This property is optional,
 					if it is not specified the default interval of 5 seconds is used.
 				</para> 
-				<para>Use this property together with <literal><emphasis>repository-name</emphasis>.type=remote</literal>.</para> </entry>
+				<para>Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=remote</literal>.</para> </entry>
 		      </row>
 		    </tbody>
 		  </tgroup>
@@ -800,8 +844,8 @@ chain=ext,usr]]></programlisting>
         <section id="configuring-provisioning-repository-search-paths">
             <title>Search Paths: Additional Information</title>
             <para>
-	            The <literal><emphasis>repository-name</emphasis>.searchPattern</literal> and 
-	            <literal><emphasis>repository-name</emphasis>.watchDirectory</literal> properties specify search paths 
+	            The <emphasis><literal>repository-name</literal></emphasis><literal>.searchPattern</literal> and 
+	            <emphasis><literal>repository-name</literal></emphasis><literal>.watchDirectory</literal> properties specify search paths 
 	            for external and watched repositories, respectively, 
 	            that define a physical location that @product.name@ searches when looking for a library or bundle dependency. 
 	            If a search path is relative, its location is relative to the root of the installation, 
@@ -810,7 +854,7 @@ chain=ext,usr]]></programlisting>
             <section id="configuring-provisioning-repository-search-paths-wildcards">
 	            <title>Using Wildcards</title>
             	<para>
-		            Search paths specified with the <literal><emphasis>repository-name</emphasis>.searchPattern</literal> property 
+		            Search paths specified with the <emphasis><literal>repository-name</literal></emphasis><literal>.searchPattern</literal> property 
 		            provide support for wildcards. 
 		            In the entries above, the path segments surrounded by curly braces, 
 		            for example <literal>{bundle}</literal> and <literal>{library}</literal>, 
@@ -833,10 +877,10 @@ chain=ext,usr]]></programlisting>
         <section id="configuring-provisioning-repository-using-system-properties">
 			<title>Using System properties</title>
 			<para>
-				You can use system properties when specifying the values of the <literal><emphasis>repository-name</emphasis>.searchPattern</literal>, 
-				<literal><emphasis>repository-name</emphasis>.watchDirectory</literal>,
-				<literal><emphasis>repository-name</emphasis>.watchInterval</literal> <literal><emphasis>repository-name</emphasis>.uri</literal>, 
-				and <literal><emphasis>repository-name</emphasis>.indexRefreshInterval</literal>
+				You can use system properties when specifying the values of the <emphasis><literal>repository-name</literal></emphasis><literal>.searchPattern</literal>, 
+				<emphasis><literal>repository-name</literal></emphasis><literal>.watchDirectory</literal>,
+				<emphasis><literal>repository-name</literal></emphasis><literal>.watchInterval</literal> <emphasis><literal>repository-name</literal></emphasis><literal>.uri</literal>, 
+				and <emphasis><literal>repository-name</literal></emphasis><literal>.indexRefreshInterval</literal>
 				properties. 
 				You reference system properties as <literal>${system.property.name}</literal>; 
 				for example, a search path of <literal>${user.home}/repository/bundles</literal> references the
@@ -925,9 +969,9 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 		</para>
               <para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
              <itemizedlist> 
-		<listitem><literal>repository-name</literal> refers to the name of the hosted repository.</listitem>
-		<listitem><literal>property</literal> refers to the name of a particular property.  </listitem>
-		<listitem><literal>value</literal> refers to the value of the property.  </listitem>
+		<listitem><para><literal>repository-name</literal> refers to the name of the hosted repository.</para></listitem>
+		<listitem><para><literal>property</literal> refers to the name of a particular property.</para></listitem>
+		<listitem><para><literal>value</literal> refers to the value of the property.</para></listitem>
              </itemizedlist> 
               </para>
              <para>For example, <literal>my-hosted-repo.type=external</literal> specifies that the <literal>type</literal> property 
@@ -946,19 +990,25 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 		  </thead>
 		  <tbody>
 			<row>
-				<entry><literal><emphasis>repository-name</emphasis>.type</literal></entry>
+				<entry><emphasis><literal>repository-name</literal></emphasis><literal>.type</literal></entry>
 				<entry>Specifies the type of path of the hosted repository.  
 				All paths are local to the current @short.product.name@ instance. 
 				You can set this property to one of the following valid values:
 	<itemizedlist>
 
-    	<listitem><literal>external</literal>: Specifies that this path points to a number of directories that satisfy a given search pattern. 
+    	<listitem>
+    	<para>
+    	<literal>external</literal>: Specifies that this path points to a number of directories that satisfy a given search pattern. 
     	Use the <literal>searchPattern</literal> property to specify the directory search pattern.
+    	</para>
     	</listitem>
-	<listitem><literal>watched</literal>: Specifies that this path points to a single directory. 
+	<listitem>
+	<para>
+	<literal>watched</literal>: Specifies that this path points to a single directory. 
 	@product.name@ regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
 	Use the <literal>watchDirectory</literal> property to specify the actual watched directory and the <literal>watchInterval</literal> property 
 	to specify how often @short.product.name@ checks the directory.
+	</para>
 	</listitem>
 	</itemizedlist>
 			  <para>See <link linkend="configuring-repository-watched-versus-external">Watched or External Repository?</link> 
@@ -967,7 +1017,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 				</entry>
 			</row>
 			<row>
-				<entry><literal><emphasis>repository-name</emphasis>.searchPattern</literal></entry>
+				<entry><emphasis><literal>repository-name</literal></emphasis><literal>.searchPattern</literal></entry>
 			<entry> <para>Specifies the pattern that an external hosted repository uses when deciding which 
 			local directories it should search when identifying artifacts.  
 			Use this property when <literal>repository-name.type=external</literal>. 
@@ -976,7 +1026,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 			</para> </entry>
 			</row>
 			<row>
-				<entry><literal><emphasis>repository-name</emphasis>.watchDirectory</literal></entry>
+				<entry><emphasis><literal>repository-name</literal></emphasis><literal>.watchDirectory</literal></entry>
 			<entry> <para>Specifies the single directory of a watched hosted repository. 
 			You can specify either an absolute or relative pathname for the directory.  
 			If you specify a relative pathname, it is relative to the root of the @short.product.name@ installation (<literal>$SERVER_HOME</literal>).  
@@ -984,7 +1034,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 			</para></entry>
 			</row>
 			<row>
-				<entry><literal><emphasis>repository-name</emphasis>.watchInterval</literal></entry>
+				<entry><emphasis><literal>repository-name</literal></emphasis><literal>.watchInterval</literal></entry>
 			<entry> <para>Specifies the interval in seconds between checks of a watched directory by a watched hosted repository.  
 			This property is optional.  Use this property when <literal>repository-name.type=watched</literal>. 
 			</para> </entry>

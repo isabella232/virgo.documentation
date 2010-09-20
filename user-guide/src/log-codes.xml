@@ -70,9 +70,6 @@ The two-letter codes are (this list is not complete):
 <entry><literal>RP</literal></entry> <entry><literal>com.springsource.repository</literal></entry>
       </row>
 	  <row>
-<entry><literal>SH</literal></entry> <entry><literal>org.eclipse.virgo.kernel.shell</literal></entry>
-      </row>
-	  <row>
 <entry><literal>UR</literal></entry> <entry><literal>org.eclipse.virgo.kernel.userregion</literal></entry>
       </row>
     </tbody>
