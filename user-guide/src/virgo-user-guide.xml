@@ -58,6 +58,10 @@
 				<firstname>Violeta</firstname>
 				<surname>Georgieva</surname>
 			</author>
+			<author>
+				<firstname>Hristo</firstname>
+				<surname>Iliev</surname>
+			</author>
 		</authorgroup>
 
 		<legalnotice>
@@ -75,6 +79,11 @@
 					<listitem>
 					<para>
 						Violeta Georgieva, SAP AG - Tomcat context configuration
+					</para>
+					</listitem>
+					<listitem>
+					<para>
+						Hristo Iliev, SAP AG - Setting jmx.properties permissions
 					</para>
 					</listitem>
 				</itemizedlist>

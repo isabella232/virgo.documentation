@@ -114,20 +114,18 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 				When starting the @product.name@ on some variants of Windows you might encounter a problem with file permissions. 
 				The error looks like this.
 			</para>
-			<screen>C:\dev\virgo-web-server-2.0.1.BUILD-20091208094124>bin\startup.bat
-Error: Exception thrown by the agent : java.io.FileNotFoundException: C:\dev\...\config\
-		org.eclipse.virgo.kernel.jmxremote.access.properties (Access is denied)</screen>
+			<screen>WARNING: jmxPermissions.vbs did not update the permissions of C:\virgo\config\org.eclipse.virgo.kernel.jmxremote.access.properties. Check the file has the correct permissions.</screen>
 			<para>
-				If the @short.product.name@ starts at this point you can skip this section and carry on. Otherwise, go to the 
-				&lsquo;config&rsquo; directory of your install in Windows Explorer and you will be able to confirm the problem, 
-				an incorrect file ownership.
+				If the @short.product.name@ starts at this point you can skip this section and carry on. However to secure your 
+				installation you have to set correct permissions. To do so, go to the &lsquo;config&rsquo; directory of the installation
+				in Windows Explorer.
 			</para>
 			<para>
 				<imagedata fileref="images/install-windows-1-FileListing.png" />
 			</para>
 			<para>
 				Right click on the &lsquo;org.eclipse.virgo.kernel.jmxremote.access.properties&rsquo; file and view its properties, 
-				then select the &lsquo;Security&rsquo; tab.
+				then select the &lsquo;Security&rsquo; tab. Remove all groups and users from the list and select &lsquo;Apply&rsquo;.
 			</para>
 			<para>
 				<imagedata fileref="images/install-windows-2-SecuritySettings.png" />
