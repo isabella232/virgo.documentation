@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="build-documentation" default="build-doc">
+<project name="build-documentation" default="doc-html">
 
 	<path id="bundles">
 		<pathelement location="${basedir}/../user-guide"/>
