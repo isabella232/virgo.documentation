@@ -67,7 +67,7 @@ The two-letter codes are (this list is not complete):
 <entry><literal>OF</literal></entry> <entry><literal>org.eclipse.virgo.kernel.osgi</literal></entry>
       </row>
       <row>
-<entry><literal>RP</literal></entry> <entry><literal>com.springsource.repository</literal></entry>
+<entry><literal>RP</literal></entry> <entry><literal>org.eclipse.virgo.repository</literal></entry>
       </row>
 	  <row>
 <entry><literal>UR</literal></entry> <entry><literal>org.eclipse.virgo.kernel.userregion</literal></entry>

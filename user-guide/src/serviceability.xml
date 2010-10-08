@@ -102,7 +102,7 @@ and what was previously referred to as <emphasis>Trace logging</emphasis> (or <e
           </para>
 		  <para>
 			The capture of <literal>System.out</literal> and <literal>System.err</literal> output is configured in the
-			<literal>config/com.springsource.osgi.medic.properties</literal> file by the <literal>log.wrapSysOut</literal> and 
+			<literal>config/org.eclipse.virgo.medic.properties</literal> file by the <literal>log.wrapSysOut</literal> and 
 			<literal>log.wrapSysErr</literal> properties. By default the properties have a value of <literal>true</literal>
 			and capture is enabled. Capture can be disabled by configuring the properties with a value of <literal>false</literal>.
 		  </para>
