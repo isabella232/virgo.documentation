@@ -130,7 +130,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 			</row>
 			<row>
 				<entry><literal>packageImports</literal></entry>
-				<entry>Specifies the packages that exist in the kernel that @short.product.name@ imports into the user region so that they are in turn available to be imported by bundles in the user region. This property supports a <literal>.*</literal> wildcard.  For example, <literal>com.springsource.util.*</literal> will import all packages that start with <literal>com.springsource.util</literal>.</entry>
+				<entry>Specifies the packages that exist in the kernel that @short.product.name@ imports into the user region so that they are in turn available to be imported by bundles in the user region. This property supports a <literal>.*</literal> wildcard.  For example, <literal>org.eclipse.virgo.util.*</literal> will import all packages that start with <literal>org.eclipse.virgo.util</literal>.</entry>
 			</row>
 			<row>
 				<entry><literal>serviceImports</literal></entry>
@@ -240,7 +240,7 @@ role.admin=juliet</programlisting>
 		<listitem><para>
 		Service dumps: Contain a snapshot of all the important state from the running @short.product.name@ instance when an internal failure or thread deadlock is detected.
 		</para>
-  	             <para>You configure service dumps for @product.name@ using the <link linkend="configuring-serviceability-medic">com.springsource.medic.properties</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file also includes some additional logging configuration.</para>
+  	             <para>You configure service dumps for @product.name@ using the <link linkend="configuring-serviceability-medic">org.eclipse.virgo.medic.properties</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file also includes some additional logging configuration.</para>
 		</listitem>
 		<listitem><para>
 		Event logs and server/application logging (previously called tracing): Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>.  This means that you now have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
@@ -252,11 +252,11 @@ role.admin=juliet</programlisting>
 	<para>For additional conceptual information about the serviceability subsystem, see <xref linkend="serviceability" />. </para>
 
 	<section id="configuring-serviceability-medic">
-	  <title>The com.springsource.medic.properties File</title>
+	  <title>The org.eclipse.virgo.medic.properties File</title>
 
-	  <para>The <literal>$SERVER_HOME/config/com.springsource.medic.properties</literal> file configures @short.product.name@ service dumps and whether you want to capture <literal>System.out</literal> and <literal>System.err</literal> output to your application's trace file. </para>
+	  <para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.medic.properties</literal> file configures @short.product.name@ service dumps and whether you want to capture <literal>System.out</literal> and <literal>System.err</literal> output to your application's trace file. </para>
 	  <para>The service dump support provides an in-memory buffer of log output. Whenever a dump is triggered this in-memory buffer is written out as part of the dump.</para>
-  	  <para>The following table describes the properties you can include in the <literal>$SERVER_HOME/config/com.springsource.medic.properties</literal> file. This file configures serviceability properties that @short.product.name@ includes in addition to those supplied by the Logback, configured in the <literal>serviceability.xml</literal> file.</para>
+  	  <para>The following table describes the properties you can include in the <literal>$SERVER_HOME/config/org.eclipse.virgo.medic.properties</literal> file. This file configures serviceability properties that @short.product.name@ includes in addition to those supplied by the Logback, configured in the <literal>serviceability.xml</literal> file.</para>
 
           <table id="medic-properties-table" colsep="1" frame="all" rowsep="1">
             <title>Serviceability Properties</title>
@@ -310,7 +310,7 @@ role.admin=juliet</programlisting>
 	    </tgroup>
 	  </table>
 
-	  <para>The following sample <literal>com.springsource.medic.properties</literal> is from a freshly-installed @short.product.name@:</para>
+	  <para>The following sample <literal>org.eclipse.virgo.medic.properties</literal> is from a freshly-installed @short.product.name@:</para>
 	  <programlisting>dump.root.directory=serviceability/dump
 log.wrapSysOut=true
 log.wrapSysErr=true
@@ -363,7 +363,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 	</layout>
     </appender>
 
-    <appender name="EVENT_LOG_STDOUT" class="com.springsource.osgi.medic.log.logback.ReroutingAwareConsoleAppender">
+    <appender name="EVENT_LOG_STDOUT" class="org.eclipse.virgo.medic.log.logback.ReroutingAwareConsoleAppender">
 	<layout class="ch.qos.logback.classic.PatternLayout">
  	    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &lt;%X{medic.eventCode}&gt; %msg %ex%n</Pattern>
 	</layout>
@@ -384,12 +384,12 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 	</layout>
     </appender>
 
-    <logger level="INFO" additivity="false" name="com.springsource.osgi.medic.eventlog.localized">
+    <logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.localized">
 	<appender-ref ref="EVENT_LOG_STDOUT" />
 	<appender-ref ref="EVENT_LOG_FILE" />
     </logger>
 	
-    <logger level="INFO" additivity="false" name="com.springsource.osgi.medic.eventlog.default">
+    <logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.default">
 	<appender-ref ref="SIFTED_LOG_FILE" />
 	<appender-ref ref="LOG_FILE" />
     </logger>
@@ -421,7 +421,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 
 	<para>The loggers and root logger specify the level of log that is written for each of the referenced appenders.</para>
 
-	<para>Typically, the default logging configuration as specified by the <literal>serviceability.xml</literal> file is adequate for all @short.product.name@ environments.  However, if you want to customize the logging framework even further, you can edit this file as well as the <literal>com.springsource.medic.properties.</literal>.  See the <ulink url="http://logback.qos.ch/manual/index.html">logback documentation</ulink> for detailed information about the architecture and the configuration of Logback.</para>
+	<para>Typically, the default logging configuration as specified by the <literal>serviceability.xml</literal> file is adequate for all @short.product.name@ environments.  However, if you want to customize the logging framework even further, you can edit this file as well as the <literal>org.eclipse.virgo.medic.properties.</literal>.  See the <ulink url="http://logback.qos.ch/manual/index.html">logback documentation</ulink> for detailed information about the architecture and the configuration of Logback.</para>
 	</section>
 
 
@@ -651,7 +651,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 		<title>Configuring the Local Provisioning Repository</title>
 		<para>
 		    You configure the locations that @product.name@ includes in its provisioning repository 
-		    by editing the <literal>com.springsource.repository.properties</literal> file in the <literal>$SERVER_HOME/config</literal> directory.  
+		    by editing the <literal>org.eclipse.virgo.repository.properties</literal> file in the <literal>$SERVER_HOME/config</literal> directory.  
 		    </para>
 		<para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
 		<itemizedlist>
@@ -695,7 +695,7 @@ chain=ext,usr]]></programlisting>
 	</para>
 	<para>
 		The following table lists all the available properties that you can use to describe a named path and the 
-		repository search chain in the <literal>com.springsource.repository.properties</literal> file.
+		repository search chain in the <literal>org.eclipse.virgo.repository.properties</literal> file.
 		<table id="repository-options-table" colsep="1" frame="all" rowsep="1">
 		<title>Repository Properties in repository.properties</title>
 		  <tgroup cols="2">
@@ -924,7 +924,7 @@ chain=ext,usr,maven-repo]]></programlisting>
             </section>
 	    <section id="configuring-repository-examples-remote-watched">
 	        <title>Add remote and watched repositories</title>
-		<para>The following example shows the default <literal>com.springsource.repository.properties</literal> file 
+		<para>The following example shows the default <literal>org.eclipse.virgo.repository.properties</literal> file 
 		from a freshly-installed @short.product.name@, but then updated to include new remote and watched repositories.  
 		Both of these repositories are part of the repository chain. 
 		</para>
@@ -964,7 +964,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 	<section id="configuring-hosted-repo">
 		<title>Configuring a Hosted Repository</title>
 		<para>You configure a @short.product.name@ instance to host a repository 
-		by editing the <literal>$SERVER_HOME/config/com.springsource.repository.hosted.properties</literal> file; 
+		by editing the <literal>$SERVER_HOME/config/org.eclipse.virgo.repository.hosted.properties</literal> file; 
 		remote clients can then access the artifacts in this hosted repository and use them locally.
 		</para>
               <para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
@@ -1042,7 +1042,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 		   </tbody>
 		  </tgroup>
 		</table>
-		<para>The following sample shows a <literal>com.springsource.repository.hosted.properties</literal> file with a single external repository 
+		<para>The following sample shows a <literal>org.eclipse.virgo.repository.hosted.properties</literal> file with a single external repository 
 		called <literal>my-hosted-repo</literal> with search pattern <literal>$SERVER_HOME/repository/hosted/*</literal>.
 		<programlisting><![CDATA[my-hosted-repo.type=external
 my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>

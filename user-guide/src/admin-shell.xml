@@ -676,9 +676,9 @@ Id  Object Class(es)                                            Providing Bundle
 7   org.eclipse.osgi.framework.log.FrameworkLog                                0
 &lt;... remainder omitted ...&gt; 
 
-65 com.springsource.osgi.webcontainer.core.spi.ServletContainer               35
-66 com.springsource.osgi.webcontainer.core.WebContainer                       34
-67 org.eclipse.virgo.server.web.core.WebApplicationRegistry                    36
+65 org.eclipse.gemini.web.core.spi.ServletContainer                           35
+66 org.eclipse.gemini.web.core.WebContainer                                   34
+67 org.eclipse.virgo.server.web.core.WebApplicationRegistry                   36
 &lt;... remainder omitted ...&gt; 
 
 osgi> </programlisting>
@@ -692,13 +692,13 @@ Properties:
     Bundle-Version:
         2.0.0.D-20091110110152
     objectClass:
-        com.springsource.repository.Repository
+        org.eclipse.virgo.repository.Repository
     org.springframework.osgi.bean.name:
         repository
     service.id:
         38
 
-Publisher: com.springsource.region.user 0.0.0 [1]
+Publisher: org.eclipse.virgo.region.user 0.0.0 [1]
 
 Consumer(s):
     org.eclipse.virgo.kernel.userregion 2.0.0.D-20091110110152 [2]
@@ -730,7 +730,7 @@ Artifact bundle swf-booking-mvc.war 0.0.0 installed</programlisting>
 Id   Name                             Version                State 
 
 0    org.eclipse.osgi                 3.5.1.R35x_v20091005   ACTIVE
-1    com.springsource.region.user     0.0.0                  ACTIVE
+1    org.eclipse.virgo.region.user    0.0.0                  ACTIVE
 &lt;... remainder omitted ...&gt; 
 
 59   org.eclipse.virgo.server.splash   2.0.0.D-20091110115520 ACTIVE 
