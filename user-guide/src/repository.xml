@@ -49,7 +49,7 @@
 	    <section id="repository-structure">
 			<title>Local Repository Structure</title>
 			<para>
-				When you first install @product.name@, the local provisioning repository is located at <literal>$SERVER_HOME/repository</literal> by default and consists of two main directories: <literal>ext</literal> and <literal>user</literal>.  The <literal>ext</literal> directory contains bundles and libraries supplied with the @product.name@ and <literal>usr</literal> contains bundles and libraries installed by the end user.  
+				When you first install @product.name@, the local provisioning repository is located at <literal>$SERVER_HOME/repository</literal> by default and consists of two main directories: <literal>ext</literal> and <literal>usr</literal>.  The <literal>ext</literal> directory contains bundles and libraries supplied with the @product.name@ and <literal>usr</literal> contains bundles and libraries installed by the end user.  
 			</para>
 	    </section>
 	    <section id="repository-installing-bundles">
