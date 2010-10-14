@@ -276,11 +276,11 @@ Manifest-Version: 1.0
 			</para>
 			<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <plan name="multi-artifact.plan" version="1.0.0" scoped="true" atomic="true"
-        xmlns="http://www.springsource.org/schema/dm-server/plan"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
-            http://www.springsource.org/schema/dm-server/plan 
-            http://www.springsource.org/schema/dm-server/plan/springsource-dm-server-plan.xsd">
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="
+		        http://www.eclipse.org/virgo/schema/plan
+		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd">
 
     <artifact type="configuration" name="app-properties" version="1.0.0"/>
     <artifact type="bundle" name="com.springsource.exciting.app" version="[2.0.0, 3.1.0)"/>
@@ -393,7 +393,7 @@ Manifest-Version: 1.0
 		  <listitem><para><emphasis role="bold">Plan</emphasis>: The name of a plan is the value of the required <code>name</code> attribute of the <code>&lt;plan&gt;</code> element in the plan&rsquo;s XML file.  In the following XML snippet, the plan name is <code>multi-artifact.plan</code>:</para> 
 		<screen>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;plan name="<emphasis role="bold">multi-artifact.plan</emphasis>" version="1.0.0" scoped="true" atomic="true"
-        xmlns="http://www.springsource.org/schema/dm-server/plan"
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
 ...</screen>
 		  </listitem>
 		  <listitem><para><emphasis role="bold">PAR</emphasis>: The name of a PAR is the value of the <code>Application-SymbolicName</code> header in the <code>META-INF/MANIFEST.MF</code> file of the <code>*.par</code> file.   The following <code>MANIFEST.MF</code> snippet shows a PAR with name <code>com.springsource.my.par</code>:</para>
@@ -590,11 +590,11 @@ password          = secret</screen>
 	  <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;plan name="multi-artifact.plan" version="1.0.0" 
          scoped="false" atomic="false"
-        xmlns="http://www.springsource.org/schema/dm-server/plan"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
-            http://www.springsource.org/schema/dm-server/plan
-            http://www.springsource.org/schema/dm-server/plan/springsource-dm-server-plan.xsd"&gt;
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="
+		        http://www.eclipse.org/virgo/schema/plan
+		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd"&gt;
 
     &lt;artifact type="configuration" name="app-properties" version="0"/&gt;
     &lt;artifact type="bundle" name="org.eclipse.virgo.configuration.properties" version="1.0.0"/&gt;

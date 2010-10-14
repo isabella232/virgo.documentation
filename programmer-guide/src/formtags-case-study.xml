@@ -693,11 +693,11 @@ org.springframework.showcase.formtags.web-2.0.0.RELEASE.war
         	Here is the contents of a suitable plan file for the Form Tags example:
 <programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <plan name="formtags.plan" version="2.0.0" scoped="true" atomic="true"
-        xmlns="http://www.springsource.org/schema/dm-server/plan"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
-            http://www.springsource.org/schema/dm-server/plan 
-            http://www.springsource.org/schema/dm-server/plan/springsource-dm-server-plan.xsd">
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="
+		        http://www.eclipse.org/virgo/schema/plan
+		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd">
 
     <artifact type="bundle" name="org.springframework.showcase.formtags.domain_par" version="[2.0,2.1)"/>
     <artifact type="bundle" name="org.springframework.showcase.formtags.service_par" version="[2.0,2.1)"/>
