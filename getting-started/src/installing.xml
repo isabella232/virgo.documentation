@@ -158,6 +158,11 @@ This guide is consistent with @sts.short@ version @sts.version@. Previous versio
 the latest revision of @greenpages@, currently @greenpages.version@.
 </para>
 
+<para>
+If you prefer to use vanilla Eclipse, please refer to the installation instructions in the
+<ulink url="http://www.eclipse.org/virgo/documentation/">Virgo Programmer Guide</ulink>.
+</para>
+
 <section>
 
 <title>Installing @sts.short@ on Windows<trademark class="trade"/> operating systems</title>
