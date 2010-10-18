@@ -341,9 +341,9 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
 		  <MaxFileSize>10MB</MaxFileSize>
 		</triggeringPolicy>
-		<layout class="ch.qos.logback.classic.PatternLayout">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 		    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
-		</layout>
+		</encoder>
 	    </appender>
 	</sift>
     </appender>
@@ -358,15 +358,15 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 	<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
 	    <MaxFileSize>10MB</MaxFileSize>
 	</triggeringPolicy>
-	<layout class="ch.qos.logback.classic.PatternLayout">
+	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 	    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
-	</layout>
+	</encoder>
     </appender>
 
     <appender name="EVENT_LOG_STDOUT" class="org.eclipse.virgo.medic.log.logback.ReroutingAwareConsoleAppender">
-	<layout class="ch.qos.logback.classic.PatternLayout">
+	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
  	    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &lt;%X{medic.eventCode}&gt; %msg %ex%n</Pattern>
-	</layout>
+	</encoder>
     </appender>
 
     <appender name="EVENT_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -379,9 +379,9 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 	<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
 	    <MaxFileSize>10MB</MaxFileSize>
 	</triggeringPolicy>
-	<layout class="ch.qos.logback.classic.PatternLayout">
+	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 	    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &lt;%X{medic.eventCode}&gt; %msg %ex%n</Pattern>
-	</layout>
+	</encoder>
     </appender>
 
     <logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.localized">
@@ -401,7 +401,7 @@ log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %
 
 </configuration>]]></programlisting>
 
-	<para>Logback allows @short.product.name@ to use logger, appender, and layout objects to log messages according to message type and level and to format these messages and define where they are written.  The default <literal>serviceability.xml</literal> file shown above includes four appenders and three loggers (two user and one root.)</para>
+	<para>Logback allows @short.product.name@ to use logger, appender, and encoder (layout) objects to log messages according to message type and level and to format these messages and define where they are written.  The default <literal>serviceability.xml</literal> file shown above includes four appenders and three loggers (two user and one root.)</para>
 
 	<para>The main information to get from this file is that @short.product.name@ writes log messages to four different locations that map to the four appenders:</para>
 	<itemizedlist>
