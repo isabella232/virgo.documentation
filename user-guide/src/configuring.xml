@@ -255,7 +255,6 @@ role.admin=juliet</programlisting>
 	  <title>The org.eclipse.virgo.medic.properties File</title>
 
 	  <para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.medic.properties</literal> file configures @short.product.name@ service dumps and whether you want to capture <literal>System.out</literal> and <literal>System.err</literal> output to your application's trace file. </para>
-	  <para>The service dump support provides an in-memory buffer of log output. Whenever a dump is triggered this in-memory buffer is written out as part of the dump.</para>
   	  <para>The following table describes the properties you can include in the <literal>$SERVER_HOME/config/org.eclipse.virgo.medic.properties</literal> file. This file configures serviceability properties that @short.product.name@ includes in addition to those supplied by the Logback, configured in the <literal>serviceability.xml</literal> file.</para>
 
           <table id="medic-properties-table" colsep="1" frame="all" rowsep="1">
@@ -290,33 +289,10 @@ role.admin=juliet</programlisting>
 		  </entry>
 	        </row>
 
-	        <row>
-		  <entry><literal>log.dump.level</literal></entry>
-		  <entry>Specifies the log-level of the entries that are captured in the in-memory buffer.
-			<para>Valid values of this property are the same as the log-levels offered by Logback: TRACE, DEBUG, INFO, WARN and ERROR.  For more details about these levels, see <ulink url="http://logback.qos.ch/manual/architecture.html">Logback Architecture</ulink>.</para></entry>
-	        </row>
-
-	        <row>
-		  <entry><literal>log.dump.bufferSize</literal></entry>
-		  <entry>Specifies the number of entries will be held in the in-memory buffer. Once the buffer is full, it wraps so that oldest entries start to be overwritten by newer entries; in other words, the buffer is circular.</entry>
-	        </row>
-
-	        <row>
-		  <entry><literal>log.dump.pattern</literal></entry>
-		  <entry>Specifies the formatting of the entries when they're written out as part of the service dump. Use the same pattern layout as for Logback logs; see <ulink url="http://logback.qos.ch/manual/layouts.html">Layouts</ulink> in the Logback documentation.</entry>
-	        </row>
-
 	      </tbody>
 	    </tgroup>
 	  </table>
 
-	  <para>The following sample <literal>org.eclipse.virgo.medic.properties</literal> is from a freshly-installed @short.product.name@:</para>
-	  <programlisting>dump.root.directory=serviceability/dump
-log.wrapSysOut=true
-log.wrapSysErr=true
-log.dump.level=DEBUG
-log.dump.bufferSize=10000
-log.dump.pattern=[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</programlisting>
 	</section>
 	<section id="configuring-serviceability-logback">
 	  <title>The serviceability.xml File</title>
