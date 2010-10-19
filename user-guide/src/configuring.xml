@@ -895,6 +895,8 @@ chain=ext,usr]]></programlisting>
 		    <section id="configuring-provisioning-repository-examples-ivy">
 		        <title>Add an Ivy cache repository</title>
 			<para>The following example shows how to add an external repository whose location is actually an Ivy cache.</para>
+			<para><emphasis>Note that Ivy repositories can contain bundles which will conflict with the normal operation of Virgo, so care should
+				be exercised when adding such an external repository.</emphasis></para>
 			<programlisting><![CDATA[ext.type=external
 ext.searchPattern=repository/ext/{artifact}
 
@@ -910,6 +912,8 @@ chain=ext,usr,ivy-repo]]></programlisting>
             <section id="configuring-provisioning-repository-examples-maven">		    
 		        <title>Add a Maven local repository</title>
 			<para>The following example shows how to add an external repository whose location is actually a Maven repository.</para>
+			<para><emphasis>Note that Maven repositories can contain bundles which will conflict with the normal operation of Virgo, so care should
+				be exercised when adding such an external repository.</emphasis></para>
 			<programlisting><![CDATA[ext.type=external
 ext.searchPattern=repository/ext/{artifact}
 
