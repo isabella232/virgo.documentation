@@ -59,9 +59,7 @@
 			plan) passes through a deployment pipeline. This deployment pipeline supports the notion of personality-specific
 			deployers which are responsible for processing an application with a certain personality (i.e., application type).
 			The @bundle.version@ release of the @short.product.name@ natively supports personality-specific deployers analogous
-			to each of the aforementioned packaging options. Furthermore, the deployment pipeline can be extended with additional
-			personality deployers, and future releases of the @short.product.name@ will provide support for personalities such as
-			Batch, Web Services, etc.
+			to each of the aforementioned packaging options.
 		</para>
 		<para>
 			Let&rsquo;s take a closer look now at each of the supported deployment and packaging options to explore which one is best

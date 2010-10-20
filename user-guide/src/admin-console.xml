@@ -100,7 +100,7 @@ role.admin=juliet</programlisting>
 		    <para><imagedata fileref="images/console-bundle-details.png" /></para>
 
 		    <para>The particular details that the Admin Console displays depends on the artifact.  For example, for all artifacts you can view their state and how it was installed (such as by a user using the Admin Console or programmatically).  The two most common states are Active (running and ready to be used) and Resolved (all dependencies resolved but you must start it before you can use it.)  An artifact can also be in one of the transition states, such as Starting and Stopping.  </para>
-		   <para>As shown in the preceding graphic, the Admin Console provides a link for Web modules that you can click on to actually invoke the application (<literal>org.eclipse.virgo.server.web.contextPath:/config-properties</literal> in the example above.)</para>
+		   <para>As shown in the preceding graphic, the Admin Console provides a link for Web modules that you can click on to actually invoke the application (<literal>org.eclipse.virgo.web.contextPath:/config-properties</literal> in the example above.)</para>
 		    <para>For PARs and plans, the Admin Console also displays whether the artifact is:</para>
 		    <itemizedlist>
 		       <listitem><emphasis role="bold">Scoped</emphasis>. Scoping specifies whether Web Server should deploy the members of the PAR/plan in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</listitem>

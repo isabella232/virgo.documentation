@@ -78,19 +78,19 @@ You will see many other messages about starting and installing other required ar
 but the <literal>UR0001I</literal> message indicates that the user region is ready for your use.
 (<emphasis>Timestamps have been removed
 and thread names and other details may vary with different installations and versions.</emphasis>)
-<programlisting>system-artifacts   &lt;TC0000I&gt; Starting Tomcat.
-system-artifacts   &lt;TC0010I&gt; Creating HTTP/1.1 connector with scheme http on port 8080.
-system-artifacts   &lt;TC0010I&gt; Creating HTTP/1.1 connector with scheme https on port 8443.
-system-artifacts   &lt;TC0010I&gt; Creating AJP/1.3 connector with scheme http on port 8009.
-system-artifacts   &lt;TC0001I&gt; Started Tomcat.
-system-artifacts   &lt;DE0004I&gt; Starting bundle 'org.eclipse.virgo.server.web.core' version '2.0.0.M6'.
-system-artifacts   &lt;DE0004I&gt; Starting bundle 'org.eclipse.virgo.server.web.dm' version '2.0.0.M6'.
-start-signalling-1 &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.server.web.dm' version '2.0.0.M6'.
-system-artifacts   &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.server.web.tomcat' version '2.0.0.M6'.
-start-signalling-1 &lt;DE0005I&gt; Started bundle 'com.springsource.osgi.webcontainer.tomcat' version '1.0.0.CI-102'.
-start-signalling-1 &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.server.web.core' version '2.0.0.M6'.
-start-signalling-1 &lt;DE0005I&gt; Started plan 'org.eclipse.virgo.server.web' version '2.0.0'.
-Thread-2           &lt;UR0001I&gt; User region ready. </programlisting>
+<programlisting>system-artifacts             &lt;TC0000I&gt; Starting Tomcat. 
+system-artifacts             &lt;TC0010I&gt; Creating HTTP/1.1 connector with scheme http on port 8080. 
+system-artifacts             &lt;TC0010I&gt; Creating HTTP/1.1 connector with scheme https on port 8443. 
+system-artifacts             &lt;TC0010I&gt; Creating AJP/1.3 connector with scheme http on port 8009.
+system-artifacts             &lt;TC0001I&gt; Started Tomcat. 
+system-artifacts             &lt;DE0004I&gt; Starting bundle 'org.eclipse.virgo.web.core' version '2.1.0.RELEASE'. 
+system-artifacts             &lt;DE0004I&gt; Starting bundle 'org.eclipse.virgo.web.dm' version '2.1.0.RELEASE'. 
+start-signalling-1           &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.web.dm' version '2.1.0.RELEASE'. 
+system-artifacts             &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.web.tomcat' version '2.1.0.RELEASE'. 
+start-signalling-1           &lt;DE0005I&gt; Started bundle 'org.eclipse.gemini.web.tomcat' version '1.1.0.RELEASE'. 
+start-signalling-2           &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.web.core' version '2.1.0.RELEASE'. 
+start-signalling-2           &lt;DE0005I&gt; Started plan 'org.eclipse.virgo.web' version '2.1.0'. 
+Thread-2                     &lt;UR0001I&gt; User region ready. </programlisting>
 </para>
 <para>Shut down the server by pressing <literal>Ctrl-C</literal>.
 </para>
@@ -120,19 +120,19 @@ You will see many other messages about starting and installing other required ar
 but the <literal>UR0001I</literal> message indicates that the user region is ready for your use.
 (<emphasis>Timestamps have been removed
 and thread names and other details may vary with different installations and versions.</emphasis>)
-<programlisting>system-artifacts   &lt;TC0000I&gt; Starting Tomcat.
-system-artifacts   &lt;TC0010I&gt; Creating HTTP/1.1 connector with scheme http on port 8080.
-system-artifacts   &lt;TC0010I&gt; Creating HTTP/1.1 connector with scheme https on port 8443.
-system-artifacts   &lt;TC0010I&gt; Creating AJP/1.3 connector with scheme http on port 8009.
-system-artifacts   &lt;TC0001I&gt; Started Tomcat.
-system-artifacts   &lt;DE0004I&gt; Starting bundle 'org.eclipse.virgo.server.web.core' version '2.0.0.M6'.
-system-artifacts   &lt;DE0004I&gt; Starting bundle 'org.eclipse.virgo.server.web.dm' version '2.0.0.M6'.
-start-signalling-1 &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.server.web.dm' version '2.0.0.M6'.
-system-artifacts   &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.server.web.tomcat' version '2.0.0.M6'.
-start-signalling-1 &lt;DE0005I&gt; Started bundle 'com.springsource.osgi.webcontainer.tomcat' version '1.0.0.CI-102'.
-start-signalling-1 &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.server.web.core' version '2.0.0.M6'.
-start-signalling-1 &lt;DE0005I&gt; Started plan 'org.eclipse.virgo.server.web' version '2.0.0'.
-Thread-2           &lt;UR0001I&gt; User region ready. </programlisting>
+<programlisting>system-artifacts             &lt;TC0000I&gt; Starting Tomcat. 
+system-artifacts             &lt;TC0010I&gt; Creating HTTP/1.1 connector with scheme http on port 8080. 
+system-artifacts             &lt;TC0010I&gt; Creating HTTP/1.1 connector with scheme https on port 8443. 
+system-artifacts             &lt;TC0010I&gt; Creating AJP/1.3 connector with scheme http on port 8009.
+system-artifacts             &lt;TC0001I&gt; Started Tomcat. 
+system-artifacts             &lt;DE0004I&gt; Starting bundle 'org.eclipse.virgo.web.core' version '2.1.0.RELEASE'. 
+system-artifacts             &lt;DE0004I&gt; Starting bundle 'org.eclipse.virgo.web.dm' version '2.1.0.RELEASE'. 
+start-signalling-1           &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.web.dm' version '2.1.0.RELEASE'. 
+system-artifacts             &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.web.tomcat' version '2.1.0.RELEASE'. 
+start-signalling-1           &lt;DE0005I&gt; Started bundle 'org.eclipse.gemini.web.tomcat' version '1.1.0.RELEASE'. 
+start-signalling-2           &lt;DE0005I&gt; Started bundle 'org.eclipse.virgo.web.core' version '2.1.0.RELEASE'. 
+start-signalling-2           &lt;DE0005I&gt; Started plan 'org.eclipse.virgo.web' version '2.1.0'. 
+Thread-2                     &lt;UR0001I&gt; User region ready. </programlisting>
 </para>
 <para>Shut down the server by pressing <literal>Ctrl-C</literal>. </para>
 

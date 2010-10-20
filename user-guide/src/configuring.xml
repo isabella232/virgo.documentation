@@ -154,7 +154,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 			<row>
 				<entry><literal>initialArtifacts</literal></entry>
 				<entry>Specifies the artifacts that @short.product.name@ deploys into the user region when the server starts. @product.name@ performs dependency satisfaction when it deploys these artifacts.  This means that you only need to list the top-level artifacts that you care about; @short.product.name@ automatically installs any other artifacts upon which they depend from the repository.
-				<para>You can use this property to convert a @short.product.name@ into a @kernel.product.name@ by removing the <literal>repository:plan/org.eclipse.virgo.server.web</literal> plan.  </para>
+				<para>You can use this property to make a @short.product.name@ behave like a @kernel.product.name@ by removing the <literal>repository:plan/org.eclipse.virgo.web</literal> plan.  </para>
 				</entry>
 			</row>
 		    </tbody>
@@ -300,80 +300,79 @@ role.admin=juliet</programlisting>
   	        <para>You configure logging for @product.name@ using the <literal>$SERVER_HOME/config/serviceability.xml</literal> file.  This file is the standard Logback <literal>logback.xml</literal> or <literal>logback-test.xml</literal> configuration file, but renamed for @short.product.name@ due to internal requirements. </para>
 		<para>The following listing shows the default <literal>serviceability.xml</literal> file in a freshly-installed @short.product.name@; see the text after the listing for a brief overview of the file:</para>
 		<programlisting language="xml"><![CDATA[<configuration>
+	<appender name="SIFTED_LOG_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<Key>applicationName</Key>
+			<DefaultValue>virgo-server</DefaultValue>
+		</discriminator>
+		<sift>
+			<appender name="${applicationName}_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<file>serviceability/logs/${applicationName}/log.log</file>
+				<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+					<FileNamePattern>serviceability/logs/${applicationName}/log_%i.log</FileNamePattern>
+					<MinIndex>1</MinIndex>
+					<MaxIndex>4</MaxIndex>
+				</rollingPolicy>
+				<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+					<MaxFileSize>10MB</MaxFileSize>
+				</triggeringPolicy>
+				<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+					<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
+				</encoder>
+			</appender>
+		</sift>
+	</appender>
 
-    <appender name="SIFTED_LOG_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
-        <discriminator>
-            <Key>applicationName</Key>
-            <DefaultValue>virgo-kernel</DefaultValue>
-	</discriminator>
-	<sift>
-	    <appender name="${applicationName}_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>serviceability/logs/${applicationName}/log.log</file>
+	<appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>serviceability/logs/log.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-		    <FileNamePattern>serviceability/logs/${applicationName}/log_%i.log</FileNamePattern>
+			<FileNamePattern>serviceability/logs/log_%i.log</FileNamePattern>
 			<MinIndex>1</MinIndex>
 			<MaxIndex>4</MaxIndex>
 		</rollingPolicy>
 		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-		  <MaxFileSize>10MB</MaxFileSize>
+			<MaxFileSize>10MB</MaxFileSize>
 		</triggeringPolicy>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-		    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
 		</encoder>
-	    </appender>
-	</sift>
-    </appender>
-	
-    <appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-	<file>serviceability/logs/log.log</file>
-	<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-	    <FileNamePattern>serviceability/logs/log_%i.log</FileNamePattern>
-	    <MinIndex>1</MinIndex>
-	    <MaxIndex>4</MaxIndex>
-	</rollingPolicy>
-	<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-	    <MaxFileSize>10MB</MaxFileSize>
-	</triggeringPolicy>
-	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-	    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
-	</encoder>
-    </appender>
+	</appender>
 
-    <appender name="EVENT_LOG_STDOUT" class="org.eclipse.virgo.medic.log.logback.ReroutingAwareConsoleAppender">
-	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
- 	    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &lt;%X{medic.eventCode}&gt; %msg %ex%n</Pattern>
-	</encoder>
-    </appender>
+	<appender name="EVENT_LOG_STDOUT" class="org.eclipse.virgo.medic.log.logback.ReroutingAwareConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &lt;%X{medic.eventCode}&gt; %msg %ex%n</Pattern>
+		</encoder>
+	</appender>
 
-    <appender name="EVENT_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-	<file>serviceability/eventlogs/eventlog.log</file>
-	<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-	    <FileNamePattern>serviceability/eventlogs/eventlog_%i.log</FileNamePattern>
-	    <MinIndex>1</MinIndex>
-	    <MaxIndex>4</MaxIndex>
-	</rollingPolicy>
-	<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-	    <MaxFileSize>10MB</MaxFileSize>
-	</triggeringPolicy>
-	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-	    <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &lt;%X{medic.eventCode}&gt; %msg %ex%n</Pattern>
-	</encoder>
-    </appender>
+	<appender name="EVENT_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>serviceability/eventlogs/eventlog.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>serviceability/eventlogs/eventlog_%i.log</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>4</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>10MB</MaxFileSize>
+		</triggeringPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &lt;%X{medic.eventCode}&gt; %msg %ex%n</Pattern>
+		</encoder>
+	</appender>
 
-    <logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.localized">
-	<appender-ref ref="EVENT_LOG_STDOUT" />
-	<appender-ref ref="EVENT_LOG_FILE" />
-    </logger>
-	
-    <logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.default">
-	<appender-ref ref="SIFTED_LOG_FILE" />
-	<appender-ref ref="LOG_FILE" />
-    </logger>
+	<logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.localized">
+		<appender-ref ref="EVENT_LOG_STDOUT" />
+		<appender-ref ref="EVENT_LOG_FILE" />
+	</logger>
 
-    <root level="WARN">
-	<appender-ref ref="SIFTED_LOG_FILE" />
-	<appender-ref ref="LOG_FILE" />
-    </root>
+	<logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.default">
+		<appender-ref ref="SIFTED_LOG_FILE" />
+		<appender-ref ref="LOG_FILE" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="SIFTED_LOG_FILE" />
+		<appender-ref ref="LOG_FILE" />
+	</root>
 
 </configuration>]]></programlisting>
 
@@ -416,45 +415,42 @@ role.admin=juliet</programlisting>
 		<programlisting language="xml"><![CDATA[<?xml version='1.0' encoding='utf-8'?>
 <Server port="8005" shutdown="SHUTDOWN">
 
-  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
-  <Listener className="org.apache.catalina.core.JasperListener" />
-  <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
-  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+	<Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+	<Listener className="org.apache.catalina.core.JasperListener" />
+	<Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
+	<Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
 
-  <Listener className="org.eclipse.virgo.server.web.tomcat.ServerLifecycleLoggingListener"/>
+	<Listener className="org.eclipse.virgo.web.tomcat.ServerLifecycleLoggingListener"/>
 
-  <Service name="Catalina">
-    <Connector port="8080" protocol="HTTP/1.1"
-               connectionTimeout="20000"
-	       redirectPort="8443" />
+	<Service name="Catalina">
+		<Connector port="8080" protocol="HTTP/1.1"
+			connectionTimeout="20000"
+			redirectPort="8443" />
 
-    <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
-	       maxThreads="150" scheme="https" secure="true"
-	       clientAuth="false" sslProtocol="TLS"
-	       keystoreFile="config/keystore"
-	       keystorePass="changeit"/>
+		<Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
+			maxThreads="150" scheme="https" secure="true"
+			clientAuth="false" sslProtocol="TLS"
+			keystoreFile="config/keystore"
+			keystorePass="changeit"/>
 
-    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+		<Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
 
-    <Engine name="Catalina" defaultHost="localhost">
+		<Engine name="Catalina" defaultHost="localhost">
+			<Realm className="org.apache.catalina.realm.JAASRealm" appName="virgo-kernel"
+					userClassNames="org.eclipse.virgo.kernel.authentication.User"
+					roleClassNames="org.eclipse.virgo.kernel.authentication.Role"/>
 
-      <Realm className="org.apache.catalina.realm.JAASRealm" appName="dm-kernel"
-	     userClassNames="org.eclipse.virgo.kernel.authentication.User"
-	     roleClassNames="org.eclipse.virgo.kernel.authentication.Role"/>
+			<Host name="localhost"  appBase="webapps"
+					unpackWARs="true" autoDeploy="true"
+					xmlValidation="false" xmlNamespaceAware="false">
 
-      <Host name="localhost"  appBase="webapps"
-	    unpackWARs="true" autoDeploy="true"
-	    xmlValidation="false" xmlNamespaceAware="false">
+				<Valve className="org.apache.catalina.valves.AccessLogValve" directory="serviceability/logs/access"
+					prefix="localhost_access_log." suffix=".txt" pattern="common" resolveHosts="false"/>
 
-        <Valve className="org.apache.catalina.valves.AccessLogValve" 
-               directory="serviceability/logs/access"
-	       prefix="localhost_access_log." suffix=".txt" pattern="common" 
-               resolveHosts="false"/>
-					
-        <Valve className="org.eclipse.virgo.server.web.tomcat.ApplicationNameTrackingValve"/>
-      </Host>
-    </Engine>
-  </Service>
+				<Valve className="org.eclipse.virgo.web.tomcat.ApplicationNameTrackingValve"/>
+			</Host>
+		</Engine>
+	</Service>
 </Server>]]></programlisting>
 
 	<section id="overview-tomcat-servlet-container">
@@ -472,7 +468,7 @@ role.admin=juliet</programlisting>
 		  <listitem><para>The root element of the <literal>tomcat-server.xml</literal> file is <literal>&lt;Server&gt;</literal>. The attributes of this element represent the characteristics of the entire embedded Tomcat servlet container. The <literal>shutdown</literal> attribute specifies the command string that the shutdown port number receives via a TCP/IP connection in order to shut down the servlet container. The <literal>port</literal> attribute specifies the TCP/IP port number that listens for a shutdown message.</para></listitem>
 
       		  <listitem><para>The <literal>&lt;Listener&gt;</literal> XML elements specify the list of lifecycle listeners that monitor and manage the embedded Tomcat servlet container. Each listener class is a Java Management Extensions (JMX) MBean that listens to a specific component of the servlet container and has been programmed to do something at certain lifecycle events of the component, such as before starting up, after stopping, and so on.</para>
-			<para> The first four <literal>&lt;Listener&gt;</literal> elements configure standard Tomcat lifecycle listeners. The listener implemented by the <literal>org.eclipse.virgo.server.web.tomcat.ServerLifecycleLoggingListener</literal> class is specific to @product.name@ and manages server lifecycle logging.
+			<para> The first four <literal>&lt;Listener&gt;</literal> elements configure standard Tomcat lifecycle listeners. The listener implemented by the <literal>org.eclipse.virgo.web.tomcat.ServerLifecycleLoggingListener</literal> class is specific to @product.name@ and manages server lifecycle logging.
 		</para> </listitem>
 
 		<listitem><para>The <literal>&lt;Service&gt;</literal> XML element groups together one or more connectors and a single engine. Connectors define a transport mechanism, such as HTTP, that clients use to to send and receive messages to and from the associated service. There are many transports that a client can use, which is why a <literal>&lt;Service&gt;</literal> element can have many <literal>&lt;Connector&gt;</literal> elements. The engine then defines how these requests and responses that the connector receives and sends are in turn handled by the servlet container; you can defined only a single <literal>&lt;Engine&gt;</literal> element for any given <literal>&lt;Service&gt;</literal> element.</para>

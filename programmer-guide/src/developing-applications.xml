@@ -662,16 +662,6 @@ password          = secret</screen>
 				</para>
 			</section>
 
-<!--			<note>-->
-<!--				<para>-->
-<!--					<literal>ServerOsgiBundleXmlWebApplicationContext</literal>-->
-<!--					resides in the <literal>org.eclipse.virgo.server.web.dm</literal>-->
-<!--					package which is-->
-<!--					<link linkend="developing-applications-automatic-imports">automatically imported</link>-->
-<!--					in your Web Module&rsquo;s or Shared Services WAR&rsquo;s bundle manifest.-->
-<!--				</para>-->
-<!--			</note>-->
-
 		</section>
 	</section>
 
@@ -909,8 +899,7 @@ Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";<emp
 			<para>
 			    Making a dependency available for provisioning is simply a matter of copying it to the appropriate location in the
 			    @short.product.name@&rsquo;s local provisioning repository. By default this is
-			    <literal>SERVER_HOME/repository/bundles/usr</literal> for bundles, and 
-			    <literal>SERVER_HOME/repository/libraries/usr</literal> for libraries. A more detailed discussion of the provisioning
+			    <literal>SERVER_HOME/repository/usr</literal>. A more detailed discussion of the provisioning
 			    repository can be found in the <ulink url="../../user-guide/html/index.html">User Guide</ulink>.
 			</para>
 	    </section>
