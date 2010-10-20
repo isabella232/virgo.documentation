@@ -593,10 +593,10 @@ osgi> </programlisting>
 		<para>The following example shows how to list the plans that have been installed in Web Server:</para>
 		<programlisting>osgi> vsh plan list
 
-Name                                    Version                            State
-org.eclipse.virgo.kernel.region.springdm 2.0.0                             ACTIVE
-org.eclipse.virgo.server.admin.plan      2.0.0                             ACTIVE
-org.eclipse.virgo.server.web             2.0.0                             ACTIVE
+Name                                           Version                            State
+org.eclipse.virgo.apps.admin.plan              2.1.0                             ACTIVE
+org.eclipse.virgo.kernel.userregion.springdm   2.1.0                             ACTIVE
+org.eclipse.virgo.web                          2.1.0                             ACTIVE
 
 osgi> </programlisting>
 
@@ -608,26 +608,26 @@ Scoped: false
 Atomic: false
 
 Children:
-    bundle org.eclipse.virgo.kernel.deployer.dm 2.1.0.BUILD-20100609153042
+    bundle org.eclipse.virgo.kernel.agent.dm 2.1.0.RELEASE
     bundle org.springframework.osgi.io 1.2.1
     bundle org.springframework.osgi.extender 1.2.1
     bundle org.springframework.osgi.core 1.2.1
-    bundle org.eclipse.virgo.kernel.agent.dm 2.1.0.BUILD-20100609153042
+    bundle org.eclipse.virgo.kernel.deployer.dm 2.1.0.RELEASE
 
 osgi> </programlisting>
 
 		<para>The following example shows how to stop a currently Active plan:</para>
-		<programlisting>osgi> vsh plan stop org.eclipse.virgo.server.web 2.0.0   
+		<programlisting>osgi> vsh plan stop org.eclipse.virgo.web 2.0.0   
 
-plan org.eclipse.virgo.server.web:2.0.0 stopped successfully
+plan org.eclipse.virgo.web:2.0.0 stopped successfully
 
 osgi> </programlisting>
 
 		<para>The following example shows how to start a plan:</para>
 
-		<programlisting>osgi> vsh plan start org.eclipse.virgo.server.web 2.0.0
+		<programlisting>osgi> vsh plan start org.eclipse.virgo.web 2.0.0
 
-plan org.eclipse.virgo.server.web:2.0.0 started successfully
+plan org.eclipse.virgo.web:2.0.0 started successfully
 
 osgi> </programlisting>
 
@@ -676,34 +676,28 @@ Id  Object Class(es)                                            Providing Bundle
 7   org.eclipse.osgi.framework.log.FrameworkLog                                0
 &lt;... remainder omitted ...&gt; 
 
-65 org.eclipse.gemini.web.core.spi.ServletContainer                           35
-66 org.eclipse.gemini.web.core.WebContainer                                   34
-67 org.eclipse.virgo.server.web.core.WebApplicationRegistry                   36
+72 org.eclipse.gemini.web.core.spi.ServletContainer                           38
+73 org.eclipse.gemini.web.core.WebContainer                                   37
+74 org.eclipse.virgo.web.core.WebApplicationRegistry                          39
 &lt;... remainder omitted ...&gt; 
 
 osgi> </programlisting>
 
 		<para>The following example shows how to examine a particular service:</para>
-		<programlisting>osgi> vsh service examine 38
+		<programlisting>osgi> vsh service examine 73
 
-Properties:
-    Bundle-SymbolicName:
-        org.eclipse.virgo.kernel.services
-    Bundle-Version:
-        2.0.0.D-20091110110152
-    objectClass:
-        org.eclipse.virgo.repository.Repository
-    org.springframework.osgi.bean.name:
-        repository
-    service.id:
-        38
+		Properties:
+		    objectClass:
+		        org.eclipse.gemini.web.core.WebContainer
+		    service.id:
+		        73
 
-Publisher: org.eclipse.virgo.region.user 0.0.0 [1]
+		Publisher: org.eclipse.gemini.web.core 1.1.0.RELEASE [37]
 
-Consumer(s):
-    org.eclipse.virgo.kernel.userregion 2.0.0.D-20091110110152 [2]
+		Consumer(s):
+		    org.eclipse.virgo.web.core 2.1.0.RELEASE [39]
 
-osgi> </programlisting>
+		osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-install-command">

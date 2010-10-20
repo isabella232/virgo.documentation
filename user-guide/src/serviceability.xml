@@ -61,14 +61,17 @@ and what was previously referred to as <emphasis>Trace logging</emphasis> (or <e
         </para>
         <para>
 		    By default, the @short.product.name@ trace file is called 
-		    <literal>$SERVER_HOME/serviceability/logs/dm-server/log_</literal><emphasis>i</emphasis><literal>.log</literal>,
+		    <literal>$SERVER_HOME/serviceability/logs/log.log</literal>,
 		    and, again by default, the application trace files are called 
-		    <literal>$SERVER_HOME/serviceability/logs/</literal><emphasis>application_name</emphasis><literal>/log_</literal><emphasis>i</emphasis><literal>.log</literal>, 
+		    <literal>$SERVER_HOME/serviceability/logs/</literal><emphasis>application_name</emphasis><literal>/log.log</literal>, 
             where <emphasis>application_name</emphasis> is automatically set by @short.product.name@ for each application artifact installed and run 
             (it is a combination of the artifact name and the version).
         </para>
-        <para>The index <emphasis>i</emphasis> varies from 1 to 4, on a rolling basis, as each log file exceeds 10Mb.
-      </para>
+		<para>
+			The default behaviour of these trace files is that, once <literal>log.log</literal> reaches a 10Mb limit, it rolls into a series of files named	
+			<literal>log_</literal><emphasis>i</emphasis><literal>.log</literal> where <emphasis>i</emphasis> ranges from 1 to 4, and logging continues in 
+			a new <literal>log.log</literal> file.
+		</para>
       <para>
 		Entries in trace files are by default of the form &lt;timestamp&gt; &lt;thread-name&gt; &lt;source&gt; &lt;level&gt; &lt;entry-text&gt;. For example:
 		<screen>

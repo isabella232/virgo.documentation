@@ -386,7 +386,7 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.springframework.showcase.formtags.web-shared-
  services
 <emphasis role="bold">Import-Package</emphasis>: org.springframework.showcase.formtags.domain,org.sprin
- gframework.showcase.formtags.service, org.eclipse.virgo.server.web.dm;version="[1.0,2.1)"
+ gframework.showcase.formtags.service, org.eclipse.virgo.web.dm;version="[1.0,2.1)"
 Import-Library: org.springframework.spring;version="[2.5.4,3.1.0)"
 Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
  .1.2",<emphasis role="bold">org.springframework.osgi.core</emphasis>
@@ -414,7 +414,7 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
                 you must explicitly set the <literal>contextClass</literal> Servlet context parameter to the fully qualified
                 class name of a <literal>ConfigurableWebApplicationContext</literal> which is OSGi-enabled. When deploying
                 Shared Services WARs to the @product.name@, you should use
-                <literal>org.eclipse.virgo.server.web.dm.ServerOsgiBundleXmlWebApplicationContext</literal>. This will
+                <literal>org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext</literal>. This will
                 then enable the use of Spring-DM&rsquo;s <literal>&lt;reference ... /&gt;</literal> within your root
                 <literal>WebApplicationContext</literal> (i.e., in <literal>applicationContext.xml</literal>).
                 The following listing is an excerpt from <literal>/WEB-INF/web.xml</literal>.
@@ -422,7 +422,7 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 <programlisting language="xml"><![CDATA[
     <context-param>
         <param-name>contextClass</param-name>
-        <param-value>org.eclipse.virgo.server.web.dm.ServerOsgiBundleXmlWebApplicationContext</param-value>
+        <param-value>org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext</param-value>
     </context-param>
 
     <listener>

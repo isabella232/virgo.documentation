@@ -83,8 +83,7 @@
 			<emphasis>web</emphasis>, and <emphasis>WAR</emphasis> personalities, which enable
 			you to build sophisticated web applications. The WAR personality includes support for
 			standard Java EE WARs, "shared library" WARs, and "shared services" WARs, each of
-			which will be covered in greater detail in <xref linkend="architecture" />. Future
-			releases will include support for more personalities such as batch, web services, etc.
+			which will be covered in greater detail in <xref linkend="architecture" />.
 		</para>
 	</section>
 
