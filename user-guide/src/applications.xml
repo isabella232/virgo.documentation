@@ -47,7 +47,7 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 				The Admin Console allows you to upload a file, which will be deployed automatically, from your local file system to the @product.name@. As soon as @product.name@ deploys the artifact,  it appears in the list of artifacts in the Admin Console.  Note that the GUI for uploading varies according to the browser and operating system you use.
 			</para>
 
-			<para>See <link linkend="admin-console-install-artifacts">Installing a New Artifact</link> for details about using the Admin Console to install (deploy) an artifact.  See <link linkend="admin-console">The Web Admin Console</link> for general informatin about the Admin Console.</para> 
+			<para>See <link linkend="admin-console-install-artifacts">Installing a New Artifact</link> for details about using the Admin Console to install (deploy) an artifact.  See <link linkend="admin-console">The Web Admin Console</link> for general information about the Admin Console.</para> 
 		</section>
 
 		<section id="deployment-deploying-happens">
@@ -74,9 +74,8 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 		<section id="deployment-deploying-restrictions">
 			<title>Restrictions</title>
 			<para>
-				The
-				@product.name@
-				does not support deploying fragment bundles.
+				@product.name@ does not support deploying fragment bundles. Typically, fragment bundles should be placed in <literal>$SERVER_HOME/repository/ext</literal>
+				or <literal>$SERVER_HOME/repository/usr</literal> so that they will be installed automatically with their host bundles.
 			</para>
 		</section>
 	</section>
@@ -86,7 +85,7 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 		<para>
 			You undeploy artifacts from @product.name@ by using either the hot-deploy directory on the file system, or the Admin Console.
 		</para>
-		<para><emphasis role="bold">Note:</emphasis>  As with deploying, in this guide the terms <emphasis>undeploying</emphasis> and <emphasis>uninstalling</emphasis> are used interchageably.</para>
+		<para><emphasis role="bold">Note:</emphasis>  As with deploying, in this guide the terms <emphasis>undeploying</emphasis> and <emphasis>uninstalling</emphasis> are used interchangeably.</para>
 
 		<section id="deployment-undeploy-hot">
 			<title>Hot Undeploy</title>
@@ -113,7 +112,8 @@ prompt$ rm helloWorld.war</programlisting>
 			<para>
 				You can undeploy only whole artifacts from the Admin Console, or in other words, you cannot undeploy the separate modules or bundles that make up an artifact.</para>
 			<para>
-				The only artifact that you cannot undeploy from the Admin Console is the Admin Console itself. If you need to undeploy this application, you must remove it from the pickup directory (by default <literal>SERVER_HOME/pickup</literal>); the name of the artifact is <literal>org.eclipse.virgo.server.admin-2.0.0.0.plan</literal>.
+				The only artifact that you cannot undeploy from the Admin Console is the Admin Console itself. If you need to undeploy this application, you must remove it from the pickup directory (by default <literal>SERVER_HOME/pickup</literal>); the name of the artifact is
+				<literal>org.eclipse.virgo.server.admin-2.1.0.RELEASE.plan</literal>.
 			</para>
 			<para>See <link linkend="admin-console-manage-artifacts">Viewing and Managing the Lifecycle of Deployed Artifacts</link> for details about uninstalling (undeploying) an artifact using the Admin Console.  The high-level steps are to highlight the artifact in the artifact tree then click <literal>Uninstall</literal>. </para>
 		</section>

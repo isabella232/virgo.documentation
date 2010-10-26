@@ -5,45 +5,42 @@
   <title>Serviceability</title>
   
 <para>
-Logging (both event logging and trace logging) in @short.product.name@ comes in two forms: application logging and server logging.
-Both are configured together in the <literal>serviceability.xml</literal> file in the <literal>config</literal> directory.
-This takes the form of a Logback configuration—@short.product.name@
-uses a Logback implementation behind the SLF4J logging interface. 
-</para>
-
+	@product.name@ supports two kinds of logging: <emphasis>Event Logging</emphasis> and <emphasis>Trace logging</emphasis> which is usually referred
+	to simply as <emphasis>Logging</emphasis>. The difference between Event Logging and Logging is explained below, but both are configured in the <literal>serviceability.xml</literal> file in the <literal>config</literal> directory.
+This file takes the form of a Logback configuration—@short.product.name@
+uses a Logback implementation behind the SLF4J logging interface.
 <para>
-What was previously referred to as <emphasis>Logging</emphasis>, is now referred to as <emphasis>Event Logging</emphasis>, 
-and what was previously referred to as <emphasis>Trace logging</emphasis> (or <emphasis>Tracing</emphasis>) is now simply <emphasis>Logging</emphasis>.
+For a description of the syntax and facilities provided by <literal>serviceability.xml</literal>
+see the <emphasis>Logback</emphasis> documentation (referenced in <xref linkend="furtherreading"/>).
+</para> 
 </para>
 
-    <section id="serviceability-info-log">
-      <title>Event log files</title>
+   <section id="serviceability-info-log">
+      <title>Event logging</title>
       <para>
-        Event log files are low-volume logs of important events in @product.name@. Each server message written to
- 		an event log file is accompanied by a code enclosed in angle brackets. 
+        Event logging records important events in @product.name@. Each event is logged to
+ 		an event log file and is accompanied by a code enclosed in angle brackets. 
  		An example is shown below:
 <screen>
-[2009-08-25 15:04:57.044] server-dm-7                  &lt;OF0001I&gt; OSGi telnet console available on port 2401.
+[2010-10-25 16:20:45.897] system-artifacts             &lt;TC0010I&gt; Creating HTTP/1.1 connector with scheme http on port 8080.
 </screen>
 		(For a description of the log code syntax, see <xref linkend="log-codes"/>.)
-        The format of event log messages from the server is fully configurable.
+        The format of event log messages is fully configurable.
       </para>
-      <para>
-        By default, event log messages are stored in
-        <literal>$SERVER_HOME/serviceability/eventlogs/eventlog_</literal><emphasis>i</emphasis><literal>.log</literal> and output to the console.
-        The index <emphasis>i</emphasis> varies from 1 to 4, at 10Mb boundaries. An examination of the <emphasis>Logback</emphasis> configuration will
-        show these defaults being set. They may be modified. 
-      </para>
-    <para>
-    For a description of the syntax and facilities provided by this file
-    see the <emphasis>Logback</emphasis> documentation (referenced in <xref linkend="furtherreading"/>).
-    </para>
+		<para>
+		    By default, event log messages are stored in <literal>$SERVER_HOME/serviceability/eventlogs/eventlog.log</literal>.
+      	</para>
+		<para>
+			The default behaviour is that, once <literal>eventlog.log</literal> reaches a 10Mb limit, it rolls into a series of files named	
+			<literal>eventlog_</literal><emphasis>i</emphasis><literal>.log</literal> where <emphasis>i</emphasis> ranges from 1 to 4, and event logging continues in 
+			a new <literal>eventlog.log</literal> file.
+		</para>
     </section>
     
     <section id="serviceability-info-trace">
-      <title>Trace (Logging)</title>
+      <title>(Trace) Logging</title>
       <para>
-	    The @product.name@&rsquo;s logging (trace) support serves two main purposes:
+	    The @product.name@&rsquo;s (trace) logging support serves two main purposes:
 	    <itemizedlist>
 		  <listitem>
 		    It provides global trace files that capture high-volume information regarding the @product.name@&rsquo;s internal events. 

@@ -32,7 +32,7 @@
 		  <tbody>
 			<row>
 				<entry><literal>.kernel.properties</literal></entry>
-				<entry>Configures <link linkend="configuring-deployment">kernel deployment</link>. </entry>
+				<entry>Configures <link linkend="configuring-deployment">deployment</link>. </entry>
 			</row>
 			<row>
 				<entry><literal>.kernel.userregion.properties</literal></entry>
@@ -57,7 +57,7 @@
     <section id="configuring-deployment">
 	<title>Configuring Deployment</title>
 
-	<para>You can configure three properties of deployment: the pickup directory into which you copy applications for hot-deployment, the deployment timeout, and whether automatic cloning of deployed bundles is enabled.  </para>
+	<para>You can configure two properties of deployment: the pickup directory into which you copy applications for hot-deployment and the deployment timeout.  </para>
 	<para>To change any of these properties, edit the <literal>deployer.XXX</literal> properties of the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file.  The following table describes these properties.  </para>
 	<table id="configuring-deployment-table" colsep="1" frame="all" rowsep="1">
 	    	  <title>Deployment Configuration Properties</title>
@@ -70,12 +70,12 @@
 		     </thead>
 		     <tbody>
 			<row>
-				<entry><literal>deployer.timeout</literal></entry>
-				<entry>Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to deploy a bundle, library, or plan.  The default value is <literal>300</literal>.  If you want to disable deployment timeout, specify <literal>0</literal>.</entry>
+				<entry><literal>deployer.pickupDirectory</literal></entry>
+				<entry>Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.  Relative paths are relative to <literal>$SERVER_HOME</literal>.  The default value is <literal>./pickup</literal>.</entry>
 			</row>
 			<row>
-				<entry><literal>deployer.pickupDirectory</literal></entry>
-				<entry>Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.  Relative paths are relative to <literal>$SERVER_HOME</literal>.  The default value is <literal>./target/pickup.</literal>.</entry>
+				<entry><literal>deployer.timeout</literal></entry>
+				<entry>Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to deploy a bundle, library, or plan.  The default value is <literal>300</literal>.  If you want to disable deployment timeout, specify <literal>0</literal>.</entry>
 			</row>
 		    </tbody>
 		 </tgroup>
@@ -98,7 +98,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 			those of the server itself, such as the Admin Console. The user region
 			is deliberately isolated from the kernel, which makes it much simpler
 			for you to manage your applications with the Admin Console 
-			because the internal server bundles are not visible.
+			because the internal kernel bundles are not visible.
 		</para>
 		<para>
 			You configure the user region by updating properties in the
@@ -138,7 +138,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 			</row>
 			<row>
 				<entry><literal>serviceExports</literal></entry>
-				<entry>Specifies the services in the user region that are imported into the kernel so that they're available to bundles in the kernel.  </entry>
+				<entry>Specifies the services in the user region that are exported to the kernel so that they're available to bundles in the kernel.  </entry>
 			</row>
 			<row>
 				<entry><literal>inheritedFrameworkProperties</literal></entry>
@@ -154,7 +154,6 @@ deployer.pickupDirectory=pickup]]></programlisting>
 			<row>
 				<entry><literal>initialArtifacts</literal></entry>
 				<entry>Specifies the artifacts that @short.product.name@ deploys into the user region when the server starts. @product.name@ performs dependency satisfaction when it deploys these artifacts.  This means that you only need to list the top-level artifacts that you care about; @short.product.name@ automatically installs any other artifacts upon which they depend from the repository.
-				<para>You can use this property to make a @short.product.name@ behave like a @kernel.product.name@ by removing the <literal>repository:plan/org.eclipse.virgo.web</literal> plan.  </para>
 				</entry>
 			</row>
 		    </tbody>
@@ -176,11 +175,11 @@ deployer.pickupDirectory=pickup]]></programlisting>
 	</para>
 		<para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.authentication.config</literal> file configures the underlying authentication technology for @short.product.name@.  The short file consists of the following entry:</para>
 
-		<programlisting>dm-kernel {
+		<programlisting>virgo-kernel {
         org.eclipse.virgo.kernel.authentication.KernelLoginModule REQUIRED;
 };</programlisting>
 
-		<para>The entry is named <literal>dm-kernel</literal>.  This name corresponds to the <literal>&lt;Realm&gt;</literal> element in the <literal>$SERVER_HOME/config/tomcat-server.xml</literal> file that configures the JAAS authentication mechanism for the <literal>Catalina</literal> service of the <link linkend="configuring-tomcat">Tomcat servlet container</link>.  The <literal>dm-kernel</literal> entry specifies that the JAAS LoginModule that @short.product.name@ uses to authenticate users is <literal>org.eclipse.virgo.kernel.authentication.KernelLoginModule</literal> and that this <literal>KernelLoginModule</literal> is required to "succeed" in order for authentication to be considered successful. The <literal>KernelLoginModule</literal> succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for Web Server is <literal>admin/springsource</literal>. </para>
+		<para>The entry is named <literal>virgo-kernel</literal>.  This name corresponds to the <literal>&lt;Realm&gt;</literal> element in the <literal>$SERVER_HOME/config/tomcat-server.xml</literal> file that configures the JAAS authentication mechanism for the <literal>Catalina</literal> service of the <link linkend="configuring-tomcat">Tomcat servlet container</link>.  The <literal>virgo-kernel</literal> entry specifies that the JAAS LoginModule that @short.product.name@ uses to authenticate users is <literal>org.eclipse.virgo.kernel.authentication.KernelLoginModule</literal> and that this <literal>KernelLoginModule</literal> is required to "succeed" in order for authentication to be considered successful. The <literal>KernelLoginModule</literal> succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for Web Server is <literal>admin/springsource</literal>. </para>
 
 	       <para>You configure the administration user in the <literal>org.eclipse.virgo.kernel.users.properties</literal> file.  The default file for a freshly installed @short.product.name@ is as follows:</para>
 
@@ -243,7 +242,7 @@ role.admin=juliet</programlisting>
   	             <para>You configure service dumps for @product.name@ using the <link linkend="configuring-serviceability-medic">org.eclipse.virgo.medic.properties</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file also includes some additional logging configuration.</para>
 		</listitem>
 		<listitem><para>
-		Event logs and server/application logging (previously called tracing): Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>.  This means that you now have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
+		Event logs and server/application (trace) logging: Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>.  This means that you now have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
 		</para>
   	             <para>You configure logging for @product.name@ using the <link linkend="configuring-serviceability-logback">serviceability.xml</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file is essentially the Logback <literal>logback.xml</literal> (or <literal>logback-test.xml</literal>) configuration file but renamed for @short.product.name@. </para>
 		</listitem>
@@ -296,8 +295,8 @@ role.admin=juliet</programlisting>
 	</section>
 	<section id="configuring-serviceability-logback">
 	  <title>The serviceability.xml File</title>
-		<para>Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>, which is a successor of the log4j project. The Logback logging framework is faster, more reliable, and easier to use than log4j and other logging systems.</para>
-  	        <para>You configure logging for @product.name@ using the <literal>$SERVER_HOME/config/serviceability.xml</literal> file.  This file is the standard Logback <literal>logback.xml</literal> or <literal>logback-test.xml</literal> configuration file, but renamed for @short.product.name@ due to internal requirements. </para>
+		<para>Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>, which is a successor of the log4j project. The Logback logging framework is faster, more reliable, and easier to use than log4j and certain other logging systems.</para>
+  	        <para>You configure logging for @product.name@ using the <literal>$SERVER_HOME/config/serviceability.xml</literal> file.  This file is the standard Logback <literal>logback.xml</literal> or <literal>logback-test.xml</literal> configuration file, but renamed for @short.product.name@. </para>
 		<para>The following listing shows the default <literal>serviceability.xml</literal> file in a freshly-installed @short.product.name@; see the text after the listing for a brief overview of the file:</para>
 		<programlisting language="xml"><![CDATA[<configuration>
 	<appender name="SIFTED_LOG_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
@@ -381,14 +380,17 @@ role.admin=juliet</programlisting>
 	<para>The main information to get from this file is that @short.product.name@ writes log messages to four different locations that map to the four appenders:</para>
 	<itemizedlist>
 		<listitem><para>The <literal>SIFTED_LOG_FILE</literal> appender logs both global and application-specific messages to the <literal>$SERVER_HOME/serviceability/logs/</literal><emphasis><literal>applicationName</literal></emphasis><literal>/log.log</literal> file, where <emphasis><literal>applicationName</literal></emphasis> refers to the name of the application.   The log messages for the @short.product.name@ itself are logged to the <literal>$SERVER_HOME/serviceability/logs/virgo-server/log.log</literal> file. Because this appender creates different log files for each application, it is called a <emphasis>sifting appender</emphasis>.   </para>
-		   <para>When @short.product.name@ creates the first log file, it calls it <literal>log.log</literal>; however, when this file reaches a size of 10MB, @short.product.name@ creates a new log file called <literal>log_1.log</literal>, and so on up to 4.  At that point, the cycle starts again and @short.product.name@ overwrites the existing <literal>log.log</literal>. This is called its <emphasis>rolling policy</emphasis>. </para>
+		<para>
+			The default behaviour of these trace files is that, once <literal>log.log</literal> reaches a 10Mb limit, it rolls into a series of files named	
+			<literal>log_</literal><emphasis>i</emphasis><literal>.log</literal> where <emphasis>i</emphasis> ranges from 1 to 4, and logging continues in 
+			a new <literal>log.log</literal> file. This is called its <emphasis>rolling policy</emphasis>.
+		</para>
 		<para>The <literal>&lt;Pattern&gt;</literal> element defines the format of each log message;  messages include the timestamp, the thread that generated the log message, the context-specific event code, and a stack trace of the exception, if any.  For example:</para>
 		 <para><literal>[2008-05-15 09:09:46.940] server-dm-2 org.apache.coyote.http11.Http11Protocol I Initializing Coyote HTTP/1.1 on http-48080</literal></para>
 		</listitem>
 		<listitem><para>The <literal>LOG_FILE</literal> appender is very similar to the first one, but it logs <emphasis>all</emphasis> log messages to the <literal>$SERVER_HOME/serviceability/log/log.log</literal> file rather than sifting application-specific messages to their own log file.  The rolling policy and message format for this appender is similar to that of the <literal>SIFTED_LOG_FILE</literal> appender.</para></listitem>
-		<listitem><para>The <literal>EVENT_LOG_STDOUT</literal> appender does not log messages to a file, but rather to the console window from which you started @short.product.name@.  The format of the messages is similar to that of the preceding appenders, although with slightly less information. For example:</para>
-		 <para><literal>[2009-08-25 15:04:57.044] server-dm-7   &lt;OF0001I&gt; OSGi telnet console available on port 2401.</literal></para>
-		 <para>might be seen when the Equinox Console is enabled (in the <literal>userregion.properties</literal> configuration file).</para>
+		<listitem><para>The <literal>EVENT_LOG_STDOUT</literal> appender does not log messages to a file, but rather to the console window from which you started @short.product.name@. For example:</para>
+		 <para><literal>[2010-10-25 16:20:49.367] Thread-3   &lt;WE0000I&gt; Starting web bundle 'org.eclipse.virgo.apps.admin.web' version '2.1.0.RELEASE' with context path '/admin'.</literal></para>
 		</listitem>
 
 		<listitem><para>The <literal>EVENT_LOG_FILE</literal> appender logs only important events to the <literal>$SERVER_HOME/serviceability/eventlogs/eventlog.log</literal> file, and thus the volume of information is much lower than with the first two appenders. The rolling policy for the event log is the same as with the first two appenders, but the format of the messages is similar to that of the <literal>EVENT_LOG_STDOUT</literal> appender. </para> </listitem>
@@ -396,7 +398,7 @@ role.admin=juliet</programlisting>
 
 	<para>The loggers and root logger specify the level of log that is written for each of the referenced appenders.</para>
 
-	<para>Typically, the default logging configuration as specified by the <literal>serviceability.xml</literal> file is adequate for all @short.product.name@ environments.  However, if you want to customize the logging framework even further, you can edit this file as well as the <literal>org.eclipse.virgo.medic.properties.</literal>.  See the <ulink url="http://logback.qos.ch/manual/index.html">logback documentation</ulink> for detailed information about the architecture and the configuration of Logback.</para>
+	<para>Typically, the default logging configuration as specified by the <literal>serviceability.xml</literal> file is adequate for all @short.product.name@ environments.  However, if you want to customize the logging framework further, you can edit this file as well as the <literal>org.eclipse.virgo.medic.properties</literal>.  See the <ulink url="http://logback.qos.ch/manual/index.html">logback documentation</ulink> for detailed information about the architecture and the configuration of Logback.</para>
 	</section>
 
 
@@ -407,7 +409,7 @@ role.admin=juliet</programlisting>
 		<para>
 			@product.name@
 			embeds an OSGi-enhanced version of the <ulink url="http://tomcat.apache.org/">Tomcat Servlet Container</ulink>
-			in order to provide support for deploying Java EE WARs and <emphasis>Web Bundles</emphasis>. 
+			in order to provide support for deploying Java EE WARs and OSGi <emphasis>Web Application Bundles</emphasis>. 
 			You configure the embedded Servlet container using the standard Apache Tomcat configuration.   The main difference is that the configuration file is called <filename>tomcat-server.xml</filename> rather than <literal>server.xml</literal>.  As with the other @short.product.name@ configuration files, the <literal>tomcat-server.xml</literal> file is located in the <literal>$SERVER_HOME/config</literal> directory. 
 		</para>
 		<para>Here's an extract of the default configuration distributed with the @short.product.name@.
@@ -471,7 +473,7 @@ role.admin=juliet</programlisting>
 			<para> The first four <literal>&lt;Listener&gt;</literal> elements configure standard Tomcat lifecycle listeners. The listener implemented by the <literal>org.eclipse.virgo.web.tomcat.ServerLifecycleLoggingListener</literal> class is specific to @product.name@ and manages server lifecycle logging.
 		</para> </listitem>
 
-		<listitem><para>The <literal>&lt;Service&gt;</literal> XML element groups together one or more connectors and a single engine. Connectors define a transport mechanism, such as HTTP, that clients use to to send and receive messages to and from the associated service. There are many transports that a client can use, which is why a <literal>&lt;Service&gt;</literal> element can have many <literal>&lt;Connector&gt;</literal> elements. The engine then defines how these requests and responses that the connector receives and sends are in turn handled by the servlet container; you can defined only a single <literal>&lt;Engine&gt;</literal> element for any given <literal>&lt;Service&gt;</literal> element.</para>
+		<listitem><para>The <literal>&lt;Service&gt;</literal> XML element groups together one or more connectors and a single engine. Connectors define a transport mechanism, such as HTTP, that clients use to to send and receive messages to and from the associated service. There are many transports that a client can use, which is why a <literal>&lt;Service&gt;</literal> element can have many <literal>&lt;Connector&gt;</literal> elements. The engine then defines how these requests and responses that the connector receives and sends are in turn handled by the servlet container; you can define only a single <literal>&lt;Engine&gt;</literal> element for any given <literal>&lt;Service&gt;</literal> element.</para>
 
 		<para> The sample <literal>tomcat-server.xml</literal> file above includes three <literal>&lt;Connector&gt;</literal> elements: one for the HTTP transport, one for the HTTPS transport, and one for the AJP transport. The file also includes a single <literal>&lt;Engine&gt;</literal> element, as required.
 		</para></listitem>
@@ -530,7 +532,7 @@ role.admin=juliet</programlisting>
 		<section id="configuring-tomcat-connectors">
 			<title>Connector Configuration</title>
 			<para> The @product.name@ supports the configuration of any connector supported by Apache Tomcat. 
-			See the default configuration above for syntax examples, and for further details on the configuration properties 
+			See the default configuration above for syntax examples, and for further details of the configuration properties 
 			supported for various <literal>&lt;Connector&gt;</literal> implementations, 
 			consult the official <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/config/http.html">Tomcat HTTP Connector</ulink> documentation.
 			</para>
@@ -566,30 +568,32 @@ role.admin=juliet</programlisting>
 					is used in @short.product.name@ for searching context configuration files and details the context configuration properties.
 				</para>
 				<para>
-					The configuration files are located as follows:
+					Context configuration files may be placed in the following locations,
+					where <literal>[enginename]</literal> is the name of Tomcat's engine ('Catalina' by default) and <literal>[hostname]</literal> names
+					a virtual host ('localhost' by default), both of which are configured in <literal>tomcat-server.xml</literal>:
 					<itemizedlist>
 						<listitem>
 						<para>
-							<literal>$SERVER_HOME/config/context.xml</literal> is the default context configuration file for all web applications.
+							<literal>$SERVER_HOME/config/context.xml</literal> provides the default context configuration file for all web applications.
 						</para>
 						</listitem>
 						<listitem>
 						<para>
-							The <literal>$SERVER_HOME/config/[enginename]/[hostname]</literal> directory contains:
+							The <literal>$SERVER_HOME/config/[enginename]/[hostname]</literal> directory may contain:
 					  		<itemizedlist>
 								<listitem>
 								<para>
-									The default context configuration for all web applications of a given virtual host.
+									The default context configuration for all web applications of a given virtual host in the file <literal>context.xml.default</literal>.
 								</para>
 								</listitem>
 					   			<listitem>
 					   			<para>
-									Individual web applications' context configuration files.
+									Individual web applications' context configuration files as described in the Apache Tomcat Configuration Reference.
+									For example, the context for a web application with
+									context path <literal>foo</literal> may be configured in <literal>foo.xml</literal>.
 					   			</para>
 								</listitem>
 							</itemizedlist>
-							<literal>[enginename]</literal> is the name of Tomcat's engine ('Catalina' by default) and <literal>[hostname]</literal> names
-							a virtual host, both of which are configured in <literal>tomcat-server.xml</literal>.
 						</para>
 						</listitem>
                     </itemizedlist>
@@ -615,6 +619,10 @@ role.admin=juliet</programlisting>
 						</listitem>
 					</itemizedlist>
 				</para>
+				<para>
+					See <link linkend="web-application-context-configuration">Web Application Context Configuration File Copying</link> for a known issue related to
+					providing a context configuration file inside a web application archive.
+				</para>
 			</section>
 
 	</section>
@@ -635,17 +643,11 @@ role.admin=juliet</programlisting>
 
 		<para>For example, <literal>ext.type=external</literal> specifies that the <literal>type</literal> property of the repository 
 		with name <literal>ext</literal> is <literal>external</literal>.  
-                </para>
-		<para>For each specific repository, you configure a number of properties, 
-		such as its type (external, watched, or remote) and its searchpath, watched directory, 
-		or URI that specifies the actual location of the artifacts (OSGi bundles, libraries, PARs, plans, or configuration files.) 
-		The particular properties that configure these options are listed in the table after the example.
-		</para>
+        </para>
 		<para>
-			The <literal>chain</literal> property specifies the order in which @product.name@ searches the searchpaths 
-			when it looks for dependencies; 
-			the first path listed specifies the first actual directory that @product.name@ searches, until the last listed path.  
-			The <literal>chain</literal> property uses the names of the searchpaths as specified in the individual repository properties; 
+			The <literal>chain</literal> property specifies the order in which @product.name@ searches the individual repositories 
+			when it looks for dependencies.  
+			The <literal>chain</literal> property uses the names of the individual repositories as specified in the individual repository properties; 
 			for example, in the property <literal>ext.type=external</literal>, the name of the repository is <literal>ext</literal>.
 		</para>
 		<para>
@@ -661,15 +663,16 @@ chain=ext,usr]]></programlisting>
 
         
         <para>
-		The default configuration shown above has two searchpaths corresponding to the two default sub-directories of the <literal>$SERVER_HOME/repository</literal> directory created when you first install @short.product.name@: <literal>ext</literal> and <literal>usr</literal>.    @product.name@ searches each of these searchpaths when locating entries for inclusion in the repository.  </para>
+		The default configuration shown above has two searchpaths corresponding to the two default sub-directories of the <literal>$SERVER_HOME/repository</literal> directory created when you first install @short.product.name@: <literal>ext</literal> and <literal>usr</literal>. @product.name@ searches each of these individual repositories when locating entries for inclusion in the repository.  </para>
 	 <para>
-	        The <literal>chain</literal> property shows the order in which @product.name@ searches the searchpaths: first <literal>ext</literal> and then <literal>usr</literal>. 
+	        The <literal>chain</literal> property shows the order in which @product.name@ searches the individual repositories: first <literal>ext</literal> and then <literal>usr</literal>. 
 	</para>
 	<para>
-		The following table lists all the available properties that you can use to describe a named path and the 
-		repository search chain in the <literal>org.eclipse.virgo.repository.properties</literal> file.
+		The following table lists all the available properties that you can use to configure an individual repository.
+		Individual repositories as well as the repository search chain  are configured in the file
+		<literal>$SERVER_HOME/config/org.eclipse.virgo.repository.properties</literal>.
 		<table id="repository-options-table" colsep="1" frame="all" rowsep="1">
-		<title>Repository Properties in repository.properties</title>
+		<title>Repository Properties</title>
 		  <tgroup cols="2">
  		    <thead>
 		      <row>
@@ -838,7 +841,7 @@ chain=ext,usr]]></programlisting>
 			        that is <literal>*</literal> and <literal>**</literal> can be used to represent any directory and 
 			        any series of directories, respectively. 
 			        For example, <literal>repository/usr/{bundle}</literal> and <literal>repository/usr/*</literal> 
-			        are directly equivalent.
+			        are equivalent.
 			    </para>
 			    <para>
 				    A common usage of the <literal>**</literal> wildcard is to allow dependencies stored in a directory structure of varying depth, 
@@ -847,11 +850,12 @@ chain=ext,usr]]></programlisting>
 			</section>
 		</section>
         <section id="configuring-provisioning-repository-using-system-properties">
-			<title>Using System properties</title>
+			<title>Using System Properties</title>
 			<para>
 				You can use system properties when specifying the values of the <emphasis><literal>repository-name</literal></emphasis><literal>.searchPattern</literal>, 
 				<emphasis><literal>repository-name</literal></emphasis><literal>.watchDirectory</literal>,
-				<emphasis><literal>repository-name</literal></emphasis><literal>.watchInterval</literal> <emphasis><literal>repository-name</literal></emphasis><literal>.uri</literal>, 
+				<emphasis><literal>repository-name</literal></emphasis><literal>.watchInterval</literal>,
+				<emphasis><literal>repository-name</literal></emphasis><literal>.uri</literal>, 
 				and <emphasis><literal>repository-name</literal></emphasis><literal>.indexRefreshInterval</literal>
 				properties. 
 				You reference system properties as <literal>${system.property.name}</literal>; 
@@ -860,7 +864,7 @@ chain=ext,usr]]></programlisting>
 			</para>
 		</section>		                 
         <section id="configuring-provisioning-repository-examples">
-	        <title>Example repository configurations</title>
+	        <title>Example Repository Configurations</title>
 	        <para>
 		        The following examples provide sample configuration that could be used for some common use cases.
 		    </para>

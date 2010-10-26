@@ -4,9 +4,9 @@
 <appendix id="known-issues">
 	<title>Known Issues</title>
 
-	<para>This section describes two known issues that you might run into, along with corresponding workarounds.  </para>
+	<para>This section describes known issues that you might run into, along with corresponding workarounds.  </para>
 
-	<para>For the full list of known issues, see the <ulink url="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;order=Importance;classification=RT;product=Virgo">Eclipse Issue Tracker for the @umbrella.product.name@</ulink>.  The issues are organised by component as well as by release.  You can also use the Issue Tracker application to enter a new issue if you cannot find an existing issue that describes the problem you are running into.</para>
+	<para>For the full list of known issues, see <ulink url="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;order=Importance;classification=RT;product=Virgo">Virgo bugs in Eclipse Bugzilla</ulink>.  The bugs are organised by component as well as by release.  You can also use bugzilla to enter a new issue if you cannot find an existing issue that describes the problem you are running into, but it's probably worth asking on the <ulink url="http://www.eclipse.org/forums/index.php?t=thread&amp;frm_id=159">Virgo community forum</ulink> first.</para>
 
 	<section id="known-issues-firewall-timeout">
 		<title>Timeout During Startup Due to Firewall Settings</title>
@@ -27,6 +27,24 @@
 			server HotSpot compiler. This problem may be resolved by configuring the
 			<literal>JAVA_OPTS</literal> environment variable to specify an increased
 			<literal>MaxPermSize</literal>, for example <literal>-XX:MaxPermSize=128M</literal>.
+		</para>
+	</section>
+	<section id="alternate-serviceability-work">
+		<title>Alternate <literal>serviceability</literal> and <literal>work</literal> Directories</title>
+		<para>
+			Although an alternate <literal>config</literal> directory may be specified on startup, there is no way to specify
+			alternate <literal>serviceability</literal> or <literal>work</literal> directories. This is covered by
+			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=307737">bug 307737</ulink> which also describes a workaround.
+		</para>
+	</section>
+	<section id="web-application-context-configuration">
+		<title>Web Application Context Configuration File Copying</title>
+		<para>If a web application, packaged as an archive rather than a directory, includes context configuration in <literal>META-INF/context.xml</literal>,
+		Virgo copies this file to <literal>$SERVER_HOME/config/[enginename]/[hostname]/[contextpath].xml</literal>.
+		If the application is redeployed, the copy of the context configuration overrides any updated context configuration included in 
+		<literal>META-INF/context.xml</literal>. To use the updated context configuration, the user must delete the copy of the file before redeploying.
+		This is covered by
+			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=328683">bug 328683</ulink>.
 		</para>
 	</section>
 </appendix>

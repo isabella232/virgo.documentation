@@ -7,7 +7,7 @@
 		<title>Prerequisites</title>
 		<para>
 			The @kernel.product.name@, or @kernel.product.name.short@ for short, requires Java SE 6 or later to be installed. Java is available from
-			<ulink url="http://java.sun.com/javase/downloads/index.jsp">Sun</ulink> and elsewhere.
+			<ulink url="http://www.java.com/">http://www.java.com/</ulink> and elsewhere.
 		</para>
 	</section>
 	
@@ -42,7 +42,7 @@
 				<para>
 					To install the @kernel.product.name@ on Windows, unzip the distribution package to the desired installation directory.
 					You should use a zip application such as 7zip, not the built-in folder decompression.  Note that both Windows and
-					Java 5 have some issues with long file names and file paths, so we recommend installing to the root directory of
+					Java have some issues with long file names and file paths, so we recommend installing to the root directory of
 					your chosen drive.
 				</para>
 			</section>

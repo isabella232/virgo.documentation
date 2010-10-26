@@ -16,7 +16,7 @@ Event log codes issued by @short.product.name@ have the general syntax
       <row> 
 <entry><literal>XX</literal></entry>
 <entry>
-is a two-letter code (upper-case) identifying the region of the @short.product.name@ code which issued the log message;
+is a two-letter code (upper-case) identifying the area of the @short.product.name@ code which issued the log message;
 </entry>
 </row><row>
 <entry><literal>nnnn</literal></entry>
@@ -45,9 +45,6 @@ The two-letter codes are (this list is not complete):
       <row>
 <entry><literal>AG</literal></entry> <entry><literal>org.eclipse.virgo.kernel.agent.dm</literal></entry>
       </row>
-	  <row>
-<entry><literal>CC</literal></entry> <entry><literal>org.eclipse.virgo.kernel.services.concurrent</literal></entry>
-      </row>
       <row>
 <entry><literal>DE</literal></entry> <entry><literal>org.eclipse.virgo.kernel.deployer.core</literal></entry>
       </row>
@@ -55,7 +52,7 @@ The two-letter codes are (this list is not complete):
 <entry><literal>HD</literal></entry> <entry><literal>org.eclipse.virgo.kernel.deployer.hot</literal></entry>
       </row>
       <row>
-<entry><literal>KD</literal></entry> <entry><literal>org.eclipse.virgo.kernel.dm</literal></entry>
+<entry><literal>HR</literal></entry> <entry><literal>org.eclipse.virgo.apps.repository.core</literal></entry>
       </row>
       <row>
 <entry><literal>KE</literal></entry> <entry><literal>org.eclipse.virgo.kernel.core</literal></entry>
@@ -70,8 +67,14 @@ The two-letter codes are (this list is not complete):
 <entry><literal>RP</literal></entry> <entry><literal>org.eclipse.virgo.repository</literal></entry>
       </row>
 	  <row>
+<entry><literal>TC</literal></entry> <entry><literal>org.eclipse.virgo.web.tomcat</literal></entry>
+	  </row>
+	  <row>
 <entry><literal>UR</literal></entry> <entry><literal>org.eclipse.virgo.kernel.userregion</literal></entry>
       </row>
+	  <row>
+<entry><literal>WE</literal></entry> <entry><literal>org.eclipse.virgo.web.core</literal></entry>
+	  </row>
     </tbody>
   </tgroup>
 </informaltable>
