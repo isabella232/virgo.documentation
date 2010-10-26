@@ -7,7 +7,7 @@
 		<title>Prerequisites</title>
 		<para>
 			The @product.name@, or @short.product.name@ for short, requires Java SE 6 or later to be installed. Java is available from
-			<ulink url="http://java.sun.com/javase/downloads/index.jsp">Sun</ulink> and elsewhere.
+			<ulink url="http://www.java.com/">http://www.java.com/</ulink> and elsewhere.
 		</para>
 	</section>
 	<section id="installation-zip">
@@ -41,7 +41,7 @@
 				<para>
 					To install the @product.name@ on Windows, unzip the distribution package to the desired installation directory.
 					You should use a zip application such as 7zip, not the built-in folder decompression.  Note that both Windows and
-					Java 5 have some issues with long file names and file paths, so we recommend installing to the root directory of
+					Java have some issues with long file names and file paths, so we recommend installing to the root directory of
 					your chosen drive.
 				</para>
 			</section>
@@ -56,7 +56,7 @@
 				<title>JAVA_HOME</title>
 				<para>
 					The @product.name@ uses the <literal>JAVA_HOME</literal> environment variable to locate the <literal>java</literal>
-					executable. Configure this environment variable to point to the home directory of the Java 5 or Java 6 installation on your computer.
+					executable. Configure this environment variable to point to the home directory of the Java 6 installation on your computer.
 				</para>
 			</section>
 			<section id="installation-post-env-server">
@@ -139,7 +139,7 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 			</para>
 			<para>
 				Once this is done select &lsquo;OK&rsquo; to return to the &lsquo;Security&rsquo; tab 
-				and now add the owner to the list of groups and users that have permission to edit the file.
+				and now add the owner to the list of groups and users that have permission to access the file.
 			</para>
 			<para>
 				<imagedata fileref="images/install-windows-4-AllSetReadAndExecute.png" />
@@ -147,7 +147,7 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 			<para>
 				Once all these steps are complete you can proceed to start the @short.product.name@.
 			</para>
-			<screen>C:\dev\virgo-web-server-2.0.1.BUILD-20091208094124>bin\tstartup.bat
+			<screen>C:\dev\virgo-web-server-2.1.0.RELEASE>bin\startup.bat
 [2009-12-08 13:09:09.545] startup-tracker              &lt;KE0001I&gt; Kernel starting.</screen>
 		</section>
 	</section>

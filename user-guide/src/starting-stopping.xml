@@ -33,8 +33,8 @@ prompt$ bin/startup.sh</screen>
 	      <screen>prompt> cd %SERVER_HOME%
 prompt> bin\startup.bat</screen>
 	      <para>
-	        Once @product.name@ has started console will display a log message
-	        similar to the one shown below:
+	        Once @product.name@ has started, the console will display a log message
+	        similar to the one shown below, along with other status messages:
 	      <screen>[2009-11-30 12:12:12.111] Thread-2   &lt;UR0001I&gt; User region ready.</screen>
 	      <para>The preceding message indicates that you can start using @short.product.name@.</para>
 	      </para>
@@ -278,7 +278,7 @@ prompt> bin\startup.bat -keystore customKeystore -keystorePassword customKeystor
 		</section>
 	</section>
 	<section>
-		<title>Starting With a Custom Configuration Directory</title>
+		<title>Starting with a Custom Configuration Directory</title>
 		<para>
 			Use the <literal>-configDir</literal> option to specify an alternate <literal>config</literal> directory, different from the
 			default <literal>SERVER_HOME/config</literal> directory. This option allows you to use the same @product.name@ 
@@ -290,6 +290,10 @@ prompt> bin\startup.bat -keystore customKeystore -keystorePassword customKeystor
 			If you specify a relative path for the <literal>-configDir</literal> parameter, 
 			the startup script interprets the path as relative to the root of the @product.name@ installation, 
 			and not relative to the directory from which you execute the <literal>startup</literal> script. 
+		</para>
+		<para>
+			See <link linkend="alternate-serviceability-work">Alternate <literal>serviceability</literal> and <literal>work</literal>
+			Directories</link> for a known issue related to specifying an alternate <literal>config</literal> directory.
 		</para>
 		<section>
 			<title>Linux</title>
@@ -309,7 +313,7 @@ prompt> bin\startup.bat -configDir c:\config\node1</screen>
 	    <section>
 	      <title>Linux</title>
 	      <para>
-	        To stop a running instance of @product.name@, start a new terminal window and the run <literal>shutdown.sh</literal> script:
+	        To stop a running instance of @product.name@, start a new terminal window and run the <literal>shutdown.sh</literal> script:
 	      </para>
 	      <screen>prompt$ cd $SERVER_HOME
 prompt$ bin/shutdown.sh</screen>
