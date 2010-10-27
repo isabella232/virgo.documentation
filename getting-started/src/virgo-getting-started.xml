@@ -6,7 +6,7 @@
   <!-- The book title has any trademark and registered trademark symbols literally inserted, since the normal
   escape doesn't appear to work on pdf output. This solution works on all output formats, now that 
   the input text is assumed to be Unicode. -->
-  <title>Creating an application with the @virgo@ @webserv@</title>
+  <title>Creating an application with EclipseRT @virgo@ @webserv@</title>
   <titleabbrev>Creating @greenpages@</titleabbrev>
   <subtitle>@greenpages@: a demonstration</subtitle>
   <!-- 

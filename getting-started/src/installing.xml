@@ -6,9 +6,10 @@
 
 <para>
 Before developing an application with @webserv@, it is essential to install <emphasis>@webserv@</emphasis>,
-the Eclipse <emphasis>Integrated Development Environment</emphasis> (IDE), the
-Eclipse-based <emphasis>@sts@</emphasis> (@sts.short@), and a build system integrated with Eclipse.
-The build system used here is <emphasis>@maven.full@</emphasis>.
+an <emphasis>Integrated Development Environment</emphasis> (IDE), and a build system integrated with Eclipse.
+The IDE used here is the
+Eclipse-based <emphasis>@sts@</emphasis> (@sts.short@), and 
+the build system used here is <emphasis>@maven.full@</emphasis>.
 </para>
 <para>@sts.short@ is supplied as a fully configured Eclipse IDE, with @virgo@ @webserv@ and @maven@ plugins built-in.</para>
 
@@ -16,18 +17,18 @@ The build system used here is <emphasis>@maven.full@</emphasis>.
 <title>Pre-requisites</title>
 
 <para>
-Before proceeding, ensure that a Java<trademark class="trade"/> Standard Edition Development Kit
+Before proceeding, ensure that a Java<trademark class="trade"/> Standard Edition Development Kit (JDK)
 for Java 6 or later is installed and that the <literal>JAVA_HOME</literal> environment variable 
-is set to the correct value.
+is set to the root directory of the JDK.
 (<emphasis>A Java Runtime Environment (JRE) alone is not sufficient,
 a development kit is necessary to use the facilities in @sts.short@.</emphasis>)
 </para>
 
 <para>
 To verify this, issue the command <literal>"%JAVA_HOME%"\bin\java -version</literal> from
-a command prompt on Windows or <literal>$JAVA_HOME/bin/java -version</literal> from a terminal window on UNIX
+a command prompt on Windows (or <literal>$JAVA_HOME/bin/java -version</literal> from a terminal window on UNIX)
 and ensure that the command completes successfully and reports
-a Java version <literal>1.6.x</literal> (denoting Java 6) or greater.
+a Java version <literal>1.6.</literal><emphasis>x</emphasis> (denoting Java 6) or greater.
 </para>
 
 <para>
@@ -36,7 +37,7 @@ extracting files from zip archives.
 If the <literal>jar</literal> command is unavailable, download and install a suitable zip program
 such as <literal>7zip</literal>, <literal>gzip</literal>, or <literal>WinZip</literal>.
 This is most relevant for Windows operating systems where the inbuilt zip extraction utility may
-mishandle long pathnames.
+not handle long pathnames correctly.
 </para>
 
 </section>
@@ -144,7 +145,7 @@ Thread-2                     &lt;UR0001I&gt; User region ready. </programlisting
 
 <para>
 The @sts@ (@sts.short@) is a development environment based on Eclipse that
-needs to be configured with
+is already configured with
 <!--comes configured with all-->
 the plugins needed to 
 work with @webserv@ and OSGi. 
@@ -176,7 +177,7 @@ prompt> "%JAVA_HOME%"\bin\jar xf \<emphasis>full…path…to</emphasis>\@sts.zip
 </para>
 
 <para>
-To verify the installation, run the <literal>eclipse.exe</literal> executable in the unzipped directory
+To verify the installation, run the <literal>eclipse.exe</literal> (or <literal>sts.exe</literal>) executable in the unzipped directory
 and check that @sts.short@ displays a welcome panel. 
 The first time there may be a short delay due to the initial set-up of indexes.
 </para>
@@ -193,7 +194,7 @@ system, simply move the unpacked directory to the chosen location.)
 </para>
 
 <para>
-To verify the installation, run the @sts.short@ executable (<literal>Eclipse.app</literal> on Mac OS X) 
+To verify the installation, run the @sts.short@ executable (<literal>STS.app</literal> on Mac OS X) 
 in the unpacked directory and check that @sts.short@ displays a welcome panel.
 The first time there may be a short delay due to the initial set-up of indexes.
 </para>
@@ -203,36 +204,12 @@ The first time there may be a short delay due to the initial set-up of indexes.
 </section>
 
 <section>
-	
-	<title>Adding the @virgo@ tools plugins</title>
-	
-	<para>
-		After installing and starting @sts.short@, click <emphasis role="bold">Help > Install New Software...</emphasis>
-		and add the @dmst@ tools update site (@dmst.update@). Install the @s2@ dm Server Tools which include the tools for @virgo@.
-		When prompted, restart Eclipse.
-	</para>
-	
-</section>
-
-<section>
 <title>Note about Java versions in @sts.short@</title>
 <para>
-    @sts@ runs on Eclipse using Java Version 1.5, and @webserv@ requires Java Version 1.6. 
+    @sts@ runs on Eclipse using Java Version 1.6, and @webserv@ requires Java Version 1.6. 
     The @greenpages@ application built here also requires Java Version 1.6.
-    Alter the default Java compiler settings in @sts.short@ before proceeding:
+    You should not need to alter the default Java compiler settings in @sts.short@ before proceeding.
 </para>
-
-<orderedlist>
-	<listitem><para>In @sts@, click <emphasis role="bold">Window > Preferences</emphasis> from the menu.</para></listitem>
-	<listitem><para>In the <emphasis role="bold">Preferences</emphasis> window, click <emphasis role="bold">Java > Compiler</emphasis> in the left panel.</para></listitem>
-	<listitem><para>In the right panel, set the <emphasis role="bold">Compiler compliance level</emphasis> to <literal>1.6</literal>.</para></listitem>
-	<listitem><para>Click <emphasis role="bold">Apply</emphasis>.  You will get a message asking if you want a full rebuild; click <emphasis role="bold">Yes</emphasis>.  The rebuild should take very little time to complete. </para>
-	<para>You might also see a  message similar to the following on the settings panel: <emphasis><quote>When selecting 1.6 compliance, make sure to have a compatible JRE installed and activated (currently 1.5).</quote></emphasis>
-    A link to <emphasis>Configure</emphasis> this will appear.
-    Select this link to open the <emphasis>Java--Installed JREs</emphasis> panel.  If not already selected, choose a JRE suitable for Java Version 1.6.x (for example <code>JVM 1.6.0</code>).</para>
-        </listitem>
-	<listitem><para>Click <emphasis role="bold">OK</emphasis>.</para></listitem>
-</orderedlist>
 
 </section>
 </section>
@@ -243,7 +220,7 @@ The first time there may be a short delay due to the initial set-up of indexes.
 <para>
 <emphasis>@maven.full@</emphasis>, or @maven@ for short, is a software project management and comprehension tool
 which uses a central <emphasis>Project Object Model</emphasis> (POM) to manage a project&rsquo;s build, reporting 
-and documentation generation. The POM files (<literal>pom.xml</literal>) are included in the projects for
+and documentation generation. POM files (<literal>pom.xml</literal>) are included in the projects for
 @greenpages@.
 </para>
 
