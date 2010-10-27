@@ -5,7 +5,7 @@
     <title>Configuration</title>
     <titleabbrev>Configuration</titleabbrev>
 
-	<para>You use configuration files in the <literal>$SERVER_HOME/config</literal> directory to configure @short.product.name@.  You can also configure the Equinox framework properties using the <literal>$SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file. This section divides the configuration of the server into the following high-level tasks:</para>
+	<para>You use configuration files in the <literal>$SERVER_HOME/config</literal> directory to configure @short.product.name@.  You can also configure the OSGi framework  using files in <literal>$SERVER_HOME/lib</literal>. This section divides the configuration of the server into the following high-level tasks:</para>
 
 	<itemizedlist> 
 	  <listitem><para><link linkend="configuring-kernel">Configuring the kernel and the user region.</link></para></listitem>
@@ -13,7 +13,7 @@
 	  <listitem><para><link linkend="configuring-serviceability">Configuring serviceability.</link></para></listitem>
 	  <listitem><para><link linkend="configuring-provisioning-repository">Configuring the local provisioning repository.</link></para></listitem>
 	  <listitem><para><link linkend="configuring-hosted-repo">Configuring the hosted repository.</link></para></listitem>
-	  <listitem><para><link linkend="configuring-framework-properties">Configuring the framework properties.</link></para></listitem>
+	  <listitem><para><link linkend="configuring-osgi-framework">Configuring the OSGi framework.</link></para></listitem>
 	</itemizedlist> 
 	
     <section id="configuring-kernel" >
@@ -1033,31 +1033,152 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 	</para>
 	</section>
 
-    <section id="configuring-framework-properties" >
-		<title>Configuring Framework Properties</title>
+    <section id="configuring-osgi-framework" >
+	<title>Configuring the OSGi Framework</title>
+	
 		<para>
-			You specify the framework properties in the <literal>$SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file. These properties are described in the following table.
+			This section provides information about configuring the OSGi framework by updating the following files in the
+			<literal>$SERVER_HOME/lib</literal> directory:
 		</para>
-		<para>
-			<emphasis role="bold">WARNING:</emphasis> We strongly recommends that you update only the <literal>org.eclipse.virgo.suppress.heap.dumps</literal> property; updating the other properties could cause @short.product.name@ to fail.  These properties are documented for your information only.
-		</para>
-		<table id="configuring-framework-properties-table" colsep="1" frame="all" rowsep="1">
-		    <title>Framework Properties</title>
-			<tgroup cols="2">
-			   <thead>
-				<row>
-					<entry>Property</entry>
-					<entry>Description</entry>
-				</row>
-			  </thead>
-			  <tbody>
-				<row>
-					<entry><literal>org.eclipse.virgo.suppress.heap.dumps</literal></entry>
-					<entry>Set to 'false' by default this property will prevent heap dumps being contributed to dumps taken during a First Failure Data Capture (FFDC) event. When the heap dumps are produced they will be located along with the other dump artifacts in the <literal>$SERVER_HOME/serviceability/dump/</literal> folder.</entry>
-				</row>
-			  </tbody>
-			</tgroup>
-		  </table>
-	</section>
 
+		<table id="configuring-osgi-framework-table" colsep="1" frame="all" rowsep="1">
+	    	<title>OSGi Framework Configuration Files </title>
+			<tgroup cols="2">
+		   		<thead>
+					<row>
+						<entry>Property File</entry>
+						<entry>Description</entry>
+					</row>
+		  		</thead>
+		  		<tbody>
+					<row>
+						<entry><literal>org.eclipse.virgo.kernel.launch.properties</literal></entry>
+						<entry>Configures <link linkend="configuring-framework-properties">OSGi framework properties</link>.</entry>
+					</row>
+					<row>
+						<entry><literal>java6-server.profile</literal></entry>
+						<entry>Configures the <link linkend="configuring-framework-profile">OSGi framework profile</link>.</entry>
+					</row>
+		  		</tbody>
+			</tgroup>
+	  	</table>
+		
+		<section id="configuring-framework-properties">
+		<title>Configuring OSGi Framework Properties</title>
+	    
+			<para>
+				You specify the framework properties in the <literal>$SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file. The
+				properties most relevant to users are described in the following table.
+			</para>
+			<para>
+				<emphasis role="bold">WARNING:</emphasis> We strongly recommend that you update only the
+				<literal>org.eclipse.virgo.suppress.heap.dumps</literal> property; updating the other properties could cause @short.product.name@
+				to fail. These properties are documented for your information only.
+			</para>
+		
+			<table id="configuring-framework-properties-table" colsep="1" frame="all" rowsep="1">
+		    <title>Framework Properties</title>
+				<tgroup cols="2">
+			   		<thead>
+						<row>
+							<entry>Property</entry>
+							<entry>Description</entry>
+						</row>
+			  		</thead>
+			  		<tbody>
+						<row>
+							<entry><literal>launcher.bundles</literal></entry>
+							<entry>
+								This property lists the bundles that comprise the kernel using <literal>file:</literal> URIs.
+								Bundles to be started are tagged with a trailing <literal>@start</literal>.
+							</entry>
+						</row>
+						<row>
+							<entry><literal>org.eclipse.virgo.suppress.heap.dumps</literal></entry>
+							<entry>
+								Set to 'false' by default this property will prevent heap dumps being contributed to dumps taken during a
+								First Failure Data Capture (FFDC) event. When the heap dumps are produced they will be located along with
+								the other dump artifacts in the <literal>$SERVER_HOME/serviceability/dump/</literal> folder.
+							</entry>
+						</row>
+						<row>
+							<entry><literal>osgi.console</literal></entry>
+							<entry>
+								Specifies the port number which will be used by an Equinox console <emphasis role="bold">attached to the kernel</emphasis>. 
+								The usual port number is 2402, to avoid clashing with any console attached to the user region. 
+								If specified, the Equinox console is enabled (without the Equinox Console Extension) during kernel start. 
+								If not specified, the Equinox console is not available for the kernel.
+							</entry>
+						</row>
+						<row>
+							<entry><literal>osgi.java.profile</literal></entry>
+							<entry>
+								Specifies the profile to use using a <literal>file:</literal> URI with default value
+								<literal>file:lib/java6-server.profile</literal>.
+							</entry>
+						</row>
+			  		</tbody>
+				</tgroup>
+		  	</table>
+		</section>
+
+		<section id="configuring-framework-profile">
+		<title>Configuring OSGi Framework Profile</title>
+	    
+			<para>
+				You specify the framework profile in the <literal>$SERVER_HOME/lib/java6-server.profile</literal> file. The
+				properties most relevant to users are described in the following table.
+			</para>
+			<para>
+				<emphasis role="bold">WARNING:</emphasis> We advise you not to change the framework profile unless you are sure you know exactly what
+				you are doing; updating the profile could cause @short.product.name@ to fail.
+			</para>
+		
+			<table id="configuring-framework-profile-table" colsep="1" frame="all" rowsep="1">
+		    <title>Framework Profile Properties</title>
+				<tgroup cols="2">
+			   		<thead>
+						<row>
+							<entry>Property</entry>
+							<entry>Description</entry>
+						</row>
+			  		</thead>
+			  		<tbody>
+						<row>
+							<entry><literal>org.osgi.framework.bootdelegation</literal></entry>
+							<entry>
+								<para>
+									This property specifies the packages which are loaded by delegation to the application class loader.
+									Bundles can load classes belonging to these packages without importing the packages.
+									The <literal>.*</literal> wildcard matches any package suffix. <literal>java.*</literal> is always
+									boot delegated and must not be specified in this property.
+								</para>
+								<para>
+									A common reason for adding packages to this property is to run @short.product.name@ under a performance profiler.
+								</para>
+							</entry>
+						</row>
+						<row>
+							<entry><literal>org.osgi.framework.system.packages</literal></entry>
+							<entry>
+								<para>
+									This property specifies the packages which are exported by the system bundle.
+								</para>
+								<para>
+									It is very occasionally necessary to extend the set, for example when configuring email logging appenders since the
+									implementation of <literal>javax.mail</literal>	is intimately related to the implementation of
+									<literal>javax.activation</literal>.
+								</para>
+								<para>
+									To make the corresponding classes available for loading, the relevant JAR file(s) should be placed in
+									<literal>$SERVER_HOME/lib</literal> so that they will be added to the application class path.
+								</para>
+							</entry>
+						</row>
+			  		</tbody>
+				</tgroup>
+		  	</table>
+		</section>
+	</section>
+	
 </chapter>
