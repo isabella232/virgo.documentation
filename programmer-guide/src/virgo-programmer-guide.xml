@@ -42,6 +42,18 @@
 				<firstname>Andy</firstname>
 				<surname>Wilkinson</surname>
 			</author>
+			<author>
+				<firstname>Glyn</firstname>
+				<surname>Normington</surname>
+			</author>
+			<author>
+				<firstname>Steve</firstname>
+				<surname>Powell</surname>
+			</author>
+			<author>
+				<firstname>Christopher</firstname>
+				<surname>Frost</surname>
+			</author>
 		</authorgroup>
 
 		<legalnotice><para>Copyright &copy; 2008, 2010 VMware Inc.</para></legalnotice>

@@ -64,24 +64,14 @@
 		<para>
 			As shown in the figure, @kernel.product.name.short@ runs on top of Equinox within a standard Java
 			Virtual Machine. Above the @kernel.product.name.short@ is a layer of subsystems which contribute functionality
-			to the @short.product.name@. Subsystems are configured to run for various <emphasis>profiles</emphasis>
-			and typically provide additional services to the basic OSGi container
-			such as serviceability,	management, and personality-specific deployment.
+			to the @short.product.name@. Subsystems typically provide additional services to the basic OSGi container
+			such as serviceability, management, and specific artifact deployment such as web application.
 		</para>
 		<para>
-			In the @product.name@, applications are modular and each module has a
-			personality that describes what kind of module it is: web, batch, web service, etc. 
-			The @short.product.name@ deploys modules of each personality in a personality-specific manner. 
-			For example, web modules are configured in Tomcat with web context. 
-			Each module in the application can be updated independently of the other modules 
-			whilst retaining the identity of being part of the larger application. 
-			Whatever kind of application you are building, the programming model remains standard
-			Spring and Spring DM.
-		</para>
-		<para>
-			Version @bundle.version@ of the @product.name@ supports the <emphasis>bundle</emphasis>,
-			<emphasis>web</emphasis>, and <emphasis>WAR</emphasis> personalities, which enable
-			you to build sophisticated web applications. The WAR personality includes support for
+			Version @bundle.version@ of the @product.name@ supports <emphasis>bundle</emphasis>, 
+			<emphasis>plan</emphasis>, <emphasis>PAR</emphasis>, <emphasis>configuration</emphasis>,
+			<emphasis>web</emphasis>, and <emphasis>WAR</emphasis> artifacts, which enable
+			you to build sophisticated web applications. This includes support for
 			standard Java EE WARs, "shared library" WARs, and "shared services" WARs, each of
 			which will be covered in greater detail in <xref linkend="architecture" />.
 		</para>
@@ -123,7 +113,8 @@
 					For optimal benefits, every technology you use in an OSGi application must
 					be packaged as OSGi bundles. Currently, this involves manually converting
 					JAR files into bundles and making sure that any libraries needed by those
-					bundles are also available as OSGi bundles.
+					bundles are also available as OSGi bundles. The @ebr@ is a good source of
+					popular pre-bundled libraries.
 				</listitem>
 				<listitem>
 					<emphasis>Package management complexity:</emphasis>
