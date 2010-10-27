@@ -7,11 +7,15 @@
 
 <title>Concepts</title>
 
-<para>@virgo@ @webserv@ is a Java application server composed of a
-collection of modules which supports applications which are also composed of a
-collection of modules.
-These may be traditional Java web applications packaged as Web ARchive (<literal>.war</literal>)
-files as well as other modular applications.</para>
+<para>
+	@virgo@ @webserv@ is a Java application server composed of a
+	collection of modules which supports applications which are also composed of a
+	collection of modules.
+	These may be traditional Java web applications packaged as Web ARchive (<literal>.war</literal>)
+	files as well as other modular applications.
+	Modules may be shared between applications and multiple versions of modules
+	can co-exist.
+</para>
 
 <para>This chapter introduces concepts
 necessary for developing @webserv@ applications.
@@ -33,18 +37,21 @@ A module <emphasis>imports</emphasis> a package to use the corresponding program
 another module.</para>
 
 <para>
-Representing a program as a collection of modules makes it easier for the
-programmer to manage it and modify it and for teams of programmers to divide
-responsibilities between themselves.
-A module is similar to a Java class in this respect. Rules similar to those for
-organising data and programs into classes can be applied
-to organising applications into modules.</para>
+	Representing a program as a collection of modules makes it easier for the
+	programmer to manage it and modify it and for teams of programmers to divide
+	responsibilities between themselves.
+	A module is similar to a Java class in this respect. Design principles similar to those for
+	organising data and programs into classes can be applied
+	to organising applications into modules.
+</para>
 
-<para>An industry consortium known as the
-<emphasis>OSGi Alliance</emphasis> (see <xref linkend="further.resources.projects"/>) develops OSGi
-specifications, reference implementations, and compliance tests.
-@virgo@ @webserv@ is built on the Equinox OSGi framework which is also
-the reference implementation for the OSGi framework specification.</para>
+<para>
+	An industry consortium known as the
+	<emphasis>OSGi Alliance</emphasis> (see <xref linkend="further.resources.projects"/>) develops OSGi
+	specifications, reference implementations, and compliance tests.
+	@virgo@ @webserv@ is built on the Equinox OSGi framework which is also
+	the reference implementation for the OSGi framework specification.
+</para>
 
 <!--========================================================================-->
 <section>
@@ -52,7 +59,7 @@ the reference implementation for the OSGi framework specification.</para>
 <title>Bundles</title>
 
 <para>Modules in OSGi are known as <emphasis>bundles</emphasis>.
-Each bundle conforms to the JAR file format and
+Each bundle is stored in a file which conforms to the JAR file format and
 can contain Java classes, a manifest (in <literal>META-INF/MANIFEST.MF</literal>),
 and further resource files.</para>
 
@@ -102,7 +109,7 @@ can be <emphasis>satisfied</emphasis> before the bundle runs. This process is kn
 loading.
 In OSGi, bundles and their packages do not appear on the application classpath.
 Instead, each bundle has a class loader which loads its own classes and loads classes belonging to each of its
-imported packages by deferring to the bundle class loader that exported the package.</para>
+imported packages by deferring to the bundle class loader that exports the package.</para>
 
 </section>
 
@@ -116,10 +123,10 @@ first of all <emphasis>install</emphasis>ed and will be in the INSTALLED state.
 If a request is made to <emphasis>start</emphasis> the bundle, the OSGi framework <emphasis>resolve</emphasis>s the bundle
 and, if resolution was successful, will subsequently move the bundle to the ACTIVE state.
 If a request is made to <emphasis>stop</emphasis> the bundle, the OSGi framework will move the
-bundle back to the INSTALLED state. A request may then be made to <emphasis>uninstall</emphasis>
+bundle back to the RESOLVED state. A request may then be made to <emphasis>uninstall</emphasis>
 the bundle.</para>
 
-<para>While the bundle is INSTALLED or ACTIVE, it may be <emphasis>updated</emphasis> to pick up
+<para>While the bundle is INSTALLED, ACTIVE or RESOLVED, it may be <emphasis>updated</emphasis> to pick up
 some changes. These changes are not detected by bundles which were depending
 on the bundle before it was updated.
 A <quote>refresh packages</quote> operation may be performed to ripple the
@@ -149,7 +156,7 @@ This diagram shows some more of the intermediate states of a bundle not describe
 to a registry managed by the OSGi framework. Other bundles running in
 the same OSGi framework can then find and use those services. Services
 are typically instances of some shared Java interface. A bundle which
-provides a service need not export the package containing the
+provides a service need not then export the package containing the
 <emphasis>implementation</emphasis>
 class of the service.
 </para>
@@ -175,7 +182,7 @@ class SomeImpl implements SomeInterface {
 then publish this instance (as an instance of the interface <literal>SomeInterface</literal>).
 </para>
 
-<para>OSGi publishes a number of standard services. For example, the 
+<para>An OSGi framework publishes a number of standard services. For example, the 
 <emphasis>Package Admin</emphasis> service provides the <quote>refresh packages</quote> life cycle operation
 mentioned above.</para>
 
@@ -189,8 +196,11 @@ but it is much simpler to use Spring DM to accomplish this. (See <xref linkend="
 	
 <title>Versioning</title>
 
-<para>OSGi allows different versions of bundles, packages, and several other entities, to co-exist
-and provides some mechanisms for managing these versions.</para>
+<para>
+	OSGi allows different versions of bundles, packages, and several
+	other entities, to co-exist in the same framework
+	and provides some mechanisms for managing these versions.
+</para>
 
 <section>
 
@@ -239,7 +249,7 @@ including all higher versions.</para>
 denotes that version and only that version.</para></listitem>
 <listitem><para>A <quote>half-open</quote> range, such as
 <literal>[1.2,2)</literal>, which has an inclusive lower limit
-and an exclusive upper limit, denoting version <literal>1.2.0</literal> and any version later than this, up 
+and an exclusive upper limit, denoting version <literal>1.2.0</literal> and any version after this, up 
 to, <emphasis>but not including</emphasis>, version <literal>2.0.0</literal>.
 </para></listitem>
 <listitem><para>An <quote>unbounded</quote> version range, such as <literal>1.2</literal>, which
@@ -378,10 +388,11 @@ using descriptions written in XML.
 <para>The XML descriptions reside in files with extension <literal>.xml</literal> in the
 bundle&rsquo;s <literal>META-INF/spring</literal> sub-directory.</para>
 
-<para>To publish a service, an <literal>&lt;osgi:service&gt;</literal> tag is used, specifying the
-implementation class of the service and the interface class to be used.
-Spring DM constructs an instance of the implementation class like any other
-Spring bean and then publishes that instance in the OSGi service registry under the interface when the bundle is started.
+<para>
+	To publish a service, an <literal>&lt;osgi:service&gt;</literal> tag is used, specifying the
+	implementation class of the service and the interface class to be used.
+	Spring DM constructs an instance of the implementation class and 
+	publishes that instance in the OSGi service registry under the interface when the bundle is started.
 </para>
 
 <para>To consume a service, an <literal>&lt;osgi:reference&gt;</literal> tag is used and the
@@ -402,21 +413,14 @@ and closes the bundle&rsquo;s application contexts.
 Web Server turns off damping of a service proxy while the proxy&rsquo;s application context
 is being closed.</para>
 
-<para>Note that, at the time of writing, Spring DM is in the process of being contributed to Eclipse
-as the Gemini Blueprint service.</para>
+<para>(Spring DM has been contributed to Eclipse as the <emphasis>Gemini Blueprint</emphasis> project.)</para>
 
 </section>
 
 <!--========================================================================-->
-<section id="concepts.dmserver">
+<section id="concepts.grouping">
 	
-<title>@webserv@ concepts</title>
-
-<para>Several @webserv@ concepts are essential for developing an application.</para>
-
-<section>
-		
-<title>PAR files</title>
+<title>Grouping bundles in @webserv@</title>
 
 <para>@webserv@ provides a way of grouping together a collection
 of OSGi bundles which comprise a single application.
@@ -429,39 +433,16 @@ inside the PAR file may depend on packages and services outside the PAR file,
 but bundles outside the PAR file may not depend on packages and services
 provided by the PAR file.</para>
 
-<para>@virgo@ also provides another way of grouping bundles and other artifacts into an application: plans.
-A plan is a XML file listing a collection of artifacts. This Guide makes no further reference to plans.</para>
+<para>@virgo@ also provides the plan artifact as another way of grouping bundles and other artifacts into an application.
+A <emphasis>plan</emphasis> is a file (in XML format) listing a collection of artifacts.
+This Guide makes no further reference to plans.
+See <xref linkend="further.resources.documentation"/> for a link to more @virgo@ documentation.</para>
 
-</section>
-
-<section>
-		
-<title>Deployment</title>
-
-<para>PAR files or individual bundles are <emphasis>deployed</emphasis> into @webserv@ by dropping them into a <quote>pickup</quote>
+<para>PAR files (or individual bundles) are <emphasis>deployed</emphasis> into @webserv@ by dropping them into a <quote>pickup</quote>
 directory or using the Administration Console web application provided with @webserv@.
-During deployment, the bundle or bundles are installed into OSGi, resolved together, and then started together.</para>
+During deployment, the bundles in the PAR file are installed into OSGi, resolved together, and then started together.</para>
 
 </section>
 
-<section>
-		
-<title>Personalities</title>
-
-<para>@webserv@ supports multiple application programming models known as <emphasis>personalities</emphasis>.
-Each bundle of an application has a personality. For example, a bundle providing a servlet has the 
-<emphasis>web</emphasis> personality. Bundles which provide packages and services using the OSGi and Spring 
-DM programming models have the <emphasis>bundle</emphasis> personality.</para> 
-
-<para>When a bundle is deployed into @webserv@, personality-specific transformations
-are applied to the bundle&rsquo;s contents, including its manifest, and the bundle is made available for use in
-a personality-specific way.
-For example, a bundle with the web personality has some package imports added to its manifest and its servlet is automatically 
-made available
-for dispatching from HTTP requests.</para>
-
-</section>
-
-</section>
 
 </chapter>

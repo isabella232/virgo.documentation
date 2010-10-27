@@ -113,7 +113,7 @@
 </project>]]>
 </programlisting>
 			ensuring that the version numbers are consistent 
-			(for example, <literal>2.0.0.RELEASE</literal> might be <literal>2.0.1.SNAPSHOT</literal> 
+			(for example, <literal>@app.version@</literal> might be <literal>@app.version.number@</literal> 
 			depending on which version of <literal>greenpages</literal> being developed).
 		</para>
 		
@@ -188,7 +188,7 @@
 		</para>
 		<para>
 			This command will now complete successfully and build a PAR into <filename>target/</filename>:
-<programlisting><![CDATA[			[INFO] Scanning for projects...
+<programlisting>[INFO] Scanning for projects...
 			[INFO] ------------------------------------------------------------------------
 			[INFO] Building GreenPages PAR
 			[INFO]    task-segment: [clean, package]
@@ -196,7 +196,7 @@
 			[INFO] [clean:clean {execution: default-clean}]
 			[INFO] [resources:resources {execution: default-resources}]
 			[INFO] [par:par {execution: default-par}]
-			[INFO] Assembling Artifacts for PAR '…/start/greenpages/target/greenpages-2.0.1.SNAPSHOT.par'
+			[INFO] Assembling Artifacts for PAR '…/start/greenpages/target/greenpages-@greenpages.version@.par'
 			[INFO]   Added 'greenpages.app.jar'
 			[INFO]   Added 'greenpages.jpa.jar'
 			[INFO]   Added 'greenpages.db.jar'
@@ -205,8 +205,7 @@
 			[INFO] Ignored project with non-bundle packaging: [par]
 			[INFO] ------------------------------------------------------------------------
 			[INFO] BUILD SUCCESSFUL
-			[INFO] ------------------------------------------------------------------------]]>
-</programlisting>
+			[INFO] ------------------------------------------------------------------------</programlisting>
 			Proceed to the next step.
 		</para>
 	</section>
