@@ -116,11 +116,15 @@ Manifest-Version: 1.0
 		<title>Creating PARs and WARs</title>
 		<para>
 			The @product.name@ supports two OSGi-oriented ways of packaging applications: the PAR format 
-			and application modules (including personality-specific modules). The @short.product.name@ also supports three
+			and application bundles (including web bundles). The @short.product.name@ also supports three
 			distinct WAR deployment and packaging formats: standard Java EE WAR, Shared Libraries WAR, Shared Services WAR.
 		</para>
 		<para>
-			The @short.product.name@ also supports plans as a way to describe an application. This method is similar to a PAR in that it encapsulates all the artifacts of an application as a single unit, but differs in that a plan simply lists the bundles in an XML file rather than packaging all the bundles in a single JAR file.  The use of plans offers additional benefits to using PARs; for this reason, we recommend their use.  For details, see <link linkend="developing-applications-plans">Creating Plans</link>.
+			The @short.product.name@ also supports plans as a way to describe an application. This method is similar to a PAR 
+			in that it encapsulates all the artifacts of an application as a single unit, but differs in that a plan simply 
+			lists the bundles in an XML file rather than packaging all the bundles in a single JAR file.  The use of plans 
+			offers additional benefits to using PARs; for this reason, we recommend their use.  For details, see 
+			<link linkend="developing-applications-plans">Creating Plans</link>.
 		</para>
 		<section id="developing-applications-packaging-par">
 			<title>PARs</title>
@@ -128,13 +132,13 @@ Manifest-Version: 1.0
 				An OSGi application is packaged as a JAR file, with extension <literal>.par</literal>. A PAR artifact offers several benefits:
 				<itemizedlist>
 					<listitem>A PAR file has an application name, version, symbolic name, and description.</listitem>
-					<listitem>The modules of a PAR file are scoped so that they cannot
+					<listitem>The artifacts of a PAR file are scoped so that they cannot
 						be shared accidentally by other applications. The scope forms a boundary for automatic
 						propagation of load time weaving and bundle refresh.</listitem>
-					<listitem>The modules of a PAR have their exported packages imported by the
+					<listitem>The artifacts of a PAR have their exported packages imported by the
 						synthetic context bundle which is used for thread context class loading. So,
 						for example, hibernate will be able to load classes of any of the exported
-						packages of the modules in a PAR file using <code>Class.forName()</code> (or equivalent).</listitem>
+						packages of the artifacts in a PAR file using <code>Class.forName()</code> (or equivalent).</listitem>
 					<listitem>The PAR file is visible to management interfaces.</listitem>
 					<listitem>The PAR file can be undeployed and redeployed as a unit.</listitem>
 				</itemizedlist>
@@ -186,10 +190,10 @@ Manifest-Version: 1.0
 			<title>Web Modules</title>
 			<para>
 				As discussed earlier, Web Modules are no longer supported in @short.product.name@. Instead, we recommend that you 
-				use Shared Service WARs or Web Bundles that are compliant with the OSGi Web Container specification.
+				use Shared Service WARs or Web Application Bundles that are compliant with the OSGi Web Container specification.
 			</para>
 			<section id="developing-applications-packaging-web-module-to-war">
-				<title>Migrating to a Web Bundle from a Web Module</title>
+				<title>Migrating to a Web Application Bundle from a Web Module</title>
 				<para>
 					To move from a Web Module to a Web Container-compliant Web Bundle you need to follow these four steps:
 					<orderedlist>
@@ -352,7 +356,7 @@ Manifest-Version: 1.0
 							<entry><literal>type</literal></entry>
 							<entry>Specifies the type of the artifact.  Valid values are: 
 		<itemizedlist>
-		  <listitem><code>bundle</code>: Specifies an OSGi bundle.  Use this artifact type for WAR files. </listitem>
+		  <listitem><code>bundle</code>: Specifies an OSGi bundle.  Use this artifact type for WAR files and Web application bundles. </listitem>
 		  <listitem><code>configuration</code>: Specifies that the artifact is a configuration file.  Configuration files contain name/value pairs that set initial values for configuration properties of a bundle.  </listitem>
 		  <listitem><code>plan</code>: Specifies that the artifact is a plan. </listitem>
 		  <listitem><code>par</code>: Specifies that the artifact is a PAR. </listitem>
@@ -385,8 +389,8 @@ Manifest-Version: 1.0
 			<para>When you create a plan, you use the <code>name</code> attribute of the <code>&lt;artifact&gt;</code> element to specify the name of all the plan&rsquo;s dependencies.  This section describes how to determine the name of an artifact, which is not always obvious.</para>
 			<para>Use the following guidelines to determine the name of an artifact:</para>
 		<itemizedlist>
-		  <listitem><para><emphasis role="bold">Bundle</emphasis>: In this context, a <emphasis>bundle</emphasis> refers to a standard OSGi bundle as well as a Web application WAR file.   The name of a bundle is the value of the <code>Bundle-SymbolicName</code> header in the <code>META-INF/MANIFEST.MF</code> file of the <code>*.jar</code> or <code>*.war</code> file.   The following <code>MANIFEST.MF</code> snippet shows a bundle with name <code>com.springsource.exciting.app</code>:</para>
-		  <screen>Bundle-SymbolicName: com.springsource.exciting.app</screen>
+		  <listitem><para><emphasis role="bold">Bundle</emphasis>: In this context, a <emphasis>bundle</emphasis> refers to a standard OSGi bundle as well as a Web application bundles and WAR file.  The name of a bundle is the value of the <code>Bundle-SymbolicName</code> header in the <code>META-INF/MANIFEST.MF</code> file of the <code>*.jar</code> or <code>*.war</code> file.   The following <code>MANIFEST.MF</code> snippet shows a bundle with name <code>com.springsource.exciting.app</code>:</para>
+		  <screen>Bundle-SymbolicName: org.eclispe.virgo.exciting.app</screen>
 		  <para>If the bundle does not contain a <code>META-INF/MANIFEST.MF</code> file, then the name of the bundle is its filename minus the <code>.jar</code> or <code>.war</code> extension.</para>
  </listitem>
 		  <listitem><para><emphasis role="bold">Configuration File</emphasis>: The name of a configuration file is its filename minus the <code>.properties</code> extension. </para></listitem>
@@ -397,7 +401,7 @@ Manifest-Version: 1.0
 ...</screen>
 		  </listitem>
 		  <listitem><para><emphasis role="bold">PAR</emphasis>: The name of a PAR is the value of the <code>Application-SymbolicName</code> header in the <code>META-INF/MANIFEST.MF</code> file of the <code>*.par</code> file.   The following <code>MANIFEST.MF</code> snippet shows a PAR with name <code>com.springsource.my.par</code>:</para>
-		  <screen>Application-SymbolicName: com.springsource.my.par</screen>
+		  <screen>Application-SymbolicName: org.eclipse.virgo.my.par</screen>
 		  <para>If the PAR does not contain a <code>META-INF/MANIFEST.MF</code> file, then the name of the PAR is its filename minus the <code>.par</code> extension.</para>
 		  </listitem>
 		</itemizedlist>
@@ -409,11 +413,11 @@ Manifest-Version: 1.0
 				Because a plan is a list of artifacts, rather than a physical file that contains the artifacts, there are a few additional steps you must perform before you deploy it to @short.product.name@.  
 			</para>
 			<orderedlist>
-				<listitem><para>Copy the artifacts that make up the plan to the <code>usr</code> repository, which by default is the <code>$DMS_HOME/repository/usr</code> directory, where <code>$DMS_HOME</code> refers to the top-level installation directory of @short.product.name@.  Note that you might have configured the server differently; in which case, copy the artifacts to your custom repository directory.</para></listitem>
+				<listitem><para>Copy the artifacts that make up the plan to the <code>usr</code> repository, which by default is the <code>$SERVER_HOME/repository/usr</code> directory, where <code>$SERVER_HOME</code> refers to the top-level installation directory of @short.product.name@.  Note that you might have configured the server differently; in which case, copy the artifacts to your custom repository directory.</para></listitem>
 				<listitem><para>Restart @short.product.name@.</para></listitem>
-				<listitem><para>After the server has started, either use the Admin Console to deploy the plan, or manually deploy it by copying the plan&rsquo;s XML file into the <code>$DMS_HOME/pickup</code> directory. </para>
+				<listitem><para>After the server has started, either use the Admin Console to deploy the plan, or manually deploy it by copying the plan&rsquo;s XML file into the <code>$SERVER_HOME/pickup</code> directory. </para>
 				<para>This results in @short.product.name@ deploying the plan with the same semantics as a PAR file.</para></listitem>
-				<listitem><para>To undeploy the plan, use the Admin Console, or simply delete it from the <code>$DMS_HOME/pickup</code> directory.</para></listitem>
+				<listitem><para>To undeploy the plan, use the Admin Console, or simply delete it from the <code>$SERVER_HOME/pickup</code> directory.</para></listitem>
 			</orderedlist>
 		</section>
 
@@ -544,7 +548,7 @@ password          = secret</screen>
 
 	<section id="developing-applications-configuration-artifacts-app">
 	  <title>Updating Your Application</title>
-	  <para>To update your application so that it "knows" about the configuration artifact, you update the application's Spring application context XML file, typically located in the <literal>WEB-INF</literal> directory.</para>
+	  <para>To update your application so that it "knows" about the configuration artifact, you update the application's Spring application context XML file, typically located in the <literal>WEB-INF</literal> or <literal>META-INF/spring</literal> directories.</para>
 
 	   <para>You use the <literal>&lt;context:property-placeholder&gt;</literal> element to specify that you want to use the @short.product.name@ mechanism for substituting values into bean properties.  The <literal>properties-ref</literal> attribute of this element points to a <literal>&lt;osgi-compendium:cm-properties&gt;</literal> element which you use to specify the configuration artifact that contains the property values.  You set the value of the <literal>persistent-id</literal> attribute of this element equal to the name of the configuration artifact, which is the name of the properties file <emphasis>minus</emphasis> the <literal>.properties</literal> extension. </para>
 	    <para>The following sample Spring application context XMl file shows everything wired together; only relevant parts of the file are shown:</para>
@@ -610,37 +614,36 @@ password          = secret</screen>
 <!-- ======================================================================= -->
 
 	<section id="developing-applications-programmatic-access">
-		<title>Programmatic Access to Personality-specific Features</title>
+		<title>Programmatic Access to The Deployer Pipeline</title>
 		<para>
-			Module personalities typically provide automatic access to features
-			specific to the personality via custom manifest headers or other
-			configuration mechanisms. There may be situations, however, for which
-			programmatic access to such features is desirable or necessary.
-			This section describes how to programmatically access personality-specific
-			features from application code in a module. 
+			Typically access to features are provided automatically via custom 
+			manifest headers or other configuration mechanisms. There may be situations, 
+			however, for which programmatic access to such features is desirable or necessary.
+			This section describes how to programmatically access features from application 
+			code in a bundle. 
 		</para>
 		<section id="developing-applications-programmatic-access-web">
-			<title>Programmatic Access to Web Personality Features</title>
+			<title>Programmatic Access to Web Features</title>
 
 			<section id="developing-applications-programmatic-access-web-application-context">
 				<title>Programmatic Access to the WebApplicationContext</title>
 				<para>
 					The @product.name@ automatically creates a <literal>WebApplicationContext</literal>
-					for Web Bundles and WAR files. When used in conjuction with an
+					for Web application bundles and WAR files. When used in conjunction with an
 					an auto-configured Spring MVC <literal>DispatcherServlet</literal>,
 					there is generally no need to access the <literal>WebApplicationContext</literal>
 					programmatically, since all components of the web application are configured
 					within the scope of the <literal>WebApplicationContext</literal>
 					itself. However, if you wish to access the <literal>WebApplicationContext</literal>
 					you can do so via the web application&rsquo;s <literal>ServletContext</literal>.
-					The Web Personality subsystem stores the bundle&rsquo;s
+					The Web subsystem stores the bundle&rsquo;s
 					<literal>WebApplicationContext</literal> in the ServletContext under
 					the attribute name "<literal>BSN-ApplicationContext</literal>", where
 					<literal>BSN</literal> is the <literal>Bundle-SymbolicName</literal>
-					of your WAR or Web Bundle.
+					of your WAR or Web application bundle.
 				</para>
 				<para>
-					Alternatively, since the Web Personality subsystem also stores the
+					Alternatively, since the Web subsystem also stores the
 					<literal>WebApplicationContext</literal> under the attribute name
 					with the value of the <literal>WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE</literal>
 					constant, you may choose to use Spring MVC&rsquo;s WebApplicationContextUtils&rsquo;
@@ -665,67 +668,63 @@ password          = secret</screen>
 		</section>
 	</section>
 
-	<section id="developing-applications-automatic-imports">
-		<title>Automatic Imports</title>
+
+	<section id="developing-applications-automatic-imports-web">
+		<title>Automatic Imports for the Web subsystem</title>
 		<para>
 			The @product.name@ generates automatic package imports (i.e., via the
-			<literal>Import-Package</literal> manifest header) for various 
-			module personalities. This section lists which packages are automatically
-			generated for each personality.
+			<literal>Import-Package</literal> manifest header) for the web subsystem&rsquo;s 
+			artifacts. This section lists which packages are automatically generated.
 		</para>
-		<section id="developing-applications-automatic-imports-web">
-			<title>Automatic Imports for the Web Personality</title>
-			
-			<para>
-				All WARs, as required by the OSGi Web Container specification, and Web Bundles (see <link linkend="known-issues-web-bundle-default-headers">Default Web 		
-				Application Bundle Headers</link>) will	automatically import the following packages:
-			</para>
-			
-			<itemizedlist>
-				<listitem>
-					<literal>javax.servlet;version="2.5"</literal>
-				</listitem>
-				<listitem>
-					<literal>javax.servlet.http;version="2.5"</literal>
-				</listitem>
-				<listitem>
-					<literal>javax.servlet.jsp";version="2.1"</literal>
-				</listitem>
-				<listitem>	
-					<literal>javax.servlet.jsp.el;version="2.1"</literal>
-				</listitem>
-				<listitem>	
-					<literal>javax.servlet.jsp.tagext;version="2.1"</literal>
-				</listitem>	
-				<listitem>	
-					<literal>javax.el";version="1.0"</literal>
-				</listitem>	
-			</itemizedlist>
+		<para>
+			All WARs, as required by the OSGi Web Container specification, and Web application bundles (see <link linkend="known-issues-web-bundle-default-headers">Default Web 
+			Application Bundle Headers</link>) will automatically import the following packages:
+		</para>
+		
+		<itemizedlist>
+			<listitem>
+				<literal>javax.servlet;version="2.5"</literal>
+			</listitem>
+			<listitem>
+				<literal>javax.servlet.http;version="2.5"</literal>
+			</listitem>
+			<listitem>
+				<literal>javax.servlet.jsp";version="2.1"</literal>
+			</listitem>
+			<listitem>	
+				<literal>javax.servlet.jsp.el;version="2.1"</literal>
+			</listitem>
+			<listitem>	
+				<literal>javax.servlet.jsp.tagext;version="2.1"</literal>
+			</listitem>	
+			<listitem>	
+				<literal>javax.el";version="1.0"</literal>
+			</listitem>	
+		</itemizedlist>
 
+		<para>
+			In addition to the above-described imports, @short.product.name@ will also
+			generate automatic imports for all of the packages that are exported by the system
+			bundle, unless an import for the package already exists in the artifact&rsquo;s manifest,
+			or the artifact contains the package, i.e. within <literal>WEB-INF/classes</literal>,
+			or in a jar file in <literal>WEB-INF/lib</literal>. When an import is generated, it
+			is versioned such that it exactly matches the version or versions of the package that
+			are exported from the system bundle. For example, a package that&rsquo;s exported only at
+			version <literal>1.0.0</literal> will generate an import with a version of
+			<literal>[1.0.0,1.0.0]</literal>, and a package that&rsquo;s exported at version
+			<literal>1.0.0</literal> and version <literal>2.0.0</literal> will generate an import 
+			with a version of <literal>[1.0.0,2.0.0]</literal>.
+		</para>
+		
+		<tip>
+			<title>System Bundle Package Exports</title>
 			<para>
-				In addition to the above-described imports, @short.product.name@ will also
-				generate automatic imports for all of the packages that are exported by the system
-				bundle, unless an import for the package already exists in the artifact&rsquo;s manifest,
-				or the artifact contains the package, i.e. within <literal>WEB-INF/classes</literal>,
-				or in a jar file in <literal>WEB-INF/lib</literal>. When an import is generated, it
-				is versioned such that it exactly matches the version or versions of the package that
-				are exported from the system bundle. For example, a package that&rsquo;s exported only at
-				version <literal>1.0.0</literal> will generate an import with a version of
-				<literal>[1.0.0,1.0.0]</literal>, and a package that&rsquo;s exported at version
-				<literal>1.0.0</literal> and version <literal>2.0.0</literal> will generate an import 
-				with a version of <literal>[1.0.0,2.0.0]</literal>.
+				For further details on which packages are exported by the
+				OSGi system bundle, consult the <filename>java6-server.profile</filename>
+				file located in the <literal>SERVER_HOME/lib</literal> directory.
 			</para>
-			
-			<tip>
-				<title>System Bundle Package Exports</title>
-				<para>
-					For further details on which packages are exported by the
-					OSGi system bundle, consult the <filename>java6-server.profile</filename>
-					file located in the <literal>SERVER_HOME/lib</literal> directory.
-				</para>
-			</tip>
+		</tip>
 
-		</section>
 	</section>
 
 	<section id="developing-applications-dependencies">

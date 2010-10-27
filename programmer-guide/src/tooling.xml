@@ -6,8 +6,7 @@
 	<para>
 		SpringSource provides a set of plug-ins for the Eclipse IDE that streamline the development
 		lifecycle of OSGi bundles and PAR applications. The @product.name@ Tools build on top
-		of the Eclipse Web Tools Project (WTP) and Spring IDE, the open-source Spring development 
-		tool set.
+		of the Eclipse Web Tools Project (WTP).
 	</para>
 	<para>
 		The @product.name@ Tools support the creation of new OSGi bundle and PAR projects within Eclipse, and the
@@ -19,7 +18,7 @@
 		<para>
 			Currently the Tools support Eclipse 3.5 and Eclipse 3.6 with the corresponding version of WTP. Downloading and
 			unzipping the <ulink url="http://www.eclipse.org/downloads/">Eclipse IDE for Java EE  Developers</ulink> is the
-			easiest way to start. 			
+			easiest way to start.
 		</para>
 		<para>
 			You may like to change the Eclipse launcher options to increase the values of <literal>-XX:MaxPermSize</literal>,
@@ -43,7 +42,7 @@
 				</listitem>
 				<listitem>
 					<para>
-						<literal>http://dist.springsource.com/milestone/TOOLS/update/e3.6/</literal>
+						<literal>http://dist.springsource.com/milestone/TOOLS/update/e3.6/</literal> (recommended at the time of writing)
 					</para>
 				</listitem>
 				<listitem>
@@ -67,7 +66,7 @@
 	<section id="tooling-running">
 		<title>Running a @product.name@ instance within Eclipse</title>
 		<para>
-			After installing the Tools from the update site outlined in the previous section, you 
+			After installing the Tools from the update site outlined in the previous section, you
 			will be able to configure an instance of the @short.product.name@ inside Eclipse.
 		</para>
 		<para>
@@ -80,7 +79,7 @@
 				<guimenuitem>Servers</guimenuitem>
 			</menuchoice>).
 			You can now right-click in the view and select "<menuchoice><guimenu>New</guimenu><guimenuitem>Server</guimenuitem></menuchoice>".
-			This will bring up a "New Server" dialog. Select "@product.name@ v2.0 Server"
+			This will bring up a "New Server" dialog. Select "@product.name@ v2.1 Server"
 			in the "Virgo" category and click "<guibutton>Next</guibutton>".
 		</para>
 		<para>
@@ -92,7 +91,7 @@
 			entry in the Servers view.
 		</para>
 		<para>
-			To start, stop, and debug the created @product.name@ instance use the toolbar or the context 
+			To start, stop, and debug the created @product.name@ instance use the toolbar or the context
 			menu actions of the Servers view.
 		</para>
 		<para>
@@ -103,7 +102,7 @@
 		<title>Bundle and Library Provisioning</title>
 		<para>
 			After successful configuration of an instance of the @product.name@ in Eclipse you can use
-			the Repository Browser to very easily install bundles and libraries from the remote 
+			the Repository Browser to very easily install bundles and libraries from the remote
 			SpringSource Enterprise Bundle Repository.
 		</para>
 		<para>
@@ -117,26 +116,26 @@
 		</para>
 		<para>
 			The left section of the Repository Browser allows the user to run searches against the
-			@ebr@ and displays matching results. The search can 
+			@ebr@ and displays matching results. The search can
 			take parts of bundle symbolic names, class or package names and allows wildcards such as
-			&lsquo;?&rsquo; and &lsquo;*&rsquo;. By selecting the checkbox left to a matching bundle and/or library and clicking 
-			the "Download" button it is	very easy to install new bundles in the @product.name@. For your 
-			convenience JARs containing the bundle source code can be automatically downloaded as well. 
+			&lsquo;?&rsquo; and &lsquo;*&rsquo;. By selecting the checkbox left to a matching bundle and/or library and clicking
+			the "Download" button it is	very easy to install new bundles in the @product.name@. For your
+			convenience JARs containing the bundle source code can be automatically downloaded as well.
 		</para>
 		<para>
 			Clicking the "Download" button will trigger an Eclipse background job that will download
-			the selected repository artifacts and -- if desired -- the source JARs one after another. 
+			the selected repository artifacts and -- if desired -- the source JARs one after another.
 		</para>
 		<para>
 			The section on the right displays the currently installed bundles and libraries. Bundles
 			with available sources are visually marked. You can very easily download missing source
-			JARs by using the "Install Sources" button.			
+			JARs by using the "Install Sources" button.
 		</para>
 	</section>
 	<section id="tooling-config">
 		<title>Setting up Eclipse Projects</title>
 		<para>
-			The @product.name@ supports different deployment units as discussed earlier in this guide. The 
+			The @product.name@ supports different deployment units as discussed earlier in this guide. The
 			Tools define specific project types to support the development of OSGi and PAR projects.
 		</para>
 		<section id="tooling-config-creating-new-projects">
@@ -144,13 +143,13 @@
 			<para>
 				There are two New Project Wizards available within Eclipse that allow for creating
 				new OSGi bundle and PAR projects. The projects created by the wizards are deployable
-				to the integrated @short.product.name@ instance without requiring any additional steps. 
+				to the integrated @short.product.name@ instance without requiring any additional steps.
 			</para>
 			<para>
 				<imagedata fileref="images/tooling-new-project-wizards.png" format="PNG" />
 			</para>
 			<para>
-				Those wizards create the required <code>MANIFEST.MF</code> file and appropriate manifest 
+				Those wizards create the required <code>MANIFEST.MF</code> file and appropriate manifest
 				headers.
 			</para>
 		</section>
@@ -158,7 +157,7 @@
 			<title>Migrating existing Java Projects</title>
 			<para>
 				To migrate an existing Java Project to be used with the @short.product.name@, the Tools
-				provide a migration action that adds the required meta data to the project. 
+				provide a migration action that adds the required meta data to the project.
 				The migration will not change your project&rsquo;s source layout.
 			</para>
 			<para>
@@ -166,33 +165,41 @@
 				"<menuchoice><guimenu>Spring Tools</guimenu><guimenuitem>Convert to OSGi bundle project</guimenuitem></menuchoice>".
 			</para>
 		</section>
+		<section id="tooling-config-creating-plan-projects">
+			<title>Creating Plan Projects</title>
+			<para>
+				This is done by creating a new <emphasis>faceted</emphasis> project and then applying the OSGi Plan facet. 
+				This will give you access to features such as content completion when editing <literal>.plan</literal> files 
+				and deployment to configured servers from within the IDE.
+			</para>
+		</section>
 	</section>
 	<section id="tooling-developing" >
 		<title>Developing OSGi Bundles</title>
 			<para>
-				The Tools provide functionality that makes developing OSGi bundles, 
-				especially the editing of MANIFEST.MF files, easier.   
+				The Tools provide functionality that makes developing OSGi bundles,
+				especially the editing of MANIFEST.MF files, easier.
 			</para>
 		<section id="tooling-developing-resolving-bundle-dependencies">
 			<title>Resolving Bundle Dependencies</title>
 			<para>
-				While working with OSGi bundles, one of the most interesting and challenging aspects is defining 
-				the	package, bundle, and library imports in the manifest and then keeping this in sync 
-				with your compile classpath	either in Ant and Maven or Eclipse. In most cases you would typically 
-				be required to manually set up the Eclipse classpath. Ultimately, the Eclipse compile 
+				While working with OSGi bundles, one of the most interesting and challenging aspects is defining
+				the	package, bundle, and library imports in the manifest and then keeping this in sync
+				with your compile classpath	either in Ant and Maven or Eclipse. In most cases you would typically
+				be required to manually set up the Eclipse classpath. Ultimately, the Eclipse compile
 				classpath is still different from the bundle runtime classpath, as normally an entire
 				JAR file is being made available on the Eclipse classpath but not necessarily at runtime
-				due to the explicit visibility rules defined in <code>Import-Package</code> headers. 
+				due to the explicit visibility rules defined in <code>Import-Package</code> headers.
 			</para>
 			<para>
-				The Tools address this problem by providing an Eclipse classpath container that 
+				The Tools address this problem by providing an Eclipse classpath container that
 				uses an @product.name@-specific dependency resolution mechanism. This classpath
 				container makes resolved dependencies available on the project&rsquo;s classpath but allows
-				only access to those package that are imported explicitly (e.g., via <code>Import-Package</code>) 
+				only access to those package that are imported explicitly (e.g., via <code>Import-Package</code>)
 				or implicitly by using <code>Import-Library</code> or <code>Import-Bundle</code>.
 			</para>
 			<para>
-				To use the automatic dependency resolution, an OSGi bundle or PAR project needs to be 
+				To use the automatic dependency resolution, an OSGi bundle or PAR project needs to be
 				targeted to a configured @product.name@ instance. This can be done from the project&rsquo;s
 				preferences by selecting the runtime on the "Targeted Runtimes" preference page.
 			</para>
@@ -206,13 +213,13 @@
 				<imagedata fileref="images/tooling-classpath.png" format="PNG" />
 			</para>
 			<para>
-				After targeting the project or PAR you will see a "Bundle Dependencies" classpath 
-				container in your Java project. It is now safe to remove any manually configured classpath 
+				After targeting the project or PAR you will see a "Bundle Dependencies" classpath
+				container in your Java project. It is now safe to remove any manually configured classpath
 				entries.
 			</para>
 			<para>
 				The classpath container will automatically attach Java source code to the classpath
-				entries by looking for source JARs next to the binary JARs in the @product.name@&rsquo;s 
+				entries by looking for source JARs next to the binary JARs in the @product.name@&rsquo;s
 				repository. You can also manually override the source code attachment by using the
 				properties dialog on a single JAR entry. This manual attachment will always override
 				the convention-based attachment.
@@ -225,7 +232,7 @@
 				edit MANIFEST.MF files. The editor understands the @product.name@ specific headers
 				like <code>Import-Library</code> and <code>Import-Bundle</code> and provides content
 				assist features while editing source code. Furthermore a Eclipse Form-based UI is also
-				available. 
+				available.
 			</para>
 			<para>
 				To open the Bundle Manifest Editor right click a MANIFEST.MF file and select "Bundle
@@ -243,8 +250,8 @@
 			</para>
 			<para>
 				The content assist proposals in the source tab as well as in the UI-based tabs are
-				resolved from the bundle and library repository of an installed and configured 
-				@product.name@. Therefore it is important to target the project or PAR to a specific 
+				resolved from the bundle and library repository of an installed and configured
+				@product.name@. Therefore it is important to target the project or PAR to a specific
 				@short.product.name@ instance to indicate to the tooling which bundle repository to use.
 			</para>
 			<para>
@@ -260,7 +267,7 @@
 			<para>
 				The Dependencies tab of the Bundle Manifest Editor enables the user to easily download
 				and install bundles and libraries from the @ebr@
-				by using the "Download..." buttons next to the "Import Bundle" and "Import Library" 
+				by using the "Download..." buttons next to the "Import Bundle" and "Import Library"
 				sections.
 			</para>
 		</section>
@@ -287,14 +294,14 @@
 			</para>
 		</note>
 		<para>
-			Once an application is deployed on the @product.name@ the tooling support will automatically 
+			Once an application is deployed on the @product.name@ the tooling support will automatically
 			pick up any change to source files -- for example, Java and XML context files -- and refresh the
 			deployed application on the @short.product.name@.
 		</para>
 		<para>
 			The wait time between a change and the actual refresh can be configured
 			in the configuration editor of the runtime. To bring up that editor,
-			double-click on the configured @product.name@ instance in the Servers view. 
+			double-click on the configured @product.name@ instance in the Servers view.
 		</para>
 	</section>
 </chapter>
