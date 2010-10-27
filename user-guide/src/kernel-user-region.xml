@@ -15,6 +15,9 @@
 		</itemizedlist>
 
 		<para>When you download and install @product.name@ you get both the kernel and web server support (configured in the user region).  You can also <ulink url="http://www.eclipse.org/virgo/download/">download and use the kernel</ulink> on its own if you do not plan on deploying Web applications.  </para>
+		
+		<para>The following graphic shows how the kernel and user region make up @short.product.name@:</para>
+		<imagedata fileref="images/kernel-user-region.png" width="885px" depth="805px" />
 
 	<section id="kernel-overview">
 		<title>The @kernel.product.name@</title>
