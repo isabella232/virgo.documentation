@@ -23,7 +23,7 @@
 			Expand the @webserv@ instance and the bundle <literal>greenpages.web</literal> will be listed as a child.
 		<mediaobject>
 			<imageobject role="fo">
-				<imagedata fileref="images/web-module/web-bundle-deployed.png" format="PNG" align="center" width="11cm"/>
+				<imagedata fileref="images/web-module/web-bundle-deployed.png" format="PNG" align="center" width="12cm"/>
 			</imageobject>
 			<imageobject role="html">
 				<imagedata fileref="images/web-module/web-bundle-deployed.png" format="PNG" align="center"/>

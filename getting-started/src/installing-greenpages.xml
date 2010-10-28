@@ -415,7 +415,7 @@ Despite the dance steps outlined, there will remain some <emphasis>Warnings</emp
 It is safe to ignore these.
 </para>
 <para>
-	When @sts.short@ starts the @webserv@ it always uses a &lsquo;warm start&rsquo;.
+	When @sts.short@ starts the @webserv@ it uses a &lsquo;warm start&rsquo; by default.
 	It is useful to set the <literal>-clean</literal> option so that every server start is a clean one.
 	This is done by an option on the @webserv@ Overview window, which is obtained by opening the @webserv@ entry in the Servers window in @sts.short@. 
 	(Double-click, or right-click and choose Open.)	
@@ -455,7 +455,7 @@ prompt> del greenpages-solution-@app.version@.par</programlisting>
 <!--    </mediaobject>-->
      <mediaobject>
         <imageobject role="fo">
-            <imagedata fileref="images/installing-greenpages/addedtoserver.png" format="PNG" align="center" width="8cm"/>
+            <imagedata fileref="images/installing-greenpages/addedtoserver.png" format="PNG" align="center" width="10cm"/>
         </imageobject>
         <imageobject role="html">
             <imagedata fileref="images/installing-greenpages/addedtoserver.png" format="PNG" align="center"/>
@@ -482,7 +482,7 @@ prompt> del greenpages-solution-@app.version@.par</programlisting>
                   <listitem>
                       <para>
                           Verify that @greenpages@ is started correctly by checking for 
-                          <code>&lt;DE0005I&gt; Started par 'greenpages' version '@greenpages.version.number@'.</code> in the Console window.
+                          <code>&lt;DE0005I&gt; Started par 'greenpages' version '@greenpages.version@'.</code> in the Console window.
     <mediaobject>
         <imageobject role="fo">
             <imagedata fileref="images/installing-greenpages/success.png" format="PNG" align="center" width="16cm"/>
