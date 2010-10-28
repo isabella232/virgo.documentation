@@ -23,6 +23,27 @@
 		Alternatively, the <literal>greenpages.web</literal> bundle can be removed from the @webserv@ instance, 
 		or the server can be stopped while these changes are made.
 	</para>
+	
+	<section id="parent.project.importing">
+		<title>Importing the parent project</title>
+		<para>
+			All of the bundles in the @greenpages@ sample are @maven@ projects which refer to a &lsquo;parent&rsquo; project.
+			To allow @sts.short@ to accommodate references to the parent, import this project first.
+		</para>
+		<para>
+			In the same way that the starting <literal>greenpages.web</literal> project was imported
+			(see <xref linkend="controller"/>)
+			import the <literal>$GREENPAGES_HOME/start/parent</literal> project.
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/web-module/import-parent-project.png" format="PNG" align="center" width="12cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/web-module/import-parent-project.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+		</para>
+	</section>
 
 	<section id="par.project.importing.project">
 		<title>Importing the <literal>greenpages.app</literal> project</title>
@@ -100,7 +121,7 @@ public Listing entry(@RequestParam("id") int id) {
 		<para>
 			Right-click in the <emphasis>Package Explorer</emphasis> and select <menuchoice><guimenu>New</guimenu>
 			<guimenuitem>Project…</guimenuitem></menuchoice>. In the dialog that opens select
-			<menuchoice><guimenu>@virgo@ @webserv@</guimenu><guimenuitem>PAR Project</guimenuitem></menuchoice> and press
+			<menuchoice><guimenu>EclipseRT</guimenu><guimenuitem>PAR Project</guimenuitem></menuchoice> and press
 			<emphasis>Next</emphasis>:
 		<mediaobject>
 			<imageobject role="fo">
@@ -127,7 +148,7 @@ public Listing entry(@RequestParam("id") int id) {
 		<para>
 			In the next dialog, some of the PAR properties are pre-populated.
 			Change the Application Name to <literal>Greenpages PAR</literal> and the Version to
-			<literal>2.0.0</literal>, then
+			<literal>2.3.0</literal>, then
 			ensure that the <emphasis>Target Runtime</emphasis>
 			is set to <emphasis>Virgo Web Server (Runtime) v2.1</emphasis> and press <emphasis>Next</emphasis>.
 		<mediaobject>

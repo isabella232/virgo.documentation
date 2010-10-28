@@ -35,9 +35,9 @@
 Bundle-Name: GreenPages Service
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: greenpages
-Tool: Bundlor 1.0.0.M6
-Export-Package: greenpages;version="2.0"
-Bundle-Version: 2.0]]>
+Tool: Bundlor 1.0.0.RELEASE
+Export-Package: greenpages;version="2.3.0"
+Bundle-Version: 2.3.0]]>
 </programlisting>
 			Go to the next step.
 		</para>
@@ -91,7 +91,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 			Add the following package clause to the <literal>Import-Template</literal> entry in the 
 			<filename>template.mf</filename> file in the <literal>greenpages.web</literal> project. When added run the
 			MANIFEST.MF generation on the project as described in <xref linkend="deploy.bundle.web.module.manifest"/>.
-			<programlisting><![CDATA[greenpages.*;version="[2.0, 2.1)"]]></programlisting>
+			<programlisting><![CDATA[greenpages.*;version="[2.3, 2.4)"]]></programlisting>
             Be careful to include the <quote><literal>.*</literal></quote> in the package pattern.
 		</para>
 		<para>
@@ -167,7 +167,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 			The web bundle will not completely start.
 			<!-- After some time, the following error should occur:
 <programlisting><![CDATA[<CC0001W> Mandatory reference '&directory' in bundle
-  'greenpages-1-greenpages.web' version '2.0.0' is waiting for service with filter
+  'greenpages-1-greenpages.web' version '2.3.0' is waiting for service with filter
   '(&(objectClass=greenpages.Directory)(!(org.eclipse.virgo.server.app.name=*)))'.]]>
 </programlisting> -->
 		</para>

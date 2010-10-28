@@ -14,9 +14,8 @@
 		<para>
 			Create a new project by right-clicking in the <emphasis>Package Explorer</emphasis> view and selecting 
 			<menuchoice><guimenu>New</guimenu><guimenuitem>Project…</guimenuitem></menuchoice>. In the resulting
-			dialog select <menuchoice><guimenu>Virgo Web Server</guimenu><guimenuitem>Bundle
-			Project</guimenuitem></menuchoice> (or, with early builds of the Virgo tools, <menuchoice><guimenu>SpringSource dm Server</guimenu><guimenuitem>Bundle
-			Project</guimenuitem></menuchoice>) and press <emphasis>Next</emphasis>:
+			dialog select <menuchoice><guimenu>EclipseRT</guimenu><guimenuitem>Bundle
+			Project</guimenuitem></menuchoice> and press <emphasis>Next</emphasis>:
 		<mediaobject>
 			<imageobject role="fo">
 				<imagedata fileref="images/middle-tier/new-bundle-project.png" format="PNG" align="center" width="8cm"/>
@@ -32,7 +31,8 @@
             Choose the create the project from an existing source location and specify a location that will place the new
 			<literal>greenpages.db</literal> alongside the project skeletons that were imported into the workspace
 			earlier. If the <literal>start</literal> directory of the @greenpages@ sample is being used this will
-            be <literal>$GREENPAGES_HOME/start/greenpages.db</literal>. Click <emphasis>Next</emphasis>.
+            be <literal>$GREENPAGES_HOME/start/greenpages.db</literal> (and, <emphasis>mutatis mutandis</emphasis> on Windows). 
+            Click <emphasis>Next</emphasis>.
 		<mediaobject>
 			<imageobject role="fo">
 				<imagedata fileref="images/middle-tier/create-bundle-project.png" format="PNG" align="center" width="12cm"/>
@@ -51,9 +51,11 @@
 		</para>
 		<para>
 			Change the <literal>Bundle-Name</literal> to <quote><literal>@greenpages@ DataSource</literal></quote> to more accurately
-			describe the bundle&rsquo;s purpose. An option to select a &lsquo;Bundle Classpath Container&rsquo; is already selected. It should 
-			be de-selected, as a Maven Classpath container will be configured later. Ensure that the <emphasis>Target Runtime</emphasis>
-			is set to <emphasis>Virgo Web Server (Runtime) v2.1</emphasis>. Click <emphasis>Finish</emphasis>.
+			describe the bundle&rsquo;s purpose. An option to &lsquo;Enable Bundle Classpath Container&rsquo; is already selected. It should 
+			be <emphasis>de</emphasis>-selected, as a @maven@ Classpath container will be configured later.
+			Ensure that the <emphasis>Target Runtime</emphasis>
+			is set to <emphasis>Virgo Web Server (Runtime) v2.1</emphasis>. 
+			Click <emphasis>Finish</emphasis>.
 		<mediaobject>
 			<imageobject role="fo">
 				<imagedata fileref="images/middle-tier/config-bundle-project.png" format="PNG" align="center" width="9cm"/>
@@ -101,7 +103,7 @@
 		</para>
 
 		<para>
-			A Maven Classpath Container can now be added to the project. Right-click the
+			A @maven@ Classpath Container can now be added to the project. Right-click the
 			<literal>greenpages.db</literal> project in the Package Explorer and select 
 			<menuchoice><guimenu>Maven 2</guimenu><guimenuitem>Enable dependency management</guimenuitem></menuchoice>.
 			Eclipse will perform some workspace building, and the <literal>greenpages.db</literal> project will now be marked as a Maven project.
@@ -142,6 +144,13 @@
 				<imagedata fileref="images/middle-tier/db-project.png" format="PNG" align="center"/>
 			</imageobject>
 		</mediaobject>
+		</para>
+		<para>
+			(It is useful to check that the @maven@ project just configured has the correct Java System library associated with it and that
+			the <literal>MANIFEST.MF</literal> file that we have just moved is correctly generated when necessary.
+			To ensure this, disable the dependency management (enabled in the previous section) and then re-enable it, saving the changes in between.
+			This step may also change the Java system libraries associated with the build (right-click on the <literal>greenpages.db</literal> project, under Properties, Java build path and Libraries).
+			If the Java system libraries look incorrect, simply remove them in the Libraries window and reset them.)
 		</para>
 	</section>
 	
@@ -220,7 +229,12 @@
 			<menuchoice><guimenu>New </guimenu><guimenuitem>Spring Bean Configuration File</guimenuitem></menuchoice> again. 
 			This time specify
 			a name of <literal>osgi-context.xml</literal>, click <emphasis>Next</emphasis>, and add the <literal>osgi</literal>
-			namespace declaration (ensure that the resultant schema location string contains the URL <literal>http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd</literal> as <literal>http://www.springframework.org/schema/osgi/spring-osgi-2.0-m1.xsd</literal> with result in an obscure deployment failure due to an invalid 'cacheTarget' property). 
+			namespace declaration 
+			(ensure that the resultant schema location string contains the URL 
+			<literal>http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd</literal> 
+			as 
+			<literal>http://www.springframework.org/schema/osgi/spring-osgi-2.0-m1.xsd</literal> 
+			will result in an obscure deployment failure due to an invalid 'cacheTarget' property). 
 			Click <emphasis>Finish</emphasis> and then add the following to the new file to publish the
 			<literal>DataSource</literal> as a service:
 <programlisting language="xml"><![CDATA[    <!--
@@ -322,5 +336,10 @@
 			Although the application web front-end will run, the database contents is
 			not visible, of course, because we are still running with the <emphasis>stub</emphasis> version of the <code>search</code> method on the controller.
 			The implementation of the <code>Directory</code> service needs to be changed to exploit the database.</para>
+			
+		<para>
+			(One possible cause of failure here is the username and password on the <literal>dataSource</literal>
+			bean defined in <literal>module-context.xml</literal>. Check that these are exactly correct.) 
+		</para>
 	</section>
 </section>

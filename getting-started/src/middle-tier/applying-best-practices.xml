@@ -102,11 +102,11 @@ final class JpaDirectory implements Directory {
             At this point the redeploy of the @greenpages@ application may fail with an error similar to this:
 <programlisting><![CDATA[<SPDE0100E> The class with name 'org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor', 
 referenced by bean 'org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor#0', 
-could not be loaded by class loader 'ServerBundleClassLoader: [bundle=greenpages-1-greenpages.jpa_2.0.0]':
+could not be loaded by class loader 'ServerBundleClassLoader: [bundle=greenpages-1-greenpages.jpa_2.3.0]':
 …]]>
 </programlisting>
 which indicates that there is some package (<code>org.springframework.dao.annotation</code>) which is not
-available to the <quote><code>BundleClassLoader</code></quote> for bundle <code>greenpages-1-greenpages.jpa_2.0.0</code>.
+available to the <quote><code>BundleClassLoader</code></quote> for bundle <code>greenpages-1-greenpages.jpa_2.3.0</code>.
 We should look in the <literal>MANIFEST.MF</literal> file for this bundle, and see that this package is not
 imported (in the <literal>Import-Package</literal> header). Since Bundlor generated this file (controlled by the
 template file <literal>template.mf</literal>) we should check that the manifest was re-generated on our last change.

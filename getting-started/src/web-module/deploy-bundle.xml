@@ -32,12 +32,8 @@
 		</para>
 		
 		<para>
-			(Eclipse may open its internal web browser as this is a web project. This or another browser can be used.)
-		</para>
-		
-		<para>
-			If deployment has gone successfully the console will contain the message 
-			<literal>&lt;DE0005I&gt; Started bundle 'greenpages.web' version '2.0.0'.</literal>
+			If deployment is successful the console will contain the message: 
+			<programlisting>&lt;DE0005I&gt; Started bundle 'greenpages.web' version '@app.version.number@'</programlisting>
 		</para>
 		<para>
 			 Leave the server instance running and go to the next step.
@@ -102,8 +98,8 @@ Import-Package: org.eclipse.virgo.web.dm;version="[2.0.0, 3.0.0)
  ework.web.servlet
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: greenpages.web
-Tool: Bundlor 1.0.0.M6
-Bundle-Version: 2.0]]>
+Tool: Bundlor 1.0.0.RELEASE
+Bundle-Version: 2.3.0]]>
 </programlisting>
 			although the order of the entries may be different.
 		</para>

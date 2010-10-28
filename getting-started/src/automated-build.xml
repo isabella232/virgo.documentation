@@ -285,7 +285,7 @@
             The output from Maven should include lines like these
 <programlisting><![CDATA[[INFO] [par:par]
 [INFO] Assembling Artifacts for PAR '/Users/chrisfrost/Repos/GIT/greenpages/solution/
-       greenpages/target/greenpages-solution-2.0.0.SNAPSHOT.par'
+       greenpages/target/greenpages-solution-2.3.0.RELEASE.par'
 [INFO]   Added 'greenpages.app-solution.jar'
 [INFO]   Added 'greenpages.jpa-solution.jar'
 [INFO]   Added 'greenpages.db-solution.jar'

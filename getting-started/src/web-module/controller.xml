@@ -4,7 +4,7 @@
 <section id="controller">
 	<title>The controller</title>
 	<para>
-		The Spring&rsquo;s @MVC style of web application development is used in which the central type
+		The Spring&rsquo;s MVC style of web application development is used in which the central type
     	is the <literal>Controller</literal> class.
 	</para>
 
@@ -25,14 +25,14 @@
 	<para>
 		(Initially this project may have compiler errors; 
 		this is to be expected particularly if the @maven@ repository hasn&rsquo;t yet been created.)
-		<mediaobject>
-			<imageobject role="fo">
-				<imagedata fileref="images/web-module/import-greenpages-web.png" format="PNG" align="center" width="10cm"/>
-			</imageobject>
-			<imageobject role="html">
-				<imagedata fileref="images/web-module/import-greenpages-web.png" format="PNG" align="center"/>
-			</imageobject>
-		</mediaobject>
+<!--		<mediaobject>-->
+<!--			<imageobject role="fo">-->
+<!--				<imagedata fileref="images/web-module/import-greenpages-web.png" format="PNG" align="center" width="10cm"/>-->
+<!--			</imageobject>-->
+<!--			<imageobject role="html">-->
+<!--				<imagedata fileref="images/web-module/import-greenpages-web.png" format="PNG" align="center"/>-->
+<!--			</imageobject>-->
+<!--		</mediaobject>-->
 		When this project is imported go to the next step.
 	</para>
 	</section>
