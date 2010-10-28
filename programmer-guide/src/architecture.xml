@@ -182,7 +182,7 @@
 			<section id="architecture-war-gemini">
 				<title>WARs and the Gemini Web Container</title>
 				<para>
-					@product.name@ fully supports the OSGi Web Container standard. Using the reference implementation from Gemini Web that  
+					@product.name@ fully supports the OSGi Web Applications standard. Using the reference implementation from Gemini Web that  
 					was developed by SpringSource from an offshoot of the original @short.product.name@ codebase. This RI is now fully 
 					integrated in @short.product.name@ as the basis of the support for web application deployment. 
 				</para>
@@ -244,7 +244,7 @@
 		<section id="architecture-web-bundles">
 			<title>Web Modules</title>
 			<para>
-				Web Modules have been removed in favour of war files and web bundles following the OSGi Web Container specification.
+				Web Modules have been removed in favour of war files and web bundles following the OSGi Web Applications specification.
 				We believe our users will benefit more from a standard model than one that is @short.product.name@-specific.
 			</para>
 		</section>
@@ -335,7 +335,7 @@
 			<para>
 				A Configuration is simply a Java properties file. When deployed it will be recognised by the deployer and installed in to 
 				<emphasis>Configuration Admin</emphasis> for later use by your applications. The name that it will be installed under or PID 
-				(Properties Identification) will be the name of the properties file less any extension. How to consume configuration data 
+				(Persistent Identity) will be the name of the properties file less any extension. How to consume configuration data 
 				is discussed <link linkend="developing-applications-configuration-artifacts">later</link>.
 			</para>
 		</section>

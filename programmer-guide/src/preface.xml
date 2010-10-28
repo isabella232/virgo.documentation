@@ -8,7 +8,7 @@
 		You not only have to deal with complex business logic, but also a myriad
 		of other concerns such as security, auditing, exposing business
 		functionality to external applications, and managing the evolution of
-		that functionality and technologies. The Spring Framework address these 
+		that functionality and technologies. The Spring Framework addresses these 
 		needs by offering a Plain-Old Java Object (POJO) based solution that 
 		lets you focus on your business logic.
 	</para>
