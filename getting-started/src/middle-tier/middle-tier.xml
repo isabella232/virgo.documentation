@@ -20,10 +20,10 @@
 					<tgroup cols="4">
 						<tbody>
 							<row>
-								<entry>LISTING_NUMBER</entry>
-								<entry>FIRST_NAME</entry>
-								<entry>LAST_NAME</entry>
-								<entry>EMAIL_ADDRESS</entry>
+								<entry><literal>LISTING_NUMBER</literal></entry>
+								<entry><literal>FIRST_NAME</literal></entry>
+								<entry><literal>LAST_NAME</literal></entry>
+								<entry><literal>EMAIL_ADDRESS</literal></entry>
 							</row>
 						</tbody>
 					</tgroup>

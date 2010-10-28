@@ -11,8 +11,8 @@
 	<section id="setting.up.eclipse">
 		<title>Setting up Eclipse (@sts.short@)</title>
 		<para>
-			The following sections are most easily followed in the Java perspective (not, for example, the Java EE
-			perspective). If not already in the Java perspective, switch to the Java perspective in @sts@ using the
+			The following sections are most easily followed in the Java (or Spring) perspective (not, for example, the Java EE
+			perspective). If not already in an appropriate perspective, switch in @sts@ using the
 			<guimenu>Open Perspective</guimenu> menu:
 			<mediaobject>
 				<imageobject role="fo">
@@ -26,7 +26,7 @@
 		
 		<para>
 			In this step create a reference to the @webserv@ instance that the @greenpages@ application 
-			integrates with (this may already be created).
+			integrates with (the instance may already be created if the @greenpages@ solution has been run from @sts.short@).
 		</para>
 		
 		<para>
@@ -48,7 +48,7 @@
 		<para>
 			In the next dialog, set the <emphasis>Virgo Web Server installation directory</emphasis> field to the
 			<emphasis>value</emphasis> of <literal>$VWS_HOME</literal> and 
-			check that the <emphasis>JRE:</emphasis> option is set to Java 1.6 or above. 
+			check that the <emphasis>JRE:</emphasis> option is set to Java 1.6 or later. 
 			<emphasis>This may not be the workbench default.</emphasis>
 			When complete, press <emphasis>Finish</emphasis>.
 		<mediaobject>

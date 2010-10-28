@@ -228,7 +228,7 @@ private EntityManager em;
 			The <literal>greenpages.db</literal> module already publishes a
 			<literal>DataSource</literal> to the service registry. 
 			<literal>greenpages.jpa</literal> must now be
-			updated to consume this <literal>dataSource</literal>.
+			updated to consume this.
 		</para>
 		
 		<para>
@@ -283,7 +283,7 @@ Excluded-Exports: greenpages.jpa
 			The <literal>Import-Package</literal> entries for
 			<literal>org.springframework.context.weaving</literal> and
 			<literal>org.springframework.transaction.aspectj</literal> are needed as Bundlor cannot, yet, 
-			detect that these packages are required based on the contents of the bundle&rsquo;s application context.
+			detect that these packages are required.
 		</para>
 		
 		<para>
@@ -294,7 +294,7 @@ Excluded-Exports: greenpages.jpa
 		
 		<para>
 			Switch to the <emphasis>Overview</emphasis> tab and click <emphasis>Update MANIFEST.MF</emphasis>.
-			As with <literal>greenpages.db</literal> before, this update will result in some errors being
+			As with <literal>greenpages.db</literal> before, this update may result in some errors being
 			reported in the manifest as the project is not associated with a targetted runtime. Double-click the
 			<literal>MANIFEST.MF</literal> file in the <literal>greenpages</literal> project in the Package Explorer.
 			Switch to the <emphasis>Dependencies</emphasis> tab and click <emphasis>Add…</emphasis>. Select
@@ -302,6 +302,9 @@ Excluded-Exports: greenpages.jpa
 			problems in the manifest should now be resolved and the @greenpages@ application should be redeployed
 			due to the addition of the <literal>greenpages.jpa</literal> module. This redeployment should succeed
 			and it&rsquo;s now time to try the application again.
+		</para>
+		<para>
+		(A possible action if this fails is to Update (@maven@) Dependencies on the project right-click menu in the @maven@ sub-menu.)
 		</para>
 	</section>
 </section>

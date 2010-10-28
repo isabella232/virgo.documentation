@@ -9,6 +9,8 @@
 		contributing an instance of this service to the Service Registry.
 	</para>
 <para>Stop the server instance before proceeding.</para>
+
+
 	<section id="osgi.service.implementation">
 		<title>Add Implementation</title>
 		<para>
@@ -63,7 +65,6 @@ public class DirectoryImpl implements Directory {
 			the home page type <literal>wilkinson</literal> into the search field and press <emphasis>Submit</emphasis>.
 			Unlike the previous attempt, this should return a list (of size 1) of search results. From here, select
 			<emphasis>view</emphasis> to get the <quote>detailed</quote> listing.
-		</para>
 		<mediaobject>
 			<imageobject role="fo">
 				<imagedata fileref="images/web-module/greenpages-listing-success.png" format="PNG" align="center" width="15cm"/>
@@ -73,6 +74,7 @@ public class DirectoryImpl implements Directory {
 			</imageobject>
 		</mediaobject>
     	This uses a stub implementation of the <classname>Directory</classname> interface which only knows about <quote>Andy Wilkinson</quote>.
+		</para>
 		<para>
 			The web interface is complete enough. Go to the next chapter to see the middle tier implementation.
 		</para>
