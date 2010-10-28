@@ -414,7 +414,14 @@ Despite the dance steps outlined, there will remain some <emphasis>Warnings</emp
 </mediaobject>
 It is safe to ignore these.
 </para>
-
+<para>
+	When @sts.short@ starts the @webserv@ it always uses a &lsquo;warm start&rsquo;.
+	It is useful to set the <literal>-clean</literal> option so that every server start is a clean one.
+	This is done by an option on the @webserv@ Overview window, which is obtained by opening the @webserv@ entry in the Servers window in @sts.short@. 
+	(Double-click, or right-click and choose Open.)	
+	The check box is labelled &lsquo;Start server with -clean option&rsquo;.
+	Close the window before proceeding.
+</para>
 </section>
 
 <section id="installing.greenpages.tools.run">
@@ -448,7 +455,7 @@ prompt> del greenpages-solution-@app.version@.par</programlisting>
 <!--    </mediaobject>-->
      <mediaobject>
         <imageobject role="fo">
-            <imagedata fileref="images/installing-greenpages/addedtoserver.png" format="PNG" align="center" width="7cm"/>
+            <imagedata fileref="images/installing-greenpages/addedtoserver.png" format="PNG" align="center" width="8cm"/>
         </imageobject>
         <imageobject role="html">
             <imagedata fileref="images/installing-greenpages/addedtoserver.png" format="PNG" align="center"/>
