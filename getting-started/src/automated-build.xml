@@ -119,7 +119,7 @@
 		
 		<para>
 			This skeleton defines a basic configuration with a parent POM. Notice that the <literal>packaging</literal>
-			type is <literal>par</literal>. When you have created this file execute the following command from the
+			type is <literal>par</literal>. After this file is created execute the following command from the
 			<filename>$GREENPAGES_HOME/start/greenpages</filename> directory.
 			<programlisting>mvn clean package</programlisting>
 		</para>
@@ -213,7 +213,7 @@
 	<section id="automated.build.dependency.plugin">
 		<title>Adding the <literal>dependency</literal> plugin</title>
 		<para>
-			Maven now successfully builds the PAR for your application, however the dependencies of the PAR
+			Maven now successfully builds the PAR for the application, however the dependencies of the PAR
 			are not apparent. 
 			In this step the Maven <literal>dependency</literal> plugin is added to
 			collect the transitive dependency graph for the PAR.
@@ -350,9 +350,9 @@
 		</para>
 		
 		<para>
-			Start the @webserv@. You should see output similar to:
+			Start the @webserv@ and look for a message similar to:
 <programlisting><![CDATA[<DE0005I> Started par 'greenpages' version '@app.version@'.]]>
-</programlisting>
+</programlisting>in the console output.
         </para>
 
         <para>

@@ -75,8 +75,8 @@ prompt> set VWS_HOME=C:\@webserv.expanded.dir@
 To verify the installation, issue the command:
 <literal>"%VWS_HOME%"\bin\startup.bat</literal> and ensure a message numbered <literal>UR0001I</literal> 
 is displayed.
-You will see many other messages about starting and installing other required artifacts, 
-but the <literal>UR0001I</literal> message indicates that the user region is ready for your use.
+Many other messages about starting and installing other required artifacts are produced, 
+but the <literal>UR0001I</literal> message indicates that the user region is ready for use.
 (<emphasis>Timestamps have been removed
 and thread names and other details may vary with different installations and versions.</emphasis>)
 <programlisting>system-artifacts             &lt;TC0000I&gt; Starting Tomcat. 
@@ -117,8 +117,8 @@ prompt$ export VWS_HOME=<emphasis>/path/to/home/</emphasis>springsource/@webserv
 <para>
 To verify the installation, use a terminal window to issue the command:
 <literal>$VWS_HOME/bin/startup.sh</literal> and ensure a message numbered <literal>UR0001I</literal> is displayed.
-You will see many other messages about starting and installing other required artifacts,
-but the <literal>UR0001I</literal> message indicates that the user region is ready for your use.
+Many other messages about starting and installing other required artifacts are produced,
+but the <literal>UR0001I</literal> message indicates that the user region is ready for use.
 (<emphasis>Timestamps have been removed
 and thread names and other details may vary with different installations and versions.</emphasis>)
 <programlisting>system-artifacts             &lt;TC0000I&gt; Starting Tomcat. 
@@ -160,7 +160,7 @@ the latest revision of @greenpages@, currently @greenpages.version@.
 </para>
 
 <para>
-If you prefer to use vanilla Eclipse, please refer to the installation instructions in the
+It is possible to use vanilla Eclipse, and add the @dmst@ to it.  Please refer to the installation instructions in the
 <ulink url="http://www.eclipse.org/virgo/documentation/">Virgo Programmer Guide</ulink>.
 </para>
 
@@ -208,7 +208,7 @@ The first time there may be a short delay due to the initial set-up of indexes.
 <para>
     @sts@ runs on Eclipse using Java Version 1.6, and @webserv@ requires Java Version 1.6. 
     The @greenpages@ application built here also requires Java Version 1.6.
-    You should not need to alter the default Java compiler settings in @sts.short@ before proceeding.
+    The default Java compiler settings in @sts.short@ should not need adjusting, but should be checked.
 </para>
 
 </section>

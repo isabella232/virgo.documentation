@@ -49,8 +49,8 @@ Bundle-Version: 2.0]]>
 			Now that the <literal>greenpages.app</literal> bundle exports the package that the
 			<interfacename>Directory</interfacename> and <interfacename>Listing</interfacename> interfaces reside in,
 			the <literal>greenpages.web</literal> bundle must import it.
-			In this step you will update the Maven
-			<filename>pom.xml</filename> file to depend on the <literal>greenpages.app</literal> bundle and import the
+			In this step the Maven
+			<filename>pom.xml</filename> file is updated to depend on the <literal>greenpages.app</literal> bundle and import the
 			package.
 		</para>
 

@@ -90,8 +90,8 @@ public class JpaDirectorySpringContextTests {
 		<title>Contributing OSGi sourced dependencies</title>
 		<para>
 			In the previous step the <classname>JpaDirectorySpringContextTests</classname> test failed because it did
-			not have a <interfacename>DataSource</interfacename> to be injected. In this step, you will instantiate an
-			<quote>in-process</quote> database for testing and populate it with data.
+			not have a <interfacename>DataSource</interfacename> to be injected. In this step, an
+			<quote>in-process</quote> database is instantiated and populated with data for testing.
 		</para>
 
 		<para>
@@ -141,8 +141,8 @@ public class JpaDirectorySpringContextTests {
 			<interfacename>DataSource</interfacename> dependency.
 			When integration testing it is often a good idea to
 			test the entire application outside of the container.
-			In this step you will create a test case for the
-			entire @greenpages@ application starting with the <classname>@greenpages@Controller</classname> class
+			In this step a test case for the
+			entire @greenpages@ application is created, starting with the <classname>@greenpages@Controller</classname> class
 			and descending all the way to a database.
 			It would be sensible to create this in a separate test bundle
 			but as one of the bundles involved here is a web bundle the tests will have to go in there.
