@@ -166,7 +166,7 @@ prompt$ cp target/par-provided/* $VWS_HOME/repository/usr
 
 <section id="installing.greenpages.building.db">
       <title>Starting and configuring the database</title>
-<para>@greenpages@ uses the H2 database to store all its data. Before you can start the application, you must start the database server and populate the database with data.</para>
+<para>@greenpages@ uses the H2 database to store all its data. Before starting the application, start the database server and populate the database with data.</para>
           <orderedlist>
               <listitem><para>Change to the <code>$GREENPAGES_HOME/db</code> current directory.  On Unix:</para>
 		<programlisting>prompt$ cd $GREENPAGES_HOME/db</programlisting>
@@ -188,7 +188,7 @@ prompt$ cp target/par-provided/* $VWS_HOME/repository/usr
           </orderedlist>
 
 <para>
-You only to need run these commands once to start a database server for H2; the server will continue to run in the background. 
+Run these commands once to start a database server for H2; the server will continue to run in the background. 
 </para>
 </section>
 
@@ -277,7 +277,7 @@ prompt> copy %GREENPAGES_HOME%\solution\greenpages\target\greenpages-solution-@a
     <section id="installing.greenpages.tools.importing">
         <title>Importing the @greenpages@ projects into Eclipse</title>
         <para>
-            Before you can start the @greenpages@ application from Eclipse, you must import the projects. To import the projects into Eclipse:
+            Before starting the @greenpages@ application from Eclipse, import the projects:
             <orderedlist>
                 <listitem>
 <para>Open the Import Wizard using 
@@ -420,8 +420,8 @@ It is safe to ignore these.
 <section id="installing.greenpages.tools.run">
           <title>Running @greenpages@ from within Eclipse</title>
           <para>
-              Now that @greenpages@ is successfully imported into Eclipse, you can run the project directly from within the IDE. </para>
-           <para>If you previously deployed the @greenpages@ PAR to @webserv@ by copying the PAR file to the <literal>pickup</literal> directory, be sure you now remove it so that it does not conflict with the deployment of the Eclipse project.  On Unix:</para>
+              Now that @greenpages@ is successfully imported into Eclipse, run the project directly from within the IDE.</para>
+           <para>If the @greenpages@ PAR file was copied to the <literal>pickup</literal> directory, be sure it is now removed so that it does not conflict with the deployment of the Eclipse project.  On Unix:</para>
 	  <programlisting>prompt$ cd $VWS_HOME/pickup
 prompt$ rm greenpages-solution-@app.version@.par</programlisting>
 	
@@ -429,7 +429,7 @@ prompt$ rm greenpages-solution-@app.version@.par</programlisting>
 	  <programlisting>prompt> cd %VWS_HOME%\pickup
 prompt> del greenpages-solution-@app.version@.par</programlisting>
 
-	  <para>Also, to prevent conflicts with the server configured in Eclipse, stop a currently-running @webserv@ by typing <literal>Control-C</literal> in the console window from which you started the server.  </para>
+	  <para>Also, to prevent conflicts with the server configured in Eclipse, stop a currently-running @webserv@ by typing <literal>Control-C</literal> in the console window.</para>
 
           <para>
               To run @greenpages@ from within Eclipse:
