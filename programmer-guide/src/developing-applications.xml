@@ -190,7 +190,7 @@ Manifest-Version: 1.0
 			<title>Web Modules</title>
 			<para>
 				As discussed earlier, Web Modules are no longer supported in @short.product.name@. Instead, we recommend that you 
-				use Shared Service WARs or Web Application Bundles that are compliant with the OSGi Web Container specification.
+				use Shared Service WARs or Web Application Bundles that are compliant with the OSGi Web Applications specification.
 			</para>
 			<section id="developing-applications-packaging-web-module-to-war">
 				<title>Migrating to a Web Application Bundle from a Web Module</title>
@@ -658,7 +658,7 @@ password          = secret</screen>
 			<section id="developing-applications-programmatic-access-web-bundle-context">
 				<title>Programmatic Access to the BundleContext</title>
 				<para>
-					As required by the OSGi Web Container specification, you can access the
+					As required by the OSGi Web Applications specification, you can access the
 					<literal>BundleContext</literal> of your WAR or Web Bundle via the web application&rsquo;s
 					<literal>ServletContext</literal>. The bundle context is stored in the
 					<literal>ServletContext</literal> under the attribute name <literal>osgi-bundlecontext</literal>.
@@ -677,7 +677,7 @@ password          = secret</screen>
 			artifacts. This section lists which packages are automatically generated.
 		</para>
 		<para>
-			All WARs, as required by the OSGi Web Container specification, and Web application bundles (see <link linkend="known-issues-web-bundle-default-headers">Default Web 
+			All WARs, as required by the OSGi Web Applications specification, and Web application bundles (see <link linkend="known-issues-web-bundle-default-headers">Default Web 
 			Application Bundle Headers</link>) will automatically import the following packages:
 		</para>
 		
