@@ -45,7 +45,7 @@
 				<para><link linkend="architecture-wars">Java EE WAR</link></para>
 			</listitem>
 			<listitem>
-				<para><link linkend="architecture-war-rfc66">Web Bundles</link></para>
+				<para><link linkend="architecture-war-gemini">Web Bundles</link></para>
 			</listitem>
 			<listitem>
 				<para><link linkend="architecture-pars">PAR</link></para>
@@ -53,12 +53,14 @@
 			<listitem>
 				<para><link linkend="architecture-plans">Plans</link></para>
 			</listitem>
+			<listitem>
+				<para><link linkend="architecture-configurations">Configurations</link></para>
+			</listitem>
 		</orderedlist>
 		<para>
 			When you deploy an application to the @short.product.name@, each deployment artifact (e.g., a single bundle, WAR, PAR, or
-			plan) passes through a deployment pipeline. This deployment pipeline supports the notion of personality-specific
-			deployers which are responsible for processing an application with a certain personality (i.e., application type).
-			The @bundle.version@ release of the @short.product.name@ natively supports personality-specific deployers analogous
+			plan) passes through a deployment pipeline. This deployment pipeline is responsible for processing applications of certain 
+			types (i.e., application type). The @bundle.version@ release of the @short.product.name@ natively supports deployers analogous
 			to each of the aforementioned packaging options.
 		</para>
 		<para>
@@ -177,24 +179,23 @@
 					modularity and reduced overall footprint of your web applications.
 				</para>
 			</section>
-			<section id="architecture-war-rfc66">
-				<title>WARs and the OSGi Web Container (RFC66)</title>
+			<section id="architecture-war-gemini">
+				<title>WARs and the Gemini Web Container</title>
 				<para>
-					@product.name@ fully supports the OSGi Web Container (RFC66) standard. In fact, the reference implementation for RFC66 
-					was developed by SpringSource from an offshoot of the original @short.product.name@ codebase. This RI is now fully integrated in
-					@short.product.name@ as the basis of the support for web application deployment. 
+					@product.name@ fully supports the OSGi Web Applications standard. Using the reference implementation from Gemini Web that  
+					was developed by SpringSource from an offshoot of the original @short.product.name@ codebase. This RI is now fully 
+					integrated in @short.product.name@ as the basis of the support for web application deployment. 
 				</para>
 				<para>
-					The Web Container specification introduces the concept of a <emphasis>web bundle</emphasis>, which is a WAR that is also
-					a bundle. The specification defines how WAR files are transformed into bundles automatically as needed. 
+					The Web Container specification introduces the concept of a <emphasis>web application bundle</emphasis>, which is a WAR 
+					that is also a bundle. The specification defines how WAR files are transformed into bundles automatically as needed. 
 				</para>
 				<para>
-					The Web Container specification is not yet publicly available, but you can find an introduction to the Web Container in
-					blog entries written by the @short.product.name@ team 
+					You can find an introduction to the Web Container in blog entries written by the @short.product.name@ team 
 					<ulink url="http://blog.springsource.com/2009/05/27/introduction-to-the-osgi-web-container/">here</ulink> 
 					and <ulink url="http://blog.springsource.com/2009/06/01/what-the-osgi-web-container-means-for-dm-server/">here</ulink>.
 				</para>
-				<section id="architecture-war-rfc66-extensions">
+				<section id="architecture-war-gemini-extensions">
 					<title>Extensions to the Web Container</title>
 					<para>
 						@product.name@ provides a variety of extensions to the Web Container that allow you to construct sophisticated applications.
@@ -240,10 +241,10 @@
 				</section>
 			</section>
 		</section>
-		<section id="architecture-web-modules">
+		<section id="architecture-web-bundles">
 			<title>Web Modules</title>
 			<para>
-				Web Modules have been removed in favor of war files and web bundles following the OSGi Web Container specification.
+				Web Modules have been removed in favour of war files and web bundles following the OSGi Web Applications specification.
 				We believe our users will benefit more from a standard model than one that is @short.product.name@-specific.
 			</para>
 		</section>
@@ -327,6 +328,15 @@
 				the order in which you list artifacts in the plan&rsquo;s XML file is the order in which @short.product.name@ deploys them.  
 				Additionally, because plans specify the artifacts that make up an application by reference, it is easier to share content 
 				between plans as well as update individual parts of a plan without having to physically repackage (re-JAR) it.
+			</para>
+		</section>
+		<section id="architecture-configurations">
+			<title>Configurations</title>
+			<para>
+				A Configuration is simply a Java properties file. When deployed it will be recognised by the deployer and installed in to 
+				<emphasis>Configuration Admin</emphasis> for later use by your applications. The name that it will be installed under or PID 
+				(Persistent Identity) will be the name of the properties file less any extension. How to consume configuration data 
+				is discussed <link linkend="developing-applications-configuration-artifacts">later</link>.
 			</para>
 		</section>
 	</section>
