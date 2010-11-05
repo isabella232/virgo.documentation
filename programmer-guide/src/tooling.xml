@@ -32,7 +32,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						<literal>http://dist.springsource.com/release/TOOLS/update/e3.6/</literal> (not yet available at the time of writing)
+						<literal>http://dist.springsource.com/release/TOOLS/update/e3.6/</literal>
 					</para>
 				</listitem>
 				<listitem>
@@ -42,7 +42,7 @@
 				</listitem>
 				<listitem>
 					<para>
-						<literal>http://dist.springsource.com/milestone/TOOLS/update/e3.6/</literal> (recommended at the time of writing)
+						<literal>http://dist.springsource.com/milestone/TOOLS/update/e3.6/</literal>
 					</para>
 				</listitem>
 				<listitem>
