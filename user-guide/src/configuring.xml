@@ -944,7 +944,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 	<section id="configuring-hosted-repo">
 		<title>Configuring a Hosted Repository</title>
 		<para>You configure a @short.product.name@ instance to host a repository 
-		by editing the <literal>$SERVER_HOME/config/org.eclipse.virgo.repository.hosted.properties</literal> file; 
+		by editing the <literal>$SERVER_HOME/config/org.eclipse.virgo.apps.repository.properties</literal> file; 
 		remote clients can then access the artifacts in this hosted repository and use them locally.
 		</para>
               <para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
@@ -1022,7 +1022,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 		   </tbody>
 		  </tgroup>
 		</table>
-		<para>The following sample shows a <literal>org.eclipse.virgo.repository.hosted.properties</literal> file with a single external repository 
+		<para>The following sample shows a <literal>org.eclipse.virgo.apps.repository.properties</literal> file with a single external repository 
 		called <literal>my-hosted-repo</literal> with search pattern <literal>$SERVER_HOME/repository/hosted/*</literal>.
 		<programlisting><![CDATA[my-hosted-repo.type=external
 my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>

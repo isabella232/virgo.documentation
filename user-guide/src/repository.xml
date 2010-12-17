@@ -41,7 +41,7 @@
 			  </itemizedlist>
 			You configure the provisioning repository using the <literal>$SERVER_HOME/config/org.eclipse.virgo.repository.properties</literal> file.  
 			</para>
-			<para> As previously described, a particular instance of @product.name@ can itself also act as a repository host for remote server instances to use when satisfying the dependencies of the applications deployed to it.  In this case, you configure a hosted repository using the <literal>$SERVER_HOME/config/org.eclipse.virgo.repository.hosted.properties</literal> file.  Typically, only remote clients use hosted repositories and their contents; the @product.name@ instance that actually hosts the repository does not typically use the artifacts in it.  Rather, it uses artifacts in its local repository.
+			<para> As previously described, a particular instance of @product.name@ can itself also act as a repository host for remote server instances to use when satisfying the dependencies of the applications deployed to it.  In this case, you configure a hosted repository using the <literal>$SERVER_HOME/config/org.eclipse.virgo.apps.repository.properties</literal> file.  Typically, only remote clients use hosted repositories and their contents; the @product.name@ instance that actually hosts the repository does not typically use the artifacts in it.  Rather, it uses artifacts in its local repository.
 			</para>
 			<para>
 				Making a third-party dependency available to your application is simply a matter of adding its artifact to the appropriate location in the provisioning repository.  This could be either in the local directories or the remote ones if you are getting artifacts from a remotely-hosted repository.
