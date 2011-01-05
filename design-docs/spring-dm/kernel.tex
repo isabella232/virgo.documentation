@@ -1,0 +1,158 @@
+\documentclass[a4paper]{article}
+\usepackage{zed-csp}
+\usepackage{graphicx}
+%\markboth{Draft}{Draft}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 6 pt
+\parindent 0 pt
+
+\title{A CSP Model Spring Dynamic Modules (v0.1)}
+\author{Glyn Normington}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+The aim is to model the concurrency features of Spring DM.
+
+\clearpage
+\pagenumbering{roman}
+\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+\renewcommand{\empty}{\emptyset}
+\newcommand{\ModuleDefZero}{ModuleDef_0}
+\newcommand{\ModuleDefOne}{ModuleDef_1}
+\newcommand{\ModuleDefTwo}{ModuleDef_2}
+\newcommand{\ModuleDefThree}{ModuleDef_3}
+\newcommand{\ModuleDefFour}{ModuleDef_4}
+
+%=============================================================================
+%\clearpage
+%\pagenumbering{arabic}
+%\section{Introduction}
+%\label{cha:intro}
+%
+%To do:
+%\begin{itemize}
+%\item 
+%\end{itemize}
+%
+%=============================================================================
+\clearpage
+\pagenumbering{arabic}
+\section{Bundles}
+
+The events in this model should be just sufficient to model the interaction between bundles and Spring DM.
+
+We recycle bundles to avoid artificial deadlock.
+\begin{displaymath}
+channel~b\_started, b\_stopping: bundle \\
+ ~\\
+Bundles = \\
+\t1          let \\
+\t2              Bundle(i) = b\_started.i \then b\_stopping.i \then Bundle(i) \\
+\t1          within \\
+\t2              \Interleave _{i:bundle} Bundle(i) \\
+\end{displaymath}
+
+%=============================================================================
+\section{Service Registry}
+\begin{displaymath}
+channel~sr\_publish, sr\_lookup, sr\_retract: service \\
+~\\
+ServiceRegistration(s) = sr\_publish.s \then PublishedServiceRegistration(s) \\
+~\\
+PublishedServiceRegistration(s) = \\
+\t1 sr\_lookup.s \then PublishedServiceRegistration(s) \extchoice
+sr\_retract.s \then ServiceRegistration(s) \\
+~\\
+ServiceRegistry = \Interleave _{s : service} ServiceRegistration(s) \\
+\end{displaymath}
+
+%=============================================================================
+\section{Application Contexts}
+Recycle application contexts to avoid artifical deadlock, but only within a single bundle start/stop cycle.
+\begin{displaymath}
+channel~ac\_start, ac\_stop, ac\_refresh, ac\_close, ac\_fail, ac\_timeout: application\_context \\
+~\\
+StopAppCtx(a) = ac\_stop.a \then AppCtx(a) \\
+~\\
+AppCtx(a) = \\
+\t1		let \\
+\t2			Normal = ac\_refresh.a \then ServiceLookup(a, service) \\
+\t2			Error = ac\_fail.a \then StopAppCtx(a) \\
+\t1	            within \\
+\t2			ac\_start.a \then (Normal \extchoice Error) \\
+\end{displaymath}
+\begin{displaymath}
+ServiceLookup(a, \emptyset) = ServicePublish(a, \emptyset, \emptyset) \\
+~\\
+ServiceLookup(a, remaining) = \\
+\t1 						let \\
+\t2 							Timeout = ac\_timeout.a \then StopAppCtx(a) \\
+\t2							Lookup = (\Intchoice _{s:remaining} sr\_lookup.s \then ServiceLookup(a, remaining \setminus \set{s})) \timeout Timeout \\
+\t1						within \\
+\t2							ServicePublish(a, remaining \inter get\_services(a), \emptyset) \intchoice Lookup \\
+\end{displaymath}
+\begin{displaymath}
+ServicePublish(a, \emptyset, published) = RunningAppCtx(a, published) \\
+~\\
+ServicePublish(a, remaining, published) =\\
+\t1								let \\
+\t2									PublishMore(s) = ServicePublish(a, remaining \setminus \set{s}, published \union \set{s}) \\
+\t2									Publish = \Intchoice _{s:remaining} sr\_publish.s \then PublishMore(s) \\
+\t1								within \\
+\t2									RunningAppCtx(a, published) \intchoice Publish \\
+\end{displaymath}
+\begin{displaymath}
+RunningAppCtx(a, published) =  ac\_stop.a \then ac\_close.a \then ServiceTerm(a, published) \\
+\end{displaymath}
+\begin{displaymath}
+ServiceTerm(a, \emptyset) = AppCtx(a) \\
+~\\
+ServiceTerm(a, published) = \Extchoice _{s:published} sr\_retract.s \then ServiceTerm(a, published \setminus \set{s}) \\
+\end{displaymath}
+\begin{displaymath}
+AppCtxs = \Interleave _{a:application\_context} AppCtx(a) \\
+\end{displaymath}
+
+%=============================================================================
+\section{Bundle to application context multiplexing}
+Multiplex bundle stopped and starting events to application context start and stop events, respectively.
+\begin{displaymath}
+Multiplex(i) = \\
+\t1 			let \\
+\t2				ac = get\_app\_ctxs(i) \\
+\t2				StartAppCtxs(\emptyset) = Multiplex(i) \\
+\t2				StartAppCtxs(acs) = \Extchoice _{a:acs} ac\_start.a \then StartAppCtxs(acs \setminus \set{a}) \\
+\t2				StopAppCtxs(\emptyset) = Multiplex(i) \\
+\t2				StopAppCtxs(acs) = \Extchoice _{a:acs} ac\_stop.a \then StopAppCtxs(acs \setminus \set{a}) \\
+\t1	               within \\
+\t2				b\_started.i \then StartAppCtxs(ac) \extchoice b\_stopping.i \then StopAppCtxs(ac) \\
+~\\
+Multiplexer = \Interleave _{i:bundle} Multiplex(i) \\
+\end{displaymath}
+%=============================================================================
+\section{System}
+A system comprising bundles, multiplexer, application contexts, and the service registry.
+\begin{displaymath}
+MultiplexedBundles = (Bundles \parallel[\set{|b\_started, b\_stopping|}] Multiplexer) \hide \\
+\t6 \set{|b\_started, b\_stopping|} \\
+~\\
+EmbeddedAppCtxs = \\
+\t1 (AppCtxs \parallel[\set{|sr\_publish, sr\_lookup, sr\_retract|}] ServiceRegistry) \hide \\
+\t2 \set{|~sr\_publish, sr\_lookup, sr\_retract~|} \\
+~\\
+System = MultiplexedBundles \parallel[\set{|~ac\_start, ac\_stop~|}] EmbeddedAppCtxs \\
+\end{displaymath}
+
+
+\end{document}

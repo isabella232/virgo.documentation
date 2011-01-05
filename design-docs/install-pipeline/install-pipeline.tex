@@ -1,0 +1,95 @@
+\documentclass[a4paper,twoside,12pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+\markboth{Draft version 0.1}{Draft version 0.1}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 2 pt
+\parindent 10 pt
+
+\title{Install Pipeline}
+\author{Glyn Normington and Andy Wilkinson}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+This short specification defines the general contract for install pipelines.
+
+This work relates to the JIRA issue \texttt{DMS-598}.
+
+%\clearpage
+%\pagenumbering{roman}
+%\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+%\renewcommand{\empty}{\emptyset}
+
+%=============================================================================
+%\clearpage
+%\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+
+%=============================================================================
+\section{Basic types}
+OSGi State instances and installable artefact trees need to be manipulated by pipeline stages.
+\begin{zed}
+ 	[State, IATree]
+\end{zed}
+
+Install pipelines perform logging by creating log entries.
+\begin{zed}
+ 	[LogEntry]
+\end{zed}
+
+Repositories are collections of artefacts indexed by type, name, and version.
+\begin{zed}
+	[Artefact, AT, AN, AV]
+\end{zed}
+
+%=============================================================================
+\clearpage
+\section{Install environment}
+The install pipeline runs in an environment known as an \textit{install environment} which includes
+an OSGi State, a tree of installed artefacts, an install log, and a repository.
+\begin{schema}{InstallEnv}
+ state : State \\
+ iaTree : IATree \\
+ ilog : \seq LogEntry \\
+ repo: AT \cross AN \cross AV \pinj Artefact
+\end{schema}
+
+%=============================================================================
+\clearpage
+\section{Pipeline stages}
+
+Pipeline stages have state and operate on installable artefacts.
+\begin{zed}
+	[PipelineStageState, InstallableArtefact]
+\end{zed}
+
+\begin{schema}{PipelineStage}
+ ps : PipelineStageState \\
+\end{schema}
+
+Running a pipeline stage may update the stage's state and the install environment although it may
+only append to the install log and may not update the repository.
+\begin{schema}{Run}
+ \Delta PipelineStage \\
+ \Delta InstallEnv \\
+ ia?, ia! : InstallableArtefact \\
+\where
+ ilog \subseteq ilog' \\
+ repo' = repo \\
+\end{schema}
+
+
+\end{document}

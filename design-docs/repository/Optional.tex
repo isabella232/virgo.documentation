@@ -1,0 +1,132 @@
+\documentclass[a4paper,titlepage,twoside,12pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+\markboth{Draft}{Version 0.1}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 2 pt
+\parindent 10 pt
+
+\title{Optional matters}
+\author{Steve Powell}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+We define an optional generic type (analogous to say, $\seq$) for use in specifications where optional values are to be supplied.
+
+
+%\clearpage
+%\pagenumbering{roman}
+%\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\defaultsTo}{\mathbin{\sf defaultsTo}}
+
+%=============================================================================
+\clearpage
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+
+\section{Optionals}
+We wanted to define a data type that was generic, something that Zed proper doesn't allow  (and fuzz doesn't type-check for us):
+
+%%unchecked
+\begin{zed}
+	Opt[X] ::= Nil | Just \ldata X \rdata
+\end{zed}
+This fails because data type definitions aren't allowed to be generic.
+
+Nor are they allowed to be parametric, as in Haskell:
+%%unchecked
+\begin{zed}
+	\mathtt{data} Opt ~ a = Nil | Just ~a
+\end{zed}
+so instead we define the following generic construction:
+\begin{zed}
+	Opt[X]==(\lambda s : \power X @ \{0\} \pfun s)
+\end{zed}
+where we declare an optional $Opt ~ S$ as a \emph{partial} function from a singleton set (the zero isn't significant, but we had to choose something, so what do you do?) to the set $S$ ---this essentially picks out a single element from $S$, or it doesn't. Exactly what we want.
+
+[The reason we chose to use functions and not simply subsets is because that makes it simple to define the function $defaultsTo$ (see below).]
+
+\subsection{Type injections $Nil$ and $Just$}
+In order to exploit this definition in the normal way, we introduce two mechanisms, corresponding to the injections $Nil$ and $Just$ of the Haskell mechanism. 
+\begin{zed}
+	Nil [X]  == \emptyset [\{0\} \cross X]
+\end{zed}
+which denotes the $Nil$ (`not supplied') object in $Opt ~ X$ (yes, the empty set---but the generic types here are significant for type inference), and:
+\begin{zed}
+	Just[X] == (\lambda x : X @ \{0 \mapsto x \})
+\end{zed}
+which puts a value $x$ in the set $S$ into the $Opt ~ S$ type (where $S$ has elements of type $X$).
+
+\subsection{Type deconstructor $Take$}
+We also define $Take$, which, given an optional which is $Just ~ x$, extracts the value behind it.
+
+\begin{zed}
+	Take[X] == (\lambda o : Opt ~X @ o ~ 0)
+\end{zed}
+Of course, $Take$ is not defined on $Nil$.
+
+\subsection{Using optionals with a default mechanism}
+Given an optional part of the state, it would be nice to define a value that was this optional value, but defaults to something else if the optional value is not supplied (is $Nil$). This can be conveniently captured by an infix operator $\defaultsTo$:
+%%inop \defaultsTo 3
+\begin{gendef}[X]
+	\_ \defaultsTo \_ :  Opt ~ X \cross X \fun X
+\where
+	\forall o : Opt ~ X; x : X @ \\
+	\t1 o \defaultsTo x = Take(Just ~ x \oplus o)
+\end{gendef}
+which can be used as in this small example:
+%%unchecked
+\begin{schema}{State}
+	value : Opt \nat	
+\end{schema}
+Query the state and ask for the value -- if it is not set in the state (it is optional after all), we want to get a default value zero:
+%%unchecked
+\begin{schema}{QueryValue}
+	\Xi State	\\
+	val! : \nat
+\where
+	val! = value  \defaultsTo  0
+\end{schema}
+
+This operator can be chained, so that, if $oVal_1$ and $oVal_2$ are optional values (of the same type $\num$, say), the expression:
+%%unchecked
+\begin{zed}
+	oVal_1 \defaultsTo oVal_2 \defaultsTo 42
+\end{zed}
+denotes the value in $oVal_1$, unless this is not specified, when it is that in $oVal_2$, unless \emph{that} is not specified, in which case it is the value $42$.
+
+\section{How to use this in specifications}
+In order to use this in a specification there are two options: one, to include the definitions of $Opt$ and the like each time we wish to use them, and two, to ensure that these terms (and types) are available for $f$UZZ when it checks the document that uses them.
+
+There are two ways to get $f$UZZ to have these definitions around beforehand, one is to extend the standard prelude (a file called \texttt{fuzzlib} contains the standard prelude and this can be manually extended) and the other is simply to supply this file to $f$UZZ before the file that makes use of it.
+
+One drawback with these solutions is that the LaTeX formatting is still needed for the symbol $\defaultsTo$ for example. This  is obtained by the definition:
+\begin{verbatim}
+  \newcommand{\defaultsTo}{\mathbin{\sf defaultsTo}}
+\end{verbatim}
+which ought to be put near the top of the file that uses this symbol.
+
+\paragraph{Example}
+The file \texttt{TestOptional.tex} is checked with the technique that supplies both files to $f$UZZ. We execute the command:
+\begin{verbatim}
+  fuzz Optional.tex TestOptional.tex
+\end{verbatim}
+and this test...
+
+...works!
+
+\end{document}

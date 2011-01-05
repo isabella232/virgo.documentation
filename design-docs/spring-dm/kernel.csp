@@ -1,0 +1,91 @@
+-- CSP model of the SpringSource Application Platform kernel
+-- This is currently work in progress, so don't trust it!
+
+-- Limited sets of bundles, services, and application contexts for model-checking purposes.
+
+datatype bundle = b1 | b2
+datatype service = s1 | s2 | s3 | s4
+datatype application_context = b1ac1 | b1ac2 | b2ac1 | b2ac2
+
+get_app_ctxs(b1) = {b1ac1, b1ac2}
+get_app_ctxs(b2) = {b2ac1, b2ac2}
+
+get_services(b1ac1) = {s1, s4}
+get_services(b1ac2) = {s2}
+get_services(b2ac1) = {s3}
+get_services(b2ac2) = {}
+
+-- Bundles
+-- The events in this model should be just sufficient to model the interaction between bundles and Spring DM.
+
+channel b_started, b_stopping: bundle
+
+Bundles = let
+              Bundle(i) = b_started.i -> b_stopping.i -> Bundle(i) -- recycle bundle to avoid artificial deadlock
+          within
+              ||| i:bundle @ Bundle(i)
+
+-- Service registry.
+
+channel sr_publish, sr_lookup, sr_retract: service
+
+ServiceRegistration(s) = sr_publish.s -> PublishedServiceRegistration(s)
+PublishedServiceRegistration(s) = sr_lookup.s -> PublishedServiceRegistration(s) [] sr_retract.s -> ServiceRegistration(s)
+
+ServiceRegistry = ||| s : service @ ServiceRegistration(s)
+
+-- Application contexts.
+
+channel ac_start, ac_stop, ac_refresh, ac_close, ac_fail, ac_timeout: application_context
+
+-- Recycle application contexts to avoid artifical deadlock, but only within a single bundle start/stop cycle
+StopAppCtx(a) = ac_stop.a -> AppCtx(a)
+
+AppCtx(a) = let
+                InitAppCtx = ac_refresh.a -> ServiceLookup(a, service) [] ac_fail.a -> StopAppCtx(a)
+            within
+                ac_start.a -> InitAppCtx
+
+ServiceLookup(a, {}) = ServicePublish(a, {}, {})
+ServiceLookup(a, remaining) = let
+                                  Timeout = ac_timeout.a -> StopAppCtx(a)
+                                  Lookup = (|~| s:remaining @ sr_lookup.s -> ServiceLookup(a, diff(remaining, {s}))) [> Timeout
+                              within
+                                  ServicePublish(a, inter(remaining, get_services(a)), {}) |~| Lookup
+
+ServicePublish(a, {}, published) = RunningAppCtx(a, published)
+ServicePublish(a, remaining, published) = let
+                                              PublishMore(s) = ServicePublish(a, diff(remaining, {s}), union(published, {s}))
+                                              Publish = |~| s:remaining @ sr_publish.s -> PublishMore(s)
+                                          within
+                                              RunningAppCtx(a, published) |~| Publish
+
+RunningAppCtx(a, published) = ac_stop.a -> ac_close.a -> ServiceTerm(a, published)
+
+ServiceTerm(a, {}) = AppCtx(a)
+ServiceTerm(a, published) = [] s:published @ sr_retract.s -> ServiceTerm(a, diff(published, {s}))
+
+AppCtxs = ||| a:application_context @ AppCtx(a)
+
+-- Multiplex bundle stopped and starting events to application context start and stop events, respectively.
+
+Multiplex(i) = let
+                   ac = get_app_ctxs(i)
+                   StartAppCtxs({}) = Multiplex(i)
+                   StartAppCtxs(acs) = [] a:acs @ ac_start.a -> StartAppCtxs(diff(acs, {a}))
+				   StopAppCtxs({}) = Multiplex(i)
+                   StopAppCtxs(acs) = [] a:acs @ ac_stop.a -> StopAppCtxs(diff(acs, {a}))
+               within
+                   b_started.i -> StartAppCtxs(ac) [] b_stopping.i -> StopAppCtxs(ac)
+
+Multiplexer = ||| i:bundle @ Multiplex(i)
+
+-- A system comprising bundles, multiplexer, application contexts, and the service registry.
+
+MultiplexedBundles = Bundles [|{|b_started, b_stopping|}|] Multiplexer
+EmbeddedAppCtxs = AppCtxs [|{|sr_publish, sr_lookup, sr_retract|}|] ServiceRegistry
+
+System = MultiplexedBundles [|{|ac_start, ac_stop|}|] EmbeddedAppCtxs
+
+assert System :[ deadlock free [F] ]
+

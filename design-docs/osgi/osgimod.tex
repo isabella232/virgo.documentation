@@ -1,0 +1,832 @@
+\documentclass[a4paper,9pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+\markboth{Unclassified, Draft}{Unclassified, Draft}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 6 pt
+\parindent 0 pt
+
+\title{A Formal Model of OSGi R4 Modularity (v0.83)}
+\author{Glyn Normington}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{alph}
+\setcounter{page}{0}
+
+%=============================================================================
+The aim is to model a subset of the features of the modularity layer of
+OSGi Release 4.
+
+%\clearpage
+%\pagenumbering{roman}
+%\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+%\renewcommand{\empty}{\emptyset}
+\newcommand{\ModuleDefZero}{ModuleDef_0}
+\newcommand{\ModuleDefOne}{ModuleDef_1}
+\newcommand{\ModuleDefTwo}{ModuleDef_2}
+\newcommand{\ModuleDefThree}{ModuleDef_3}
+\newcommand{\ModuleDefFour}{ModuleDef_4}
+
+%=============================================================================
+\clearpage
+\pagenumbering{arabic}
+\section{Introduction}
+\label{cha:intro}
+\textit{Probably omit this from the paper, although there needs to be
+`warning' of the formal stuff near the start of the paper and in the
+abstract.}
+
+This specification only models a subset of the modularity function of OSGi R4.
+It does not model:
+\begin{itemize}
+\item `uses'
+\item optional resolution
+\item dynamic imports
+\item export filters
+\item require-module
+\end{itemize}
+
+%=============================================================================
+\clearpage
+\section{UML Overview}
+\label{cha:uml}
+\textit{Probably omit this from the paper.}
+
+Figure \ref{fig:uml} shows the main artefacts of OSGi modularity, some of
+which will be covered by the formal model.
+
+\begin{figure}[h!]
+\includegraphics*[scale=0.5]{uml.pdf}
+\caption{UML Overview}
+\label{fig:uml}
+\end{figure}
+
+There are three new concepts in the diagram which are purely to explain the
+other ``classes'' which relate directly to RFC 79 manifest headers.
+
+\begin{description}
+\item[ExportSpec] is a piece of the ``export signature'' of a module which
+is a generalisation of \texttt{Export-Package}.
+What the diagram doesn't show is that \texttt{Require-Bundle} with
+\texttt{visibility:=reexport}
+also produces these abstract exports.
+
+\item[ImportSpec] is a kind of generalisation of
+\texttt{Import-Package} and \texttt{DynamicImport-Package}.
+AbstractImport really does generalise \texttt{Import-Package}.
+But \texttt{DynamicImport-Package} can, because of its wild-carded package
+name, be thought of as a kind of macro or template which generates
+(at class load time) ``dynamic import instances'', described next.
+
+\item[DynamicImportInstance] is effectively an import which is derived, at
+class load time, from a dynamic import. AbstractImport generalises
+DynamicImportInstance.
+\end{description}
+
+The crux of the diagram is that there is a ``matches'' relationship between
+AbstractImport and AbstractExport.
+This relationship describes potential package wirings - RFC 79 has to cover
+the cases when an import matches more than one export.
+
+
+%=============================================================================
+\clearpage
+\section{Basic Types}
+\label{cha:basics}
+\textit{Insert this section in section 3 of the paper.}
+
+Some basic types need defining.
+
+\subsection*{Module Names}
+
+Modules are identified within a module system by module name
+and module version number.
+\begin{zed}
+  [MName, MVer]
+\end{zed}
+
+Module version, consisting of the name and version number of a module,
+needs an abbreviation.
+\begin{zed}
+  MV == MName \cross MVer
+\end{zed}
+
+\subsection*{Packages}
+We need the notion of packages (or, more precisely, package names)
+and package version numbers.
+\begin{zed}
+  [Package, PVer]
+\end{zed}
+
+%The default package name is special.
+%\begin{axdef}
+%  DefaultPackage : Package
+%\end{axdef}
+
+Package version, consisting of the name and version number of a package,
+needs an abbreviation.
+\begin{zed}
+  PV == Package \cross PVer
+\end{zed}
+
+We need the notion of (fully qualified) class names and classes.
+\begin{zed}
+  [ClassName, Class]
+\end{zed}
+
+Each class name belongs a unique package.
+\begin{axdef}
+  package : ClassName \fun Package
+\end{axdef}
+
+Certain classes belong to packages beginning with ``java.'' (and ``org.omg.'' etc.).
+\begin{axdef}
+  javaClasses : \power ClassName
+\end{axdef}
+
+\subsection*{Class Spaces and Consistency}
+
+A class space is a collection of classes indexed by class name.
+\begin{zed}
+  ClassSpace == ClassName \pinj Class
+\end{zed}
+
+We say that two class spaces $s$ and $t$ are \textit{consistent} if
+and only if
+
+$s \cup t \in ClassSpace$
+
+, i.e. $s$ and $t$ agree on the
+class names they have in common.
+
+\subsection*{Attributes}
+
+Arbitrary attribute names and values will be used to provide a flexible
+import/export matching mechanism.
+\begin{zed}
+[AName, AValue]
+\end{zed}
+
+We will use mappings of attribute names to values.
+\begin{zed}
+  AMap == AName \pfun AValue
+\end{zed}
+
+Module  names are sometimes used as attribute names.
+\begin{axdef}
+  MNameAttr : AName
+\end{axdef}
+
+%=============================================================================
+\clearpage
+\section{Simple Class Loaders}
+\label{cha:simpleloaders}
+\textit{Insert this section in section 3 of the paper.}
+
+Before we continue to describe OSGi modularity, we model a simple class loader
+which delegates to a parent class loader.
+This will help to familiarise the reader with the notation and how class
+loading is modelled.
+
+A simple class loader has a local collection of class
+definitions, typically implemented as a sequence of jar files on a file
+system, but modelled here as a class space.
+It also has a class space of classes which have been defined
+(i.e.\ loaded locally) by the class loader and which are derived from
+the loader's local collection of class definitions.
+Finally it has a class space of all classes loaded by the class loader. 
+We defer tying this to the the parent class loader.
+\begin{schema}{SimpleLoader}
+  definitions : ClassSpace \\
+  defined : ClassSpace \\
+  loaded : ClassSpace \\
+\where
+  defined = definitions \cap loaded \\
+\end{schema}
+The defined classes are those which have definitions and which are also loaded.
+Note that this only makes sense because the child and parent definitions turn
+out to be disjoint. If a class is loaded from identical class files by two
+distinct class loaders, the resultant class objects are distinct. 
+
+A simple loader initially has no loaded classes.
+\begin{schema}{SimpleLoaderInit}
+  SimpleLoader \\
+\where
+  loaded = \emptyset
+\end{schema}
+
+We now model a successful class load.
+\begin{schema}{SuccessfulLoad}
+  \Delta SimpleLoader \\
+  cn? : ClassName \\
+\where
+  definitions' = definitions \\
+  defined \subseteq defined' \\
+  loaded \subseteq loaded' \\
+  cn? \in \dom loaded' \\
+\end{schema}
+The definitions are preserved.
+The collections of defined and loaded classes may not decrease.
+The specified class is loaded.
+Note that more than one class may be loaded, which
+may be necessary if the specified class refers to other classes
+which have not yet been loaded.
+
+A \textit{bootstrap} class loader is at the top of the
+parent-child hierarchy and therefore only loads classes it also defines.
+We refer to such a class loader as a \textit{top loader}.
+\begin{schema}{TopLoader}
+  SimpleLoader \\
+\where
+  defined = loaded \\
+\end{schema}
+
+We shall see later that a simple loader together with its parentage
+up to and including the bootstrap loader may be modelled as a
+top loader.
+
+With this in mind, we can express the relationship between a child
+class loader and its parentage.
+
+\begin{schema}{ParentalConstraint}
+  child : SimpleLoader \\
+  parentage : TopLoader \\
+\where
+  child.loaded \setminus child.defined \subseteq parentage.loaded \\
+  (\dom child.defined) \cap (\dom parentage.definitions) = \emptyset \\
+  child.definitions \cap parentage.definitions = \emptyset \\
+\end{schema}
+Classes which the child has loaded but not defined must have been
+loaded by the parentage.
+The child has not defined a class for which the parentage has a
+definition.
+The child and parentage definitions are disjoint which models the
+fact that distinct class loaders produce distinct class
+instances when they load from the same class bytecode.
+
+The first two properties are ensured by the child class loader
+first of all delegating each class load to its parent and then only
+attempting to define the class if its parent failed to load the class.
+
+It follows that $child.loaded$ and $parentage.loaded$ are consistent
+class spaces.
+The proof is omitted because of lack of space.
+
+We now show how a child together with a top loader satisfying the
+above constraint can be combined to produce a new top loader.
+
+\begin{schema}{Combine}
+  ParentalConstraint \\
+  loader: SimpleLoader \\
+\where
+  loader.definitions = child.definitions \oplus parentage.definitions \\
+  loader.defined = child.defined \cup parentage.defined \\
+  loader.loaded = child.loaded \cup parentage.loaded \\
+\end{schema}
+
+The proof that the result is really a top loader is omitted for lack of space.
+\begin{argue}
+  Combine \vdash loader \in TopLoader
+\end{argue}
+
+The reverse process of factoring a child class loader from a top loader
+is also sometimes possible, but is not explored further here.
+
+%=============================================================================
+\clearpage
+\section{Delegating Class Loaders}
+\label{cha:delegatingloaders}
+\textit{Possibly omit this from the paper.}
+
+As a further step towards OSGi R4 modularity, we extend the notion of
+a simple loader to model imports and exports.
+
+An importer is a simple loader which defines the class names it is willing
+to import from elsewhere. In OSGi R4 as we shall see later, imports are
+defined in terms of packages, but we will overlook that level of detail for
+the moment. For simplicity, we also ignore the parent class loader.
+\begin{schema}{Importer}
+  SimpleLoader \\
+  imports : \power ClassName \\
+  imported : ClassSpace \\
+\where
+  imported = loaded \setminus defined \\
+ \dom imported \subseteq imports \\
+\end{schema}
+Classes which are loaded, but not defined, are imported.
+Imported classes must be named as imports.
+
+An exporter is a simple loader which defines the class names it is willing
+to export to an importer.
+\begin{schema}{Exporter}
+  SimpleLoader \\
+  exports : \power ClassName \\
+  exported : ClassSpace \\
+\where
+  exported \subseteq loaded \\
+  \dom exported \subseteq exports \\
+\end{schema}
+Exported classes must be loaded and named as exports.
+
+We now define a constraint between a `matching' importer and exporter.
+\begin{schema}{DelegationConsistency}
+  i : Importer \\
+  e : Exporter \\
+\where
+  i.definitions \cap e.definitions = \emptyset \\
+  \LET shared == i.imports \cap e.exports @ \\
+\t1 shared \dres i.imported \subseteq shared \dres e.exported \\
+\end{schema}
+The importer and exporter definitions are disjoint which models the
+fact that distinct class loaders produce distinct class
+instances when they load from the same class bytecode.
+If shared classes denote those which may be both imported by the importer and
+exported by the exporter, then the shared classes which have been imported
+have also been exported.
+
+It follows that $shared \dres i.loaded$ and $shared \dres e.loaded$ are
+consistent class spaces.
+
+One of the main problems solved by OSGi R4 is how to match imports to
+exports in order to maintain proper consistency of class spaces
+and avoid certain kinds of type mismatches resulting in class loading
+failures, class cast exceptions, etc.
+
+The solution starts with a `module definition'.
+
+%=============================================================================
+\clearpage
+\section{Module Definition}
+\label{cha:moduledef}
+\textit{Insert the start of section in section 4.2 (Module Content)
+of the paper
+and intersperse the import/export related schemas into sections
+4.3 (Imported Packages) and 4.4 (Exported Packages).
+Insert the `matches' relation in section 4.8 (Module Resolution) of the paper.}
+
+A module system contains a collection of modules which share packages
+in various ways.
+
+Before we model the module system, we focus first on the definition of an
+individual module and secondly, in the next section, on the runtime state of
+an individual module.
+A module's definition identifies the module by module  name and
+module version.
+It also contains class definitions which are contained
+in the module and may be loaded by the module.
+
+\begin{schema}{ModuleId}
+  mname : MName \\
+  mver : MVer \\
+  mv : MV \\
+\where
+  mv = (mname, mver)
+\end{schema}
+
+\begin{schema}{\ModuleDefZero}
+  ModuleId \\
+  definitions : ClassSpace \\
+\where
+  mv = (mname, mver)
+\end{schema}
+
+A complete list of imported and exported classes would be hard to maintain.
+Also a given class module does not typically want an arbitrary mixture of
+classes from various sources.
+The OSGi design point is to make the Java package the minimum unit of
+resolution.
+
+Each package which a module exports has an export specification which
+specifies the module  name, module version, package version, and
+a set of matching attributes some of which must be supplied by an importer
+which wishes to use the exported package.
+The export specification may also require a matching importer to specify
+module  name or module version (or both).
+\begin{schema}{ExportSpec}
+  ModuleId \\
+  pver : PVer \\
+  attr : AMap \\
+  mandatory : \power AName \\
+\where
+  MNameAttr \notin \dom attr \\
+  mandatory \subseteq (\dom attr \cup \{ MNameAttr \}) \\
+\end{schema}
+
+Each package which a module imports has an import specification.
+
+A module name may be specified (using a singleton set) or not (using an empty set).
+Module versions may only be constrained if a module name has been specified.
+A range of acceptable module versions or package versions is represented as a set containing
+all the elements of the range.
+\begin{schema}{ImportSpec}
+  mname : \power MName \\
+  mver : \power MVer \\
+  pver : \power PVer \\
+  attr : AName \pfun AValue \\
+\where
+  \# mname \leq 1 \\
+  mname = \empty \implies mver = MVer \\
+  MNameAttr \notin \dom attr \\
+\end{schema}
+
+An export specification matches an import specification if and only if:
+\begin{itemize}
+\item any module
+ name, module versions, and package versions in the import specification are
+satisfied by exported module  name, module version, and package version,
+\item any arbitrary attributes specified in the import specification match the values specified
+in the export specification,
+\item any arbitrary attributes specified as mandatory in the export specification are specified
+in the import specification,
+\item if the export specification mandated the module  name, the import specification
+specifies the module  name.
+\end{itemize}
+\begin{axdef}
+  matches: ImportSpec \rel ExportSpec
+\where
+  \forall is : ImportSpec; es : ExportSpec @ \\
+\t1 is \mapsto es \in matches \iff \\
+\t2 is.mname = \empty \lor is.mname = \{ es.mname \} \land \\
+\t2 es.mver \in is.mver \land \\
+\t2 es.pver \in is.pver \land \\
+\t2 is.attr \subseteq es.attr \land \\
+\t2 es.mandatory \subseteq (\dom is.attr \cup \{ MNameAttr \}) \land \\
+\t2 MNameAttr \in es.mandatory \implies  is.mname \neq \empty \\
+\end{axdef}
+
+A module's definition identifies the packages the module imports and exports
+by providing corresponding import and export specifications.
+A module may provide at most
+one import specification for a given package name but it may have multiple
+export specifications for a given package name.
+
+A module may not name itself in an import specification.
+
+However a module can import and export the same package, although
+as we shall see later, such a package is defined by one and only one
+module.
+If a module imports and exports the same package,
+either the import or the
+export is honoured when the module is resolved and the other statement
+is disregarded.
+We add abbreviations for the sets of classes which may be exported
+and imported.
+\begin{schema}{ModuleDef}
+  \ModuleDefZero \\
+  exports : Package \rel ExportSpec \\
+  imports : Package \pfun ImportSpec \\
+  classExports, classImports : \power ClassName \\
+\where
+  \forall es : \ran exports @ es.mv = mv \\
+  \forall is : \ran imports @ mv \notin is.mname \cross is.mver \\
+  classExports = package \inv \limg \dom exports \rimg \\
+  classImports = package \inv \limg \dom imports \rimg \\
+\end{schema}
+
+%% OSGi uses package names, wild-carded expressions, and
+%% sequencing to build up rich sets of classes for sharing.
+%% The model here simply describes the outcome.
+%% $\dom imports$ and $\dom exports$ are the sets of \textit{potentially}
+%% imported and exported classes, respectively.
+%% We say \textit{potentially} because only classes which are actually
+%% available for import or export will actually be imported or exported.
+
+%% OSGi allows a class to be imported from any one of a number of modules.
+%% So we model $imports$ as a relation.
+
+%% OSGi allows a class to be exported globally or to one or more particular
+%% (\textit{friend}) modules.
+%% We allow for this by modelling $exports$ as a relation
+%% between class names and module  names: a particular class name in
+%% the domain of $exports$ would, in the case of a global export,
+%% relate to every possible module  name whereas, in the case of
+%% a more restrictive export, a class name would relate to fewer
+%% module  names.
+
+%=============================================================================
+\clearpage
+\section{Module}
+\label{cha:module}
+\textit{Insert this section in section 4.8 (Module Resolution) of the paper.}
+
+Based on its definition, a module loads classes either from its contents
+or by importing from another module\footnote{For the purposes of this
+model, we ignore the parent class loader}. 
+These loaded classes are modelled using various class spaces
+in addition to the module definition:
+\begin{description}
+\item[defined] classes loaded by the module\footnote{Strictly speaking,
+$defined$ models classes for which the module's class loader is the
+\textit{defining} loader.},
+\item[imported] classes imported from other modules.
+\end{description}
+Note that $defined$ and $imported$, together with the module's definition,
+determine the other class spaces:
+\begin{description}
+\item[loaded] all classes available to a module,
+\item[exported] classes exported to other modules,
+\item[private] classes loaded by the module which are not exported.
+\end{description}
+\begin{schema}{Module}
+  ModuleDef \\
+  defined : ClassSpace \\
+  imported : ClassSpace \\
+  loaded : ClassSpace \\
+  exported : ClassSpace \\
+  private : ClassSpace \\
+\where
+  defined \subseteq definitions \\
+  defined = classImports \ndres loaded \\
+  imported = classImports \dres loaded \\
+  exported = classExports \dres loaded \\
+  private = classExports \ndres loaded \\
+\end{schema}
+
+Some interesting properties follow.
+\begin{argue}
+  Module \vdash \\
+\t2 \langle defined, imported \rangle \partition loaded \land \\
+\t2 \langle private, exported \rangle \partition loaded \land \\
+\t2 package \limg \dom defined \rimg \cap \dom imports = \emptyset \land \\
+\t2 defined = definitions \cap (loaded \setminus imported) \\
+\end{argue}
+The defined and imported class spaces partition the loaded class space.
+The private and exported class spaces also partition the loaded class space.
+No classes are loaded locally which belong to imported packages.
+Locally loaded classes are precisely those which have local definitions
+and which have been loaded but not imported.
+
+The proofs of these properties is left as an exercise for the reader.
+
+%=============================================================================
+\clearpage
+\section{Module System}
+\label{cha:splat}
+\textit{Insert this section in section 4.8 (Module Resolution) of the paper.}
+
+To give an indication of how the pieces of the specification fit together,
+we model a service
+platform of installed modules ($m$)
+some of which are resolved and with a wiring function ($wire$) wiring together
+resolved modules for packages.
+\begin{schema}{ModuleSystemBase}
+  m : MV \pinj Module \\
+  resolved : \power MV \\
+  wire : MV \cross Package \pfun MV \\
+\where
+ \ran wire \subseteq resolved \\
+ resolved \subseteq \dom m \\
+ first~\limg \dom wire \rimg \subseteq resolved \\
+ (\forall mv  : resolved | (m~mv).imports \neq \emptyset @ mv \in first~\limg \dom wire \rimg )
+\end{schema}
+
+Note that the package wiring for a given package $p$ is described by the
+function $\lambda mv : MV @ wire~(mv, p)$.
+
+Two constraints must be satisfied. The first is that imports must be
+matched by exports.
+\begin{schema}{ImportExportMatching}
+  ModuleSystemBase \\
+\where
+  (\forall m1 : MV; p : Package | (m1, p) \in \dom wire @ \\
+\t1 p \in \dom (m~m1).imports \land \\
+\t1 p \in \dom ((m \circ wire)(m1, p)).exports \land \\
+\t1 (\LET is == (m~m1).imports~p @ \\
+\t2 (\exists es : (((m \circ wire)(m1, p)).exports) \limg \{ p \} \rimg @ \\
+\t3 (is, es) \in matches ))) \\
+\end{schema}
+
+The second is that matched importers and exporters are consistent.
+\begin{schema}{WiringConsistency}
+  ModuleSystemBase \\
+\where
+  \forall i, e : MV; p : Package | (i, p) \mapsto e \in wire @ \\
+\t1 \LET mi == m~i; me == m~e; c == package \inv \limg \{ p \} \rimg @ \\
+\t2 c \dres mi.imported \subseteq c \dres me.exported \\ 
+\end{schema}
+
+Then a module system must satisfy both constraints.
+\begin{zed}
+  ModuleSystem \defs ImportExportMatching \land WiringConsistency
+\end{zed}
+
+\begin{schema}{ResolveOk}
+ \Delta ModuleSystem \\
+ m? : MV \\
+ mdef? : ModuleDef \\
+\where
+ m? \notin \dom m \\
+ m? \in resolved' \\
+\end{schema}
+
+%=============================================================================
+\clearpage
+\section{Class Search Order}
+\label{cha:classsearchorder}
+\textit{Insert this section in section 4.9 (Run-time Class Search Order)
+of the paper.}
+
+Although we have avoided modelling the parent class loader and Require-Bundle
+so far, it is essential to see how these features combine into the final
+class search order.
+We add the parent class loader in, modelled as a top loader, and the
+contribution of all required modules modelled as a class space.
+We also model the search order explicitly as a class space.
+\begin{schema}{CompleteModule}
+  parent : TopLoader \\
+  required : ClassSpace \\
+  search : ClassSpace \\
+  ModuleDef \\
+  defined : ClassSpace \\
+  imported : ClassSpace \\
+  loaded : ClassSpace \\
+  exported : ClassSpace \\
+  private : ClassSpace \\
+\where
+  (classImports \cup classExports) \cap javaClasses = \emptyset \\
+  classImports \cap \dom required = \emptyset \\
+  loaded = (defined \cup required \cup imported) \\
+\t2 \oplus (javaClasses \dres parent.loaded) \\
+  search = ((classImports \ndres (definitions \oplus required)) \cup imported) \\
+\t2 \oplus (javaClasses \dres parent.definitions) \\
+  defined \subseteq definitions \\
+  defined = ((classImports \cup javaClasses) \ndres loaded) \setminus required \\
+  imported = classImports \dres loaded \\
+  exported = classExports \dres loaded \\
+  private = classExports \ndres loaded \\
+\end{schema}
+Neither imports not exports may specify packages beginning with ``java.''.
+Required classes do not include any classes which are specified as imports.
+
+Loaded classes consist of those defined by the module, those required from other modules,
+those imported from other modules, but all overridden with the parent class loader's packages
+which begin with ``java.''.
+
+The search order reflects the parent class loader being searched for packages beginning with
+``java.'', and then imported packages, and then required and defined classes which do not
+belong to impored packages.
+
+The defined classes are those which are loaded but not inherited from the parent, imported,
+or required.
+Imported classes are those which are loaded and which belong to imported packages.
+Exported classes are those which are loaded and which belong to exported packages.
+Private classes are those which are loaded but which do not belong to exported packages.
+%=============================================================================
+\newpage
+\section{Z Notation}
+\label{cha:znot}
+
+\makeatletter % the following code is taken from Mike Spivey's zed.tex
+
+\def\symtab{\setbox0=\vbox\bgroup \def\\{\cr}
+        \halign\bgroup\strut$##$\hfil&\quad##\hfil\cr}
+\def\endsymtab{\crcr\egroup\egroup
+        \dimen0=\ht0 \divide\dimen0 by2 \advance\dimen0 by\ht\strutbox
+        \splittopskip=\ht\strutbox \vbadness=10000
+        \predisplaypenalty=0
+        $$\halign{##\cr\hbox to\linewidth{% 
+                \valign{##\vfil\cr
+                        \setbox1=\vsplit0 to\dimen0 \unvbox1\cr 
+                        \noalign{\hfil}\unvbox0\cr
+                        \noalign{\hfil}}}\cr 
+                \noalign{\prevdepth=\dp\strutbox}}$$
+        \global\@ignoretrue}
+
+\makeatother 
+
+Numbers:
+\begin{symtab}
+        \nat & \verb/Natural numbers/ \{\verb/0,1,.../\} \\
+%       \num & \verb/Integers (...,-1,0,1,...)/ \\
+%       \nat_1 & \verb/Positive natural numbers/ \\
+%       \upto & \verb/integral range/ \\
+%       + & \verb/Addition/\quad\hfill 3 \\
+%       - & \verb/Subtraction/\quad\hfill 3 \\
+%       * & \verb/Multiply/\quad\hfill 4 \\
+%       \div & \verb/Remainder/\quad\hfill 4 \\
+%       \mod & \verb/Modulus/\quad\hfill 4 \\
+%       < & \verb/Less than/ \\
+%       > & \verb/Greater than/ \\
+%       \leq & \verb/Less than or equal/ \\
+%       \geq & \verb/Greater than or equal/ \\
+%       \neq & \verb/Inequality/ \\
+\end{symtab}
+Propositional logic and the schema calculus:
+\begin{symtab}
+%       \lnot & \verb/Not/ \\
+        \ldots\land\ldots & \verb/And/ \\
+        \ldots\lor\ldots & \verb/Or/ \\
+        \ldots\implies\ldots & \verb/Implies/ \\
+%       \iff & \verb/If and only if/ \\
+        \forall..\mid..\spot.. & \verb/For all/ \\
+        \exists..\mid..\spot.. & \verb/There exists/ \\
+%       \exists_1..\mid..\spot.. & \verb/There exists unique/ \\
+        \ldots\hide\ldots & \verb/Hiding/ \\
+%       \project & \verb/\project/ \\
+%       \pre & \verb/\pre/ \\
+%       \semi & \verb/\semi/
+        \ldots\defs\ldots & \verb/Schema definition/ \\
+        \ldots==\ldots & \verb/Abbreviation/ \\
+        \ldots::=\ldots\mid\ldots & \verb/Free type definition/ \\
+        \ldata\ldots\rdata & \verb/Free type injection/ \\
+        [\ldots] & \verb/Given sets/ \\
+        ',?,!,_0\ldots_9 & \verb/Schema decorations/ \\
+        \ldots\shows\ldots & \verb/theorem/ \\
+        \theta\ldots & \verb/Binding formation/ \\
+        \lambda\ldots & \verb/Function definition/ \\
+        \mu\ldots & \verb/Mu-expression/ \\
+        \Delta\ldots & \verb/State change/ \\
+        \Xi\ldots & \verb/Invariant state change/ \\
+\end{symtab}
+Sets and sequences:
+%and bags:
+\begin{symtab}
+        \{\ldots\} & \verb/Set/ \\
+        \{..\mid..\spot..\} & \verb/Set comprehension/ \\
+        \power\ldots & \verb/Set of subsets of/ \\
+%       \power_1 & \verb/Non-empty subsets of/ \\
+%       \finset & \verb/Finite sets/ \\
+%       \finset_1 & \verb/Non-empty finite sets/ \\
+        \emptyset & \verb/Empty set/ \\
+        \ldots\cross\ldots & \verb/Cartesian product/ \\
+        \ldots\in\ldots & \verb/Set membership/ \\
+        \ldots\notin\ldots & \verb/Set non-membership/ \\
+        \ldots\cup\ldots & \verb/Union/ \\
+        \ldots\cap\ldots & \verb/Intersection/ \\
+        \ldots\setminus\ldots & \verb/Set difference/ \\
+        \bigcup\ldots & \verb/Distributed union/ \\
+%       \bigcap & \verb/Distributed intersection/ \\
+        \#\ldots & \verb/Cardinality/ \\
+%       \dcat & \verb/Distributed sequence concatenation/
+        \ldots\subseteq\ldots & \verb/Subset/ \\
+        \ldots\subset\ldots & \verb/Proper subset/ \\
+        \ldots\partition\ldots & \verb/Set partition/ \\
+        \seq & \verb/Sequences/ \\
+%       \seq_1 & \verb/Non-empty sequences/ \\
+%       \iseq & \verb/Injective sequences/ \\
+        \langle\ldots\rangle & \verb/Sequence/ \\
+%       \cat & \verb/Sequence concatenation/ \\
+        \disjoint\ldots & \verb/Disjoint sequence of sets/ \\
+%       \bag & \verb/Bags/ \\
+%       \lbag\ldots\rbag & \verb/Bag/ \\
+%       \inbag & \verb/Bag membership/ \\
+\end{symtab}
+%Here are the infix function symbols. Each symbol is
+%shown with its priority:
+%\begin{symtab}
+%       \uplus & \verb/\uplus/ \\
+%       \filter & \verb/Schema projection/ \\
+%       \uminus & \verb/\uminus/
+%\end{symtab}
+Functions and relations:
+\begin{symtab}
+        \ldots\rel\ldots  & \verb/Relation/ \\
+        \ldots\pfun\ldots & \verb/Partial function/ \\
+        \ldots\fun\ldots  & \verb/Total function/ \\
+        \ldots\pinj\ldots & \verb/Partial injection/ \\
+        \ldots\inj\ldots  & \verb/Injection/ \\
+%       \psurj & \verb/Partial surjection/ \\
+%       \surj & \verb/Surjection/ \\
+%       \bij  & \verb/Bijection/ \\
+%       \ffun & \verb/Finite partial function/ \\
+%       \finj & \verb/Finite partial injection/ \\
+        \dom\ldots & \verb/Domain/ \\
+        \ran\ldots & \verb/Range/ \\
+        \ldots\mapsto\ldots & \verb/maplet/ \\
+        \ldots\inv & \verb/Relational inverse/ \\
+%       \ldots\plus & \verb/Transitive closure/ \\
+        \ldots\star & \verb/Reflexive-transitive closure/ \\
+%       \ldots\bsup n \esup & \verb/Relational iteration/ \\
+        \ldots\limg\ldots\rimg & \verb/Relational image/ \\
+%       \comp & \verb/Forward relational composition/ \\
+%       \circ & \verb/Relational composition/ \\
+        \ldots\oplus\ldots & \verb/Functional overriding/ \\
+        \ldots\dres\ldots & \verb/Domain restriction/ \\
+%       \ldots\rres\ldots & \verb/Range restriction/ \\
+        \ldots\ndres\ldots & \verb/Domain subtraction/ \\
+%       \ldots\nrres\ldots & \verb/Range subtraction/ \\
+%       \id & \verb/Identity relation/ \\
+\end{symtab}
+Axiomatic descriptions:
+%%unchecked
+\begin{axdef}
+  Declarations
+\where
+  Predicates
+\end{axdef}
+Schema definitions:
+%%unchecked
+\begin{schema}{SchemaName}
+  Declaration
+\where
+  Predicates
+\end{schema}
+\end{document}

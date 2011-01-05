@@ -1,0 +1,335 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+\markboth{Unclassified, v0.1}{Unclassified, v0.1}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 2 pt
+\parindent 10 pt
+
+\title{A Formal Model of the OSGi Web Container (0.1)}
+\author{Rob Harrop}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+We model aspects of OSGi Web Container (RFC66).
+
+%\clearpage
+%\pagenumbering{roman}
+%\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+%\renewcommand{\empty}{\emptyset}
+\newcommand{\ModuleDefZero}{ModuleDef_0}
+\newcommand{\ModuleDefOne}{ModuleDef_1}
+\newcommand{\ModuleDefTwo}{ModuleDef_2}
+\newcommand{\ModuleDefThree}{ModuleDef_3}
+\newcommand{\ModuleDefFour}{ModuleDef_4}
+\newcommand{\defaultsTo}{\mathbin{\sf defaultsTo}}
+
+%=============================================================================
+\clearpage
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+\section{Introduction}
+
+This specification describes the OSGi Web Container service. The Web Container service extends an OSGi service platform to support the installation of WAR files adhering to the Servlet 2.5 specification.
+
+The Web Container provides no new installation artefacts for the OSGi service platform. Instead, WAR files are installed into the service platform as standard OSGi bundles. 
+
+The Web Container provides an \emph{extender} that recognises bundles that are also valid WAR files. We refer to these bundles as \emph{WAR bundles}. The extender reacts to {\tt STARTED} and {\tt STOPPED} events on these WAR bundles and starts and stops the corresponding web application appropriately.
+
+The Web Container provides two main installation modes. The first mode allows a WAR bundle to be installed directly into the Web Container. In this mode, the Web Container performs no transformations to the bundle during or after installation.
+
+The second mode allows for WAR files to be transformed during installation, with the container ensuring that result is a valid WAR bundle. The transformation process is complex and considers input from three sources. It should be noted that the WAR file going through the transformation may already be a valid WAR bundle. This specification aims to capture the exact semantics of the transformations being performed.
+
+\begin{thebibliography}{99}
+    \bibitem{OSGi} OSGi Service Platform Core Specification v4.1, April 2007 {\tt http://www.OSGi.org}
+    \bibitem{Servlet 2.5} Servlet 2.5 Specification \\
+      {\tt http://jcp.org/aboutJava/communityprocess/mrel/jsr154/index2.html}
+    \bibitem{Extender Model} The OSGi Extender Model \\
+    {\tt http://www.osgi.org/blog/2007/02/osgi-extender-model.html}
+\end{thebibliography}
+    
+%=============================================================================
+\clearpage
+\section{Basic Types}
+\label{cha:basictypes}
+
+We are interested in various identifiers, names, versions and attributes of both bundles and WARs.
+
+\subsection{Identifying Bundles}
+
+Bundles are uniquely identified by their symbolic name and version
+\begin{zed}
+	[SymbolicName, Version]
+\end{zed}
+
+We are interested in the ordering of Versions. There is an earliest version number which we can name here. All other versions are later than this one. 
+
+\begin{axdef}
+ 	EARLIEST\_VERSION : Version
+\end{axdef}
+
+We define a relation between all Versions and the Versions that are greater than or equal to those Versions
+
+\begin{axdef}
+vgeq : Version \rel Version
+\where
+\forall v : \dom vgeq @ v \mapsto v \in vgeq \\
+\forall v1, v2 : \dom vgeq | v1 \neq v2 @ v1 \mapsto v2 \in vgeq \implies v2 \mapsto v1 \notin vgeq \\
+\lnot (\exists v : \dom vgeq | v \neq EARLIEST\_VERSION \\
+\t1 @ v \mapsto EARLIEST\_VERSION \in vgeq) \\
+\end{axdef}
+
+\subsection{Bundle Manifest Versions}
+
+Bundles have a {\tt Bundle-ManifestVersion} that controls the behaviour applied to the bundle by the OSGi Service Platform. {\tt Bundle-ManifestVersions} are simply numbers:
+
+\begin{zed}
+	BundleManifestVersion == \nat
+\end{zed}
+
+\subsection{Bundle Class Path}
+
+Each bundle has a private class path. The class path is made up of class path entries:
+
+\begin{zed}
+	[BundleClassPathEntry]
+\end{zed}
+
+\subsection{Imports and Exports}
+
+Bundles may import and export zero or more packages. An imported package is quite different from an exported package
+
+\begin{zed}
+	[PackageName]
+\end{zed}
+
+\begin{schema}{ImportedPackage}
+name: PackageName \\
+version: Version
+\end{schema}
+
+\begin{zed}
+	[ExportedPackage]
+\end{zed}
+
+All WAR files and bundles have a file name associated with them
+
+\begin{zed}
+	[FileName]
+\end{zed}
+
+%=============================================================================
+\clearpage
+\section{Transformation}
+\label{cha:transformation}
+
+The transformation process takes a WAR file and generates a valid bundle. 
+
+Transformations to a given property in the WAR generally operate on the value of the property in the WAR, an optional user value for this property and a default value for this property. 
+
+\subsection{Bundle Symbolic Name Transformation}
+
+For the purpose of this specification we only allow bundles that comply with OSGi R4.1 or above. Therefore, all bundles must have a symbolic name
+
+\begin{schema}{BundleSN}
+bsn: SymbolicName
+\end{schema}
+
+WAR files optionally have a symbolic name
+
+\begin{schema}{WarSN}
+wsn: Opt~SymbolicName
+\end{schema}
+
+A mechanism exists for translating the file name of the WAR into a suitable symbolic name.
+
+\begin{axdef}
+defaultSymbolicName: FileName \fun SymbolicName
+\end{axdef}
+
+WAR symbolic  name are transformed into Bundle symbolic names according to the following rules:
+\begin{itemize}
+\item if the user supplies a symbolic name it is used; otherwise
+\item if the WAR already has a symbolic name it is used; otherwise
+\item a symbolic name is generated from the file name
+\end{itemize}
+
+\begin{schema}{TransformSN}
+WarSN \\
+BundleSN' \\
+usn? : Opt~SymbolicName \\
+fn? : FileName \\
+\where
+bsn' = usn? \defaultsTo  (wsn \defaultsTo  (defaultSymbolicName ~ fn? ) )
+\end{schema}
+
+\subsection{Bundle Version Transformation}
+
+Bundles must have a version
+
+\begin{schema}{BundleVersion}
+bv: Version
+\end{schema}
+
+WARs may optionally have a version
+
+\begin{schema}{WarVersion}
+wv: Opt ~ Version
+\end{schema}
+
+WAR versions are transformed into Bundle versions according to the following rules:
+
+\begin{itemize}
+\item if the user supplies a version it is used; otherwise
+\item if the WAR already has a version it is used; otherwise
+\item the default {\tt EARLIEST\_VERSION} is used
+\end{itemize}
+
+\begin{schema}{TransformVersion}
+WarVersion \\
+BundleVersion' \\
+uv?: Opt ~ Version
+\where
+bv' = uv? \defaultsTo  (wv \defaultsTo  EARLIEST\_VERSION)
+\end{schema}
+
+\subsection{Bundle Manifest Version Transformation}
+
+Bundles must have a bundle manifest version of at least 2
+
+\begin{schema}{BundleMV}
+bmv : BundleManifestVersion \\
+\where
+bmv \geq 2 \\
+\end{schema}
+
+WARs may optionally have a manifest version. There is no restriction on the value of a WARs bundle manifest version
+
+\begin{schema}{WarMV}
+wmv : Opt ~ BundleManifestVersion \\
+\end{schema}
+
+WAR bundle manifest versions are transformed into bundle manifest versions according to the following rules
+
+\begin{itemize}
+\item if the user supplies a bundle manifest version greater than 2 it will be used; otherwise
+\item if the WAR contains a bundle manifest version greater than 2 it will be used; otherwise
+\item the bundle manifest version is set to 2 
+\end{itemize}
+
+You should note that the bundle manifest version must always be at least 2.
+
+\begin{schema}{TransformMV}
+WarMV \\
+BundleMV' \\
+umv? : Opt ~ BundleManifestVersion \\
+\where
+\LET mv == umv? \defaultsTo (wmv \defaultsTo 2) @ \\
+\t1 mv \geq 2 \implies bmv' = mv \land mv < 2 \implies bmv' = 2
+\end{schema}
+
+\subsection{Bundle Class Path Transformation}
+
+All bundles have a class path with at least one entry. The bundle class path cannot have duplicate entries.
+
+\begin{schema}{BundleClassPath}
+bcp: \iseq BundleClassPathEntry
+\where
+\# bcp > 0 \\
+\end{schema}
+
+WARs need not have bundle class path entries already, and they may have duplicates entries.
+
+\begin{schema}{WarClassPath}
+wcp: \seq BundleClassPathEntry
+\end{schema}
+
+The transformation process of the WAR class path must transform the bundle class path to meet the following constraints:
+
+\begin{itemize}
+\item all unique entries in the class path of the WAR must be present in the transformed class path
+\item {\tt WEB-INF/classes} must be the first entry in the transformed class path
+\item all library JARs in {\tt WEB-INF/lib} must have a corresponding in the transformed class path
+\end{itemize}
+
+We need a way to represent the {\tt WEB-INF/classes} bundle class path entry 
+
+\begin{axdef}
+WEB\_INF\_CLASSES : BundleClassPathEntry \\ 
+\end{axdef}
+
+We also need a way to represent library JARs
+
+\begin{zed}
+	[Lib]
+\end{zed}
+
+A library JAR can be converted into a class path entry
+
+\begin{axdef}
+libToClassPath : Lib \fun BundleClassPathEntry \\
+\end{axdef}
+
+Thus the bundle class path transformation is defined as 
+
+\begin{schema}{TransformBundleClassPath}
+WarClassPath \\
+BundleClassPath' \\
+libs? : \power Lib \\
+\where
+\ran wcp \subseteq \ran bcp' \\
+libToClassPath \limg libs? \rimg \subseteq \ran bcp' \\
+head ~ bcp' = WEB\_INF\_CLASSES \\
+\end{schema}
+
+\subsection{Import Package Transformation}
+
+A bundle can import any number of packages. It may only import a package with a given name once
+
+\begin{schema}{BundleImports}
+bi: \power ImportedPackage \\
+\where
+\forall p1, p2 : bi | p1.name = p2.name @ p1 = p2 \\
+\end{schema}
+
+A WAR may import any number of packages. There are no restrictions on the packages imported
+
+\begin{schema}{WarImports}
+wi : \power ImportedPackage \\
+\end{schema}
+
+\begin{schema}{TransformImports}
+WarImports \\
+BundleImports' \\
+ui? : \power ImportedPackage \\
+
+\end{schema}
+
+\subsection{Full Transformation}
+
+\begin{zed}
+Bundle \defs BundleSN \land BundleVersion \land BundleMV \land BundleClassPath
+\end{zed}
+
+\begin{zed}
+War \defs WarSN \land WarVersion \land WarMV \land WarClassPath
+\end{zed}
+
+\begin{zed}
+TransformWarToBundle \defs TransformSN \land TransformVersion \\
+\t1 \land TransformMV \land TransformBundleClassPath 
+\end{zed}
+
+\end{document}
