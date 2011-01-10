@@ -7,7 +7,7 @@
 \parskip 6 pt
 \parindent 0 pt
 
-\title{Regions in Virgo (v0.1)}
+\title{Regions in Virgo (v0.2)}
 \author{Glyn Normington}
 \maketitle
 % The following three commands ensure the title page is stamped as
@@ -87,6 +87,39 @@ filter g.
 Unlike OSGi package imports between bundles, imports between regions are transitive.
 So region C can see bundles, exported packages, and services from region A, subject to filters g and h.
 
+\subsection{Resolver Hook}
+
+The resolver hook limits the exported packages that the bundles in a given region may wire to, depending on
+the region containing the bundle that exports each candidate exported package and the filters between the
+regions.
+
+For example, Figure \ref{fig:pfilt} shows a bundle Z being resolved which imports packages p and q. Bundle X
+in region B exports both p and q while bundle Y in region B exports only p.
+
+Region A is connected to region B with a filter that allows only package p to be seen by region A.
+The net effect is that the import of p may be satisfied by either bundle X or Y but the import of package q may not
+be satisfied by bundle X since q is filtered out.
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{package-filtering.pdf}
+\caption{Package Filtering}
+\end{center}
+\label{fig:pfilt}
+\end{figure}
+
+Another example in Figure \ref{fig:tpfilt} shows a package p transitively visible through two filters via an
+intermediate region.
+
+Bundle Z may wire to bundle X or bundle Y for package p, but not for packages q and r which are both
+filtered out on the way from C to A.
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{transitive-package-filtering.pdf}
+\caption{Transitive Package Filtering}
+\end{center}
+\label{fig:tpfilt}
+\end{figure}
+
 %=============================================================================
 \clearpage
 \section{Basic Types}
@@ -143,17 +176,17 @@ We define some helper functions.
 \begin{axdef}
   bid : Bundle \fun (BSN \cross BVer) \\
 \where
-  bid =  (\lambda b : Bundle @ (b.name, b.version)) \\
+  bid =  (\lambda Bundle @ (name, version)) \\
 \end{axdef}
 \begin{axdef}
   bundlePkgs : Bundle \fun \power Package \\
 \where
- bundlePkgs = (\lambda b : Bundle @ b.exportedPackages) \\
+ bundlePkgs = (\lambda Bundle @ exportedPackages) \\
 \end{axdef}
 \begin{axdef}
   bundleSvcs : Bundle \fun \power Service \\
 \where
- bundleSvcs = (\lambda b : Bundle @ b.publishedServices) \\
+ bundleSvcs = (\lambda Bundle @ publishedServices) \\
 \end{axdef}
 
 %=============================================================================
@@ -212,22 +245,22 @@ We define some helper functions.
 \begin{axdef}
   regionBundles : Region \fun \power Bundle \\
 \where
- regionBundles = (\lambda r : Region @ r.bundles) \\
+ regionBundles = (\lambda Region @ bundles) \\
 \end{axdef}
 \begin{axdef}
   regionPkgs : Region \fun \power Package \\
 \where
- regionPkgs = (\lambda r : Region @ r.pkg) \\
+ regionPkgs = (\lambda Region @ pkg) \\
 \end{axdef}
 \begin{axdef}
   regionSvcs : Region \fun \power Service \\
 \where
- regionSvcs = (\lambda r : Region @ r.svc) \\
+ regionSvcs = (\lambda Region @ svc) \\
 \end{axdef}
 \begin{axdef}
   regionLoc : Region \fun (BLoc \pinj Bundle) \\
 \where
- regionLoc = (\lambda r : Region @ r.l) \\
+ regionLoc = (\lambda Region @ l) \\
 \end{axdef}
 
 We define a nil region.
@@ -244,17 +277,21 @@ Regions with consistent partitioning may be combined to produce a composite regi
 \begin{axdef}
  \_ \sqcup \_ : Region \cross Region \pfun Region \\
 \where
- (\_ \sqcup \_) = \{ r1, r2, r3 : Region | \\
-\t1 r3.nv = r1.nv \cup r2.nv \land \\
-\t1 r3.l = r1.l \cup r2.l \land \\
-\t1 r3.pkg = r1.pkg \cup r2.pkg \land \\
-\t1 r3.svc = r1.svc \cup r2.svc @ \\
-\t2 ((r1, r2), r3) \}
+ (\_ \sqcup \_) = (\lambda r1, r2 : Region @ \\
+\t3 (\mu Region | \\
+\t4 bundles = r1.bundles \cup r2.bundles \land \\
+\t4 pkg = r1.pkg \cup r2.pkg \land \\
+\t4 svc = r1.svc \cup r2.svc)) \\
 \end{axdef}
+The precondition of $\sqcup$ is that the input regions have consistent bundle spaces, that is no bundle in one
+region has the same symbolic name and version as a distinct bundle in the other region.
+Also, no bundle in one region has the same location as a distinct bundle in the other region.
+Also, no bundle in one region may export the same package as a distinct bundle in the other region.
+Also, no bundle in one region may publish the same service as a distinct bundle in the other region.
 
 $\sqcup$ is idempotent, commutative, and associative and $NIL$ acts as a zero.
 \begin{argue}
-  \shows \forall r, s,t : Region | \{ (r, s), (s, t) \} \subseteq \dom(\_ \sqcup \_) @ \\
+  \shows \forall r, s,t : Region | \{ (r, s), (s, t), (t, r) \} \subseteq \dom(\_ \sqcup \_) @ \\
 \t1 (r, r) \in \dom(\_ \sqcup \_) \land r \sqcup r = r \land \\
 \t1 r \sqcup s = s \sqcup r \land \\
 \t1 r \sqcup (s \sqcup t) = (r \sqcup s) \sqcup t \land \\
@@ -293,7 +330,7 @@ and a convenience set containing all the valid region identifiers.
  (regionBundles \circ reg) \partition allBundles \\
  (regionPkgs \circ reg) \partition allPackages \\
  (regionSvcs \circ reg) \partition allServices \\
- breg = \{ b : allBundles; rid : \dom reg | b \in regionBundles~(reg~rid) @ (b, rid) \} \\
+ breg = (\lambda b : allBundles @ (\mu rid : \dom reg | b \in regionBundles~(reg~rid))) \\
  rids = \dom reg \\
  (regionLoc \circ reg) \partition ls \\
 \end{schema}
@@ -370,20 +407,28 @@ We also define the most permissive filter.
 %%inop \wr 3
 We define an infix $\wr$ operator to apply a filter to a region and produce another region.
 \begin{axdef}
-  \_ \wr \_ : Region \cross Filter \pfun Region \\
+  \_ \wr \_ : Region \cross Filter \fun Region \\
 \where
-  (\_ \wr \_) = \{ r1, r2 : Region; f : Filter | \\
-\t1 r2.bundles = \{ b : r1.bundles | (bid~b) \in f.bf @ xb(b, f) \} \land \\
-\t1 r2.nv = f.bf \dres r1.nv \land \\
-\t1 r2.l = r2.nv \circ bid \circ r1.l \land \\
-\t1 r2.pkg = r1.pkg \cap f.pf \land \\
-\t1 r2.svc = r1.svc \cap f.sf @ \\
-\t2 ((r1, f), r2) \} \\
+  (\_ \wr \_) = (\lambda r : Region;  f : Filter @ \\
+\t3   (\mu Region | \\
+\t4 bundles = \{ b : r.bundles | (bid~b) \in f.bf @ xb(b, f) \} \land \\
+\t4 nv = f.bf \dres r.nv \land \\
+\t4 l = nv \circ bid \circ r.l \land \\
+\t4 pkg = r.pkg \cap f.pf \land \\
+\t4 svc = r.svc \cap f.sf )) \\
 \end{axdef}
+$\wr$ is total since packages and services not filtered out which are exported or published by a
+bundle which \textit{is} filtered out end up
+in the resultant region's imported packages and imported services sets, respectively.
 
 The most permissive filter can be applied to any region without effect.
 \begin{argue}
   \shows \forall r : Region @ r \wr TOP = r \\
+\end{argue}
+
+Filters can be applied in any order with the same effect.
+\begin{argue}
+  \shows \forall r : Region; f, g : Filter @ (r \wr f) \wr g = (r \wr g) \wr f \\
 \end{argue}
 
 %=============================================================================
@@ -435,6 +480,37 @@ We now describe the behaviour of the hooks in terms of the system of connected r
   listeners? \subseteq allBundles \\
   fl! = \{ l : listeners? | eb? \in (squash(breg~l)).bundles \} \\
 \end{schema}
+
+\begin{schema}{ResolveHookFilterMatches}
+  \Xi ConnectedRegions \\
+  requirer? : Bundle \\
+  candidates? : \power Package \\
+  filtered! : \power Package \\
+\where
+  requirer? \in allBundles \\
+  filtered! = candidates? \cap (squash(breg~requirer?)).pkg \\
+\end{schema}
+
+\begin{schema}{ServiceFindHook}
+  \Xi ConnectedRegions \\
+  finder? : Bundle \\
+  candidates? : \power Service \\
+  found! : \power Service \\
+\where
+  finder? \in allBundles \\
+  found! = candidates? \cap (squash(breg~finder?)).svc \\
+\end{schema}
+
+\begin{schema}{ServiceEventHook}
+  \Xi ConnectedRegions \\
+  listeners? : \power Bundle \\
+  es? : Service \\
+  fl! : \power Bundle \\
+\where
+  listeners? \subseteq allBundles \\
+  fl! = \{ l : listeners? | es? \in (squash(breg~l)).svc \} \\
+\end{schema}
+
 
 %=============================================================================
 \newpage
