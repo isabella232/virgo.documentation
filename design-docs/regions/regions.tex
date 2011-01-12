@@ -261,28 +261,6 @@ the given bundle's symbolic name and bundle version or a bundle with the given b
   importedSvc' = importedSvc \\
 \end{schema}
 
-We define some helper functions.
-\begin{axdef}
-  regionBundles : Region \fun \power Bundle \\
-\where
- regionBundles = (\lambda Region @ bundles) \\
-\end{axdef}
-\begin{axdef}
-  regionPkgs : Region \fun \power Package \\
-\where
- regionPkgs = (\lambda Region @ pkg) \\
-\end{axdef}
-\begin{axdef}
-  regionSvcs : Region \fun \power Service \\
-\where
- regionSvcs = (\lambda Region @ svc) \\
-\end{axdef}
-\begin{axdef}
-  regionLoc : Region \fun (BLoc \pinj Bundle) \\
-\where
- regionLoc = (\lambda Region @ l) \\
-\end{axdef}
-
 We define a nil region.
 \begin{axdef}
   NIL : Region \\
@@ -339,35 +317,20 @@ Since $\sqcup$ is commutative and associative, so we define a distributed form.
 \section{Multiple Regions}
 \label{cha:multiregions}
 
-A system of multiple regions has an indexed collection of regions, a set of bundles known to the
-system, a set of exported packages, and a set of services.
-The regions partition the set of all known bundles, the exported packages, and the services.
-Bundles in the system of multiple regions are uniquely identified by their location.
-
-The system also have a convenience function for determining a bundle's region identifier
-and a convenience set containing all the valid region identifiers.
+A system of multiple regions has an indexed collection of regions, a convenience of all the
+region identifiers in the system, and a function for
+determining the region identifier of any bundle in the system.
 \begin{schema}{Regions}
   reg : RId \pfun Region \\
   allBundles : \power Bundle \\
-  allPackages : \power Package \\
-  allServices : \power Service \\
-  ls : BLoc \pinj Bundle \\
-  breg : Bundle \pfun RId \\
   rids : \power RId \\
+  breg : Bundle \pfun RId \\
 \where
- (regionBundles \circ reg) \partition allBundles \\
- (regionPkgs \circ reg) \partition allPackages \\
- (regionSvcs \circ reg) \partition allServices \\
- breg = (\lambda b : allBundles @ (\mu rid : \dom reg | b \in regionBundles~(reg~rid))) \\
+ allBundles = \bigcup \{ r : \ran reg@ r.bundles \} \\
  rids = \dom reg \\
- (regionLoc \circ reg) \partition ls \\
+ breg = \{ b : Bundle; rid : rids | b \in (reg~rid).bundles @ (b, rid) \} \\
 \end{schema}
-
-Each bundle in the system has an associated region.
-\begin{argue}
-  Regions \shows \dom breg = allBundles \\
-\end{argue}
-This follows easily from $(regionBundles \circ reg) \partition allBundles$.
+Since $breg$ is a function, no bundle can belong to more than one region.
 
 We expose the convenience function as an operation for determining a bundle's region.
 This function is well defined thanks to the preceding theorem.
