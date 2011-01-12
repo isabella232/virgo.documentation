@@ -83,6 +83,60 @@ filter g.
 Unlike OSGi package imports between bundles, imports between regions are transitive.
 So region C can see bundles, exported packages, and services from region A, subject to filters g and h.
 
+We now consider visibility from the perspective of each of the framework hooks.
+
+\subsection{Bundle Find Hook}
+
+The bundle find hooks limits the bundles that a bundle in a given region sees when listing bundles using
+\texttt{BundleContext.getBundles}.
+
+For example, Figure \ref{fig:bfind} shows a bundle W which finds bundles W, X, and Y.
+It does not find Z which is filtered out. 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{bundle-find.pdf}
+\caption{Bundle Find \label{fig:bfind}}
+\end{center}
+\end{figure}
+
+\subsection{Bundle Event Hook}
+
+The bundle event hooks limits the bundle events that a bundle listener in a given region receives.
+
+For example, Figure \ref{fig:bevent} shows a bundle W which has a bundle listener.
+Bundle W's bundle listener receives events for W, X, and Y. It does not receive events for bundle Z which is filtered out. 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{bundle-event.pdf}
+\caption{Bundle Event \label{fig:bevent}}
+\end{center}
+\end{figure}
+
+\subsection{Service Find Hook}
+
+The service find hooks limits the services that a bundle in a given region sees when looking up services.
+
+For example, Figure \ref{fig:sfind} shows a bundle W which can look up services s and t but not u which is filtered out.
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{service-find.pdf}
+\caption{Service Find \label{fig:sfind}}
+\end{center}
+\end{figure}
+
+\subsection{Service Event Hook}
+
+The service event hooks limits the service events that a service listener in a given region receives.
+
+For example, Figure \ref{fig:sevent} shows a bundle W which has a service listener.
+Bundle W's service listener receives events for s and t. It does not receive events for service u which is filtered out. 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{service-event.pdf}
+\caption{Service Event \label{fig:sevent}}
+\end{center}
+\end{figure}
+
 \subsection{Resolver Hook}
 
 The resolver hook limits the exported packages that the bundles in a given region may wire to, depending on
@@ -98,9 +152,8 @@ be satisfied by bundle X since q is filtered out.
 \begin{figure}[h!]
 \begin{center}
 \includegraphics*[scale=0.4]{package-filtering.pdf}
-\caption{Package Filtering}
+\caption{Package Filtering \label{fig:pfilt}}
 \end{center}
-\label{fig:pfilt}
 \end{figure}
 
 Another example in Figure \ref{fig:tpfilt} shows a package p transitively visible through two filters via an
@@ -111,9 +164,8 @@ filtered out on the way from C to A.
 \begin{figure}[h!]
 \begin{center}
 \includegraphics*[scale=0.4]{transitive-package-filtering.pdf}
-\caption{Transitive Package Filtering}
+\caption{Transitive Package Filtering \label{fig:tpfilt}}
 \end{center}
-\label{fig:tpfilt}
 \end{figure}
 
 %=============================================================================
@@ -250,7 +302,7 @@ A region is a linked region with derived sets of all packages and all services.
 
 A bundle can be added to a region provided the region does not already contain a bundle with
 the given bundle's symbolic name and bundle version or a bundle with the given bundle's location.
-\begin{schema}{AddBundleOk}
+\begin{schema}{RegionAddBundleOk}
   \Delta Region \\
   b? : Bundle \\
 \where
@@ -342,6 +394,22 @@ This function is well defined thanks to the preceding theorem.
   b? \in allBundles \\
   r! = reg(breg~b?) \\
 \end{schema}
+
+We define a promotion schema.
+\begin{schema}{PromoteRegion}
+  \Delta Regions \\
+  \Delta Region \\
+  rid? : RId \\
+\where
+  rid? \in \dom reg \\
+  \theta Region = reg~rid? \\
+  reg' = reg \oplus \{ rid? \mapsto \theta Region' \} \\
+\end{schema}
+
+Then we promote the operation to add a bundle.
+\begin{zed}
+  RegionsAddBundleOk \defs (\exists \Delta Region @ PromoteRegion \land RegionAddBundleOk) \\
+\end{zed}
 
 %=============================================================================
 \clearpage
@@ -444,6 +512,53 @@ So the bundles in a region can see all the bundles, exported packages, and servi
 \t2 squash(rid) = r \sqcup \bigsqcup \{ r2 : RId | (rid, r2) \in \dom filter \land r2 \neq rid @ \\
 \t3 squash(r2) \wr filter(rid,r2) \}))\\
 \end{schema}
+
+This schema places a constraint on the system that a bundle in any given region, can never see two
+distinct bundles with identical bundle symbolic names and versions.
+We go further than this when adding connections and bundles and make sure that the filters
+never clash over a bundle symbolic name and version and that the bundles in a given region never clash
+with the filters associated with the connections from the given region.
+
+We define a condition on an output system of connected regions which states that
+for a given input region identifier, any filters connecting the corresponding region to distinct
+regions do not overlap on any bundle symbolic name and bundle version.
+\begin{schema}{FiltersConsistent}
+   ConnectedRegions' \\
+   r? : RId \\
+\where
+  (\forall s, t : RId; f, g : Filter | (r?, s) \mapsto f \in filter' \land (r?, t) \mapsto g \in filter' @ \\
+\t1 f.bf \cap g.bf = \emptyset )
+\end{schema}
+
+We define an operation to connect two regions with a filter which must be consistent with
+the other filters associated with the first of the regions.
+\begin{schema}{ConnectOk}
+  \Delta ConnectedRegions \\
+  r?, s? : RId \\
+  f? : Filter \\
+  FiltersConsistent \\
+\where
+  (r?, s?) \notin \dom filter \\
+  \theta Regions' = \theta Regions \\
+  filter' = filter \cup \{ (r?, s?) \mapsto f? \} \\
+\end{schema}
+
+We promote the add bundle operation and add a constraint that the bundle being added must not 
+have a bundle symbolic name and version which is present in a filter associated with the region
+the bundle is being added to.
+\begin{schema}{CRAddBundleOk}
+  \Delta ConnectedRegions \\
+  RegionsAddBundleOk \\
+\where
+  filter' = filter \\
+  (\forall s : RId; f : Filter | (rid?, s) \mapsto f \in filter @ \\
+\t1 (bid~b?) \notin f.bf) \\ 
+\end{schema}
+
+We also promote the get region operation for completeness.
+\begin{zed}
+  CRGetRegionOk \defs \Xi ConnectedRegions \land GetRegionOk \\
+\end{zed}
 
 %=============================================================================
 \clearpage
