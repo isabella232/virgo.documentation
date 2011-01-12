@@ -7,12 +7,10 @@
 \parskip 6 pt
 \parindent 0 pt
 
-\title{Regions in Virgo (v0.2)}
-\author{Glyn Normington}
+\title{Regions in Virgo (v0.3)}
+\author{Glyn Normington\\Steve Powell}
+
 \maketitle
-% The following three commands ensure the title page is stamped as
-% confidential without a page number. Page numbering is started at the
-% table of contents.
 \thispagestyle{myheadings}
 \pagenumbering{alph}
 \setcounter{page}{0}
@@ -20,11 +18,9 @@
 %=============================================================================
 The aim is to model how Virgo divides the OSGi framework into a connected graph
 of \textit{regions}.
-The model will inform the work on bug 330776 ``Re-implement user region using
-framework hooks instead of nested framework''.
 
-\textbf{The model is incomplete. It does not cope with importing from more than one region to
-a given region because the ``squashed'' result may not be a region.}
+The model will inform the work on \textbf{Bug 330776} ``Re-implement user region using
+framework hooks instead of nested framework''.
 
 %\clearpage
 %\pagenumbering{roman}
@@ -33,7 +29,7 @@ a given region because the ``squashed'' result may not be a region.}
 % Type checking hacks
 \newcommand{\true}{true}
 \newcommand{\false}{false}
-%\renewcommand{\empty}{\emptyset}
+\renewcommand{\emptyset}{\varnothing}
 \newcommand{\ModuleDefZero}{ModuleDef_0}
 \newcommand{\ModuleDefOne}{ModuleDef_1}
 \newcommand{\ModuleDefTwo}{ModuleDef_2}
@@ -50,9 +46,9 @@ The Virgo kernel is isolated from applications by the use of \textit{regions}.
 The kernel runs in its own region and applications run in a \textit{user region}.
 
 Virgo 2.1.0 implemented the user region as a nested framework, but Equinox
-has deprecated the nested framework support in favour of the framework hooks
+has deprecated the nested framework support in favour of \textit{framework hooks}
 which are being defined for OSGi 4.3.
-Bug 330776 re-implements the user region using the OSGi framework and service
+\textbf{Bug 330776} re-implements the user region using the OSGi framework and service
 registry hooks.
 
 Framework hooks are used to limit which bundles can `see' particular bundles
@@ -63,7 +59,7 @@ Rather than allowing arbitrary hook behaviour, we limit the hooks to operate on 
 which are connected together with filters.
 
 A \textit{region} is then a set of bundles and a region can see bundles, exported packages, and services
-from another region via a \textit{connection}. Each connection has a filter which may limit
+from another region via a \textit{connection}. Each connection has a \textit{filter} which may limit
 what can be seen across the connection.
 Hence regions and connections form a directed graph decorated by filters.
 
@@ -171,22 +167,17 @@ publishes zero or more services.
   exportedPackages : \power Package \\
   publishedServices : \power Service \\
 \end{schema}
+It is unusual, and usually bad practice, to include the primary key (in this case the location) of
+an entity in the entity's schema.
+We do it here to ensure that all bundles are
+distinct and use this property later when determining which region a bundle belongs to.
 
-We define some helper functions.
+We define a helper function for extracting a pair consisting of the bundle symbolic name and bundle
+version from a bundle. 
 \begin{axdef}
   bid : Bundle \fun (BSN \cross BVer) \\
 \where
   bid =  (\lambda Bundle @ (name, version)) \\
-\end{axdef}
-\begin{axdef}
-  bundlePkgs : Bundle \fun \power Package \\
-\where
- bundlePkgs = (\lambda Bundle @ exportedPackages) \\
-\end{axdef}
-\begin{axdef}
-  bundleSvcs : Bundle \fun \power Service \\
-\where
- bundleSvcs = (\lambda Bundle @ publishedServices) \\
 \end{axdef}
 
 %=============================================================================
@@ -194,42 +185,71 @@ We define some helper functions.
 \section{Region}
 \label{cha:region}
 
-A region contains a set of bundles each of which is uniquely identified \textit{within the region}
+We build up to a definition of a region in several small steps.
+
+\subsection{Proto-Region}
+
+A proto-region contains a set of bundles.
+\begin{schema}{ProtoRegion}
+  bundles : \power Bundle \\
+\end{schema}
+
+\subsection{Indexed Region}
+
+An indexed region adds some indices, and thereby some constraints, to a proto-region.
+
+An indexed region contains a set of bundles each of which is uniquely identified \textit{within the region}
 by its bundle symbolic name and bundle version and by its location.
 
-A region also has a set of imported packages and a set of imported services which do not overlap
-the packages exported by and the services published by, respectively, the bundles in the region.
-
-A region also contains some derived values: a function identifying the bundles in the region by
-symbolic name and version, a function identifying the bundles in the region by location,
-a set of the packages exported by bundles in the region
-(which is partitioned by bundle), a set of services published by bundles in the region (which is also
-partitioned by bundle), a combined set of local and imported packages, and a combined set
-of local and imported services.
-\begin{schema}{Region}
-  bundles : \power Bundle \\
-  importedPkg : \power Package \\
-  importedSvc : \power Service \\
-\also
+The indices are a function identifying the bundles in the region by
+symbolic name and version and a function identifying the bundles in the region by location.
+\begin{schema}{IndexedRegion}
+  ProtoRegion \\
   nv : BSN \cross BVer \pinj Bundle \\
   l : BLoc \pinj Bundle \\
-  localPkg : \power Package \\
-  localSvc : \power Service \\
-  pkg : \power Package \\
-  svc : \power Service \\
 \where
   nv = \{ b : bundles @ (bid~b) \mapsto b \} \\
   l = \{ b : bundles @ b.location \mapsto b \} \\
- (bundlePkgs \circ l) \partition localPkg \land \\
- (bundleSvcs \circ l) \partition localSvc \\
- \langle localPkg, importedPkg \rangle \partition pkg \\
- \langle localSvc, importedSvc \rangle \partition svc \\
+\end{schema}
+
+\subsection{OpenRegion}
+
+An open region is an indexed region with some derived sets of packages exported by bundles in the region
+and services published by bundles in the region.
+
+\begin{schema}{OpenRegion}
+  IndexedRegion \\
+  localPkg : \power Package \\
+  localSvc : \power Service \\
+\where
+  localPkg = \bigcup \{ b : bundles @ b.exportedPackages \} \\
+  localSvc = \bigcup \{ b : bundles @ b.publishedServices \} \\
+\end{schema}
+
+\subsection{LinkedRegion}
+
+A linked region is an indexed region with additional sets of imported packages and services.
+
+\begin{schema}{LinkedRegion}
+  OpenRegion \\
+  importedPkg : \power Package \\
+  importedSvc : \power Service \\  
+\end{schema}
+
+\subsection{Region}
+
+A region is a linked region with derived sets of all packages and all services.
+\begin{schema}{Region}
+  LinkedRegion \\
+  pkg : \power Package \\
+  svc : \power Service \\
+\where
+  pkg = localPkg \cup importedPkg \\
+  svc = localSvc \cup importedSvc \\
 \end{schema}
 
 A bundle can be added to a region provided the region does not already contain a bundle with
 the given bundle's symbolic name and bundle version or a bundle with the given bundle's location.
-The bundles exported packages and published services must not overlap the region's packages
-and the region's services, respectively.
 \begin{schema}{AddBundleOk}
   \Delta Region \\
   b? : Bundle \\
@@ -273,7 +293,7 @@ We define a nil region.
  \end{axdef}
 
 %%inop \sqcup 3
-Regions with consistent partitioning may be combined to produce a composite region using the infix $\sqcup$ operator.
+Regions with consistent indexing may be combined to produce a composite region using the infix $\sqcup$ operator.
 \begin{axdef}
  \_ \sqcup \_ : Region \cross Region \pfun Region \\
 \where
@@ -284,26 +304,34 @@ Regions with consistent partitioning may be combined to produce a composite regi
 \t4 svc = r1.svc \cup r2.svc)) \\
 \end{axdef}
 The precondition of $\sqcup$ is that the input regions have consistent bundle spaces, that is no bundle in one
-region has the same symbolic name and version as a distinct bundle in the other region.
-Also, no bundle in one region has the same location as a distinct bundle in the other region.
-Also, no bundle in one region may export the same package as a distinct bundle in the other region.
-Also, no bundle in one region may publish the same service as a distinct bundle in the other region.
+region has the same symbolic name and version as a bundle in the other region.
+Also, no bundle in one region has the same location as a bundle in the other region.
 
 $\sqcup$ is idempotent, commutative, and associative and $NIL$ acts as a zero.
 \begin{argue}
   \shows \forall r, s,t : Region | \{ (r, s), (s, t), (t, r) \} \subseteq \dom(\_ \sqcup \_) @ \\
 \t1 (r, r) \in \dom(\_ \sqcup \_) \land r \sqcup r = r \land \\
-\t1 r \sqcup s = s \sqcup r \land \\
-\t1 r \sqcup (s \sqcup t) = (r \sqcup s) \sqcup t \land \\
+\t1 (s, r) \in \dom(\_ \sqcup \_) \land r \sqcup s = s \sqcup r \land \\
+\t1 (r, s \sqcup t) \in \dom(\_ \sqcup \_) \land (r \sqcup s, t) \in \dom(\_ \sqcup \_) \land r \sqcup (s \sqcup t) = (r \sqcup s) \sqcup t \land \\
 \t1 (r, NIL) \in \dom(\_ \sqcup \_) \land r \sqcup NIL = NIL \\
 \end{argue}
+
+We define the set of all pairwise consistent regions
+\begin{zed}
+  ConsistentRegionPairs == \dom(\_ \sqcup \_) \\
+\end{zed}
+and the set of all pairwise consistent finite sets of regions.
+\begin{zed}
+  ConsistentRegionSets == \{ f : \finset Region | \forall r, s : f @ (r, s) \in ConsistentRegionPairs \} \\
+\end{zed}
 
 Since $\sqcup$ is commutative and associative, so we define a distributed form.
 \begin{axdef}
   \bigsqcup : \finset Region \pfun Region \\
 \where
   \bigsqcup \emptyset = NIL \land \\
-  (\forall r : Region; f : \finset Region @ \bigsqcup( \{ r \} \cup f ) = r \sqcup \bigsqcup f) \\ 
+  (\forall r : Region; f : ConsistentRegionSets | \{ r \} \cup f \in ConsistentRegionSets @ \\
+\t1 \bigsqcup( \{ r \} \cup f ) = r \sqcup \bigsqcup f) \\ 
 \end{axdef}
   
 %=============================================================================
