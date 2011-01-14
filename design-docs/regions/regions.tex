@@ -7,7 +7,7 @@
 \parskip 6 pt
 \parindent 0 pt
 
-\title{Regions in Virgo (v0.4)}
+\title{Regions in Virgo (v0.5)}
 \author{Glyn Normington\\Steve Powell}
 
 \maketitle
@@ -16,7 +16,7 @@
 \setcounter{page}{0}
 
 %=============================================================================
-This document provides a formal model of how Virgo divides the OSGi framework into a connected graph
+This document provides a formal model of how Virgo divides the OSGi framework into a directed graph
 of \textit{regions}.
 
 The model will inform the work on \textbf{Bug 330776} ``Re-implement user region using
@@ -172,7 +172,7 @@ filtered out on the way from C to A.
 \end{figure}
 
 The remaining chapters provide a formal, albeit partial, model of bundles, regions, filters, and how
-regions are connected together, via filters, into a graph.
+regions are connected together, via filters, into a directed graph.
 The model finally indicates how it may be implemented using framework hooks.
 
 %=============================================================================
@@ -354,7 +354,7 @@ the given bundle's symbolic name and bundle version or a bundle with the given b
 \subsection{Combining Regions}
 
 Although we will not support operations to combine regions, it is necessary to define how to combine
-regions so we can discuss the behaviour of connected graphs of regions later.
+regions so we can discuss the behaviour of directed graphs of regions later.
 
 %%inop \sqcup 3
 Regions with consistent indexing may be combined to produce a composite region using the infix $\sqcup$ operator.
@@ -403,11 +403,11 @@ Since $\sqcup$ is commutative, associative, idempotent, and has a zero, we defin
 \section{Multiple Regions}
 \label{cha:multiregions}
 
-A system of multiple regions has an indexed collection of regions, a convenience function of all the
+A system of multiple regions has a finite, indexed collection of regions, a convenience function of all the
 region identifiers in the system, and a function for
 determining the region identifier of any bundle in the system.
 \begin{schema}{Regions}
-  reg : RId \pfun Region \\
+  reg : RId \ffun Region \\
   allBundles : \power Bundle \\
   rids : \power RId \\
   breg : Bundle \pfun RId \\
@@ -534,6 +534,8 @@ Filters can be applied in any order with the same effect.
 \section{Connected Regions}
 \label{cha:connregions}
 
+We now connect up regions to form a directed graph.
+
 Regions are connected by filters.
 Every region is connected to itself by the most permissive filter.
 So the bundles in a region can see all the bundles, exported packages, and services in that region.
@@ -557,6 +559,15 @@ distinct bundles with identical bundle symbolic names and versions.
 We go further than this when adding connections and bundles and make sure that the filters
 never clash over a bundle symbolic name and version and that the bundles in a given region never clash
 with the filters associated with the connections from the given region.
+
+The $squash$ function is well defined but this isn't immediately obvious.
+Since there are finitely many regions, the $\bigsqcup$ expression in the constraint is well defined.
+Also, we need to be sure that there is a $squash$ function which satisfies the constraint.
+This turns out to be the case because if we start at a given region $r$ and then form all the non-looping
+paths to other regions, then we can apply all the filters along each non-looping path and then
+use $\bigsqcup$ to combine the results to form $squash~r$ observing that visiting the same region via
+a longer, looping path does not affect the result since more filters will
+be applied compared to the non-looping path to that region.
 
 \subsection{Connecting Regions Together}
 
