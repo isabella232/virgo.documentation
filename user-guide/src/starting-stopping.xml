@@ -277,7 +277,7 @@ prompt> bin\startup.bat -keystore customKeystore -keystorePassword customKeystor
 				</para>
 		</section>
 	</section>
-	<section>
+	<section id="starting-stopping-configuration-directory">
 		<title>Starting with a Custom Configuration Directory</title>
 		<para>
 			Use the <literal>-configDir</literal> option to specify an alternate <literal>config</literal> directory, different from the
@@ -308,6 +308,22 @@ prompt$ bin/startup.sh -configDir /config/node1</screen>
 prompt> bin\startup.bat -configDir c:\config\node1</screen>
 		</section>
 	</section>
+  <section id="starting-stopping-properties">
+      <title>Start properties</title>
+      <para>
+          You can use the properties in <link linkend="configuring-kernel">Configuring kernel</link> section to customize @product.name@. To specify a custom console port:
+        <section>
+          <title>Linux</title>
+          <screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh -Fosgi.console=1234</screen>
+        </section>
+        <section>
+          <title>Windows</title>
+          <screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat "-Fosgi.console=1234"</screen>
+        </section>
+      </para>
+  </section>
 	  <section>
 	    <title>Stopping @product.name@</title>
 	    <section>

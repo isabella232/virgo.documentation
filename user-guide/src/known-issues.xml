@@ -18,6 +18,15 @@
 			this error from occurring.
 		</para>
 	</section>
+    <section id="known-issues-startup-timeout">
+        <title>Timeout During Startup Due to Insufficient Resources</title>
+        <para>
+            The @short.product.name@ will fail to start correctly if it is running on slow hardware or
+            on a system with insufficient resources. Typically this manifests as error <literal>KE0004E</literal> .
+            Configuring the <link linkend="configuring-kernel-properties">startup wait limit</link> will provide the
+            @short.product.name@ with more time for initialisation.
+        </para>
+    </section>
 	<section id="known-issues-perm-gen-sun-vm">
 		<title>OutOfMemoryError: PermGen space running on Sun VM</title>
 		<para>
