@@ -7,7 +7,7 @@
 \parskip 6 pt
 \parindent 0 pt
 
-\title{Regions in Virgo (v0.5)}
+\title{Regions in Virgo (v0.6)}
 \author{Glyn Normington\\Steve Powell}
 
 \maketitle
@@ -461,6 +461,8 @@ A filter specifies sets of bundles, exported packages, and services.
 \end{schema}
 
 We define some helper functions to perform filtering.
+
+The $xb$ function applies a filter to a bundle by filtering its exported packages and published services.
 \begin{axdef}
   xb : Bundle \cross Filter \fun Bundle
 \where
@@ -473,18 +475,22 @@ We define some helper functions to perform filtering.
 \t2 publishedServices = b.publishedServices \cap f.sf))
 \end{axdef}
 
+The $fb$ function passes a set of bundles through a filter and then
+applies the filter to the remaining bundles.
 \begin{axdef}
   fb : \power Bundle \cross Filter \fun \power Bundle \\
 \where
   fb = (\lambda bs : \power Bundle; f : Filter @ \{ b : bs | (bid~b) \in f.bf @ xb(b, f) \}) \\
 \end{axdef}
 
+The $fp$ function passes a set of exported packages through a filter.
 \begin{axdef}
   fp : \power Package \cross Filter \fun \power Package \\
 \where
   fp = \{ ps : \power Package; f : Filter @ ((ps, f), ps \cap f.pf) \}
 \end{axdef}
 
+The $fp$ function passes a set of published services through a filter.
 \begin{axdef}
   fs : \power Service \cross Filter \fun \power Service \\
 \where
@@ -502,12 +508,12 @@ We also define the most permissive filter.
 
 \subsection{Filtering Regions}
 
-%%inop \wr 3
-We define an infix $\wr$ operator to apply a filter to a region and produce another region.
+%%inop \downarrow 6
+We define an infix $\downarrow$ operator to apply a filter to a region and produce another region.
 \begin{axdef}
-  \_ \wr \_ : Region \cross Filter \fun Region \\
+  \_ \downarrow \_ : Region \cross Filter \fun Region \\
 \where
-  (\_ \wr \_) = (\lambda r : Region;  f : Filter @ \\
+  (\_ \downarrow \_) = (\lambda r : Region;  f : Filter @ \\
 \t3   (\mu Region | \\
 \t4 bundles = \{ b : r.bundles | (bid~b) \in f.bf @ xb(b, f) \} \land \\
 \t4 nv = f.bf \dres r.nv \land \\
@@ -515,18 +521,25 @@ We define an infix $\wr$ operator to apply a filter to a region and produce anot
 \t4 pkg = r.pkg \cap f.pf \land \\
 \t4 svc = r.svc \cap f.sf )) \\
 \end{axdef}
-$\wr$ is total since packages and services not filtered out which are exported or published by a
+$\downarrow$ is total since packages and services not filtered out which are exported or published by a
 bundle which \textit{is} filtered out end up
 in the resultant region's imported packages and imported services sets, respectively.
 
 The most permissive filter can be applied to any region without effect.
 \begin{argue}
-  \shows \forall r : Region @ r \wr TOP = r \\
+  \shows \forall r : Region @ r \downarrow TOP = r \\
 \end{argue}
 
 Filters can be applied in any order with the same effect.
 \begin{argue}
-  \shows \forall r : Region; f, g : Filter @ (r \wr f) \wr g = (r \wr g) \wr f \\
+  \shows \forall r : Region; f, g : Filter @ (r \downarrow f) \downarrow g = (r \downarrow g) \downarrow f \\
+\end{argue}
+
+$\downarrow$ distributes over $\sqcup$ (where defined). Note that $\downarrow$ is defined to bind
+more tightly than $\sqcup$.
+\begin{argue}
+  \shows \forall f : Filter; r, s : Region @ \\
+\t1 f \downarrow (r \sqcup s) = f \downarrow r \sqcup f \downarrow s \\
 \end{argue}
 
 %=============================================================================
@@ -551,7 +564,7 @@ So the bundles in a region can see all the bundles, exported packages, and servi
   (\forall rid : rids @ \\
 \t1 (\LET r == reg~rid @ \\
 \t2 squash(rid) = r \sqcup \bigsqcup \{ r2 : RId | (rid, r2) \in \dom filter \land r2 \neq rid @ \\
-\t3 squash(r2) \wr filter(rid,r2) \}))\\
+\t3 squash(r2) \downarrow filter(rid,r2) \}))\\
 \end{schema}
 
 This schema places a constraint on the system that a bundle in any given region, can never see two
