@@ -79,4 +79,26 @@
 			</itemizedlist>
 		</para>
 	</section>
+	<section id="hibernate-resolution-issue">
+		<title>Hibernate Resolution Issue</title>
+		<para>
+			Applications using Hibernate 3.4.0.GA need to upgrade the Hibernate EJB fragment bundle to version 3.4.0.GA.A.
+			The symptoms are that the application will fail to resolve due to missing imports of packages such as
+			<literal>org.hibernate.ejb.transaction</literal>.
+			See <ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=335174">bug 335174</ulink> for details.
+		</para>
+		<para>
+			The Hibernate EJB fragment bundle <literal>com.springsource.org.hibernate.ejb</literal> v3.4.0.GA in the
+			<ulink url="http://ebr.springsource.com/repository/app/">SpringSource Enterprise Bundle Repository</ulink>
+			depends on the package <literal>org.slf4j</literal> with a version range that excludes the version of the
+			package provided with Virgo.
+			The net effect is that Hibernate EJB fragment bundle fails to attach to its host
+			<literal>com.springsource.org.hibernate</literal> and the host then does not export the packages the application
+			may need, such as <literal>org.hibernate.ejb.transaction</literal>.
+		</para>
+		<para>
+			An updated Hibernate EJB fragment with version 3.4.0.GA.A which fixes this problem is available from the
+			<ulink url="http://ebr.springsource.com/repository/app/">SpringSource Enterprise Bundle Repository</ulink>.
+		</para>
+	</section>	
 </chapter>
