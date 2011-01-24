@@ -7,7 +7,7 @@
 \parskip 6 pt
 \parindent 0 pt
 
-\title{Regions in Virgo (v0.6)}
+\title{Regions in Virgo (v0.7)}
 \author{Glyn Normington\\Steve Powell}
 
 \maketitle
@@ -24,6 +24,9 @@ framework hooks instead of nested framework''.
 
 The model is defined using the Z specification language. An introduction provides an informal
 description of regions and how they influence framework hooks for readers who are not familiar with Z.
+
+We are grateful to Rob Harrop for reviewing this model and raising several corrections and
+points of clarification.
 
 \clearpage
 \pagenumbering{roman}
@@ -292,7 +295,7 @@ no difficulty for this model and would complicate the model if we constrained it
 
 \subsection{LinkedRegion}
 
-A linked region is an indexed region with additional sets of imported packages and services.
+A linked region is an open region with additional sets of imported packages and services.
 
 \begin{schema}{LinkedRegion}
   OpenRegion \\
@@ -318,7 +321,8 @@ A region is a linked region in which we derive sets of all packages and all serv
   svc = localSvc \cup importedSvc \\
 \end{schema}
 The local and imported packages are not necessarily disjoint and neither are the local and imported
-services.
+services. This is important as packages exported by and services published by imported bundles
+are classified as both local and imported.
 
 We define a nil region.
 \begin{axdef}
@@ -350,6 +354,7 @@ the given bundle's symbolic name and bundle version or a bundle with the given b
   importedPkg' = importedPkg \\
   importedSvc' = importedSvc \\
 \end{schema}
+Note that $localPkg'$, $localSvc'$, $pkg'$, and $svc'$ are determined by the constraints of $Region'$.
 
 \subsection{Combining Regions}
 
@@ -417,6 +422,8 @@ determining the region identifier of any bundle in the system.
  breg = \{ b : Bundle; rid : rids | b \in (reg~rid).bundles @ (b, rid) \} \\
 \end{schema}
 Since $breg$ is a function, no bundle can belong to more than one region.
+This is a constraint on the regions in the collection expressed by the functionality of $breg$
+rather than by a quantification over the bundles in the regions.
 
 \subsection{Determining a Bundle's Region}
 
