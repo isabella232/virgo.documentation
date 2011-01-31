@@ -1,0 +1,213 @@
+\documentclass[a4paper]{article}
+\usepackage{zed-cm}
+%\usepackage{graphicx}
+%\markboth{Draft}{Draft}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 6 pt
+\parindent 0 pt
+
+\title{Service Scoping (v2.0)}
+\author{Rob Harrop}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+This document discusses the specification, design and implementation of service scoping as present in dm Server version 2.0.
+\clearpage
+\pagenumbering{roman}
+\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+\renewcommand{\empty}{\emptyset}
+
+%=============================================================================
+\clearpage
+\pagenumbering{arabic}
+\section{Overview}
+
+Service scoping is an extension to standard OSGi service binding that introduces preferential selection and visibility restriction.
+
+A scope defines a grouping for services. Scopes are split in two kinds: application and global. There is a single global scope and zero or more application scopes.
+
+Within a given application scope, all published services are visible only in that scope. This is visibility restriction.
+
+When a component in an application scope performs a service lookup, any matching services from within the scope are preferred over matching services in the global scope.
+
+%=============================================================================
+\clearpage
+\section{Services and Modules}
+
+Services are opaque, unique objects
+\begin{zed}
+[Service]
+\end{zed}
+
+\begin{zed}
+Filter == \power Service
+\end{zed}
+
+\begin{schema}{Module}
+exp: \power Service \\
+imp: \power Service \\
+global: \power Service \\
+\where
+exp \subseteq global
+\end{schema}
+
+\begin{schema}{StandardPublish}
+\Delta Module \\
+s?:Service \\
+\where
+imp' = imp \\
+exp' = exp \cup \{ s? \} \\
+global' = global \cup \{ s? \} 
+\end{schema}
+
+\begin{schema}{StandardBind}
+\Delta Module \\
+f?: Filter \\
+\where
+f? \cap global \neq \emptyset \\
+global' = global \\
+exp' = exp \\
+imp' = imp \cup (f? \cap global) \\
+\end{schema}
+
+\begin{schema}{ScopedModule}
+Module \\
+scopedExp: \power Service \\
+\where
+scopedExp \cap exp = \emptyset \\
+scopedExp \cap global = \emptyset \\
+imp \subseteq scopedExp \cup global \\
+\end{schema}
+
+\begin{schema}{GlobalPublish}
+\Delta ScopedModule \\
+StandardPublish \\
+\where
+s? \notin scopedExp \\
+scopedExp' = scopedExp \\
+\end{schema}
+
+\begin{schema}{ScopedPublish}
+\Delta ScopedModule \\
+\Xi Module \\
+s?: Service
+\where
+s? \notin global \\
+scopedExp' = scopedExp \cup \{ s? \} \\
+\end{schema}
+
+\begin{schema}{GlobalBind}
+\Delta ScopedModule \\
+StandardBind \\
+\where
+f? \cap scopedExp = \emptyset \\
+scopedExp' = scopedExp
+\end{schema}
+
+\begin{schema}{ScopedBind}
+\Delta ScopedModule \\
+f?: Filter \\
+\where
+f? \cap scopedExp \neq \emptyset \\
+global' = global \\
+exp' = exp \\
+scopedExp' = scopedExp \\
+imp' = imp \cup (f? \cap scopedExp) \\
+\end{schema}
+
+
+%=============================================================================
+\clearpage
+\section{Design Overview}
+
+When a user deploys a PAR artefact, all modules in that PAR are grouped into the same scope. This scope is called the \textbf{application scope}. Each PAR defines a discrete application and therefore a discrete application scope. 
+
+Application scopes are named - the name is derived from the \texttt{Application-SymbolicName} and \texttt{Application-Version} defined in the PAR file.
+
+Modules that are deployed outside of a PAR file are said to reside in the global scope. 
+
+\subsection{Publication}
+
+Application-scoped modules can choose to publish services in their own scope or in the global scope. Globally-scoped modules can only publish services into the global scope.
+
+A scoped module can choose which scope a service is to be published into the service property \texttt{com.springsource.service.scope} to the value \texttt{global} for global scope or \texttt{app} for application scope.
+
+Services published using Spring DM from an application-scoped bundle are automatically application scoped. Programmatic service publication from an application-scoped bundle defaults to using the global scope.
+
+Globally-scoped modules can never force a service to be published inside an application scope.
+
+\subsection{Binding}
+
+Globally scoped modules can only bind to services that are published in the global scope. No application scoped services are visible to globally scoped modules.
+
+When binding to services, application-scoped modules will always prefer matching services published in their own scope over matching services in the global scope. If no matching services are found in the application's scope, then binding can proceed as normal against the global scope.
+
+Application-scoped modules can never bind to services published in another application's scope.
+
+%=============================================================================
+\clearpage
+\section{Implementation}
+
+The chosen implementation uses the service registry hooks to restrict service visibility on service lookup and an publication of listener events.
+
+\subsection{Service Lookup}
+
+Restricting visibility during service lookup is done using a \texttt{FindHook}. The \texttt{FindHook} gives the implementor the ability to restrict the \texttt{ServiceReferences} that would normal be returned during a lookup. This is done by iterating over a \texttt{Collection} of \texttt{ServiceReferences} that match the user's filter and removing references as necessary.
+
+To determine whether a given \texttt{ServiceReference} should be removed we need to determine the scope that the \texttt{ServiceReference} is published under and the scope that the lookup is being performed in.
+
+The scope that a service is published under can be determined using the following rules:
+
+\begin{enumerate}
+\item If the service was published by a globally-scoped module, then the service is globally-scoped, otherwise;
+\item If the service has the \texttt{com.springsource.service.scope} property set then the value of that property determines the scope, otherwise;
+\item If the service has the \texttt{org.springframework.osgi.bean.name} property set, indicating that it was published by Spring DM, then the service is application-scoped, otherwise;
+\item The service is globally-scoped
+\end{enumerate}
+
+The lookup scope is calculated using the following rules:
+
+\begin{enumerate}
+\item If the consumer bundle is globally-scoped, then the lookup is globally-scoped, otherwise;
+\item If the user-supplied filter matches a service exported by any bundle in the scope as the consumer then the lookup is application-scoped, otherwise;
+\item The lookup is globally-scoped
+\end{enumerate}
+
+\texttt{ServiceReferences} are removed from the \texttt{Collection} supplied by the \texttt{FindHook} if their publication scope does not match the lookup scope.
+
+\subsection{Listeners}
+
+Restricting visibility for listeners is very simple. If the publication scope for a service is global then all listeners can see events for that service. If the publication scope for a service is application, then only listeners registered by bundles in the same scope can see events for the service.
+
+\subsection{Matching Against Exported Services}
+
+discuss service model
+
+%=============================================================================
+\clearpage
+\section{Implementation Alternatives}
+
+The original service scoping implementation used XML rewriting to add service properties and filters to Spring DM <service> and <reference> tags. These properties and filters were used to constrain the visibility of services to an application to ensure that application services were selected over global services. 
+
+This approach has the following drawbacks:
+
+\begin{enumerate}
+\item No meaningful model can be defined for programmatic access
+\item Rewriting XML necessitated taking copies of user artefacts. This makes redeploying on user change overly difficult
+\item The scoping is easy to break if the right properties and filters are known
+\end{enumerate}
+
+
+
+\end{document}

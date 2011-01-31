@@ -1,0 +1,129 @@
+\documentclass[a4paper]{article}
+\usepackage{zed-cm}
+%\usepackage{graphicx}
+%\markboth{Draft}{Draft}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 6 pt
+\parindent 0 pt
+
+\title{Kernel Process Model Requirements (v0.1)}
+\author{Glyn Normington}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+The Hebrides release of the SpringSource dm Server will be based on a separate \textit{kernel} component.
+This document explores the requirements for how concurrent processes are modelled in the kernel.
+\clearpage
+\pagenumbering{roman}
+\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+\renewcommand{\empty}{\emptyset}
+
+%=============================================================================
+\clearpage
+\pagenumbering{arabic}
+\section{Overview}
+
+There are three layers in the kernel process model: events, processes, and a completion service that
+provides callbacks when processes change state.
+
+%=============================================================================
+\clearpage
+\section{Events}
+
+Events have string names and associated value objects
+\begin{zed}
+[EventName, Value]
+\end{zed}
+
+Each event has a name and an optional value object.
+\begin{schema}{Event}
+name : EventName \\
+value : Value \\
+\end{schema}
+
+Events are correlated using correlator objects.
+\begin{zed}
+[Correlator]
+\end{zed}
+\begin{schema}{EventWait}
+ awaited : \power (EventName \cross Correlator) \\
+ fired : EventName \cross Correlator \pfun Event \\
+\where
+ awaited \cap \dom fired = \emptyset \\
+  \forall n : EventName, c : Correlator | (n, c) \in \dom fired @\\
+ \t1 fired(n, c).name = n \\
+\end{schema}
+
+Events can be awaited. If the event has not already fired, the event is added to the awaited set of
+events (and the await operation blocks until the event fires).
+\begin{schema}{AwaitNotFired}
+  \Delta EventWait \\
+  c? : Correlator \\
+  n? : EventName \\
+ \where
+  (n?, c?) \notin \dom fired \\
+  awaited' = awaited \cup \{ (n?, c?) \} \\
+  fired' = fired \\
+ \end{schema}
+ 
+ If the event has already fired, the state is not changed and the operation returns immediately.
+ \begin{schema}{AwaitFired}
+  \Xi EventWait \\
+  c? : Correlator \\
+  n? : EventName \\
+ \where
+  (n?, c?) \in \dom fired \\
+ \end{schema}
+ 
+ Awaiting an event covers either case.
+ \begin{zed}
+  Await \defs AwaitNotFire \lor AwaitFired \\
+ \end{zed}
+
+Correlators can be used to clean up old events. By definition, old events are not being waited upon.
+\begin{schema}{Cleanup}
+  \Delta EventWait \\
+  c? : Correlator \\
+ \where
+  \forall a : awaited @ c? \neq second~a \\
+  fired' = (EventName \cross \{c? \}) \ndres fired \\
+ \end{schema}
+
+\subsection{Serviceability Requirements}
+
+Event waits and event firings will appear in the trace.
+
+The set of awaited events and the collection of fired events will appear in the dump.
+
+%=============================================================================
+\clearpage
+\section{Processes}
+
+Process states and transitions are defined by a process schema.
+
+Process schemas may be checked statically for properties such as deadlock freedom.
+
+Child processes can be related to their parent processes?
+
+Progress of a process relative to its schema to be visible in dump and trace.
+
+Overall process graph to be deducible from the dump.
+
+%=============================================================================
+\clearpage
+\section{Completion Service}
+
+TBD.
+
+\end{document}

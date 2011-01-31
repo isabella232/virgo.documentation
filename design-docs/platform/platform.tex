@@ -1,0 +1,574 @@
+\documentclass[a4paper]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+%\markboth{Draft}{Draft}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 6 pt
+\parindent 0 pt
+
+\title{A Formal Model of the SpringSource Application Platform (v0.2)}
+\author{Glyn Normington}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+The aim is to model the basic architecture of the SpringSource Application Platform.
+
+\clearpage
+\pagenumbering{roman}
+\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+\renewcommand{\empty}{\emptyset}
+\newcommand{\ModuleDefZero}{ModuleDef_0}
+\newcommand{\ModuleDefOne}{ModuleDef_1}
+\newcommand{\ModuleDefTwo}{ModuleDef_2}
+\newcommand{\ModuleDefThree}{ModuleDef_3}
+\newcommand{\ModuleDefFour}{ModuleDef_4}
+
+%=============================================================================
+%\clearpage
+%\pagenumbering{arabic}
+%\section{Introduction}
+%\label{cha:intro}
+%
+%To do:
+%\begin{itemize}
+%\item 
+%\end{itemize}
+%
+%=============================================================================
+\clearpage
+\pagenumbering{arabic}
+\section{Standard OSGi}
+\label{cha:standardosgi}
+
+Bundles have symbolic names (which are strings, but we ignore that here) and versions.
+\begin{zed}
+  [SymbolicName, Version]
+\end{zed}
+
+A bundle definition defines the bundle's name and version as well as other things we will not model here.
+\begin{schema}{BundleDef}
+ name : SymbolicName \\
+ version : Version \\
+\end{schema}
+
+A bundle can be in one of several states.
+\begin{zed}
+  BundleState ::= bundleInstalled | bundleResolved | bundleStarting | \\ 
+\t1 bundleActive | bundleUnknown | bundleStopping | bundleUninstalled 
+\end{zed}
+\textit{Note : we are modelling a bundle instance rather than
+a bundle definition, so we may not need the uninstalled state.}
+
+We'll need to talk about class loaders but only in terms of them providing a name space for classes.
+\begin{zed}
+  [ClassName, Class]
+\end{zed}
+
+We currently ignore the distinction between initiating and defining class loaders and model a class
+loader as a one-one map of class names to classes.
+\begin{schema}{ClassLoader}
+ cl : ClassName \pinj Class \\
+\end{schema}
+
+Each class instance uniquely determines its defining class loader.
+\begin{axdef}
+  getClassLoader : Class \pfun ClassLoader \\
+\where
+  \forall c : \dom getClassLoader @ \\
+\t1 c \in \ran (getClassLoader~c).cl \\
+\end{axdef}
+
+A bundle has a name and a state.
+\begin{schema}{Bundle}
+ name : SymbolicName \\
+ version : Version \\
+ state : BundleState \\
+\end{schema}
+
+The standard OSGi framework uniquely identifies each installed bundle by name and version.
+The OSGi framework also loads the classes of each bundle using a separate class loader.
+Bundles which have reached the starting state have a class loader whereas those which are
+installed or resolved will only have a class loader if they have reached the starting state in
+the past.
+\begin{schema}{StandardOSGi}
+ bundles : SymbolicName \cross Version \pinj Bundle \\
+ cl : Bundle \pinj ClassLoader \\
+\where
+ \forall n : SymbolicName; v : Version; b : Bundle | \\
+\t1 (n, v) \mapsto b \in bundles @ \\
+\t2 n = b.name \land v = b.version \\
+ \forall b : \ran bundles | \\
+\t1 b.state \notin \{ bundleInstalled, bundleResolved \} @ \\
+\t2 b \in \dom cl \\
+\end{schema}
+
+A bundle may be installed in the OSGi framework by providing its bundle definition.
+We allow for the installation of a bundle to install other bundles (from a repository
+as we will see later).
+\begin{schema}{InstallBundleOk\_so}
+ \Delta StandardOSGi \\
+ bd? : BundleDef \\
+\where
+ (bd?.name, bd?.version) \notin \dom bundles \\
+ \exists Bundle' @ \\
+\t1 name' = bd?.name \land version' = bd?.version \land \\
+\t1 state' = bundleInstalled \land \\
+\t1 \{ (name', version') \mapsto \theta Bundle' \} \cup bundles \subseteq bundles' \\
+\end{schema}
+
+%=============================================================================
+\clearpage
+\section{Extended OSGi}
+\label{cha:extendedosgi}
+
+The SpringSource Application Platform extends standard OSGi by adding a number of concepts
+including the concept of a \textit{library}.
+
+A library has a symbolic name, a version, and a list of bundles. Each bundle
+in the list has a unique symbolic name.
+\begin{schema}{Library}
+ name : SymbolicName \\
+ version : Version \\
+ bundles : \seq Bundle \\
+\where
+ \forall i, j : \dom bundles @ \\
+\t1 (bundles~i).name = (bundles~j).name \implies i = j \\
+\end{schema}
+\textit{Note: check this constraint is enforced by the Platform.}
+
+The extended OSGi framework adds a collection of libraries to the standard framework.
+Each library is uniquely identified by name and version and its bundles are present in
+the framework.
+\begin{schema}{ExtendedOSGi}
+ StandardOSGi \\
+ libraries : SymbolicName \cross Version \pinj Library \\
+\where
+ \forall n : SymbolicName; v : Version; l : Library | \\
+\t1 (n, v) \mapsto l \in libraries @ \\
+\t2 n = l.name \land v = l.version \\
+ \forall l : \ran libraries @ \\
+\t1 \ran l.bundles \subseteq \ran bundles \\
+\end{schema}
+
+%=============================================================================
+\clearpage
+\section{Subsystems}
+\label{cha:subsystems}
+
+Subsystem names are strings, but we ignore that here.
+\begin{zed}
+  [SubsystemName]
+\end{zed}
+
+A subsystem can be in one of several states.
+\begin{zed}
+  SubsystemState ::= subsystemInstalling | subsystemInstalled | \\
+\t1 subsystemStarting | subsystemStarted | \\
+\t1 subsystemUnknown | subsystemStopping | \\
+\t1 subsystemStopped | subsystemUninstalling 
+\end{zed}
+
+The Platform is composed of \textit{subsystems} each of which has a name, a status, and a
+set of bundles.
+\begin{schema}{Subsystem}
+name : SubsystemName \\
+state : SubsystemState \\
+bundles : \power Bundle \\
+\end{schema}
+\textit{Note: there relationship between the state of a subsystem and the states of
+its bundles is not modelled here. It is not an invariant except in steady states.}
+
+%=============================================================================
+\clearpage
+\section{Subsystem Registry}
+\label{cha:subsystemRegistry}
+
+The subsystem registry maintains a collection of subsystems indexed by name and navigational information
+to determine the bundle for a given class loader and the subsystem for a given bundle.
+\begin{schema}{SubsystemRegistry}
+ ExtendedOSGi \\
+ ss : SubsystemName \pinj Subsystem \\
+ b : ClassLoader \pinj Bundle \\
+ bs : Bundle \pfun Subsystem \\
+\where
+ b = cl\inv \\
+ \forall n : \dom ss @ (ss~n).name = n \\
+ \ran b \subseteq \dom bs \\
+ \ran bs \subseteq \ran ss \\
+ \forall s : \ran ss | s.state \neq subsystemInstalling @ \\
+\t1 s.bundles \subseteq bs \inv \limg \{ s \} \rimg \\ 
+\end{schema}
+
+\begin{schema}{getSubsystemByClassOk}
+	\Xi SubsystemRegistry \\
+	c? : Class \\
+	s! : Subsystem \\
+\where
+	\exists cl : ClassLoader | cl = getClassLoader~c? @ \\
+\t1		cl \in \dom b \land \\
+\t1		s! = bs(b~cl) \\
+\end{schema}
+
+%=============================================================================
+\clearpage
+\section{Repository}
+\label{cha:repository}
+
+A repository holds bundle and library definitions.
+
+A library definition defines the library's name and version and a specification of
+a collection of bundles. Each bundle in the specification has a name and a version
+range (modelled here as a set of versions).
+\begin{schema}{LibraryDef}
+ name : SymbolicName \\
+ version : Version \\
+ bundleSpecs : SymbolicName \pinj \power Version
+\end{schema}
+
+The repository uniquely identifies each bundle and library by name and version.
+\begin{schema}{Repository}
+ bundleDefs : SymbolicName \cross Version \pinj BundleDef \\
+ libraryDefs : SymbolicName \cross Version \pinj LibraryDef \\
+\where
+ \forall n : SymbolicName; v : Version; bd : BundleDef | \\
+\t1 (n, v) \mapsto bd \in bundleDefs @ \\
+\t2 n = bd.name \land v = bd.version \\
+ \forall n : SymbolicName; v : Version; ld : LibraryDef | \\
+\t1 (n, v) \mapsto ld \in libraryDefs @ \\
+\t2 n = ld.name \land v = ld.version \\
+\end{schema}
+
+The internal representation of a repository may be quite different from the
+model presented here. The aim here is to provide a specification that defines
+how a repository behaves rather than a detailed description of a particular
+repository implementation.
+
+The repository provides an operation for adding a bundle.
+\begin{schema}{AddBundleOk}
+ \Delta Repository \\
+ bd? : BundleDef \\
+\where
+ (bd?.name, bd?.version) \notin \dom bundleDefs \\
+ bundleDefs = bundleDefs \cup \{ (bd?.name, bd?.version) \mapsto bd? \} \\
+\end{schema}
+
+\textit{The implementation allows any bundle definition to be added to the
+repository, even if it is already present.}
+
+The repository also provides an operation for adding a library.
+\begin{schema}{AddLibraryOk}
+ \Delta Repository \\
+ ld? : LibraryDef \\
+\where
+ (ld?.name, ld?.version) \notin \dom libraryDefs \\
+ libraryDefs = libraryDefs \cup \{ (ld?.name, ld?.version) \mapsto ld? \} \\
+\end{schema}
+
+%=============================================================================
+\clearpage
+\section{Installation}
+\label{cha:installation}
+
+Bundles are installed in OSGi and then started in order to initialise the
+Platform and to deploy applications on to the Platform.
+
+Installation takes some bundles and attempts to satisfy their dependencies by
+implicitly installing other bundles from the repository. Installation automatically starts
+bundles implicitly installed from the repository, but does not start the
+bundles that were input to installation.
+\begin{schema}{InstallBundle}
+ \Xi Repository \\
+ \Delta ExtendedOSGi \\
+ InstallBundleOk\_so \\
+\where
+ \exists i :  SymbolicName \cross Version \pinj BundleDef @ \\
+\t1 i \subseteq bundleDefs \land \\
+\t1 \dom bundles' = \dom bundles \cup \{ (bd?.name, bd?.version)\} \cup \dom i \\
+\end{schema}
+\textit{Note: the above schema does not model the states of the implicitly installed
+bundles. Each such bundle is installed from the corresponding bundle definition
+in the repository and is started after being installed.}
+
+%=============================================================================
+\clearpage
+\section{Deployment}
+\label{cha:deployment}
+
+Quite separately from the installation of bundles during deployment, we need to model the way
+application deployment is exposed to the user.
+
+Users deal with deployable artefacts such as Platform archive files (PARs), web archive files (WARs), and single OSGi bundles (JARs). We abstract away from the differences and model a deployable
+artefact as having just a \textit{deployment identity} consisting of a symbolic name and a version.
+\begin{schema}{DeploymentIdentity}
+ name : SymbolicName \\
+ version : Version \\
+\end{schema}
+
+We don't bother modelling the contents of a deployment artefact other than its deployment identifier.
+of deployable artefacts.
+\begin{schema}{DeployableArtefact}
+ DeploymentIdentity \\
+\end{schema}
+
+A deployable artefact may be deployed either by calling a Platform API passing the location of
+the artefact in the file system or by copying the artefact into the Platform's hot deployment
+directory.
+\begin{zed}
+  [Location]
+\end{zed}
+
+\begin{zed}
+ Boolean ::= yes | no
+\end{zed}
+
+\begin{schema}{FileSystem}
+ fs: Location \pfun DeployableArtefact \\
+\end{schema}
+
+Artefacts deployed in the Platform are identified by name and version. Artefacts which were
+hot deployed are stored in a portion of the file system and each such artefact has a unique
+location within that portion of the file system. Some deployed artefacts are recoverable
+including all those stored in the deployer's portion of the file system.
+\begin{schema}{Deployed}
+ dep : DeploymentIdentity \pinj DeployableArtefact \\
+ rec : \power DeployableArtefact \\
+ FileSystem_0 \\
+\where
+ \forall DeploymentIdentity; da : DeployableArtefact | \\
+\t1 \theta DeploymentIdentity \mapsto da \in dep @ \\
+\t2 name = da.name \land version = da.version \\
+\ran fs_0 \subseteq \ran dep \\
+fs_0 \in Location \pinj DeployableArtefact \\
+rec \subseteq \ran dep \\
+\ran fs_0 \subseteq rec \\
+\end{schema}
+
+Deploying from a location stores the deployable artefact but does not remember the location.
+\begin{schema}{DeployLocationOk}
+ \Xi FileSystem \\
+ \Delta Deployed \\
+ loc? : Location \\
+ recoverable? : Boolean \\
+\where
+ \dom fs_0 \cap \dom fs = \empty \\
+ loc? \in \dom fs \\
+ fs_0' = fs_0 \\
+ \exists d : DeployableArtefact; DeploymentIdentity | \\
+\t1 d = fs~loc? \land d.name = name \land d.version = version @ \\
+\t1 \theta DeploymentIdentity \notin \dom dep \land \\
+\t1 dep' = dep \cup \{\theta DeploymentIdentity \mapsto d\} \land \\
+\t1 recoverable? = yes \implies rec' = rec \cup \{d\} \\
+recoverable? = no \implies rec' = rec \\
+\end{schema}
+
+Hot deploying a deployable artefact stores the artefact and gives it a location in the deployer's
+portion of the file system.
+\begin{schema}{HotDeployOk}
+ \Xi FileSystem \\
+ \Delta Deployed \\
+ da? : DeployableArtefact \\
+\where
+ \exists DeploymentIdentity | name = da?.name \land version = da?.version @ \\
+\t1 \theta DeploymentIdentity \notin \dom dep \land \\
+\t1 dep' = dep \cup \{\theta DeploymentIdentity \mapsto da?\} \\
+ \exists l' : Location | l' \notin \dom fs \cup \dom fs_0 @ \\
+ \t1 fs_0' = fs_0 \cup \{l' \mapsto da?\} \\
+ rec' = rec \cup \{da?\} \\
+\end{schema}
+
+A artefact that has already been deployed can be undeployed in a number of ways. The most
+general way is to pass in deployment identity (equivalent to the name and version).
+\begin{schema}{UndeployNameVersionOk}
+ \Delta Deployed \\
+ di? : DeploymentIdentity \\
+\where
+ di? \in \dom dep \\
+ dep' = \{di?\} \ndres dep \\
+ fs_0' = fs_0 \nrres \{dep~di?\} \\
+ rec' = rec \setminus \{dep~di?\} \\
+\end{schema}
+
+The other way to undeploy an artefact is to delete an artefact that was hot deployed which we
+model as passing in the location of the hot deployed artefact.
+\begin{schema}{HotUndeployOk}
+ \Delta Deployed \\
+ loc? : Location \\
+\where
+loc? \in \dom fs_0 \\
+fs_0' = \{loc?\} \ndres fs_0 \\
+dep' = dep \nrres \{fs_0~loc?\} \\
+rec' = rec \setminus \{fs_0~loc?\} \\
+\end{schema}
+
+Recovery deletes non-recoverable artefacts.
+\begin{schema}{Recover}
+ \Delta Deployed \\
+\where
+dep' = dep \rres rec \\
+rec' = rec \\
+fs_0' = fs_0 \\
+\end{schema}
+
+
+%=============================================================================
+\newpage
+\section{Z Notation}
+\label{cha:znot}
+
+\makeatletter % the following code is taken from Mike Spivey's zed.tex
+
+\def\symtab{\setbox0=\vbox\bgroup \def\\{\cr}
+        \halign\bgroup\strut$##$\hfil&\quad##\hfil\cr}
+\def\endsymtab{\crcr\egroup\egroup
+        \dimen0=\ht0 \divide\dimen0 by2 \advance\dimen0 by\ht\strutbox
+        \splittopskip=\ht\strutbox \vbadness=10000
+        \predisplaypenalty=0
+        $$\halign{##\cr\hbox to\linewidth{% 
+                \valign{##\vfil\cr
+                        \setbox1=\vsplit0 to\dimen0 \unvbox1\cr 
+                        \noalign{\hfil}\unvbox0\cr
+                        \noalign{\hfil}}}\cr 
+                \noalign{\prevdepth=\dp\strutbox}}$$
+        \global\@ignoretrue}
+
+\makeatother 
+
+Numbers:
+\begin{symtab}
+        \nat & \verb/Natural numbers/ \{\verb/0,1,.../\} \\
+%       \num & \verb/Integers (...,-1,0,1,...)/ \\
+%       \nat_1 & \verb/Positive natural numbers/ \\
+%       \upto & \verb/integral range/ \\
+%       + & \verb/Addition/\quad\hfill 3 \\
+%       - & \verb/Subtraction/\quad\hfill 3 \\
+%       * & \verb/Multiply/\quad\hfill 4 \\
+%       \div & \verb/Remainder/\quad\hfill 4 \\
+%       \mod & \verb/Modulus/\quad\hfill 4 \\
+%       < & \verb/Less than/ \\
+%       > & \verb/Greater than/ \\
+%       \leq & \verb/Less than or equal/ \\
+%       \geq & \verb/Greater than or equal/ \\
+%       \neq & \verb/Inequality/ \\
+\end{symtab}
+Propositional logic and the schema calculus:
+\begin{symtab}
+%       \lnot & \verb/Not/ \\
+        \ldots\land\ldots & \verb/And/ \\
+        \ldots\lor\ldots & \verb/Or/ \\
+        \ldots\implies\ldots & \verb/Implies/ \\
+%       \iff & \verb/If and only if/ \\
+        \forall..\mid..\spot.. & \verb/For all/ \\
+        \exists..\mid..\spot.. & \verb/There exists/ \\
+%       \exists_1..\mid..\spot.. & \verb/There exists unique/ \\
+        \ldots\hide\ldots & \verb/Hiding/ \\
+%       \project & \verb/\project/ \\
+%       \pre & \verb/\pre/ \\
+%       \semi & \verb/\semi/
+        \ldots\defs\ldots & \verb/Schema definition/ \\
+        \ldots==\ldots & \verb/Abbreviation/ \\
+        \ldots::=\ldots\mid\ldots & \verb/Free type definition/ \\
+        \ldata\ldots\rdata & \verb/Free type injection/ \\
+        [\ldots] & \verb/Given sets/ \\
+        ',?,!,_0\ldots_9 & \verb/Schema decorations/ \\
+        \ldots\shows\ldots & \verb/theorem/ \\
+        \theta\ldots & \verb/Binding formation/ \\
+        \lambda\ldots & \verb/Function definition/ \\
+        \mu\ldots & \verb/Mu-expression/ \\
+        \Delta\ldots & \verb/State change/ \\
+        \Xi\ldots & \verb/Invariant state change/ \\
+\end{symtab}
+Sets and sequences:
+%and bags:
+\begin{symtab}
+        \{\ldots\} & \verb/Set/ \\
+        \{..\mid..\spot..\} & \verb/Set comprehension/ \\
+        \power\ldots & \verb/Set of subsets of/ \\
+%       \power_1 & \verb/Non-empty subsets of/ \\
+%       \finset & \verb/Finite sets/ \\
+%       \finset_1 & \verb/Non-empty finite sets/ \\
+        \emptyset & \verb/Empty set/ \\
+        \ldots\cross\ldots & \verb/Cartesian product/ \\
+        \ldots\in\ldots & \verb/Set membership/ \\
+        \ldots\notin\ldots & \verb/Set non-membership/ \\
+        \ldots\cup\ldots & \verb/Union/ \\
+        \ldots\cap\ldots & \verb/Intersection/ \\
+        \ldots\setminus\ldots & \verb/Set difference/ \\
+        \bigcup\ldots & \verb/Distributed union/ \\
+%       \bigcap & \verb/Distributed intersection/ \\
+        \#\ldots & \verb/Cardinality/ \\
+%       \dcat & \verb/Distributed sequence concatenation/
+        \ldots\subseteq\ldots & \verb/Subset/ \\
+        \ldots\subset\ldots & \verb/Proper subset/ \\
+        \ldots\partition\ldots & \verb/Set partition/ \\
+        \seq & \verb/Sequences/ \\
+%       \seq_1 & \verb/Non-empty sequences/ \\
+%       \iseq & \verb/Injective sequences/ \\
+        \langle\ldots\rangle & \verb/Sequence/ \\
+%       \cat & \verb/Sequence concatenation/ \\
+        \disjoint\ldots & \verb/Disjoint sequence of sets/ \\
+%       \bag & \verb/Bags/ \\
+%       \lbag\ldots\rbag & \verb/Bag/ \\
+%       \inbag & \verb/Bag membership/ \\
+\end{symtab}
+%Here are the infix function symbols. Each symbol is
+%shown with its priority:
+%\begin{symtab}
+%       \uplus & \verb/\uplus/ \\
+%       \filter & \verb/Schema projection/ \\
+%       \uminus & \verb/\uminus/
+%\end{symtab}
+Functions and relations:
+\begin{symtab}
+        \ldots\rel\ldots  & \verb/Relation/ \\
+        \ldots\pfun\ldots & \verb/Partial function/ \\
+        \ldots\fun\ldots  & \verb/Total function/ \\
+        \ldots\pinj\ldots & \verb/Partial injection/ \\
+        \ldots\inj\ldots  & \verb/Injection/ \\
+%       \psurj & \verb/Partial surjection/ \\
+%       \surj & \verb/Surjection/ \\
+%       \bij  & \verb/Bijection/ \\
+%       \ffun & \verb/Finite partial function/ \\
+%       \finj & \verb/Finite partial injection/ \\
+        \dom\ldots & \verb/Domain/ \\
+        \ran\ldots & \verb/Range/ \\
+        \ldots\mapsto\ldots & \verb/maplet/ \\
+        \ldots\inv & \verb/Relational inverse/ \\
+%       \ldots\plus & \verb/Transitive closure/ \\
+        \ldots\star & \verb/Reflexive-transitive closure/ \\
+%       \ldots\bsup n \esup & \verb/Relational iteration/ \\
+        \ldots\limg\ldots\rimg & \verb/Relational image/ \\
+%       \comp & \verb/Forward relational composition/ \\
+%       \circ & \verb/Relational composition/ \\
+        \ldots\oplus\ldots & \verb/Functional overriding/ \\
+        \ldots\dres\ldots & \verb/Domain restriction/ \\
+%       \ldots\rres\ldots & \verb/Range restriction/ \\
+        \ldots\ndres\ldots & \verb/Domain subtraction/ \\
+%       \ldots\nrres\ldots & \verb/Range subtraction/ \\
+%       \id & \verb/Identity relation/ \\
+\end{symtab}
+Axiomatic descriptions:
+%%unchecked
+\begin{axdef}
+  Declarations
+\where
+  Predicates
+\end{axdef}
+Schema definitions:
+%%unchecked
+\begin{schema}{SchemaName}
+  Declaration
+\where
+  Predicates
+\end{schema}
+\end{document}

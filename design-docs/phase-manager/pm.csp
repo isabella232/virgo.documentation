@@ -1,0 +1,27 @@
+-- CSP model of the SpringSource Application Platform phase manager
+-- This is currently work in progress, so don't trust it!
+
+-- Limited sets of bundles, services, and application contexts for model-checking purposes.
+
+--channel a, b, c, d, e, f, g, h, i, j, k, l
+
+--T = ( b -> e -> g -> i -> STOP) [|{| i |}|] ( c -> f -> h -> i -> STOP)
+--U = a -> e -> j -> STOP
+--V = ( d -> f -> k -> l -> STOP ) [|{| l |}|] ( j -> l -> STOP )
+
+--Sys = ( T [|{| e |}|] U ) [|{| f, j |}|] V
+
+-- Deployer
+
+datatype Bundle = b1 | b2
+
+channel s, a, b : Bundle
+channel started, deployed
+
+Deploy = ( [|{ started }|] i : Bundle @ ( s.i -> started -> STOP ) ) [|{ started }|]
+         (started -> ( [|{ deployed }|] i : Bundle @ ( a.i -> b.i -> deployed -> STOP ) ))
+
+B(i) = s.i -> b.i -> STOP
+AC(i) = s.i -> a.i -> STOP
+
+DeployerSys = ( Deploy [|{| s, b |}|] (||| i : Bundle @ B(i)) ) [|{| s, a |}|] (||| i : Bundle @ AC(i))

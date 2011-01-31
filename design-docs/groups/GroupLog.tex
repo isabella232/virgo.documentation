@@ -1,0 +1,194 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{../util/zed-cm}
+\usepackage{graphicx}
+\markboth{Unclassified, Draft}{Unclassified, Draft}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 2 pt
+\parindent 10 pt
+
+\title{A very abstract model of a Group log}
+\author{Steve Powell}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+\noindent
+We model the log or history structure of a group used by a Group Coordinator in keeping a collection of group members synchronised.
+
+This model is frozen (12 February 2009) pending the reintroduction of the requirement for group configuration synchronisation.
+
+%\clearpage
+%\pagenumbering{roman}
+%\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\ModuleDefZero}{ModuleDef_0}
+\newcommand{\ModuleDefOne}{ModuleDef_1}
+\newcommand{\ModuleDefTwo}{ModuleDef_2}
+\newcommand{\ModuleDefThree}{ModuleDef_3}
+\newcommand{\ModuleDefFour}{ModuleDef_4}
+
+%%inrel namematch typematch attrmatch versionmatch
+
+%=============================================================================
+\clearpage
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+\section{Intro}
+This simple model appears to capture the essential properties of the group state that a coordinator needs in order to understand how to direct the group members what to do to synchronise with the group configuration.
+
+%\begin{thebibliography}{99}
+%    \bibitem{OSGi} OSGi Service Platform Core Specification v4.1, April 2007 {\tt http://www.OSGi.org}
+%\end{thebibliography}
+    
+%=============================================================================
+
+%=============================================================================
+\clearpage
+\section{Basic Types}
+\label{cha:basic}
+
+There are \emph{Runtime Artefact Models} ({\it sic}), commands that change them, and group members that (may) execute the commands:
+\begin{zed}
+	[RAM, COMMAND, MEMBER]
+\end{zed}
+and there is an initial command, used in initial states:
+\begin{axdef}
+	initCOMMAND : COMMAND
+\end{axdef}
+
+The group log is essentially an (alternating) sequence of models and command, each model being associated with (a set of) member responses. We therefore need to have a set of possible responses:
+\begin{zed}
+	[RESPONSE]
+\end{zed}
+the only feature of which is that there are two distinct responses which we might encounter...
+\begin{axdef}
+	ok, fail : RESPONSE
+\where
+	ok \neq fail	
+\end{axdef}
+
+A member response is thus a response associated with a member, and a partial function records these for a collection of members:
+\begin{zed}
+	Responses == MEMBER \pfun RESPONSE
+\end{zed}
+
+Entries in the log (\emph{transitions}) need to be identified by external parties, so we require that each has an identifier:
+\begin{zed}
+	[TRANSITIONID]
+\end{zed}	
+and an initial identifier is required for the initial state:
+\begin{axdef}
+	initTRANID : TRANSITIONID
+\end{axdef}
+
+\section{Group log state}
+The Group log records a series of $RAM$ states, with a command between each state, and a collection of responses from group members concerning their synchrony with that state.
+
+Figure \ref{fig:grouplog1} shows a diagram which inspired this model.
+\begin{figure}[h]
+\centering
+\includegraphics*[scale=1.0]{grouplog1.pdf}
+\caption{Diagram of a Group log}
+\label{fig:grouplog1}
+\end{figure}
+
+There is no {\it a priori} reason that the sets of member responses need correlate although, in any particular case, the members of the group would appear here, and the responses indicate if they are (or were) synchronised with that state (based upon responses received by the coordinator).
+
+\subsection{Parts of the log}
+We first model the $RAM$ and $Responses$ pairs, these are, effectively, a record of the group state -- so we call it:
+\begin{schema}{GroupState}
+	ram : RAM		\\
+	responses : Responses
+\end{schema}
+The responses are a record of whether group members have reached that state.
+
+We can say something (but not everything) about an initial group state:
+\begin{schema}{InitGroupState}
+	GroupState'
+\where
+	responses' = \emptyset
+\end{schema}
+and leave the $ram$ unspecified here. It turns out we need to use the initial group state both when recording new transitions into a log, and when initialising a new log. These have differing $RAM$ values.
+
+We now formulate a state transition, which is a command and (the resulting) group state, associated with a transition identifier:
+\begin{schema}{Transition}
+	tranid : TRANSITIONID	\\
+	fromCmd : COMMAND	\\
+	GroupState
+\end{schema}
+The idea is that the command \emph{led to} or \emph{resulted in} the $ram$ in the state. 
+
+The initial group transition can be specified as:
+\begin{schema}{InitTransition}
+	Transition'		\\
+	InitGroupState
+\where
+	fromCmd' = initCOMMAND	\\
+	tranid' = initTRANID
+\end{schema}
+where again the $RAM$ value is not constrained, since even the first transition in a new log will have to be formulated with whatever $RAM$ is supplied initially.
+
+\subsection{Full log}
+We define a \emph{group log} as a sequence of group state transitions:
+\begin{schema}{GroupLog}
+	glog : \seq Transition
+\where
+	\forall i_1, i_2 : \dom glog | (glog ~ i_1).tranid = (glog ~ i_2).tranid @ i_1 = i_2
+\end{schema}
+ensuring that all the transitions in the sequence have distinct identifiers, 
+and that is all there is to it.
+
+\subsection{Initial log}
+
+The initial value of a group log is defined to record the (presumed) initial state of the group. This is a (given) intial $RAM$, no responses and the initial command. Thus:
+\begin{schema}{InitGroupLog}
+	initRam? : RAM \\
+	GroupLog'
+\where
+	glog' = \langle (\mu InitTransition | ram' = initRam? @ \theta Transition') \rangle
+\end{schema}
+Note that this last constraint ties down the initial state completely, as a function of the initial $RAM$ parameter.
+
+\section{Group log operations}
+After initialisation, the following operations are envisaged:
+\begin{description}
+\item[$RecordTransition$]
+where a group transition is added to the log, with a new identifier;
+\item[$RecordResponse$]
+where a member response is recorded in the log at the identified transition;
+\item[$LogProjection$]
+where a log is (potentially) reduced to account for a given set of group members;
+\item[$LogTruncation$]
+where a log is truncated so that only relevant transitions for a given set of members is retained. 
+\end{description}
+
+The assertion is that we can define these operations purely in terms of the state provided, accomodating the major coordinator functions without having to know of what the $RAM$ consists, or what the $COMMAND$s actually do.
+
+The transition identifier introduced above becomes relevant in response recording, but requires refinement if automatic resynchronisation is required. The identifiers then have to form an unbroken sequence in order to have a common understanding of the coordination events that have flowed between the members.
+
+%\begin{argue}
+%	ModuleCollection \\
+%\vdash \\
+%	moduleById \in ModuleId \pinj Module \\
+%	moduleByName \in SymbolicName \cross Version \pinj Module
+%\end{argue}
+
+
+%In order to explain (and explore)  the notion of `uses' more easily we introduce a diagrammatic notation. 
+%Figure \ref{fig:key} shows the conventions we shall use.
+
+
+
+\end{document}

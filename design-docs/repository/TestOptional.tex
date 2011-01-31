@@ -1,0 +1,56 @@
+\documentclass[a4paper,titlepage,twoside,12pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+\markboth{Draft}{Version 0.1}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 2 pt
+\parindent 10 pt
+
+\title{Testing Optional matters}
+\author{Steve Powell}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+We test the optional generic type (analogous to say, $\seq$) defined in \texttt{Optional.tex}.
+
+
+%\clearpage
+%\pagenumbering{roman}
+%\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\defaultsTo}{\mathbin{\sf defaultsTo}}
+
+%=============================================================================
+\clearpage
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+\section{Test}
+We use $Opt$, $Nil$ and $Just$ to check that it type-checks with $f$UZZ.
+
+Here is a given set:
+
+\begin{zed}
+	[BundleSymbolicName]
+\end{zed}
+and here is a state schema that uses it:
+\begin{schema}{BundleState}
+	bsn : Opt ~ BundleSymbolicName
+\where
+	(Nil \neq bsn) \implies (Take ~ bsn \in BundleSymbolicName) 
+\end{schema}
+The constraint merely states the minimum that can be true about the optional value. Since it type-checks with $f$UZZ then we can assume we have got the definitions approximately right.
+
+\end{document}

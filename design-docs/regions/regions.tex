@@ -1,0 +1,845 @@
+\documentclass[a4paper,9pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+%\markboth{Draft}{Draft}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 6 pt
+\parindent 0 pt
+
+\title{Regions in Virgo (v0.7)}
+\author{Glyn Normington\\Steve Powell}
+
+\maketitle
+\thispagestyle{myheadings}
+\pagenumbering{alph}
+\setcounter{page}{0}
+
+%=============================================================================
+This document provides a formal model of how Virgo divides the OSGi framework into a directed graph
+of \textit{regions}.
+
+The model will inform the work on \textbf{Bug 330776} ``Re-implement user region using
+framework hooks instead of nested framework''.
+
+The model is defined using the Z specification language. An introduction provides an informal
+description of regions and how they influence framework hooks for readers who are not familiar with Z.
+
+We are grateful to Rob Harrop for reviewing this model and raising several corrections and
+points of clarification.
+
+\clearpage
+\pagenumbering{roman}
+\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\ModuleDefZero}{ModuleDef_0}
+\newcommand{\ModuleDefOne}{ModuleDef_1}
+\newcommand{\ModuleDefTwo}{ModuleDef_2}
+\newcommand{\ModuleDefThree}{ModuleDef_3}
+\newcommand{\ModuleDefFour}{ModuleDef_4}
+
+%=============================================================================
+\clearpage
+\pagenumbering{arabic}
+\section{Introduction}
+\label{cha:intro}
+
+The Virgo kernel is isolated from applications by the use of \textit{regions}.
+The kernel runs in its own region and applications run in a \textit{user region}.
+
+Virgo 2.1.0 implemented the user region as a nested framework, but Equinox
+has deprecated the nested framework support in favour of \textit{framework hooks}
+which are being defined for OSGi 4.3.
+\textbf{Bug 330776} re-implements the user region using the OSGi framework and service
+registry hooks.
+
+Framework hooks are used to limit which bundles can `see' particular bundles
+and exported packages, and service registry hooks are used to limit which bundles
+can `see' particular services. `Seeing' includes both finding and being notified via lifecycle events.
+
+Rather than allowing arbitrary hook behaviour, we limit the hooks to operate on regions
+which are connected together with filters.
+
+A \textit{region} is then a set of bundles and a region can see bundles, exported packages, and services
+from another region via a \textit{connection}. Each connection has a \textit{filter} which may limit
+what can be seen across the connection.
+Hence regions and connections form a directed graph decorated by filters.
+
+For example, Figure \ref{fig:conn} shows three regions connected by three connections.
+Each connection has a filter which limits what bundles, exported packages, and services
+are visible across the connection.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.35]{connected-regions.pdf}
+\caption{Connected Regions}
+\end{center}
+\label{fig:conn}
+\end{figure}
+
+A connection may be thought of as an import. So region C imports from region B.
+The imports are filtered, so filter h may limit what region C sees from region B.
+Similarly region A imports from region B through filter f and region B imports from region A through
+filter g.
+
+Unlike OSGi package imports between bundles, imports between regions are transitive.
+So region C can see bundles, exported packages, and services from region A, subject to filters g and h.
+
+We now consider visibility from the perspective of each of the framework hooks.
+
+\subsection{Bundle Find Hook}
+
+The bundle find hooks limits the bundles that a bundle in a given region sees when listing bundles using
+\texttt{BundleContext.getBundles}.
+
+For example, Figure \ref{fig:bfind} shows a bundle W which finds bundles W, X, and Y.
+It does not find Z which is filtered out. 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{bundle-find.pdf}
+\caption{Bundle Find \label{fig:bfind}}
+\end{center}
+\end{figure}
+
+\subsection{Bundle Event Hook}
+
+The bundle event hooks limits the bundle events that a bundle listener in a given region receives.
+
+For example, Figure \ref{fig:bevent} shows a bundle W which has a bundle listener.
+Bundle W's bundle listener receives events for W, X, and Y. It does not receive events for bundle Z which is filtered out. 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{bundle-event.pdf}
+\caption{Bundle Event \label{fig:bevent}}
+\end{center}
+\end{figure}
+
+\subsection{Service Find Hook}
+
+The service find hooks limits the services that a bundle in a given region sees when looking up services.
+
+For example, Figure \ref{fig:sfind} shows a bundle W which can look up services s and t but not u which is filtered out.
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{service-find.pdf}
+\caption{Service Find \label{fig:sfind}}
+\end{center}
+\end{figure}
+
+\subsection{Service Event Hook}
+
+The service event hooks limits the service events that a service listener in a given region receives.
+
+For example, Figure \ref{fig:sevent} shows a bundle W which has a service listener.
+Bundle W's service listener receives events for s and t. It does not receive events for service u which is filtered out. 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{service-event.pdf}
+\caption{Service Event \label{fig:sevent}}
+\end{center}
+\end{figure}
+
+\subsection{Resolver Hook}
+
+The resolver hook limits the exported packages that the bundles in a given region may wire to, depending on
+the region containing the bundle that exports each candidate exported package and the filters between the
+regions.
+
+For example, Figure \ref{fig:pfilt} shows a bundle Z being resolved which imports packages p and q. Bundle X
+in region B exports both p and q while bundle Y in region B exports only p.
+
+Region A is connected to region B with a filter that allows only package p to be seen by region A.
+The net effect is that the import of p may be satisfied by either bundle X or Y but the import of package q may not
+be satisfied by bundle X since q is filtered out.
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{package-filtering.pdf}
+\caption{Package Filtering \label{fig:pfilt}}
+\end{center}
+\end{figure}
+
+Another example in Figure \ref{fig:tpfilt} shows a package p transitively visible through two filters via an
+intermediate region.
+
+Bundle Z may wire to bundle X or bundle Y for package p, but not for packages q and r which are both
+filtered out on the way from C to A.
+\begin{figure}[h!]
+\begin{center}
+\includegraphics*[scale=0.4]{transitive-package-filtering.pdf}
+\caption{Transitive Package Filtering \label{fig:tpfilt}}
+\end{center}
+\end{figure}
+
+The remaining chapters provide a formal, albeit partial, model of bundles, regions, filters, and how
+regions are connected together, via filters, into a directed graph.
+The model finally indicates how it may be implemented using framework hooks.
+
+%=============================================================================
+\clearpage
+\section{Basic Types}
+\label{cha:basics}
+
+Some basic types need defining.
+
+\subsection*{Bundles}
+
+Bundles are identified by a bundle symbolic name and bundle version, but uniquely identified in the
+OSGi framework by a bundle location.
+\begin{zed}
+  [BSN, BVer, BLoc]
+\end{zed}
+
+\subsection*{Packages}
+
+We abstract the notion of package version and the attributes associated with package imports and exports.
+\begin{zed}
+  [Package]
+\end{zed}
+
+\subsection*{Services}
+
+We abstract all the details of services.
+\begin{zed}
+  [Service]
+\end{zed}
+
+\subsection*{Regions}
+
+Regions are identified by a region identifer.
+\begin{zed}
+  [RId]
+\end{zed}
+
+%=============================================================================
+\clearpage
+\section{Bundle}
+\label{cha:bundle}
+
+A bundle has a bundle symbolic name and bundle version, exports zero or more packages, and
+publishes zero or more services.
+
+\begin{schema}{Bundle}
+  name : BSN \\
+  version : BVer \\
+  location : BLoc \\
+  exportedPackages : \power Package \\
+  publishedServices : \power Service \\
+\end{schema}
+It is unusual, and usually bad practice, to include the primary key (in this case the location) of
+an entity in the entity's schema.
+We do it here to ensure that all bundles are
+distinct and use this property later when determining which region a bundle belongs to.
+
+We define a helper function for extracting a pair consisting of the bundle symbolic name and bundle
+version from a bundle. 
+\begin{axdef}
+  bid : Bundle \fun (BSN \cross BVer) \\
+\where
+  bid =  (\lambda Bundle @ (name, version)) \\
+\end{axdef}
+
+%=============================================================================
+\clearpage
+\section{Region}
+\label{cha:region}
+
+We build up to a definition of a region in several small steps.
+
+\subsection{Proto-Region}
+
+A proto-region contains a set of bundles which are installed in the framework and associated with
+the proto-region either by being added to the proto-region or by being imported into the proto-region.
+\begin{schema}{ProtoRegion}
+  bundles : \power Bundle \\
+\end{schema}
+
+\subsection{Indexed Region}
+
+An indexed region adds some indices, and thereby some constraints, to a proto-region.
+
+The indices are: a function identifying the bundles in the region by
+symbolic name and version; and a function identifying the bundles in the region by location.
+\begin{schema}{IndexedRegion}
+  ProtoRegion \\
+  nv : BSN \cross BVer \pinj Bundle \\
+  l : BLoc \pinj Bundle \\
+\where
+  nv = \{ b : bundles @ (bid~b) \mapsto b \} \\
+  l = \{ b : bundles @ b.location \mapsto b \} \\
+\end{schema}
+The signature imposes the constraint of injectivity on both indices.
+Thus an indexed region contains a set of bundles each of which is uniquely identified
+both by its bundle symbolic name and bundle version and by its location.
+
+\subsection{OpenRegion}
+
+An open region is an indexed region with some derived sets of packages exported by bundles in the region
+and services published by bundles in the region.
+
+\begin{schema}{OpenRegion}
+  IndexedRegion \\
+  localPkg : \power Package \\
+  localSvc : \power Service \\
+\where
+  localPkg = \bigcup \{ b : bundles @ b.exportedPackages \} \\
+  localSvc = \bigcup \{ b : bundles @ b.publishedServices \} \\
+\end{schema}
+We allow a given exported package to be associated with more than one bundle, which can happen if a bundle uses
+\texttt{require-bundle} with the reexport option.
+We also allow a given service to be published by more than one bundle, which can never happen, but which causes
+no difficulty for this model and would complicate the model if we constrained it.
+
+\subsection{LinkedRegion}
+
+A linked region is an open region with additional sets of imported packages and services.
+
+\begin{schema}{LinkedRegion}
+  OpenRegion \\
+  importedPkg : \power Package \\
+  importedSvc : \power Service \\  
+\end{schema}
+The imported packages and services come into play later when regions are filtered and combined
+because it will be possible to filter out a bundle but not its exported packages or published services.
+We want to represent the result as a region for simplicity, so the region needs to have a way
+of recording packages and services which are `detached' from their bundle(s).
+
+We do not need a corresponding set of imported bundles because these can be stored in $bundles$.
+
+\subsection{Region}
+
+A region is a linked region in which we derive sets of all packages and all services.
+\begin{schema}{Region}
+  LinkedRegion \\
+  pkg : \power Package \\
+  svc : \power Service \\
+\where
+  pkg = localPkg \cup importedPkg \\
+  svc = localSvc \cup importedSvc \\
+\end{schema}
+The local and imported packages are not necessarily disjoint and neither are the local and imported
+services. This is important as packages exported by and services published by imported bundles
+are classified as both local and imported.
+
+We define a nil region.
+\begin{axdef}
+  NIL : Region \\
+\where
+ NIL.bundles = \emptyset \\
+ NIL.importedPkg = \emptyset \\
+ NIL.importedSvc = \emptyset \\
+ \end{axdef}
+
+\subsection{Adding a Bundle to a Region}
+
+Bundles are typically added to regions \textit{under} the bundle install operation (ideally using a bundle install
+hook which is yet to be defined) so that the bundle is associated with its region by the time the
+install completes.
+
+A bundle may also be added to a region after the bundle is installed, although this opens up a window in
+which the bundle does not belong to any region.
+
+A bundle can be added to a region provided the region does not already contain a bundle with
+the given bundle's symbolic name and bundle version or a bundle with the given bundle's location.
+\begin{schema}{RegionAddBundleOk}
+  \Delta Region \\
+  b? : Bundle \\
+\where
+  (bid~b?) \notin \dom nv \\
+  b?.location \notin \dom l \\
+  bundles' = bundles \cup \{ b? \} \\
+  importedPkg' = importedPkg \\
+  importedSvc' = importedSvc \\
+\end{schema}
+Note that $localPkg'$, $localSvc'$, $pkg'$, and $svc'$ are determined by the constraints of $Region'$.
+
+\subsection{Combining Regions}
+
+Although we will not support operations to combine regions, it is necessary to define how to combine
+regions so we can discuss the behaviour of directed graphs of regions later.
+
+%%inop \sqcup 3
+Regions with consistent indexing may be combined to produce a composite region using the infix $\sqcup$ operator.
+\begin{axdef}
+ \_ \sqcup \_ : Region \cross Region \pfun Region \\
+\where
+ (\_ \sqcup \_) = (\lambda r1, r2 : Region @ \\
+\t3 (\mu Region | \\
+\t4 bundles = r1.bundles \cup r2.bundles \land \\
+\t4 pkg = r1.pkg \cup r2.pkg \land \\
+\t4 svc = r1.svc \cup r2.svc)) \\
+\end{axdef}
+The precondition of $\sqcup$ is that the input regions have consistent bundle spaces, that is no bundle in one
+region has the same symbolic name and version as a bundle in the other region.
+Also, no bundle in one region has the same location as a bundle in the other region.
+
+$\sqcup$ is idempotent, commutative, and associative (where defined) and $NIL$ acts as a zero.
+\begin{argue}
+  \shows \forall r, s,t : Region | \{ (r, s), (s, t), (t, r) \} \subseteq \dom(\_ \sqcup \_) @ \\
+\t1 (r, r) \in \dom(\_ \sqcup \_) \land r \sqcup r = r \land \\
+\t1 (s, r) \in \dom(\_ \sqcup \_) \land r \sqcup s = s \sqcup r \land \\
+\t1 (r, s \sqcup t) \in \dom(\_ \sqcup \_) \land (r \sqcup s, t) \in \dom(\_ \sqcup \_) \land r \sqcup (s \sqcup t) = (r \sqcup s) \sqcup t \land \\
+\t1 (r, NIL) \in \dom(\_ \sqcup \_) \land r \sqcup NIL = NIL \\
+\end{argue}
+
+We define the set of all pairwise consistent regions
+\begin{zed}
+  ConsistentRegionPairs == \dom(\_ \sqcup \_) \\
+\end{zed}
+and the set of all pairwise consistent finite sets of regions.
+\begin{zed}
+  ConsistentRegionSets == \{ f : \finset Region | \forall r, s : f @ (r, s) \in ConsistentRegionPairs \} \\
+\end{zed}
+
+Since $\sqcup$ is commutative, associative, idempotent, and has a zero, we define a distributed form.
+\begin{axdef}
+  \bigsqcup : \finset Region \pfun Region \\
+\where
+  \bigsqcup \emptyset = NIL \land \\
+  (\forall r : Region; f : \finset Region | \{ r \} \cup f \in ConsistentRegionSets @ \\
+\t1 \bigsqcup( \{ r \} \cup f ) = r \sqcup \bigsqcup f) \\ 
+\end{axdef}
+  
+%=============================================================================
+\clearpage
+\section{Multiple Regions}
+\label{cha:multiregions}
+
+A system of multiple regions has a finite, indexed collection of regions, a convenience function of all the
+region identifiers in the system, and a function for
+determining the region identifier of any bundle in the system.
+\begin{schema}{Regions}
+  reg : RId \ffun Region \\
+  allBundles : \power Bundle \\
+  rids : \power RId \\
+  breg : Bundle \pfun RId \\
+\where
+ allBundles = \bigcup \{ r : \ran reg@ r.bundles \} \\
+ rids = \dom reg \\
+ breg = \{ b : Bundle; rid : rids | b \in (reg~rid).bundles @ (b, rid) \} \\
+\end{schema}
+Since $breg$ is a function, no bundle can belong to more than one region.
+This is a constraint on the regions in the collection expressed by the functionality of $breg$
+rather than by a quantification over the bundles in the regions.
+
+\subsection{Determining a Bundle's Region}
+
+We expose the convenience function as an operation for determining a bundle's region.
+\begin{schema}{GetRegionOk}
+  \Xi Regions \\
+  b? : Bundle \\
+  r! : Region \\
+\where
+  b? \in allBundles \\
+  r! = reg(breg~b?) \\
+\end{schema}
+
+\subsection{Promoting Region Operations}
+
+We define a fairly standard promotion schema.
+\begin{schema}{PromoteRegion}
+  \Delta Regions \\
+  \Delta Region \\
+  rid? : RId \\
+\where
+  rid? \in \dom reg \\
+  \theta Region = reg~rid? \\
+  reg' = reg \oplus \{ rid? \mapsto \theta Region' \} \\
+\end{schema}
+
+Then we promote the operation to add a bundle.
+\begin{zed}
+  RegionsAddBundleOk \defs (\exists \Delta Region @ PromoteRegion \land RegionAddBundleOk) \\
+\end{zed}
+
+%=============================================================================
+\clearpage
+\section{Filters}
+\label{cha:filters}
+
+A filter specifies sets of bundles, exported packages, and services.
+\begin{schema}{Filter}
+  bf : \power (BSN \cross BVer) \\
+  pf : \power Package \\
+  sf : \power Service \\
+\end{schema}
+
+We define some helper functions to perform filtering.
+
+The $xb$ function applies a filter to a bundle by filtering its exported packages and published services.
+\begin{axdef}
+  xb : Bundle \cross Filter \fun Bundle
+\where
+  xb = (\lambda b: Bundle; f : Filter @ \\
+\t1  (\mu Bundle | \\
+\t2 name = b.name \land \\
+\t2 version = b.version \land \\
+\t2 location = b.location \land \\
+\t2 exportedPackages = b.exportedPackages \cap f.pf \land \\
+\t2 publishedServices = b.publishedServices \cap f.sf))
+\end{axdef}
+
+The $fb$ function passes a set of bundles through a filter and then
+applies the filter to the remaining bundles.
+\begin{axdef}
+  fb : \power Bundle \cross Filter \fun \power Bundle \\
+\where
+  fb = (\lambda bs : \power Bundle; f : Filter @ \{ b : bs | (bid~b) \in f.bf @ xb(b, f) \}) \\
+\end{axdef}
+
+The $fp$ function passes a set of exported packages through a filter.
+\begin{axdef}
+  fp : \power Package \cross Filter \fun \power Package \\
+\where
+  fp = \{ ps : \power Package; f : Filter @ ((ps, f), ps \cap f.pf) \}
+\end{axdef}
+
+The $fp$ function passes a set of published services through a filter.
+\begin{axdef}
+  fs : \power Service \cross Filter \fun \power Service \\
+\where
+  fs = \{ ss : \power Service; f : Filter @ ((ss, f), ss \cap f.sf) \}
+\end{axdef}
+
+We also define the most permissive filter.
+\begin{axdef}
+  TOP : Filter
+\where
+  TOP.bf = BSN \cross BVer \\
+  TOP.pf = Package \\
+  TOP.sf = Service \\
+\end{axdef}
+
+\subsection{Filtering Regions}
+
+%%inop \downarrow 6
+We define an infix $\downarrow$ operator to apply a filter to a region and produce another region.
+\begin{axdef}
+  \_ \downarrow \_ : Region \cross Filter \fun Region \\
+\where
+  (\_ \downarrow \_) = (\lambda r : Region;  f : Filter @ \\
+\t3   (\mu Region | \\
+\t4 bundles = \{ b : r.bundles | (bid~b) \in f.bf @ xb(b, f) \} \land \\
+\t4 nv = f.bf \dres r.nv \land \\
+\t4 l = nv \circ bid \circ r.l \land \\
+\t4 pkg = r.pkg \cap f.pf \land \\
+\t4 svc = r.svc \cap f.sf )) \\
+\end{axdef}
+$\downarrow$ is total since packages and services not filtered out which are exported or published by a
+bundle which \textit{is} filtered out end up
+in the resultant region's imported packages and imported services sets, respectively.
+
+The most permissive filter can be applied to any region without effect.
+\begin{argue}
+  \shows \forall r : Region @ r \downarrow TOP = r \\
+\end{argue}
+
+Filters can be applied in any order with the same effect.
+\begin{argue}
+  \shows \forall r : Region; f, g : Filter @ (r \downarrow f) \downarrow g = (r \downarrow g) \downarrow f \\
+\end{argue}
+
+$\downarrow$ distributes over $\sqcup$ (where defined). Note that $\downarrow$ is defined to bind
+more tightly than $\sqcup$.
+\begin{argue}
+  \shows \forall f : Filter; r, s : Region @ \\
+\t1 f \downarrow (r \sqcup s) = f \downarrow r \sqcup f \downarrow s \\
+\end{argue}
+
+%=============================================================================
+\clearpage
+\section{Connected Regions}
+\label{cha:connregions}
+
+We now connect up regions to form a directed graph.
+
+Regions are connected by filters.
+Every region is connected to itself by the most permissive filter.
+So the bundles in a region can see all the bundles, exported packages, and services in that region.
+\begin{schema}{ConnectedRegions}
+  Regions \\
+  filter : RId \cross RId \pfun Filter \\
+  squash : RId \pfun Region \\
+\where
+  first~\limg \dom filter \rimg = rids \\
+  second~\limg \dom filter \rimg = rids \\
+  (\forall rid : rids @ filter(rid, rid) = TOP) \\
+  \dom squash = rids \\
+  (\forall rid : rids @ \\
+\t1 (\LET r == reg~rid @ \\
+\t2 squash(rid) = r \sqcup \bigsqcup \{ r2 : RId | (rid, r2) \in \dom filter \land r2 \neq rid @ \\
+\t3 squash(r2) \downarrow filter(rid,r2) \}))\\
+\end{schema}
+
+This schema places a constraint on the system that a bundle in any given region, can never see two
+distinct bundles with identical bundle symbolic names and versions.
+We go further than this when adding connections and bundles and make sure that the filters
+never clash over a bundle symbolic name and version and that the bundles in a given region never clash
+with the filters associated with the connections from the given region.
+
+The $squash$ function is well defined but this isn't immediately obvious.
+Since there are finitely many regions, the $\bigsqcup$ expression in the constraint is well defined.
+Also, we need to be sure that there is a $squash$ function which satisfies the constraint.
+This turns out to be the case because if we start at a given region $r$ and then form all the non-looping
+paths to other regions, then we can apply all the filters along each non-looping path and then
+use $\bigsqcup$ to combine the results to form $squash~r$ observing that visiting the same region via
+a longer, looping path does not affect the result since more filters will
+be applied compared to the non-looping path to that region.
+
+\subsection{Connecting Regions Together}
+
+We define a condition on an output system of connected regions which states that
+for a given input region identifier, any filters connecting the corresponding region to distinct
+regions do not overlap on any bundle symbolic name and bundle version.
+\begin{schema}{FiltersConsistent}
+   ConnectedRegions' \\
+   r? : RId \\
+\where
+  (\forall s, t : RId; f, g : Filter | (r?, s) \mapsto f \in filter' \land (r?, t) \mapsto g \in filter' @ \\
+\t1 f.bf \cap g.bf = \emptyset )
+\end{schema}
+
+We define an operation to connect two regions with a filter which must be consistent with
+the other filters associated with the first of the regions.
+\begin{schema}{ConnectOk}
+  \Delta ConnectedRegions \\
+  r?, s? : RId \\
+  f? : Filter \\
+  FiltersConsistent \\
+\where
+  (r?, s?) \notin \dom filter \\
+  \theta Regions' = \theta Regions \\
+  filter' = filter \cup \{ (r?, s?) \mapsto f? \} \\
+\end{schema}
+
+\subsection{Promoting Multiple Region Operations}
+
+We promote the add bundle operation and add a constraint that the bundle being added must not 
+have a bundle symbolic name and version which is present in a filter associated with the region
+the bundle is being added to.
+\begin{schema}{CRAddBundleOk}
+  \Delta ConnectedRegions \\
+  RegionsAddBundleOk \\
+\where
+  filter' = filter \\
+  (\forall s : RId; f : Filter | (rid?, s) \mapsto f \in filter @ \\
+\t1 (bid~b?) \notin f.bf) \\ 
+\end{schema}
+
+We also promote the get region operation for completeness.
+\begin{zed}
+  CRGetRegionOk \defs \Xi ConnectedRegions \land GetRegionOk \\
+\end{zed}
+
+%=============================================================================
+\clearpage
+\section{Framework Hooks}
+\label{cha:fhooks}
+
+We now describe the behaviour of framework hooks sufficient to implement our model
+of connected regions.
+
+\begin{schema}{BundleFindHook}
+  \Xi ConnectedRegions \\
+  finder? : Bundle \\
+  candidates? : \power Bundle \\
+  found! : \power Bundle \\
+\where
+  finder? \in allBundles \\
+  found! = candidates? \cap (squash(breg~finder?)).bundles \\
+\end{schema}
+
+\begin{schema}{BundleEventHook}
+  \Xi ConnectedRegions \\
+  listeners? : \power Bundle \\
+  eb? : Bundle \\
+  fl! : \power Bundle \\
+\where
+  listeners? \subseteq allBundles \\
+  fl! = \{ l : listeners? | eb? \in (squash(breg~l)).bundles \} \\
+\end{schema}
+
+\begin{schema}{ResolverHookFilterMatches}
+  \Xi ConnectedRegions \\
+  requirer? : Bundle \\
+  candidates? : \power Package \\
+  filtered! : \power Package \\
+\where
+  requirer? \in allBundles \\
+  filtered! = candidates? \cap (squash(breg~requirer?)).pkg \\
+\end{schema}
+
+\begin{schema}{ServiceFindHook}
+  \Xi ConnectedRegions \\
+  finder? : Bundle \\
+  candidates? : \power Service \\
+  found! : \power Service \\
+\where
+  finder? \in allBundles \\
+  found! = candidates? \cap (squash(breg~finder?)).svc \\
+\end{schema}
+
+\begin{schema}{ServiceEventHook}
+  \Xi ConnectedRegions \\
+  listeners? : \power Bundle \\
+  es? : Service \\
+  fl! : \power Bundle \\
+\where
+  listeners? \subseteq allBundles \\
+  fl! = \{ l : listeners? | es? \in (squash(breg~l)).svc \} \\
+\end{schema}
+
+%=============================================================================
+\newpage
+\section{Z Notation}
+\label{cha:znot}
+
+\makeatletter % the following code is taken from Mike Spivey's zed.tex
+
+\def\symtab{\setbox0=\vbox\bgroup \def\\{\cr}
+        \halign\bgroup\strut$##$\hfil&\quad##\hfil\cr}
+\def\endsymtab{\crcr\egroup\egroup
+        \dimen0=\ht0 \divide\dimen0 by2 \advance\dimen0 by\ht\strutbox
+        \splittopskip=\ht\strutbox \vbadness=10000
+        \predisplaypenalty=0
+        $$\halign{##\cr\hbox to\linewidth{% 
+                \valign{##\vfil\cr
+                        \setbox1=\vsplit0 to\dimen0 \unvbox1\cr 
+                        \noalign{\hfil}\unvbox0\cr
+                        \noalign{\hfil}}}\cr 
+                \noalign{\prevdepth=\dp\strutbox}}$$
+        \global\@ignoretrue}
+
+\makeatother 
+
+Numbers:
+\begin{symtab}
+        \nat & \verb/Natural numbers/ \{\verb/0,1,.../\} \\
+%       \num & \verb/Integers (...,-1,0,1,...)/ \\
+%       \nat_1 & \verb/Positive natural numbers/ \\
+%       \upto & \verb/integral range/ \\
+%       + & \verb/Addition/\quad\hfill 3 \\
+%       - & \verb/Subtraction/\quad\hfill 3 \\
+%       * & \verb/Multiply/\quad\hfill 4 \\
+%       \div & \verb/Remainder/\quad\hfill 4 \\
+%       \mod & \verb/Modulus/\quad\hfill 4 \\
+%       < & \verb/Less than/ \\
+%       > & \verb/Greater than/ \\
+%       \leq & \verb/Less than or equal/ \\
+%       \geq & \verb/Greater than or equal/ \\
+%       \neq & \verb/Inequality/ \\
+\end{symtab}
+Propositional logic and the schema calculus:
+\begin{symtab}
+%       \lnot & \verb/Not/ \\
+        \ldots\land\ldots & \verb/And/ \\
+        \ldots\lor\ldots & \verb/Or/ \\
+        \ldots\implies\ldots & \verb/Implies/ \\
+%       \iff & \verb/If and only if/ \\
+        \forall..\mid..\spot.. & \verb/For all/ \\
+        \exists..\mid..\spot.. & \verb/There exists/ \\
+%       \exists_1..\mid..\spot.. & \verb/There exists unique/ \\
+        \ldots\hide\ldots & \verb/Hiding/ \\
+%       \project & \verb/\project/ \\
+%       \pre & \verb/\pre/ \\
+%       \semi & \verb/\semi/
+        \ldots\defs\ldots & \verb/Schema definition/ \\
+        \ldots==\ldots & \verb/Abbreviation/ \\
+        \ldots::=\ldots\mid\ldots & \verb/Free type definition/ \\
+        \ldata\ldots\rdata & \verb/Free type injection/ \\
+        [\ldots] & \verb/Given sets/ \\
+        ',?,!,_0\ldots_9 & \verb/Schema decorations/ \\
+        \ldots\shows\ldots & \verb/theorem/ \\
+        \theta\ldots & \verb/Binding formation/ \\
+        \lambda\ldots & \verb/Function definition/ \\
+        \mu\ldots & \verb/Mu-expression/ \\
+        \Delta\ldots & \verb/State change/ \\
+        \Xi\ldots & \verb/Invariant state change/ \\
+\end{symtab}
+Sets and sequences:
+%and bags:
+\begin{symtab}
+        \{\ldots\} & \verb/Set/ \\
+        \{..\mid..\spot..\} & \verb/Set comprehension/ \\
+        \power\ldots & \verb/Set of subsets of/ \\
+%       \power_1 & \verb/Non-empty subsets of/ \\
+%       \finset & \verb/Finite sets/ \\
+%       \finset_1 & \verb/Non-empty finite sets/ \\
+        \emptyset & \verb/Empty set/ \\
+        \ldots\cross\ldots & \verb/Cartesian product/ \\
+        \ldots\in\ldots & \verb/Set membership/ \\
+        \ldots\notin\ldots & \verb/Set non-membership/ \\
+        \ldots\cup\ldots & \verb/Union/ \\
+        \ldots\cap\ldots & \verb/Intersection/ \\
+        \ldots\setminus\ldots & \verb/Set difference/ \\
+        \bigcup\ldots & \verb/Distributed union/ \\
+%       \bigcap & \verb/Distributed intersection/ \\
+        \#\ldots & \verb/Cardinality/ \\
+%       \dcat & \verb/Distributed sequence concatenation/
+        \ldots\subseteq\ldots & \verb/Subset/ \\
+        \ldots\subset\ldots & \verb/Proper subset/ \\
+        \ldots\partition\ldots & \verb/Set partition/ \\
+        \seq & \verb/Sequences/ \\
+%       \seq_1 & \verb/Non-empty sequences/ \\
+%       \iseq & \verb/Injective sequences/ \\
+        \langle\ldots\rangle & \verb/Sequence/ \\
+%       \cat & \verb/Sequence concatenation/ \\
+        \disjoint\ldots & \verb/Disjoint sequence of sets/ \\
+%       \bag & \verb/Bags/ \\
+%       \lbag\ldots\rbag & \verb/Bag/ \\
+%       \inbag & \verb/Bag membership/ \\
+\end{symtab}
+%Here are the infix function symbols. Each symbol is
+%shown with its priority:
+%\begin{symtab}
+%       \uplus & \verb/\uplus/ \\
+%       \filter & \verb/Schema projection/ \\
+%       \uminus & \verb/\uminus/
+%\end{symtab}
+Functions and relations:
+\begin{symtab}
+        \ldots\rel\ldots  & \verb/Relation/ \\
+        \ldots\pfun\ldots & \verb/Partial function/ \\
+        \ldots\fun\ldots  & \verb/Total function/ \\
+        \ldots\pinj\ldots & \verb/Partial injection/ \\
+        \ldots\inj\ldots  & \verb/Injection/ \\
+%       \psurj & \verb/Partial surjection/ \\
+%       \surj & \verb/Surjection/ \\
+%       \bij  & \verb/Bijection/ \\
+%       \ffun & \verb/Finite partial function/ \\
+%       \finj & \verb/Finite partial injection/ \\
+        \dom\ldots & \verb/Domain/ \\
+        \ran\ldots & \verb/Range/ \\
+        \ldots\mapsto\ldots & \verb/maplet/ \\
+        \ldots\inv & \verb/Relational inverse/ \\
+%       \ldots\plus & \verb/Transitive closure/ \\
+        \ldots\star & \verb/Reflexive-transitive closure/ \\
+%       \ldots\bsup n \esup & \verb/Relational iteration/ \\
+        \ldots\limg\ldots\rimg & \verb/Relational image/ \\
+%       \comp & \verb/Forward relational composition/ \\
+%       \circ & \verb/Relational composition/ \\
+        \ldots\oplus\ldots & \verb/Functional overriding/ \\
+        \ldots\dres\ldots & \verb/Domain restriction/ \\
+%       \ldots\rres\ldots & \verb/Range restriction/ \\
+        \ldots\ndres\ldots & \verb/Domain subtraction/ \\
+%       \ldots\nrres\ldots & \verb/Range subtraction/ \\
+%       \id & \verb/Identity relation/ \\
+\end{symtab}
+Axiomatic descriptions:
+%%unchecked
+\begin{axdef}
+  Declarations
+\where
+  Predicates
+\end{axdef}
+Schema definitions:
+%%unchecked
+\begin{schema}{SchemaName}
+  Declaration
+\where
+  Predicates
+\end{schema}
+\end{document}

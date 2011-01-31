@@ -2,27 +2,12 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="admin-shell">
-	<title>Equinox Console Extension (<literal>vsh</literal>)</title>
+	<title>Equinox Console</title>
 
-	<para>Virgo provides an extension to the Equinox console in the form of the <literal>vsh</literal> command that allows you to examine artifacts
-	currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shut down
-	the server.   You can install, examine, and manage the lifecycle of the following artifacts:
-	<itemizedlist>
-	  <listitem><para>Bundles</para></listitem>
-	  <listitem><para>Configuration Artifacts</para></listitem>
-	  <listitem><para>PARs</para></listitem>
-	  <listitem><para>Plans</para></listitem>
-	</itemizedlist>
-	and can examine:
-	<itemizedlist>
-	  <listitem><para>Exported packages</para></listitem>
-	  <listitem><para>Services in the OSGi service registry</para></listitem>
-	</itemizedlist>
-	</para>
 	<para>
 		The Equinox console is not enabled by default.  To enable it place the setting
 <programlisting><![CDATA[osgi.console=2401]]></programlisting>
-		in the <literal>org.eclipse.virgo.kernel.userregion.properties</literal> file in the <literal>config</literal> directory.  
+		in the <literal>org.eclipse.virgo.kernel.userregion.properties</literal> file in the <literal>config</literal> directory.
 		Any free port can be used, but 2401 is the usual default.
 	</para>
 	<para>
@@ -35,9 +20,26 @@ Escape character is '^]'.
 
 osgi> ]]></programlisting>
 
-	<section id="admin-shell-using">
-		<title>Using the Equinox Console Extension</title>
-		<para>You invoke the Equinox Console Extension using the <literal>vsh</literal> command. For example:</para>
+	<section id="admin-shell-using-vsh">
+		<title>Using the Equinox Console Extension (<literal>vsh</literal>)</title>
+
+        <para>Virgo provides an extension to the Equinox console in the form of the <literal>vsh</literal> command that allows you to examine artifacts
+        currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shut down
+        the server. You can install, examine, and manage the lifecycle of the following artifacts:
+        <itemizedlist>
+          <listitem><para>Bundles</para></listitem>
+          <listitem><para>Configuration Artifacts</para></listitem>
+          <listitem><para>PARs</para></listitem>
+          <listitem><para>Plans</para></listitem>
+        </itemizedlist>
+        and can examine:
+        <itemizedlist>
+          <listitem><para>Exported packages</para></listitem>
+          <listitem><para>Services in the OSGi service registry</para></listitem>
+        </itemizedlist>
+        </para>
+
+        <para>You invoke the Equinox Console Extension using the <literal>vsh</literal> command. For example:</para>
 		<programlisting><![CDATA[
 osgi> vsh help
 
@@ -56,12 +58,12 @@ osgi> vsh help
 
 osgi> ]]></programlisting>
 
-	    <section id="admin-shell-using-command-list">
+	    <section id="admin-shell-vsh-using-command-list">
 		<title>Equinox Console Extension (<literal>vsh</literal>) Subcommands</title>
 
 		<para>The following table lists the Equinox Console Extension subcommands; each subcommand in turn has a variety of options that you can specify, depending on what you want to do, such as start a bundle or refresh a plan. The reference documentation about each subcommand provides the full list of available options. </para>
 
-        	<table id="admin-shell-commands-table" colsep="1" frame="all" rowsep="1">
+        	<table id="admin-shell-vsh-commands-table" colsep="1" frame="all" rowsep="1">
             	  <title>Equinox Console Extension Subcommands</title>
                     <tgroup cols="2">
                       <thead>
@@ -72,43 +74,43 @@ osgi> ]]></programlisting>
                       </thead>
                       <tbody>
                         <row>
-				<entry><link linkend="admin-shell-bundle-command">bundle</link></entry>
+				<entry><link linkend="admin-shell-vsh-bundle-command">bundle</link></entry>
                                 <entry>Manages and displays information about bundle artifacts.</entry>
                         </row>
                         <row>
-				<entry><link linkend="admin-shell-config-command">config</link></entry>
+				<entry><link linkend="admin-shell-vsh-config-command">config</link></entry>
                                 <entry>Manages and displays information about configuration artifacts.</entry>
                         </row>
                         <row>
-				<entry><link linkend="admin-shell-package-command">package</link></entry>
+				<entry><link linkend="admin-shell-vsh-package-command">package</link></entry>
                                 <entry>Displays information about exported packages.</entry>
                         </row>
                         <row>
-				<entry><link linkend="admin-shell-par-command">par</link></entry>
+				<entry><link linkend="admin-shell-vsh-par-command">par</link></entry>
                                 <entry>Manages and displays information about PAR artifacts.</entry>
                         </row>
                         <row>
-				<entry><link linkend="admin-shell-plan-command">plan</link></entry>
+				<entry><link linkend="admin-shell-vsh-plan-command">plan</link></entry>
                                 <entry>Manages and displays information about plan artifacts.</entry>
                         </row>
                         <row>
-				<entry><link linkend="admin-shell-service-command">service</link></entry>
+				<entry><link linkend="admin-shell-vsh-service-command">service</link></entry>
                                 <entry>Displays information about services in the OSGi service registry.</entry>
                         </row>
                         <row>
-				<entry><link linkend="admin-shell-install-command">install</link></entry>
+				<entry><link linkend="admin-shell-vsh-install-command">install</link></entry>
                                 <entry>Installs an artifact to Web Server. </entry>
                         </row>
                         <row>
-				<entry><link linkend="admin-shell-shutdown-command">shutdown</link></entry>
+				<entry><link linkend="admin-shell-vsh-shutdown-command">shutdown</link></entry>
                                 <entry>Shuts down the Web Server instance to which the Equinox Console is connected.</entry>
                         </row>
                         <row>
-				<entry><link linkend="admin-shell-help-command">help</link></entry>
+				<entry><link linkend="admin-shell-vsh-help-command">help</link></entry>
                                 <entry>Displays help about the list of available subcommands, as well as more detailed help about individual subcommands.</entry>
                         </row>
 		                <row>
-				<entry><link linkend="admin-shell-exit-command">exit</link></entry>
+				<entry><link linkend="admin-shell-vsh-exit-command">exit</link></entry>
 		                        <entry>Returns to the Equinox console with no effect.</entry>
 		                </row>
 
@@ -119,31 +121,31 @@ osgi> ]]></programlisting>
 
 	</section>
 
-	<section id="admin-shell-command-reference">
+	<section id="admin-shell-vsh-command-reference">
 	  <title>Equinox Console Extension Subcommand Reference</title>
 
 	  <para>
 	  	This section contains reference information about the Equinox Console Extension subcommands
-		<link linkend="admin-shell-bundle-command">bundle</link>, 
-		<link linkend="admin-shell-config-command">config</link>, 
-		<link linkend="admin-shell-package-command">package</link>, 
-		<link linkend="admin-shell-par-command">par</link>, 
-		<link linkend="admin-shell-plan-command">plan</link>, 
-		<link linkend="admin-shell-service-command">service</link>, 
-		<link linkend="admin-shell-install-command">install</link>, 
-		<link linkend="admin-shell-shutdown-command">shutdown</link>, 
-		<link linkend="admin-shell-help-command">help</link>, and
-		<link linkend="admin-shell-exit-command">exit</link>.
+		<link linkend="admin-shell-vsh-bundle-command">bundle</link>,
+		<link linkend="admin-shell-vsh-config-command">config</link>,
+		<link linkend="admin-shell-vsh-package-command">package</link>,
+		<link linkend="admin-shell-vsh-par-command">par</link>,
+		<link linkend="admin-shell-vsh-plan-command">plan</link>,
+		<link linkend="admin-shell-vsh-service-command">service</link>,
+		<link linkend="admin-shell-vsh-install-command">install</link>,
+		<link linkend="admin-shell-vsh-shutdown-command">shutdown</link>,
+		<link linkend="admin-shell-vsh-help-command">help</link>, and
+		<link linkend="admin-shell-vsh-exit-command">exit</link>.
 	  </para>
 
 
-	  <section id="admin-shell-bundle-command">
+	  <section id="admin-shell-vsh-bundle-command">
 		<title>bundle Subcommand</title>
 
 		<para>Use the <literal>bundle</literal> subcommand to manage the lifecycle of bundles deployed to @short.product.name@ and to gather information about deployed bundles, such as diagnostic information, header information, and so on. </para>
 		<para>The following table lists the options you can specify for this subcommand.</para>
-	
-        	<table id="admin-shell-bundle-command-table" colsep="1" frame="all" rowsep="1">
+
+        	<table id="admin-shell-vsh-bundle-command-table" colsep="1" frame="all" rowsep="1">
             	  <title>Options of the bundle Subcommand</title>
                     <tgroup cols="2">
                       <thead>
@@ -193,7 +195,7 @@ osgi> ]]></programlisting>
                         </row>
                         <row>
 				<entry>uninstall <emphasis>id</emphasis></entry>
-                                <entry>Uninstalls the specified bundle from Web Server.   Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.  
+                                <entry>Uninstalls the specified bundle from Web Server.   Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.
 				  <para>When the uninstall process is complete, the bundle does not show up in the list of bundles displayed by the <literal>bundle list</literal> subcommand.  If you want to use the application in the bundle, you must re-install it using the <literal>install</literal> subcommand.</para>
 				</entry>
                         </row>
@@ -254,7 +256,7 @@ Imported Packages:
     org.springframework.osgi.context [1.2.1, 1.2.1]
         exported by org.springframework.osgi.core 1.2.1 [4]
     &lt;... remainder omitted ...&gt;
-	
+
 Exported Packages:
     org.springframework.osgi.extender 1.2.1
     &lt;... remainder omitted ...&gt;
@@ -276,13 +278,13 @@ Fragments:
 osgi> </programlisting>
 
 	  </section>
-	  <section id="admin-shell-config-command">
+	  <section id="admin-shell-vsh-config-command">
 		<title>config Subcommand</title>
 
 		<para>Use the <literal>config</literal> subcommand to view and manage the configuration artifacts that have been installed to Web Server.  A <emphasis>configuration artifact</emphasis> is simply a properties file that is associated with a user application that is contained in a bundle.  Using configuration artifacts, you can manage the configuration of a user application completely separately from the bundle that contains the application. </para>
 		<para>The following table lists the options you can specify for this subcommand.</para>
-	
-        	<table id="admin-shell-config-command-table" colsep="1" frame="all" rowsep="1">
+
+        	<table id="admin-shell-vsh-config-command-table" colsep="1" frame="all" rowsep="1">
             	  <title>Options of the config Subcommand</title>
                     <tgroup cols="2">
                       <thead>
@@ -294,7 +296,7 @@ osgi> </programlisting>
                       <tbody>
                         <row>
 				<entry>list</entry>
-                                <entry>Lists the configuration artifacts that are currently installed in Web Server.  
+                                <entry>Lists the configuration artifacts that are currently installed in Web Server.
 			          <para>The <literal>list</literal> option displays the full name of each installed configuration artifact, its version, and its current state.  Configuration artifacts have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a configuration can be in is the same as those of bundles; see <link linkend="admin-shell-bundle-command">the bundle subcommand</link> for the list of possible states. </para>
 			        </entry>
                         </row>
@@ -349,7 +351,7 @@ osgi> </programlisting>
 
 		<programlisting>osgi> vsh config examine org.eclipse.virgo.kernel
 
-Factory pid:     
+Factory pid:
 Bundle Location: file:lib/kernel/org.eclipse.virgo.kernel.osgi-2.1.0.RELEASE.jar
 
 Properties:
@@ -368,14 +370,14 @@ Properties:
 osgi> </programlisting>
 
 	  </section>
-	  <section id="admin-shell-package-command">
+	  <section id="admin-shell-vsh-package-command">
 		<title>package Subcommand</title>
 
 		<para>Use the <literal>package</literal> subcommand to view the complete list of packages exported by all bundles installed to Web Server, as well as examine a particular exported package in more detail.</para>
 
 		<para>The following table lists the options you can specify for this subcommand.</para>
-	
-        	<table id="admin-shell-package-command-table" colsep="1" frame="all" rowsep="1">
+
+        	<table id="admin-shell-vsh-package-command-table" colsep="1" frame="all" rowsep="1">
             	  <title>Options of the package Subcommand</title>
                     <tgroup cols="2">
                       <thead>
@@ -410,10 +412,10 @@ osgi> </programlisting>
 		<programlisting>osgi> vsh package list
 
 Name                                                        Version                    Providing Bundle
-javax.accessibility                                         0.0.0                      0      
-javax.activation                                            0.0.0                      0      
-javax.activation                                            1.1.1                      0   
-&lt;... remainder omitted ...&gt;   
+javax.accessibility                                         0.0.0                      0
+javax.activation                                            0.0.0                      0
+javax.activation                                            1.1.1                      0
+&lt;... remainder omitted ...&gt;
 
 osgi> </programlisting>
 
@@ -443,19 +445,19 @@ Importer(s):
         Import-Package directives:
             resolution:
                 static
-    &lt;... remainder omitted ...&gt; 
+    &lt;... remainder omitted ...&gt;
 
 osgi> </programlisting>
 
 
 	  </section>
-	  <section id="admin-shell-par-command">
+	  <section id="admin-shell-vsh-par-command">
 		<title>par Subcommand</title>
 
 		<para>Use the <literal>par</literal> subcommand to view all the PARs currently installed in Web Server, view details about a particular PAR and manage its lifecycle, such as starting, stopping, refreshing, and uninstalling it.</para>
 		<para>The following table lists the options you can specify for this subcommand.</para>
-	
-        	<table id="admin-shell-par-command-table" colsep="1" frame="all" rowsep="1">
+
+        	<table id="admin-shell-vsh-par-command-table" colsep="1" frame="all" rowsep="1">
             	  <title>Options of the par Subcommand</title>
                     <tgroup cols="2">
                       <thead>
@@ -474,7 +476,7 @@ osgi> </programlisting>
 				<entry>examine <emphasis>name version</emphasis></entry>
                                 <entry>Displays information about the specified PAR; you are required to identify the PAR with both its name and its version.  Use the <literal>par list</literal> subcommand to view all installed PAR files and their versions.  The subcommand displays the following information:
 			         <itemizedlist>
-				    <listitem><para>The current state of the PAR (see <link linkend="admin-shell-bundle-command">the bundle subcommand</link> for the full list of possible states).</para></listitem>
+				    <listitem><para>The current state of the PAR (see <link linkend="admin-shell-vsh-bundle-command">the bundle subcommand</link> for the full list of possible states).</para></listitem>
 				  <listitem><para>Whether the PAR is <emphasis>scoped</emphasis>.  Scoping specifies whether Web Server should deploy the members of the PAR in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</para></listitem>
 				  <listitem><para>Whether the PAR is <emphasis>atomic</emphasis>.  When a PAR is atomic, Web Server manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Web Server starts <emphasis>all</emphasis> the PAR artifacts. If one artifact fails to start, then Web Server stops all other artifacts in the PAR.</para></listitem>
 				  <listitem><para>The individual members, or children, of the PAR.  These could be other PARs, plans, bundles, configuration artifacts, and so on.</para></listitem>
@@ -483,22 +485,22 @@ osgi> </programlisting>
                         </row>
                         <row>
 				<entry>start <emphasis>name version</emphasis></entry>
-                                <entry>Starts the specified PAR.  You must specify both the full name of the PAR as well as the version you want to start. Use the <literal>par list</literal> subcommand to get the list of PARs currently installed in Web Server. 
+                                <entry>Starts the specified PAR.  You must specify both the full name of the PAR as well as the version you want to start. Use the <literal>par list</literal> subcommand to get the list of PARs currently installed in Web Server.
 				<para>To start a PAR, it must have already been resolved by Web Server, or in other words, be in the <literal>Resolved</literal> state.  After Web Server successfully starts the PAR, it is listed in the <literal>Active</literal> state. </para></entry>
                         </row>
                         <row>
 				<entry>stop <emphasis>name version</emphasis></entry>
-                                <entry>Stops the specified PAR.  You must specify both the full name of the PAR as well as the version you want to stop. Use the <literal>par list</literal> subcommand to get the list of PARs currently installed in Web Server. 
+                                <entry>Stops the specified PAR.  You must specify both the full name of the PAR as well as the version you want to stop. Use the <literal>par list</literal> subcommand to get the list of PARs currently installed in Web Server.
 				  <para>When you stop a PAR, it goes from the <literal>Active</literal> state to the <literal>Resolved</literal> state, and you must re-start it if you want to use the application that the PAR contains.</para> </entry>
                         </row>
                         <row>
 				<entry>refresh <emphasis>name version</emphasis></entry>
-                                <entry>Updates the contents of the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the <literal>par list</literal> subcommand to this information.  
+                                <entry>Updates the contents of the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the <literal>par list</literal> subcommand to this information.
 				<para>Use this subcommand if you have changed the contents of the PAR file and you want to refresh the artifact as installed in the OSGi framework.</para></entry>
                         </row>
                         <row>
 				<entry>uninstall <emphasis>name version</emphasis></entry>
-                                <entry>Uninstalls the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the <literal>par list</literal> subcommand to this information.  
+                                <entry>Uninstalls the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the <literal>par list</literal> subcommand to this information.
 				  <para>When the uninstall process is complete, the PAR will not show up in the list of PARs displayed by the <literal>par list</literal> subcommand.  If you want to use the application in the PAR, you must re-install it using the <literal>install</literal> subcommand.</para></entry>
                         </row>
 		      </tbody>
@@ -537,13 +539,13 @@ osgi> </programlisting>
 
 	  </section>
 
-	  <section id="admin-shell-plan-command">
+	  <section id="admin-shell-vsh-plan-command">
 		<title>plan Subcommand</title>
 
 		<para>Use the <literal>plan</literal> subcommand to view all the plans currently installed in Web Server, view details about a particular plan and manage its lifecycle, such as starting, stopping, refreshing, and uninstalling it.</para>
 		<para>The following table lists the options you can specify for this subcommand.</para>
-	
-        	<table id="admin-shell-plan-command-table" colsep="1" frame="all" rowsep="1">
+
+        	<table id="admin-shell-vsh-plan-command-table" colsep="1" frame="all" rowsep="1">
             	  <title>Options of the plan Subcommand</title>
                     <tgroup cols="2">
                       <thead>
@@ -562,7 +564,7 @@ osgi> </programlisting>
 				<entry>examine <emphasis>name version</emphasis></entry>
                                 <entry>Displays information about the specified plan; you are required to identify the plan with both its name and its version.  Use the <literal>plan list</literal> subcommand to view all installed plans and their versions.  The subcommand displays the following information:
 			         <itemizedlist>
-						<listitem><para>The current state of the plan (see <link linkend="admin-shell-bundle-command">the bundle subcommand</link> for the full list of possible states).</para></listitem>
+						<listitem><para>The current state of the plan (see <link linkend="admin-shell-vsh-bundle-command">the bundle subcommand</link> for the full list of possible states).</para></listitem>
 				    	<listitem><para>Whether the plan is <emphasis>scoped</emphasis>.  Scoping specifies whether Web Server should deploy the members of the plan in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</para></listitem>
 				    	<listitem><para>Whether the plan is <emphasis>atomic</emphasis>.  When a plan is atomic, Web Server manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Web Server starts <emphasis>all</emphasis> the plan artifacts. If one artifact fails to start, then Web Server stops all other artifacts in the plan.</para></listitem>
 				    	<listitem><para>The individual members, or children, of the plan.  These could be other plans, PARs, bundles, configuration artifacts, and so on.</para></listitem>
@@ -571,22 +573,22 @@ osgi> </programlisting>
                         </row>
                         <row>
 				<entry>start <emphasis>name version</emphasis></entry>
-                                <entry>Starts the specified plan.  You must specify both the full name of the plan as well as the version you want to start. Use the <literal>plan list</literal> subcommand to get the list of plans currently installed in Web Server. 
+                                <entry>Starts the specified plan.  You must specify both the full name of the plan as well as the version you want to start. Use the <literal>plan list</literal> subcommand to get the list of plans currently installed in Web Server.
 				<para>To start a plan, it must have already been resolved by Web Server, or in other words, be in the <literal>Resolved</literal> state.  After Web Server successfully starts the plan, it is listed in the <literal>Active</literal> state. </para></entry>
                         </row>
                         <row>
 				<entry>stop <emphasis>name version</emphasis></entry>
-                                <entry>Stops the specified plan.  You must specify both the full name of the plan as well as the version you want to stop. Use the <literal>plan list</literal> subcommand to get the list of plans currently installed in Web Server. 
+                                <entry>Stops the specified plan.  You must specify both the full name of the plan as well as the version you want to stop. Use the <literal>plan list</literal> subcommand to get the list of plans currently installed in Web Server.
 				  <para>When you stop a plan, it goes from the <literal>Active</literal> state to the <literal>Resolved</literal> state, and you must re-start it if you want to use the application that the plan contains.</para> </entry>
                         </row>
                         <row>
 				<entry>refresh <emphasis>name version</emphasis></entry>
-                                <entry>Updates the contents of the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the <literal>plan list</literal> subcommand to this information.  
+                                <entry>Updates the contents of the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the <literal>plan list</literal> subcommand to this information.
 				<para>Use this subcommand if you have changed the contents of the plan file and you want to refresh the artifact as installed in the OSGi framework.</para></entry>
                         </row>
                         <row>
 				<entry>uninstall <emphasis>name version</emphasis></entry>
-                                <entry>Uninstalls the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the <literal>plan list</literal> subcommand to this information.  
+                                <entry>Uninstalls the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the <literal>plan list</literal> subcommand to this information.
 				  <para>When the uninstall process is complete, the plan will not show up in the list of plans displayed by the <literal>plan list</literal> subcommand.  If you want to use the application in the plan, you must re-install it using the <literal>install</literal> subcommand.</para></entry>
                         </row>
 		      </tbody>
@@ -620,7 +622,7 @@ Children:
 osgi> </programlisting>
 
 		<para>The following example shows how to stop a currently Active plan:</para>
-		<programlisting>osgi> vsh plan stop org.eclipse.virgo.web 2.1.0   
+		<programlisting>osgi> vsh plan stop org.eclipse.virgo.web 2.1.0
 
 plan org.eclipse.virgo.web:2.1.0 stopped successfully
 
@@ -635,13 +637,13 @@ plan org.eclipse.virgo.web:2.1.0 started successfully
 osgi> </programlisting>
 
 	  </section>
-	  <section id="admin-shell-service-command">
+	  <section id="admin-shell-vsh-service-command">
 		<title>service Subcommand</title>
 
 		<para>Use the <literal>service</literal> subcommand to view all the services that have been registered in the OSGi service registry of Web Server. You can also examine a specific service to discover its properties, the bundle that publishes the service, and any bundles that consume the service.</para>
 		<para>The following table lists the options you can specify for this subcommand.</para>
-	
-        	<table id="admin-shell-service-command-table" colsep="1" frame="all" rowsep="1">
+
+        	<table id="admin-shell-vsh-service-command-table" colsep="1" frame="all" rowsep="1">
             	  <title>Options of the service Subcommand</title>
                     <tgroup cols="2">
                       <thead>
@@ -653,7 +655,7 @@ osgi> </programlisting>
                       <tbody>
                         <row>
 				<entry>list</entry>
-                                <entry>Displays the list of services that are currently registered in the OSGi service registry of Web Server. 
+                                <entry>Displays the list of services that are currently registered in the OSGi service registry of Web Server.
 				  <para>Each service is identified by an internal <literal>ID</literal> which you can then use with the <literal>service examine</literal> subcommand to view the details about a particular service. The <literal>list</literal> option also displays the object class that implements the service and the internal <literal>id</literal> of the bundle that provides the service. </para></entry>
                         </row>
                         <row>
@@ -677,12 +679,12 @@ Id  Object Class(es)                                            Providing Bundle
 5   java.lang.ClassLoader                                                      0
 6   org.eclipse.osgi.framework.log.FrameworkLog                                0
 7   org.eclipse.osgi.framework.log.FrameworkLog                                0
-&lt;... remainder omitted ...&gt; 
+&lt;... remainder omitted ...&gt;
 
 72 org.eclipse.gemini.web.core.spi.ServletContainer                           38
 73 org.eclipse.gemini.web.core.WebContainer                                   37
 74 org.eclipse.virgo.web.core.WebApplicationRegistry                          39
-&lt;... remainder omitted ...&gt; 
+&lt;... remainder omitted ...&gt;
 
 osgi> </programlisting>
 
@@ -703,7 +705,7 @@ osgi> </programlisting>
 		osgi> </programlisting>
 
 	  </section>
-	  <section id="admin-shell-install-command">
+	  <section id="admin-shell-vsh-install-command">
 		<title>install Subcommand</title>
 
 		<para>Use the <literal>install</literal> subcommand to deploy an artifact to Web Server.  The artifact can be a bundle, PAR, plan, or configuration artifact.</para>
@@ -724,13 +726,13 @@ Artifact bundle swf-booking-mvc.war 0.0.0 installed</programlisting>
 
 		<programlisting>osgi> vsh bundle list
 
-Id   Name                             Version                   State 
+Id   Name                             Version                   State
 
 0    org.eclipse.osgi                 3.6.1.R36x_v20100806     ACTIVE
 1    org.eclipse.virgo.region.user    0.0.0                    ACTIVE
-&lt;... remainder omitted ...&gt; 
+&lt;... remainder omitted ...&gt;
 
-59   org.eclipse.virgo.server.splash   2.1.0.RELEASE           ACTIVE 
+59   org.eclipse.virgo.server.splash   2.1.0.RELEASE           ACTIVE
 60   swf-booking-mvc.war              0.0.0                  RESOLVED
 
 osgi> </programlisting>
@@ -757,12 +759,12 @@ Imported Packages:
         exported by org.eclipse.osgi 3.6.1.R36x_v20100806 [0]
     org.omg.DynamicAny.DynAnyFactoryPackage [0.0.0, 0.0.0]
         exported by org.eclipse.osgi 3.6.1.R36x_v20100806 [0]
-    &lt;... remainder omitted ...&gt; 
+    &lt;... remainder omitted ...&gt;
 
 osgi> </programlisting>
 
 	  </section>
-	  <section id="admin-shell-shutdown-command">
+	  <section id="admin-shell-vsh-shutdown-command">
 		<title>shutdown Subcommand</title>
 
 		<para>Use the <literal>shutdown</literal> subcommand to shut down the Web Server instance to which you are connected. When Web Server is shutdown, the shell returns you to the operating system prompt. </para>
@@ -776,7 +778,7 @@ Shutdown MBean called
 prompt$</programlisting>
 
 	  </section>
-	  <section id="admin-shell-help-command">
+	  <section id="admin-shell-vsh-help-command">
 		<title>help Subcommand</title>
 
 		<para>Use the <literal>help</literal> subcommand on its own to get a list of all available Equinox Console Extension subcommands.  If you specify a particular subcommand to the <literal>help</literal> subcommand, then you will get the list of options that you can pass to the subcommand. </para>
@@ -820,13 +822,142 @@ osgi> </programlisting>
 
 
 	  </section>
-	  <section id="admin-shell-exit-command">
+	  <section id="admin-shell-vsh-exit-command">
 		<title>exit Subcommand</title>
 		<para>This returns to the Equinox console and otherwise has no effect.</para>
 		<para>The <literal>exit</literal> subcommand does not have any options.</para>
 	  </section>
 
-	
 
 	</section>
+
+    <section id="admin-shell-class-loading">
+        <title>Class Loading Commands</title>
+        <para>The class loading commands in @short.product.name@ provide the ability to list all bundles that:
+            <itemizedlist>
+                <listitem><para><emphasis role="bold">contain</emphasis> a class</para></listitem>
+                <listitem><para><emphasis role="bold">export</emphasis> a class</para></listitem>
+                <listitem><para>can <emphasis role="bold">load</emphasis> a class</para></listitem>
+            </itemizedlist>
+        </para>
+
+        <section id="admin-shell-cl-using-command-list">
+            <title>Class Loading Commands List</title>
+            <para>The following table lists the class loading commands. The reference documentation about each command provides the full list of available options.</para>
+            <table id="admin-shell-cl-commands-table" colsep="1" frame="all" rowsep="1">
+                <title>Class Loading Commands</title>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Command</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><link linkend="admin-shell-cl-clhas">clhas</link></entry>
+                            <entry>Lists all bundles that <emphasis role="bold">contain</emphasis> a class.</entry>
+                        </row>
+                        <row>
+                            <entry><link linkend="admin-shell-cl-clexport">clexport</link></entry>
+                            <entry>Lists all bundles that <emphasis role="bold">export</emphasis> a class or package.</entry>
+                        </row>
+                        <row>
+                            <entry><link linkend="admin-shell-cl-clload">clload</link></entry>
+                            <entry>Lists all bundles that can <emphasis role="bold">load</emphasis> a class.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </section>
+    </section>
+
+    <section id="admin-shell-class-loading-reference">
+        <title>Class Loading Commands Reference</title>
+        <para>This section contains reference information about the class loading commands
+          <link linkend="admin-shell-cl-clhas">clhas</link>,
+          <link linkend="admin-shell-cl-clexport">clexport</link>, and
+          <link linkend="admin-shell-cl-clload">clload</link>.
+        </para>
+
+        <section id="admin-shell-cl-clhas">
+            <title>clhas command</title>
+            <para>Use the <literal>clhas</literal> command to list the classes contained in the bundles deployed to @short.product.name@ and to solve class loading issues.</para>
+            <para>The command accepts as a parameter the fully qualified class name (in the form <emphasis>package.class</emphasis>).</para>
+            <para>A bundle is listed only if the class can be loaded. If the class is successfully loaded a check is made if the loading was delegated to another bundle. The command lists only the leaves in the class loading hierarchy - i.e. the bundles that actually contain the class and not the ones that delegate to another bundle via import/require mechanisms.</para>
+
+            <para>The following examples show how to use this command.</para>
+            <para>Use the <literal>clhas</literal> to view all bundles that contain <literal>Servlet</literal> class:</para>
+            <programlisting>osgi> clhas javax.servlet.Servlet
+
+Bundles containing [javax.servlet.Servlet]:
+  14    com.springsource.javax.servlet</programlisting>
+
+            <para>The following example shows how to identify a possible <literal>ClassCastException</literal> due to wrong packaging:</para>
+            <programlisting>osgi> clhas javax.servlet.Servlet
+
+Bundles containing [javax.servlet.Servlet]:
+  66    myapp
+  14    com.springsource.javax.servlet</programlisting>
+            <para>It's obvious that the <literal>javax.servlet</literal> package should not be present in <literal>myapp</literal> application and its packaging has to be changed. This problem can often be seen in WAR or web bundles that package Servlet/JSP classes by accident.</para>
+        </section>
+        <section id="admin-shell-cl-clexport">
+            <title>clexport command</title>
+            <para>Use the <literal>clexport</literal> command to list the bundles that export a class or package.</para>
+            <para>The command accepts as a parameter the fully qualified class name (in the form <emphasis>package.class</emphasis>).</para>
+            <para>Additional check if the provided class is actually contained in the bundle is performed. If the class is not found in a bundle, but its package is exported then a hint <literal>[class not found, package only]</literal> is displayed.</para>
+
+            <para>The following examples show how to use this command.</para>
+            <para>Use the <literal>clexport</literal> to view all bundles that contain <literal>Servlet</literal> class:</para>
+            <programlisting>osgi> clexport javax.servlet.Servlet
+
+Bundles exporting [javax.servlet.Servlet]:
+  14    com.springsource.javax.servlet</programlisting>
+
+            <para>If a bundle exports a package but the requested class is not contained the output of the command will be similar to this:</para>
+            <programlisting>osgi> clexport javax.servlet.ServletX
+
+Bundles exporting [javax.servlet.ServletX]:
+  14    com.springsource.javax.servlet     [class not found, package only]</programlisting>
+        </section>
+        <section id="admin-shell-cl-clload">
+            <title>clload command</title>
+            <para>Use the <literal>clload</literal> command to list the bundles that can load a class or to check if a specific bundle can load a class.</para>
+            <para>The command accepts as a parameter either:
+                <itemizedlist>
+                    <listitem><para>the fully qualified class name (in the form <emphasis>package.class</emphasis>)</para></listitem>
+                    <listitem><para>the fully qualified class name (in the form <emphasis>package.class</emphasis>) and the symbolic name or id of the bundle that has to be tested</para></listitem>
+                </itemizedlist>
+            </para>
+            <para>The command lists not only the bundle that successfully loaded the class, but also the one that actually provides the class. This is visualized with hints like <literal>[exported by 14 com.springsource.javax.servlet]</literal>.</para>
+
+            <para>The following examples show how to use this command.</para>
+            <para>You can use the <literal>clload</literal> to view all bundles that can load <literal>Servlet</literal> class:</para>
+            <programlisting>osgi> clload javax.servlet.Servlet
+
+Successfully loaded [javax.servlet.Servlet] from:
+  56    com.springsource.org.apache.taglibs.standard
+                [exported by 14 com.springsource.javax.servlet]
+  54    org.eclipse.virgo.apps.admin.web
+                [exported by 14 com.springsource.javax.servlet]
+  19    com.springsource.org.apache.commons.fileupload
+                [exported by 14 com.springsource.javax.servlet]
+  &lt;... remainder omitted ...&gt;</programlisting>
+
+            <para>If a bundle has to be tested, then its id can be used as a command parameter:</para>
+            <programlisting>osgi> clload javax.servlet.Servlet 19
+
+Successfully loaded [javax.servlet.Servlet] using class loader from:
+  19    com.springsource.org.apache.commons.fileupload
+                [exported by 14 com.springsource.javax.servlet]</programlisting>
+            <para>Or the same class load test with the symbolic name of the bundle:</para>
+            <programlisting>osgi> clload javax.servlet.Servlet com.springsource.org.apache.commons.fileupload
+
+Successfully loaded [javax.servlet.Servlet] using class loader from:
+  19    com.springsource.org.apache.commons.fileupload
+                [exported by 14 com.springsource.javax.servlet]</programlisting>
+        </section>
+
+
+    </section>
 </chapter>

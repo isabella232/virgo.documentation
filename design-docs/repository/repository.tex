@@ -1,0 +1,582 @@
+\documentclass[a4paper,titlepage,twoside,12pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+\markboth{Draft}{Version 0.1}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 2 pt
+\parindent 10 pt
+
+\title{Repository matters}
+\author{Steve Powell and Andy Wilkinson}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+We define various aspects of repository and repository chain configuration and behaviour.
+
+This work is performed under the JIRA items \texttt{DMS-347} and \texttt{DMS-340}.
+
+%\clearpage
+%\pagenumbering{roman}
+%\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+%\renewcommand{\empty}{\emptyset}
+
+%=============================================================================
+\clearpage
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+
+\section{Basic types and functions}
+Repositories will be named and resources (which may be stored artefacts, or files, or remote repositories) will be identified by URI.
+
+Artefacts stored in a repository will require a storage position---this also uses a URI---and other properties, like names, types and versions.
+
+There is a structure on versions which is exposed, to a certain extent, in the handling of repository queries. This is encapsulated in a function which chooses the `maximum' version from (some) sets of versions. This sort of abstraction allows us to avoid having to describe intricate details of version syntax, or indeed of version range syntax.
+
+\subsection{Basic types}
+These items are fundamental terms:
+\begin{zed}
+ 	[RepoName, URI]
+\end{zed}
+
+We will wish to identify a place in the file system where artefacts are stored. This is also a URI. There are file path \emph{patterns}  for describing what files in an external directory to read. The pattern is only accepted for an `external' repository---not a `managed' nor a `watched' repository. These terms will be described later.
+\begin{zed}
+	[StoredArtefactPattern]
+\also
+	StoredArtefactArea \\
+	\t1 ::=	 saROOT \ldata URI \rdata	\\
+	\t1 |  saPATTERN \ldata StoredArtefactPattern \rdata
+\end{zed}
+The syntax and form of a pattern is not specified here but we will use the ANT file pattern rules.
+
+There are also properties, but we will not need to explain them in the formal specification.
+\begin{zed}
+ 	[Properties]
+\end{zed}
+%There is a relationship between $RepoName$ and $URI$ which allows us to construct a new URI from a given URI and a 
+%$RepoName$:
+%\begin{axdef}
+%	extend :  URI \cross  RepoName \inj URI
+%\end{axdef}
+%This is a total injection, which indicates we have an unambiguous way of getting to (and from) an URI from the repository name and a 
+%server URI.
+
+\subsection{Artefact basics}
+There are artefact descriptors, which essentially identify the artefact bytes with a type, a name and a version, and some derived meta-data. All these fundamental types will be used in our description of a repository.
+\begin{zed}
+	[Type, Name, Version, MetaData]
+\also
+	TNV == Type \cross Name \cross Version
+\end{zed}
+We use the abbreviation $TNV$ in the repository descriptions below, and the individual types in defining the (definitive) descriptor of an artefact:
+\begin{schema}{ArtefactDescriptor}
+	type : Type	\\
+	name : Name	\\
+	version : Version	\\
+	uri : URI	\\
+	metadata : MetaData
+\end{schema}
+There are no constraints that can be expressed at this level of abstraction. (In particular, we cannot refer to a file store or a remote system to determine if the $uri$ really indicates a resource that matches these $type$, $name$, $version$ and $metatdata$ values.) The $uri$ is the link from this description to the actual files on disc---here is where to go for the artefact binaries.\footnote{Note that this $uri$ is not necessarily the one that the artefact was sourced from: some repositories copy the artefact into their own storage (and so have a new $URI$) and some do not. See the $PublishArtefact$ operation, later.}
+
+We will want to extract parts of an artefact descriptor at various times; here are the projections to do that:
+\begin{zed}
+	typeOf == (\lambda ArtefactDescriptor @ type)		\\
+	nameOf == (\lambda ArtefactDescriptor @ name)	\\
+	versionOf == (\lambda ArtefactDescriptor @ version)	\\
+	uriOf == (\lambda ArtefactDescriptor @ uri)		\\
+	tnvOf == (\lambda ArtefactDescriptor @ (type, name, version))	\\
+	nonuriOf == (\lambda ArtefactDescriptor @ (type, name, version, metadata))
+\end{zed}
+
+\subsection{Version types}
+There are some manipulations we will want to perform on versions, and sets of versions. In particular, we have the notion of a version range:
+\begin{zed}
+	VersionRange == \power Version
+\end{zed}
+which may represent a (theoretically) infinite collection, and a function which picks out the highest version from a (finite) non-empty version range:
+\begin{axdef}
+	maxv : VersionRange \pfun Version
+\where
+	\dom maxv = \finset_1 Version	\\
+	\forall vr : \dom maxv @ (maxv ~ vr) \in vr
+\end{axdef}
+Here we do not fully specify this function which depends upon a well-understood total order 
+on $Version$s.
+
+\section{Repositories}
+\subsection{Repository state}
+A $Repository$ is essentially a map from artefact types, names and versions to full artefact descriptions:
+\begin{schema}{Repository}
+	artems : TNV \finj ArtefactDescriptor
+\also
+	arteuri : URI \finj TNV
+\where
+	tnvOf \circ artems = \id (\dom artems)	\\
+\also
+	arteuri = (artems \comp uriOf) \inv
+\end{schema}
+The first constraint, on $artems$, says that the type, name and version used to index a descriptor are actually embedded in the descriptor indexed (no mismatches occur).
+
+We have added a derived component of the state ($arteuri$) which, by declaring it also to be an injection, imposes the rule that the $uri$ component of an artefact descriptor must uniquely identify a descriptor in the repository. The second constraint shows that the $arteuri$ map is fully derived from $artems$. The derivation shows that the $URI$ used to index the artefacts in $arteuri$ is that stored in the artefact descriptor so indexed.
+
+These constraints are \emph{state invariants}, to be preserved by all operations on the state.
+
+\subsection{Repository initialisation}
+Initialising a repository is to populate the map $artems$ consistently. This is done differently for the different implementations of $Repository$, so we will defer this operation until the implementations are discussed.
+
+\subsection{Repository operations}
+The operations on a (general) repository are quite simple, and involve modifying the $artems$ map. Because the $arteuri$ map is derived from $artems$ we need not specify changes to it; however, the fact that $arteuri$ is an injection does impose some not-so-obvious pre-conditions on the operations. We will mention these in each case.
+
+\subsubsection{Get artefact}
+To get an artefact we need to ask the repository about it, which means asking the repository for the artefact descriptor. This is a simple look-up, except that we might give a range of acceptable versions we would like. The version we get is the highest ($maxv$) that there is in the repository.
+\begin{schema}{GetArtefactOK}
+	\Xi Repository	\\
+	t? : Type		\\
+	n? : Name	\\
+	vr? : VersionRange	\\
+	ad! : ArtefactDescriptor
+\where
+	ad! =	\\
+	\t1 ( \LET mv ==  maxv ( versionOf \limg artems \limg \{~t?~\} \cross \{~n?~\} \cross vr? \rimg \rimg )\\
+	\t1 @	artems (t?, n?, mv)  )
+\end{schema}
+This rather imposing constraint simply chooses the highest version artefact with that type and name that exists in the repository and has a version in the range supplied. $ad!$ is the resulting artefact descriptor.
+
+We have called this $GetArtefactOK$ because it describes the result only if the pre-condition is satisfied---that there is an artefact that fits the bill therein. If not, this operation specification says nothing. We will augment these operations with failure cases later.
+
+Observe that the repository does not change.
+
+\subsubsection{Query artefacts}
+Considerably more complex retrievals from the repository are required, but this interface will not support a complex query language. Instead we will use a query object, defined elsewhere, which will identify a set of artefact descriptors that fit the bill. When that query object is applied to a repository a set of available artefacts that satisfy the query is returned.  The query object is represented here as a set---a subset of $ArtefactDescriptor$---which may very well be (theoretically) infinite. Application to the repository guarantees a finite result (since $artems$ is a finite injection) and this is returned. The latter can therefore be represented as a simple enumeration, whereas the query itself is probably a structural representation of a boolean function on artefact descriptors. We will defer deciding the actual format by requiring the repository itself to construct the query objects: this gives the repository the opportunity to tailor the query representation to the repository implementation, if we wish.
+
+The key observation here is what the query object is a subset \emph{of}. Only information in the artefact descriptor is to be relevant in the query. In fact, we might have been even more proscriptive\footnote{proscribe---\emph{v. tr.} forbid, esp. by law: `strikes remained proscribed in the armed forces'; denounce or condemn: `certain practices which the Catholic Church proscribed, such as polygyny'; (\emph{hist.}) outlaw (someone).}: only the type, name, version and meta-data information ought to be used. The $URI$, and in particular the form of the $URI$, should not have any influence on the query function applied. This observation, though expressible here, is rather awkward to tease out (without reconstructing the specification state somewhat) so we leave this as understood.
+
+A repository query is a subset of the set of all possible $ArtefactDescriptor$s:
+\begin{zed}
+	RepositoryQuery == \power ArtefactDescriptor
+\end{zed}
+and the operation to `run' the query against the repository is $QueryArtefactsOK$:
+\begin{schema}{QueryArtefactsOK}
+	\Xi Repository	\\
+	q? : RepositoryQuery	\\
+	ads! : \finset ArtefactDescriptor
+\where
+	ads! = q? \cap \ran artems
+\end{schema}
+We have chosen here to return a simple set of artefact descriptors.	
+
+An alternative, which might be more suitable, is to return a partial map of the results:
+\begin{schema}{AltQueryArtefacts}
+	\Xi Repository	\\
+	q? : RepositoryQuery	\\
+	subarte! : TNV \finj ArtefactDescriptor
+\where
+	subarte! = artems \rres q? 
+\end{schema}
+Probably a much more useful result. Of course these are logically in\-dis\-tinguish\-able---the type, name and version information can be unambiguously recovered from the artefact descriptor, as the $Repository$ state ensures.
+
+\subsubsection{Publish artefact}
+Having described innocuous operations that leave the repository unchanged, we wish to describe the modifying operations: publish and retract.
+
+Not every repository type supports publish and retract. Those that do should adhere to this behaviour.
+
+Publishing an artefact to the repository requires that a reference to the artefact be supplied. This takes the form of a $URI$. The information gleaned from the $URI$ will be used to populate the repository map, although it has to be realised that the URI itself need not be referenced in the repository. Thus although a $URI$ is passed in, there is no reason to suppose that the same $URI$ is passed out.
+
+The definition of $PublishArtefact$ is therefore rather abstract and non-deterministic:
+\begin{schema}{PublishArtefactOK}
+	\Delta Repository	\\
+	uri? : URI	\\
+	ad! : ArtefactDescriptor
+\where
+	artems' = \\
+	\t1	artems \oplus \{~(typeOf ~ ad!, nameOf ~ ad!, versionOf ~ ad!) \mapsto ad!~\}
+\end{schema}
+Some artefact descriptor is returned. Although it has to be a consistent addition to $artems$ to qualify for return, there is nothing to enforce a relationship with the value of $uri?$ passed in. In particular, there is no necessary relationship between $uri?$ and $uriOf ~ ad!$. In fact, they will be equal for some types of repository, though for others they will not.
+
+When we come to describe possible failures for this operation, we will realise that the result is non-deterministic in this respect also. In fact, this is to be expected---we cannot guarantee what may be found when a $URI$ is `followed up' at run-time---\emph{there's mony a slip 'tween cup 'n' lip}.
+
+Despite appearances this operation doesn't say nothing at all---it crucially explains in what way the repository may change as a result of a publish---nothing is lost from the repository; something may be added; that something need not have the same $URI$ as supplied (though it has to be distinct from the other $URI$s already in the repository, as the $Repository$ state dictates).
+
+Notice that \emph{overwrite} is used in this definition. It is entirely possible that a publish operation replaces (or hides) an existing artefact. In general, this cannot be prevented.
+
+\subsubsection{Retract artefact}
+Not every repository type supports retract and publish. Those that do should adhere to this behaviour.
+
+There are, potentially, two ways to identify an artefact to remove from the repository. The obvious way is to use the (main) index---$TNV$. However, not all clients of the repository need know the canonical identification of the artefact they wish to remove. It is possible that the $URI$ is known instead.
+
+We describe two retract operations, one which removes an artefact given the $Type$, $Name$ and $Version$ of it, and another which removes an artefact identified by its $URI$. Note that the $URI$ operation requires the $URI$ of the artefact \emph{in the repository} and not the original $URI$ as supplied on the $Publish$ operation.
+
+\paragraph{Retract an artefact by name}
+by supplying the $TNV$ for the artefact:
+\begin{schema}{RetractArtefactByNameOK}
+	\Delta Repository	\\
+	t? : Type	\\
+	n? : Name	\\
+	v? : Version	\\
+	ad! : ArtefactDescriptor
+\where
+	(t?,n?,v?) \in \dom artems
+\also
+	\{~(t?,n?,v?)~\} \ndres artems' = \{~(t?,n?,v?)~\} \ndres artems
+\also
+	nonuriOf ~ ad! = nonuriOf ~ (artems ~ (t?,n?,v?))
+\end{schema}
+The precondition is that the artefact identification actually identifies a known artefact.
+The repository is not affected except (possibly) on that artefact instance.
+An artefact descriptor is returned, though the $uri$ in it means nothing (we probably do not return one).
+
+Care needs to be taken here---just because the artefact is successfully removed, doesn't mean it isn't still there.  This paradoxical result
+is due to the fact that the artefact removed may have `hidden' another (with identical $TNV$) when it was published (this tends to happen with chains). 
+The removal will not then have any perceptible effect---although the artefact URI and binaries might indeed be different when we look it up. 
+(Of course, this can be different each time we look anyway.)
+We have documented these subtleties by being careful to say nothing about the contents of the resulting repository 
+\emph{under the $TNV$ key retracted.}
+
+It is also possible that removal fails. We deal with that later.
+
+Notice there is no indication that the artefact binaries (located by $uriOf ~ ad!$) are touched in any way. For some repositories they are not, for others they may be (or have been) deleted.
+
+\paragraph{Retract an artefact by $URI$} by supplying the \emph{repository's} $uri?$ for the artefact:
+\begin{schema}{RetractArtefactByUriOK}
+	\Delta Repository	\\
+	uri? : URI	\\
+	ad! : ArtefactDescriptor
+\where
+	uri? \in \dom arteuri
+\also
+	\{~uri?~\} \ndres arteuri' = \{~uri?~\} \ndres arteuri
+\also
+	nonuriOf ~ ad! = nonuriOf  (artems ~ (arteuri ~ uri?))
+\end{schema}
+The $uri?$ must identify one of the artefacts in the repository.
+The repository is not affected except (possibly) on that artefact instance.
+An artefact descriptor is returned, though the $uri$ in it means nothing (we probably do not return one).
+
+The same subtleties are observed here as for the $TNV$ case: there is no guarantee that the artefact is now absent from the repository, though we do guarantee that no other artefact is affected.
+The artefact descriptor returned has no relevant $URI$.
+
+\subsection{Complete operations}
+To describe the failure conditions, we can either leave them implicit (and choose to throw an exception, say---though this leaves the state invariants open to doubt) or we can make them explicit as far as is possible. We choose the latter, being aware that a `return code' need not be a return value in actual code. The point here is to document what happens if preconditions fail (or non-deterministically), what states result, and what information is available in those cases.
+
+We need to introduce some indicator of failure and success:
+\begin{zed}
+	ReturnCode ::= \\
+	\t1 OK | \\
+	\t1 UnknownUri \ldata URI \rdata | \\
+	\t1 UnknownId \ldata TNV \rdata | \\
+	\t1 UnknownIds \ldata Type \cross Name \cross VersionRange \rdata | \\
+	\t1 CannotPublishUri \ldata URI \rdata | \\
+	\t1 IOReadFailureUri \ldata URI \rdata | \\
+	\t1 IOReadFailureId \ldata TNV \rdata | \\
+	\t1 IOWriteFailureUri \ldata URI \rdata |	\\
+	\t1 IOWriteFailureId \ldata TNV \rdata
+\also
+	Rc \defs [~rc! : ReturnCode~]
+\also
+	RcOK \defs [~Rc | rc!=OK~]
+\end{zed}
+The return code spectrum indicates what the error information contains; $RcOK$ being short for everything worked (the
+precondition of the operation core being satisfied).
+
+We then use some abbreviations for signatures and generate state change promises:
+\begin{zed}
+	OpRc \defs \Delta Repository \land Rc	\\
+	StetRc \defs \Xi Repository \land Rc
+\also
+	SigUri \defs [~uri? : URI~]	\\
+	SigId \defs [~t? : Type; n?:Name; v?:Version~]	\\
+	SigIdRan \defs [~t?:Type; n?:Name; vr?:VersionRange~]	\\
+\end{zed}
+and we can succinctly define the error cases. First the `not known' (deterministic) cases:
+\begin{zed}
+	RcUnknownIds \defs [~StetRc; SigIdRan \\
+	\t4 | (\{t?\}\cross\{n?\}\cross vr?) \cap \dom artems = \emptyset	\\
+	\t4	\land rc!=UnknownIds(t?,n?,vr?)~]
+\also
+	RcUnknownId \defs [~StetRc; SigId \\
+	\t4 | (t?,n?,v?) \notin \dom artems	\\
+	\t4	\land rc!=UnknownId(t?,n?,v?)~]	
+\also
+	RcUnknownUri \defs [~StetRc; SigUri \\
+	\t4 | uri? \notin \dom arteuri	\\
+	\t4	\land rc!=UnknownUri ~ uri?~]	
+\end{zed}
+and now the non-deterministic cases:
+\begin{zed}
+	RcIOStetIdRange \defs [~StetRc;SigIdRan	\\
+	\t4	|\exists v:vr?@rc!=IOReadFailureId(t?,n?,v)~]	\\
+	RcCannotPublishUri \defs [~StetRc;SigUri | rc! = CannotPublishUri ~ uri?~]
+\also
+	RcIOStetUri \defs [~StetRc;SigUri | rc! = IOReadFailureUri ~ uri?~]	\\
+	RcIOFailUri \defs [~OpRc;SigUri | rc! = IOWriteFailureUri ~ uri?~]	\\
+	RcIOUri \defs RcIOStetUri \lor RcIOFailUri
+\also
+	RcIOStetId \defs [~StetRc;SigId | rc! = IOReadFailureId (t?,n?,v?)~]	\\
+	RcIOFailId \defs [~OpRc;SigId | rc! = IOWriteFailureId (t?,n?,v?)~]	\\
+	RcIOId \defs RcIOStetId \lor RcIOFailId
+\end{zed}
+Notice the complete state flapping in the $RcIOFail$... cases.
+
+We proceed to apply them to define the complete operation specs as follows:
+
+\paragraph{Get}
+only fails deterministically if the artefact is unknown, or non-deter\-min\-istically if there is some (non-destructive) access or read failure:
+\begin{zed}
+	GetArtefact \defs \\
+	\t1 (GetArtefactOK \land RcOK) \lor RcUnknownIds \lor RcIOStetId
+\end{zed}
+
+\paragraph{Publish}
+only fails for its own reasons (this is where an unrecognised artefact would surface):
+\begin{zed}
+	PublishArtefact \defs \\
+	\t1 (PublishArtefactOK \land RcOK) \lor RcCannotPublishUri \lor RcIOUri
+\end{zed}
+If there is a read error then the $uri?$ is returned and the state does not change; if there is a write error then
+the resulting repository state is undetermined.
+
+The return information from $PublishArtefact$ is a little sparse---we would have liked to return information about duplication, if detected; but there is nothing to say at this level of abstraction, although we at least have described the sort of errors one might get.
+
+\paragraph{Retract by name}
+fails if the artefact is unknown (by that type, name and version), or if some IO failure occurs:
+\begin{zed}
+	RetractArtefactByName \defs \\
+	\t1 (RetractArtefactByNameOK \land RcOK) \lor RcUnknownId \lor RcIOId
+\end{zed}
+
+\paragraph{Retract by $URI$}
+fails if the artefact is unknown (by that $uri?$) or if some IO failure occurs:
+\begin{zed}
+	RetractArtefactByUri \defs \\
+	\t1 (RetractArtefactByUriOK \land RcOK) \lor RcUnknownUri \lor RcIOUri
+\end{zed}
+
+\paragraph{Query artefacts}
+will not fail:
+\begin{zed}
+	QueryArtefacts \defs QueryArtefactsOK \land RcOK
+\end{zed}
+We have not augmented the operation $QueryArtefacts$, since this can always return an empty set of results---we anticipate no errors from this operation.
+
+The return information from $PublishArtefact$ is a little sparse---we would have liked to return information about duplication, if detected; but there is nothing to say at this level of abstraction, although we at least have described the sort of errors one might get.
+
+
+%----------------------------------------------------------------------------------
+
+\section{Repository types}
+We have already mentioned that repositories come in several types. These are:
+\begin{description}
+\item[external] this repository reads artefact files which are generated by other programs, and does not 
+modify or move them in any way---they are treated as read-only; 
+\item[managed] this repository creates and manages all its own artefact files;
+\item[watched] this repository adds (publishes) or removes (retracts) files automatically based upon a `watched' directory---the file operations trigger addition or removal of the stored artefacts from the repository index;
+\item[remote] this is a `proxy' for a remote (hosted) repository---the artefacts and indexes are managed by a separate system;
+\item[chained] this is a `compound' repository, which manages an ordered sequence of other repositories in such a way as to support the repository interfaces.
+\end{description}
+
+
+
+%----------------------------------------------------------------------------------
+
+\section{Repository configuration}
+In  a \emph{dm Server} there are \emph{local} repositories, which are defined locally and accessed directly by the current server, and \emph{remote} repositories, defined elsewhere and accessed by communication with a remote (dm Repository) server. Each repository has a named definition, which identifies its artefact store (a file path), its name, and various properties useful for management of the artefacts.
+
+We identify five types of repository: a `managed' repository---the artefacts are created, stored and held by the repository; an `external' re\-posi\-tory---the artefacts are created and destroyed by another program; a `watched' repository---the artefacts are created and destroyed by file system operations in a (flat) directory structure; a `remote' repository---the artefacts aren't stored here, but are managed by another server; and a `chain' repository---a compound repository made up from a sequence of other (non-chain) repositories.
+
+A repository definition is named, and has properties. Other than that there is little in common between the types. Therefore we define a base, which all the other types `inherit':
+\begin{schema}{RepoDefnBase}
+	rName : RepoName	\\
+	rProps : Properties
+\end{schema}
+
+For each of the types of repository we define an extension of these data:
+\begin{zed}
+ManagedRepoDefn \defs [~root : URI~]	\\
+ExternalRepoDefn \defs [~pattern : StoredArtefactPattern~]	\\
+WatchedRepoDefn \defs [~dir : URI~]	\\
+RemoteRepoDefn \defs [~remoteUri : URI~]	\\
+ChainRepoDefn \defs [~chain : \iseq RepoName~]
+\end{zed}
+
+We can now define what a repository definition logically looks like, starting with the basic data:
+\begin{zed}
+	RepoDefnData ::= \\
+	\t1 MANAGED \ldata ManagedRepoDefn\rdata | \\
+	\t1 EXTERNAL \ldata  ExternalRepoDefn \rdata | \\
+	\t1 WATCHED \ldata WatchedRepoDefn\rdata| \\
+	\t1 REMOTE \ldata RemoteRepoDefn\rdata | \\
+	\t1 CHAINED \ldata ChainRepoDefn \rdata
+\end{zed}
+and then defining the definition form:
+\begin{zed}
+	RepositoryDefn \defs [~RepoDefnBase; defnData: RepoDefnData~]
+\end{zed}
+
+Before defining a configuration we explain some basic functions on definition data, some projections:
+\begin{zed}
+	rNameOf == (\lambda RepositoryDefn @ rName)	\\
+	rPropsOf == (\lambda RepositoryDefn @ rProps)
+\end{zed}
+and a partial function for extracting chains:
+\begin{axdef}
+	rChainOf : RepositoryDefn \pfun \iseq RepoName
+\where
+	rChainOf = (\lambda d : RepositoryDefn | d.defnData \in \ran CHAINED @ (CHAINED \inv ~ d.defnData).chain)
+\end{axdef}
+and then extending to a complete configuration, which is a (consistent) collection of definitions with constraints:
+\begin{schema}{RepositoryConfig}
+	defns: \finset RepositoryDefn
+\end{schema}
+
+%--------------------------------------------------------------------------------------------------------------
+\section{Chain configuration reified}
+We give examples of these definitions as \texttt{JSON} files.
+
+In a repository configuration file we might see definitions like this:
+\begin{verbatim}
+"repositories": {
+  "bundles-ext": { 		
+    "type" : "external",
+    "searchPattern": "repository/bundles/ext/*.jar"
+  },
+  "bundles-usr": {
+    "type" : "external",
+    "searchPattern": "repository/bundles/usr/*.jar"
+  },
+  "libraries-ext": {
+    "type" : "external",
+    "searchPattern": "repository/libraries/ext/*.jar"
+  },
+  "libraries-usr": {
+    "type" : "external",
+    "searchPattern": "repository/libraries/usr/*.jar"
+  },
+  "managed-repo" : {
+    "type" : "managed",
+    "storageDirectory" : "repository/managed"
+  },
+  "watched-repo" : {
+    "type" : "watched",
+    "watchDirectory" : "repository/watched",
+    "watchInterval" : 5
+  },
+  "remote-repo" : {
+    "type" : "remote",
+    "uri" : "http://localhost:8080/com.springsource.repository/foo",
+    "indexRefreshInterval" : 5
+  }
+}
+\end{verbatim}
+where we emphasise that the order of the definitions is not relevant and that the repository names are distinct within the configuration file.
+We envisage one such definition file per dm Server.
+
+The repository chain can then be a sequence, for example:
+\begin{verbatim}
+"repositoryChain": [ 
+  "bundles-ext",
+  "bundles-usr",
+  "watched-repo",
+  "remote-repo"
+]
+\end{verbatim}
+in this case of two local repositories followed by a watched (local) repository and a remote repository. Notice that not all the defined repositories need be used.
+
+Actual chain construction is carried out programmatically---the list of configurations \emph{names} is obtained (from the configuration file?), and the configurations are looked-up (by name) and passed (as a list) to construct the repository chain itself.
+
+\section{Repositories and artefact stores}
+Every repository has an artefact store from which it obtains its artefacts. The store contains files which separately or in combination constitute the binaries from which an artefact is deployed. Normally an artefact is stored at a $File$ URI, though it can be any URI and we exploit this to allow \emph{hosting}really. 
+
+A file URI can be owned by the repository or not. If owned by the repository then the actions of publish and retract become significant.
+We design a repository (and an interface) that can be placed in a chain and can support publish and retract operations (either implicit or explicit) into the artefact store.
+
+\subsection{Artefact stores}
+Artefacts are stored. These are normally files or collections of files, each of which may be identified by a (single) $URI$. We do not need to expose the files in this specification, the artefact descriptor (above) is sufficient.
+
+An artefact store can be regarded simply as a map from stored artefact URIs to the stored artefacts themselves. With this we can specify an artefact store (which is essentially a piece of a file system):
+\begin{schema}{ArtefactStore}
+	aStore : URI \pinj ArtefactDescriptor
+\where
+	aStore \inv \subseteq uriOf
+\end{schema}
+The map $aStore$ is injective, which implies that distinct stored artefacts have distinct URIs, and the URI for any stored artefact is entirely dictated by the file system. This means that the artefact store is essentially just a set of stored artefacts, indexed by URI.
+
+There are three types of artefact store, corresponding to the three ways in which the $aStore$ is initialised and managed.
+
+\subsubsection{External artefact store}
+The external artefact store is part of a file system containing stored artefacts. The files are not managed by the artefact store, the store merely keeps information about the stored artefacts in it. It is initialised by supplying a file store pattern which is used to populate the map from a given file system and it supports an operation $GetURIs$ that returns all the URIs.
+
+The state of the external artefact store includes the pattern.
+\begin{schema}{ExternalArtefactStore}
+	ArtefactStore	\\
+	pattern : StoredArtefactPattern
+\end{schema}
+
+Initialising the $ExternalArtefactStore$ involves setting the pattern, and populating the map using the stored artefacts found there. We do not attempt to show the dependency upon a file system that is evident---we hide this in a function that maps a pattern to a collection of stored artefacts that match it:
+\begin{axdef}
+	filesOf : StoredArtefactPattern \pfun \power ArtefactDescriptor
+\end{axdef}
+
+Initialising the store gets the matching files and populates the $aStore$ by reference to the file system:
+\begin{schema}{InitExternalArtefactStore}
+	ExternalArtefactStore'	\\
+	pattern? : StoredArtefactPattern
+\where
+	pattern' = pattern?	\\
+	aStore' ~ \inv = ( filesOf ~ pattern? ) \dres uriOf 
+\end{schema}
+
+Operations on the ExternalArtefactStore do not ever modify the pattern:
+\begin{schema}{ExternalArtefactOp}
+	\Delta ExternalArtefactStore
+\where
+	pattern' = pattern
+\end{schema}
+and we can document the (trivial) query operation, which doesn't modify anything:
+\begin{schema}{GetURIs}
+	\Xi ExternalArtefactStore	\\
+	storedArtefactURIs! : \power URI
+\where
+	storedArtefactURIs! = \dom aStore
+\end{schema}
+
+\subsubsection{Managed artefact store}
+The managed artefact store manages the stored artefacts itself, and therefore is not initialised with a pattern. It supports \emph{store} and \emph{remove} operations as well as query.
+
+\subsubsection{Watched artefact store}
+
+\section{Conversational notes}
+(\emph{This section is for future expansion and is `in transit'.})
+
+A repository is given a (single) file store place for artefacts.
+
+The repositories have three types:  external, managed and watched.
+
+An \emph{external} repository is read/scanned and artefacts can be installed from it, but publish and retract is \emph{not} supported. This means that the only way to modify this is by changing the file store directly. One application of this is to have a pre-populated repository for first use. Another use is to point to a Maven directory so that artefacts can be built and tested in development easily.
+
+A \emph{managed} repository is wholly managed by the server, and the server allows modification of the artefacts of the repository by publish and retract.  The internal structure and content of a managed repository is entirely the responsibility of the server. 
+
+A \emph{watched} repository cannot be modified by publish and retract, but by file creation (move/copy) and file deletion (move/delete). This is precisely the pickup directory semantics. File store watching is then a matter for the repository implementation which raises repository events to the rest of the system (kernel/deployer).
+
+Repositories can be labelled `autodeploy', which, for a watched repository means that the repository event triggers full deploy, that is, install and start. For an external repository this would imply that all artefacts in the repository are installed/started when the kernel is started.  Autodeploy might also work for a mutable (managed) repository, which would imply deploy on publish. The autodeploy option is only relevant for a repository in a chain---should we put the autodeploy option on a (local) repository?
+
+`Autodeploy' is not recorded here, it appears to be a feature of the deployer and not the repository, nor the chain.
+
+Repositories raise events when things happen to them. The deployer (in the kernel) can listen for these. When an artefact is published in a repository, for example, the repository can raise the `publish' event, identifying the artefact (by type, name and version) and the repository in which it is published (by name in the repository definition). This only makes sense if the local deployer/server is listening to the events. At this point the deployer has enough information to execute an auto-deploy---if this is configured. There remains the thorny problem of a pickup directory being lower in the chain than a repository that has the artefact already in it. With these data on the event it is possible for the deployer (the user of the chain) to determine if the artefact in question would be installed. This allows it to correctly diagnose (and report) `shadowed' artefacts, and not attempt to deploy them.
+
+This reasoning also applies to retracts of artefacts. The repository and the artefact identification is reported on the event, and the deployer looks to see if this is deployed or not. The retract can then trigger an automatic stop and uninstall of the artefact if necessary, or ignore it if not.
+
+The pickup directory (watched) gives strange problems, and in general publish of an artefact to a watched repository has issues. For example, if a bundle is published to a watched repository but that bundle is already installed from another repository in the chain, what happens?  If the bundle is visible (from the chain) then can we install it (after un-installing the old one?) if the bundle is not visible, perhaps we should issue a warning, or error -- we certainly cannot `install' it, because then when the item is deleted we might actually un-install the one that is earlier in the chain!  This is counter-intuitive and needs careful thought.
+
+\end{document}

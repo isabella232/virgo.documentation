@@ -1,0 +1,408 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+\markboth{Unclassified, v0.2}{Unclassified, v0.2}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 2 pt
+\parindent 10 pt
+
+\title{A Formal Model of the SpringSource OSGi R4 Resolver (v0.2)}
+\author{Rob Harrop and Steve Powell}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+We model aspects of the OSGi R4 Resolver.
+
+%\clearpage
+%\pagenumbering{roman}
+%\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+%\renewcommand{\empty}{\emptyset}
+\newcommand{\ModuleDefZero}{ModuleDef_0}
+\newcommand{\ModuleDefOne}{ModuleDef_1}
+\newcommand{\ModuleDefTwo}{ModuleDef_2}
+\newcommand{\ModuleDefThree}{ModuleDef_3}
+\newcommand{\ModuleDefFour}{ModuleDef_4}
+
+%%inrel namematch typematch attrmatch versionmatch
+
+%=============================================================================
+\clearpage
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+\section{Introduction}
+This specification was begun by Rob Harrop and pursued by Steve Powell as an exercise in understanding OSGi wiring and the resolution algorithm. We intend to search for good ways to determine all possible wirings that satisfy the constraints. It may be that the problem is NP-complete and that our search for an efficient algorithm is futile. Either outcome is an advance on the present state-of-the-art.
+
+The early work introduced {\tt Require-Bundle} as one type of $Requirement$, but we begin by ignoring {\tt Require-Bundle} manifest headers and concentrating upon {\tt Import-Package} and {\tt Export-Package}. Before re-introducing required bundle headers we intend to incorporate the constraints implied by the {\tt uses} directives.
+
+This work is at an intermediate stage.
+
+\begin{thebibliography}{99}
+    \bibitem{OSGi} OSGi Service Platform Core Specification v4.1, April 2007 {\tt http://www.OSGi.org}
+\end{thebibliography}
+    
+%=============================================================================
+
+%=============================================================================
+\clearpage
+\section{Basic Types}
+\label{cha:basics}
+
+Attributes, attribute values, identifiers, versions and names are interesting, but beside the point. Their precise structure has no bearing on the problem. We are only interested in equality on these things (even versions, it turns out) so we merely refer to them as `basic types'  or, in the Zednacular, `Given sets'.
+
+\subsection{Attributes}
+Attribute names ($AName$) and attribute values ($AValue$) are used to provide a flexible symbolic matching mechanism:
+
+\begin{zed}
+  [AName, AValue]
+\end{zed}
+The association between names and values is a map (a partial function). These maps are explicitly specified on both import and export package headers. Matching them is part of the resolution process.
+
+\subsection{Names}
+Packages have names and versions.
+\begin{zed}
+ [PackageName, Version]
+\end{zed}
+Apart from equality, we are not interested in what these look like.
+A version is (almost) a lexicographically ordered point decimal sequence, but we don't actually care (yet).
+
+The structure of a version is not exposed and we interpret version ranges as sets. The version range of an import package header is thus a set of $Version$s even when a single version is mandated. In that case it would be a singleton set.
+
+There is an earliest version number which we can name here. All other versions are later than this one. We only need this as a default value; we never need to use the ordering on $Version$, but we may refer to it in the descriptive text.
+\begin{axdef}
+ 	EARLIEST\_VERSION : Version
+\end{axdef}
+
+\subsection{Module Identifiers}
+A $ModuleId$ identifies a module (\emph{aka} bundle) in a collection (the $ModuleCollection$, see later). Just like other names this is not further specified.
+
+\begin{zed}
+ 	[ModuleId]
+\end{zed}
+$ModuleId$s have to be distinct for distinct modules in the resolution space (the resolved module system). The OSGi specification states that the (`global') system module has an identifier of $0$. We can avoid making this explicit:
+\begin{axdef}
+ 	SYSTEM\_MODULEID : ModuleId
+\end{axdef}
+
+Modules also have a name---the bundle symbolic name---and a version. Versions are identical in form to package versions, but bundle symbolic names are not the same as package names:
+\begin{zed}
+ 	[SymbolicName]
+\end{zed}
+These are used to constrain package wiring. This is achieved by providing attributes that refer to bundle symbolic names. This means that an attribute value must represent a $SymbolicName$, and so there is an injection of $SymbolicName$ into $AValue$:
+\begin{axdef}
+ 	BSN : SymbolicName \inj AValue
+\end{axdef}
+This is only used when attribute matching involving the bundle symbolic name of the module from which an exported package is obtained.
+
+Within a system the combination of symbolic name and version must uniquely identify a module, and therefore are in 1-1 correspondence with module identifiers. These facts will be reflected in our description of a $ModuleCollection$.
+
+%=============================================================================
+\clearpage
+\section{Modularity}
+\label{cha:modularity}
+
+A $Module$ is (as far as we are concerned) a collection of export and import headers (at least, it is at the moment, until we introduce {\tt Require-Bundle} later). The exports and imports both express constraints imposed upon the `wiring' of a module in a system.
+
+\subsection{Requirements}
+Modules have $Requirement$s that must be satisfied by the resolver when it is resolving a module.
+
+Modules can have requirements for either bundles ({\tt Require-Bundle}) or packages ({\tt Import-Package}). At this stage we only model the {\tt Import-Package} case, so we define an $ImportRequirement$:
+\begin{schema}{ImportRequirement}
+ 	pName : PackageName \\
+ 	pVersionRange : \power Version \\
+ 	specAttrs : AName \pfun AValue \\
+\end{schema}
+Each part of the $ImportRequirement$ limits the exports to which this import can be wired. The $pName$ is the name of the package, the $pVersionRange$ is the set of permissible versions of the package, and the $specAttrs$ map records those attributes that must be defined (and match in value) in a package export.
+
+An $ImportRequirement$ may also be {\it optional}, modelled in $Module$ below.
+
+\subsection{Providers}
+
+Modules provide potential wiring points to satisfy $Requirement$s. These are called $Provider$s. The {\tt Export-Package} headers expose one sort of $Provider$.
+
+An $ExportProvider$ has a package name and an explicit version, a collection of named attributes (some of which are mandatory) and a set of (package) names that this export {\it uses}. 
+\begin{schema}{ExportProvider}
+	pName : PackageName \\
+	pVersion : Version \\
+	attrs : AName \pfun AValue \\
+	mandatory : \power AName \\
+	uses : \power PackageName
+\where
+	mandatory \subseteq \dom attrs \\
+	pName \notin uses
+\end{schema}
+The $pName$ is the name of the exported package, and $pVersion$ is its (explicit) version. (These are always present -- the default $pVersion$ of $EARLIEST\_VERSION$ is assumed if the {\tt Export-Package} header omits it.) The mandatory set of attribute names must all come from the attributes of the export. The package name must not appear in its own $uses$ set.
+
+The other sort of $Provider$ is a module itself, these satisfy the {\tt Require-Bundle} or {\tt Import-Bundle} headers. We omit these for now.
+
+\subsection{Modules}
+A module both exports and imports packages. Some of the imports are optional.
+\begin{schema}{Module}
+	bName : SymbolicName	\\
+	bVersion : Version	\\
+ 	imports : PackageName \pfun ImportRequirement	\\
+	mandatoryImports : \power PackageName	\\
+ 	exports : \power ExportProvider
+ \where
+ 	mandatoryImports \subseteq \dom imports	\\
+ 	\forall n : \dom imports @ (imports ~ n).pName = n
+\end{schema}
+The $bName$ denotes the bundle-symbolic-name, $bVersion$ is the bundle-version, and the import and export bundle headers are summarized in the $imports$ and $exports$ sets.
+
+The mandatory imports are a specified subset of the import packages, the others, in the complementary set $(\dom imports \setminus mandatoryImports)$, are the optional imports. Packages in an {\tt Import-Package} header are mandatory by default, and optional when the directive {\tt resolution:=optional} is specified.
+
+It must be the case that distinct imports refer to distinct package names---which is why we explicitly index the $ImportRequirement$s by the package names that occur there---though many exports can refer to the same package name, provided some attribute (including version) differs. This latter rule is sufficiently enforced by the use of a {\it set} of $ExportProvider$s.
+
+It is worth noting that exports referring to the same package name need only differ in one other attribute---for example the $uses$ set, or the set of $mandatory$ attribute names.
+
+We proceed by describing a \emph{collection} of modules, without regard to any resolution. These form the collection of `installed' modules.
+
+\subsection{Module Collection}
+In a collection a module is identified by a single identifier and also by a combination of its symbolic name and version. The natural ways to represent this are as a(n injective) map from identifiers to modules, or from symbolic names and versions to modules. We define both and keep them consistent by constraint.
+\begin{schema}{ModuleCollection}
+	moduleById : ModuleId \pinj Module \\
+	moduleByName : SymbolicName \cross Version \pinj Module
+\where
+	SYSTEM\_MODULEID \in \dom moduleById \\
+	\ran moduleById = \ran moduleByName \\
+	\forall mid :  \dom moduleById; m : Module |  m = moduleById ~ mid \\
+	\t1      @ moduleByName (m.bName, m.bVersion) = m \\
+\end{schema}
+$moduleById$ is the (1-1) indexed collection of modules of the system, which are also exactly those indexed by the combinations of $SymbolicName$ and $Version$ in $moduleByName$. The name and the version indexing a module is that which is recorded in the module itself.
+
+It should be obvious that $moduleByName$ must be a partial injection because the symbolic name and version are embedded in the module; if we had defined it only as a partial function it would follow easily that it is 1-1.
+%=============================================================================
+\clearpage
+\section{Resolution - Part One}
+\label{cha:resolutionI}
+To introduce resolved systems of modules we have to discuss wires and wirings. In this first look at resolution we will consider simple wiring rules and constraints for correct resolution. Uses constraints are considered in Part Two.
+
+\subsection{Wires}
+A {\it wire} is the smallest unit of resolution -- it connects a requirement in a module to a provider in another module. We consider only imports connected to exports.  When a particular import requirement (in a particular module) is satisfied by a particular export from a particular module, this association (or connection) is a $ConsistentWire$. A collection of consistent wires is called a `wiring'.
+
+A wire connects an import requirement ({\tt Import-Package}) in a module to a consistent export provider 
+({\tt Export-Package}) in another module; by consistent we mean that the requirement and the provider match attributes, package name and version in a particular way:
+\begin{schema}{ConsistentWire}
+	ImportRequirement	\\
+	ExportProvider		\\
+	imod, emod : Module
+\where
+	pName \in \dom imod.imports		\\
+	\theta ImportRequirement = imod.imports ~ pName \\
+	\theta ExportProvider \in emod.exports \\
+	pVersion \in pVersionRange \\
+	specAttrs \subseteq attrs \\
+	mandatory \subseteq \dom specAttrs
+\end{schema}
+The $pName$ is shared between the import and the export, which means they must match, and identifies the $ImportRequirement$ in the corresponding module; the $ExportProvider$ is one of those in the export headers of the $emod$ module; the $pVersion$ must appear in the requirement $pVersionRange$; all the attributes specified must be set (and agree in value) in the export; and the mandatory attributes must be specified.
+
+This form of consistency is called `local' because only the properties of the immediately connected modules are needed to determine if it is valid. When we consider an entire wiring, there are other consistencies to consider which are `non-local' (or `global'): it is necessary to consider  other wires in the wiring before we can determine their validity.
+
+\subsection{Wire space}
+A $wiring$ accompanies a module collection with a set of consistent wires that can be applied to the collection. These wires explicitly connect an import of a module to a single export in some other module, so we could make $wiring$ a partial function. It is, however, convenient to consider all the \emph{possible} wires from an import simultaneously, so for the moment we will make no such restriction and instead consider the $WireSpace$ which identifies all the locally consistent wires in a collection. 
+
+First, some abbreviations for the wires themselves:
+\begin{zed}
+	WIRE == (ModuleId \cross PackageName)  \cross (ModuleId \cross ExportProvider)
+\also	
+	WIRES == ModuleId \cross PackageName \rel ModuleId \cross ExportProvider
+\end{zed}
+and another to refer to a single consistent wire in the form we prefer:
+\begin{schema}{OneWire}
+	ConsistentWire		\\
+	imid, emid : ModuleId	\\
+	w : WIRE
+\where
+	w = (imid, pName) \mapsto (emid, \theta ExportProvider)
+\end{schema}
+
+The full wire space (all locally consistent possibilities) is thus:
+\begin{schema}{WireSpace}
+	ModuleCollection \\
+	wirespace : WIRES
+\where
+	wirespace = 	\\
+	\t1 \{~ OneWire | \{imid \mapsto imod, emid \mapsto emod\} \subseteq moduleById @ w  ~\}
+\end{schema}
+where all the (locally) consistent wires which are possible in the \emph{ModuleCollection} are put into $wirespace$. Each wire association is therefore represented by an element of the relation.
+
+Notice carefully that here we have \emph{not} imposed the constraint that \emph{the import and export modules are distinct in every wire} (no wiring to self); nor the constraint that \emph{all the imports should be wired in any module connected to}. These constraints are non-local and will be introduced in the next section; besides the maximally wired module collection is an interesting object in its own right: all correctly resolved combinations of wires are \emph{subgraphs} of this directed graph.
+
+\subsubsection*{Importing and exporting the same package}
+It is permitted to specify an import and export(s) of the same package (name) in a single module. This is, however, modified as part of the resolution process (see section {\it 3.7 Resolving Process} in \cite{OSGi}). At resolution time, a choice is made between the import and the exports and one is ``discarded'' (\emph{sic}). Where there are multiple exports for the same package name in a module they are kept (or discarded) together.
+
+The OSGi specification places a priority upon import definitions---if an import can be resolved (wired) to (an export in) another module without reference to the exports (of the same name) then the import is kept and the exports discarded. Otherwise, the import is discarded and the exports are taken, {\it provided an export matches the import}, in the sense of local consistency. If no such match occurs then the import is deemed `un-resolved' (that is, it is not wired). In this case, due to `non-local' consistency rules (specified later), the entire module cannot be resolved: nothing can be wired to exports or imports of that module.
+
+These rules appear to be circular: the rule for determining which imports and exports to keep and wire (and which to discard) depends upon the wiring which, due to `non-local' consistency rules, depends upon which imports and exports are wired. This gets worse when we consider uses constraints (next section).
+
+We do not model this process, yet, neither do we prohibit self-wiring yet. If necessary we should impose this rule independently as the other (non-local) constraints are imposed.
+
+\subsection{Simple non-local constraints}
+The $ModuleCollection$ maintains a set of all known modules (those that have been installed) and a $wirespace$ associates imports with exports. There are further non-local constraints that must be satisfied by a wiring before we can say it has properly resolved the modules in it. These constraints are called non-local because they rely upon the arrangement of many wires, and cannot be determined by consideration of each wire alone.
+
+Each non-local constraint will be defined separately to produce a \emph{schema} defining wirings that satisfy the constraint.  The join of the schemas specifies wirings that are ultimately permitted.
+
+We first describe any consistent wiring:
+\begin{schema}{ConsistentWiring}
+	WireSpace \\
+	consistent : WIRES 
+\where
+	consistent \subseteq wirespace
+\end{schema}
+\emph{Every} sub-relation of the (maximal) relation $wirespace$ is a (locally) consistent wiring.
+
+\subsubsection*{Single import source}
+The first simple non-local constraint imposes the rule that an import package requirement can be wired to at most one export package provider.
+
+\begin{schema}{SingleImports}
+	ConsistentWiring
+\where
+	consistent \in ModuleId \cross PackageName \pfun ModuleId \cross ExportProvider
+\end{schema}
+That is, the wiring relation must be a partial function. This is exactly what we want to say: each import requirement must be related to at most one export provider.
+
+\subsubsection*{All or nothing imports}
+The next simple non-local constraint is that, in a particular module, either all (mandatory) imports are wired or none of them are, and if an export is wired all its module's (mandatory) imports must be wired as well.
+
+It is easier to understand this constraint if we first define (and name) the set of ids of those modules that have some wire to or from them---$modids$:
+\begin{schema}{AllImportsExposed}
+	ConsistentWiring \\
+	modids : \power ModuleId
+\where
+	modids = \dom (\ran consistent) \cup \dom (\dom consistent) \\
+	\forall m : modids @ \\
+	\t1	 \{m\} \cross (moduleById ~ m).mandatoryImports \subseteq \dom consistent
+\end{schema}
+the set of all module identifiers that appear at either end of a wire, $modids$, can be gleaned from the consistent wiring relation, and we can then go further and stipulate that all (mandatory) import packages of these modules must be wired.
+
+After we have imposed this, there is no further need to expose the set $modids$, and the constraint we use later is named $AllImports$.
+\begin{zed}
+	AllImports \defs AllImportsExposed \hide (modids)
+\end{zed}
+
+\clearpage
+\section{Resolution - Part Two}
+In this section we consider the more complex non-local rules imposed by `uses' constraints.
+
+\subsection{Uses constraints - concepts}
+In order to explain (and explore)  the notion of `uses' more easily we introduce a diagrammatic notation. Figure \ref{fig:key} shows the conventions we shall use.
+
+\begin{figure}[h]
+\centering
+\includegraphics*[scale=0.7]{keydiag.pdf}
+\caption[Key to diagrams]{Key to diagrammatic notation for uses constraints.}
+\label{fig:key}
+\end{figure}
+
+Essentially, the uses constraint says that if a module imports a package {\tt p} which `uses' a package {\tt q}, then if it has access to {\tt q} (for example, if it imports it) then it must access the same one that the module that exported {\tt p} does.
+
+\begin{figure}[h]
+\centering
+\includegraphics*[scale=0.7]{usesCase1.pdf}
+\caption[Simple case]{Illustration of the uses constraint in the simple case.}
+\label{fig:uses1}
+\end{figure}
+
+In figure \ref{fig:uses1}, for example, is a module (bundle) {\tt A} which imports packages {\tt p} and {\tt q}. The module {\tt B}  exports package {\tt p} and imports package {\tt q}, and gets {\tt q} from {\tt C} (the import {\tt q} is wired to an export {\tt q} in {\tt C}).
+
+The module {\tt A} could apparently source package {\tt q} from either {\tt C}, {\tt D} or {\tt E}, but only one is consistent with the wiring from {\tt B}.
+
+Without the `uses' constraint on module {\tt B} any one of the dotted lines could be used to satisfy the wiring constraint (the import of {\tt q} on {\tt A}). The uses constraint on {\tt B} says that {\tt A} must get the same exported package {\tt q} that {\tt B} gets. Thus, {\tt A} must wire to {\tt C}'s exported {\tt q}. In fact, must wire to the {\it same export of {\tt q}} in {\tt C} as {\tt B} does.
+
+`Uses' constraints are transitive. Consider the arrangement of modules and wires in figure \ref{fig:uses2}.
+
+\begin{figure}[h]
+\centering
+\includegraphics*[scale=0.7]{usesCase2.pdf}
+\caption[Transitive uses]{The uses relation carries through wires transitively.}
+\label{fig:uses2}
+\end{figure}
+
+The wiring of package {\tt r} in the modules {\tt A} and {\tt B} depend on where {\tt C} sources the package named {\tt r}.
+
+Assuming that {\tt C} wires (imports) {\tt r}, then both {\tt A} and {\tt B} must, independently, wire any import of {\tt r} to the same place as {\tt C} does.
+
+If {\tt C} did not import {\tt r} then it could instead \emph{export} it. This would mean that {\tt C} `gets' its package {\tt r} from itself (its own class-loader, in fact) and so {\tt A} and/or {\tt B} would need to wire to {\tt C}'s export of {\tt r}.
+
+There is one remaining possibility: that {\tt C} neither imports nor exports a package named {\tt r}. In this case, it would be presumed that {\tt r} is an internal, private, package used in {\tt q} (in {\tt C}) but not available elsewhere, so it is not possible to wire any imports in {\tt A} or {\tt B} to it. Thus any such imports could not be resolved.
+
+Notice that even if {\tt B} does not import {\tt r}, the constraint on where {\tt A} gets {\tt r} from still applies. The constraint on importing {\tt r} gets associated with {\tt q} in {\tt B} and passes to {\tt A} along the uses constraint of the export of {\tt p}.
+
+\subsection{Uses constraints - formulation}
+In order to precisely describe uses constraints we want to impose a non-local condition, just as we did for $AllImports$ above.
+
+All previous constraints have been independently imposed, so we can apply them in combination as we think fit, but the uses constraint appears to be hard to apply by this means.  The problem resides in the fact that the constraint on wiring {\tt r}, where {\tt q} uses {\tt r}, is associated with {\tt q} and `travels through' the wires on which {\tt q} is exported.
+
+We first attempt to understand when an exported package `uses' another.  This is a non-trivial relation which depends upon the wiring and the {\tt uses} directives in the exported package. In general, it is a relation on package \emph{names} and modules, which can be built upon any consistent wiring.
+
+After developing the relation we can use it to precisely describe the constraints it implies. We will be describing these constraints upon a general `consistent' wiring---we will not assume, for example, that any of the other non-local constraints are satisfied. This is a deliberate attempt to allow us to impose the non-local constraints in any order.
+
+\subsubsection*{Usage across a single wire}
+
+The first step is to define the non-transitive `base' of the relation. We introduce a shorthand for the relation carrier:
+\begin{zed}
+	UsesRelations == ModuleId \cross PackageName \rel ModuleId \cross PackageName
+\end{zed}
+and use it to define the `base' relation:
+\begin{schema}{UsesBase}
+	ConsistentWiring	\\
+	usesBase : UsesRelations
+\where
+	usesBase = 	\\
+	\t1 \{~ OneWire; pUsed : PackageName \\
+	\t1 | w \in consistent \land pUsed \in uses \\
+	\t1 @ (imid, pName) \mapsto (emid, pUsed) ~\}
+\end{schema}
+which records the relation of \emph{immediate} usage. 
+Each relationship $(m_1, p_1) \mapsto (m_2, p_2)$ in $usesBase$ arises from an import of $p_1$ in $m_1$ wired to an export of $p_1$ in $m_2$, where the export declares $p_1$ {\tt uses} $p_2$. 
+
+The definition generates these pairs from the wires in $consistent$. Each wire $w$ in $consistent$ establishes a possible (one-step) use of all the package names in the {\tt uses} directive on the exported side. (Since the reference is quite remote, we remind the reader that $uses$ is a set of package names exposed by $OneWire$, and is a component of the $ExportProvider$ object in the target of $w$, a consistent wire of the $ModuleCollection$.)
+
+\subsubsection*{Usage extended transitively}
+The transitive rule arises from cases like the transitive diagram in figure \ref{fig:uses2} on page \pageref{fig:uses2}.
+In that diagram we see two wires `chained'.  In $UsesBase$ we would see two relationships:
+\begin{argue}
+	({\tt A}, {\tt p}) \mapsto ({\tt B},{\tt q})		\\
+	({\tt B}, {\tt q}) \mapsto ({\tt C},{\tt r})	
+\end{argue}
+and we want to deduce that:
+\begin{argue}
+	({\tt A}, {\tt p}) \mapsto  ({\tt C},{\tt r})	
+\end{argue}
+which is to say, the package named {\tt p} in module {\tt A} uses (albeit indirectly) package {\tt r} in module {\tt C}.
+
+The point is that from $UsesBase$ we can deduce that imports of {\tt q} in {\tt A} must wire to the same place that {\tt B} gets {\tt q} from (either another wire from {\tt B} or an export from {\tt B}); and that imports of {\tt r} in {\tt B} must wire to the same place that {\tt C} gets {\tt r} from. We \emph{cannot} infer that imports of {\tt r} in {\tt A} are constrained at all---that is why we need to `transitively close' our relation, for that is what will properly describe the relationship.
+
+The definition is actually rather simple:
+\begin{schema}{GeneralUsesExposed}
+	UsesBase		\\
+	usesGen : UsesRelations
+\where
+	usesGen = usesBase \plus
+\end{schema}
+and we can now dispense with the base relation:
+\begin{zed}
+	GeneralUses \defs GeneralUsesExposed \hide (usesBase) 
+\end{zed}
+
+\subsubsection*{Applying the uses constraint}
+Having determined the general uses condition, we can now define how that constrains our wirings. Essentially we need to put into formal terms the rule we expressed above (``imports of {\tt q} in {\tt A} must wire to the same place that {\tt B} gets {\tt q} from''), bearing in mind that the ``place that {\tt B} gets {\tt q} from'' isn't necessarily on a wire from {\tt B} but might be an export from {\tt B} (or might be \emph{hidden} in {\tt B}).
+
+So, what is the constraint?  We have a constraint for every relationship in $usesGen$. Let's try to formulate one by itself:
+\begin{schema}{UsesConstraintOne}
+	GeneralUses	\\
+	
+\end{schema}
+
+\end{document}

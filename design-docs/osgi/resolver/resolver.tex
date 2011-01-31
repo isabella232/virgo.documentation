@@ -1,0 +1,358 @@
+\documentclass[a4paper,9pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+\markboth{Unclassified, Draft}{Unclassified, Draft}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 6 pt
+\parindent 0 pt
+
+\title{A Formal Model of the SpringSource OSGi R4 Resolver (v0.1)}
+\author{Rob Harrop}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{alph}
+\setcounter{page}{0}
+
+%=============================================================================
+The aim is to model the SpringSource implementation of the OSGi R4 Resolver.
+
+%\clearpage
+%\pagenumbering{roman}
+%\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+\renewcommand{\empty}{\emptyset}
+\newcommand{\ModuleDefZero}{ModuleDef_0}
+\newcommand{\ModuleDefOne}{ModuleDef_1}
+\newcommand{\ModuleDefTwo}{ModuleDef_2}
+\newcommand{\ModuleDefThree}{ModuleDef_3}
+\newcommand{\ModuleDefFour}{ModuleDef_4}
+
+%%inrel namematch typematch attrmatch versionmatch
+
+%=============================================================================
+\clearpage
+\pagenumbering{arabic}
+\section{Introduction}
+
+%=============================================================================
+
+%=============================================================================
+\clearpage
+\section{Basic Types}
+\label{cha:basics}
+
+Some basic types need defining.
+
+\subsection*{Attributes}
+Arbitrary attribute names and values are used to provide a flexible Provider/Requirement matching mechanism
+
+\begin{zed}
+  [AName, AValue]
+\end{zed}
+
+We will use mappings of attribute names to values.
+
+\begin{zed}
+ AMap == AName \pfun AValue
+\end{zed}
+
+\subsection*{Versions}
+We need the notion of a version.
+\begin{zed}
+ [Version]
+\end{zed}
+
+\subsection*{Names}
+Names are used to refer to Modules, Requirements and Providers.
+
+\begin{zed}
+ [Name]
+\end{zed}
+
+
+%=============================================================================
+\clearpage
+\section{Modularity}
+\label{cha:modularity}
+
+\subsection*{Module Identifiers}
+A ModuleId identifies a Module.
+
+\begin{zed}
+ [ModuleId]
+\end{zed}
+
+\subsection*{Requirements}
+Modules have Requirements that must be satisfied by the Resolver when it is resolving the Module.
+
+Modules can have Requirements for either bundles (Require-Bundle) or packages (Import-Package).
+
+\begin{zed}
+ RequirementType ::= REQUIRE\_BUNDLE | IMPORT\_PACKAGE \\
+\end{zed}
+
+Requirements have a Name, which, in the case of Import-Package, is the package name, and in the case of Require-Bundle, is the bundle symbolic name.
+
+\begin{schema}{Requirement}
+ name : Name \\
+ type : RequirementType \\
+ moduleId : ModuleId \\
+ versionRange : \power Version \\
+ attrs : AMap \\
+\end{schema}
+
+Requirements reference the Module which publishes them via moduleId.
+
+\subsection*{Providers}
+
+Modules export Providers which are capable of satisfying Requirements from other Modules.
+
+Modules can have either Bundle or Package Providers
+\begin{zed}
+ ProviderType ::= BUNDLE | PACKAGE
+\end{zed}
+
+Providers have a Name, Version and attributes.
+
+\begin{schema}{Provider}
+name : Name \\
+type : ProviderType \\
+moduleId : ModuleId \\
+version : Version \\
+attrs : AMap \\
+mandatory : \power AName \\
+\where
+mandatory \subseteq \dom attrs \\
+\end{schema}
+
+Providers attributes include default attributes for the bundle symbolic name and bundle version.
+
+Providers reference the Module which publishes them via moduleId.
+
+A Requirement can be mapped to kind of Provider that will satisfy it:
+
+\begin{axdef}
+ requiredProviderType : RequirementType \fun ProviderType
+\end{axdef}
+
+\subsection*{Modules}
+A Module has a ModuleId and a Name along with its Providers and Requirements.
+
+\begin{schema}{Module}
+ id : ModuleId \\
+ requirements : \power Requirement \\
+ providers : \power Provider \\
+ bsn : Name \\
+\where
+ \exists_1 p : providers @ p.type = BUNDLE \\
+ \forall p : providers @  p.type = BUNDLE \implies p.name = bsn \land \\
+ \t1 id = p.moduleId \\
+ \forall p : providers @ id = p.moduleId \\
+ \forall r : requirements @ id = r.moduleId \\
+\end{schema}
+
+%=============================================================================
+\clearpage
+\section{Module Repository}
+\label{cha:modulerepository}
+
+The ModuleRepository maintains a set of all known Modules. The resolver is limited to operating
+on Modules that are in this set. A subset of all known Modules are resolved at any point
+in time. Both the known set of Modules and the set of resolved Modules are never empty - they always contain the system Module. Each Module is uniquely identified by its ModuleId.
+
+\begin{schema}{ModuleRepository}
+	modules, resolved : \power Module \\
+	sys : Module \\
+\where
+	sys \in modules \cap resolved \\
+	resolved \subseteq modules \\
+	\forall m_1, m_2 : modules @ m_1.id = m_2.id \implies m_1 = m_2
+\end{schema}
+
+A ModuleRepository is initialised with the system Module.
+
+\begin{schema}{MRInit}
+ ModuleRepository' \\
+ sys? : Module \\
+\where
+ sys' = sys? \\ 
+ resolved' = \{sys?\} \\
+ modules' = \{sys?\} \\
+\end{schema}
+
+Various changes can be made to the ModuleRepository but the system Module can never change.
+
+\begin{schema}{MRChange}
+ \Delta ModuleRepository \\
+\where
+ sys' = sys \\
+\end{schema}
+
+A Module can be added to the ModuleRepository.
+
+\begin{schema}{MRAddModule}
+ MRChange \\
+ m? : Module
+\where
+ resolved' = resolved \\
+ modules' = modules \cup \{m?\} 
+\end{schema}
+
+Modules other than the system Module can be removed from the ModuleRepository. This will remove the Module from the set of resolved Modules also.
+
+\begin{schema}{MRRemoveModule}
+ MRChange \\
+ m? : Module
+\where
+  m? \neq sys \\
+  resolved' = resolved \setminus \{m?\} \\
+  modules' = modules \setminus \{m?\}
+\end{schema}
+
+Once a Module is resolved it can be marked as such.
+
+\begin{schema}{MRResolveModule}
+ MRChange \\
+ m? : Module
+\where
+ m? \in modules \\
+ modules' = modules \\
+ resolved' = resolved \cup \{m?\}
+\end{schema}
+
+If a Module other than the system Module becomes unresolved it can be marked as such.
+
+\begin{schema}{MRUnresolveModule}
+ MRChange \\
+ m? : Module
+\where
+ m? \neq sys \\
+ modules' = modules \\
+ resolved' = resolved \setminus \{m?\}
+\end{schema}
+
+%=============================================================================
+\clearpage
+\section{Requirement Repository}
+\label{cha:supplierrepository}
+
+The RequirementRepository maintains a mapping of all known Requirements to the Modules that contain them.
+
+\begin{schema}{RequirementRepository}
+ ModuleRepository \\
+ requirements : Requirement \pfun Module \\
+\where
+ \dom requirements = \bigcup \{m : modules @ m.requirements \} \\ 
+ \ran requirements \subseteq modules \\
+ \forall r : Requirement; m : Module | r \mapsto m \in requirements @ r \in m.requirements
+\end{schema}
+
+The Requirements of a given Module can be added to the RequirementRepository.
+
+\begin{schema}{RRAddRequirements}
+ \Delta RequirementRepository \\
+ MRAddModule \\
+\where
+ requirements' = requirements \cup \{r : Requirement  | r \in m?.requirements @ r \mapsto m? \}
+\end{schema}
+
+The Requirements of a given Module can be removed for the RequirementRepository.
+
+\begin{schema}{RRRemoveRequirements}
+ \Delta RequirementRepository \\
+ MRRemoveModule \\
+\where
+ requirements' = requirements \setminus \{r : Requirement  | r \in m?.requirements @ r \mapsto m? \}
+\end{schema}
+
+%=============================================================================
+\clearpage
+\section{Resolution}
+\label{cha:resolution}
+
+Resolution attempts to determine a Wiring, that is mapping from a Requirement to a Provider that can satisfy it. The Wiring that is chosen must satisfy all Requirements in a given Module and be consistent with respect to the uses constraints of all Providers.
+
+\begin{zed}
+ Wiring == Requirement \pfun Provider
+\end{zed}
+
+\subsection*{Requirement Satisfaction}
+
+To determine the possible which Providers can satisfy which Requirements a series of filters are applied. The first filter checks that the name of the Requirement matches the name of the Provider.
+
+\begin{axdef}
+\_ namematch \_ : Requirement \rel Provider
+\where
+\forall p : Provider; r : Requirement @ r~namematch~p \iff r.name = p.name
+\end{axdef}
+
+Requirement types must also match the type required by the Provider.
+
+\begin{axdef}
+\_ typematch \_ : Requirement \rel Provider
+\where
+\forall p : Provider; r : Requirement @ r~typematch~p \\
+\t1 \iff p.type = requiredProviderType~r.type
+\end{axdef}
+
+The Provider's Version must reside within the range of Versions the Requirement defines.
+
+\begin{axdef}
+\_ versionmatch \_ : Requirement \rel Provider
+\where
+\forall p : Provider; r : Requirement @ r~versionmatch~p \iff p.version \in r.versionRange
+\end{axdef}
+
+All attributes that the Requirement requires must be present and equal in the Provider. Also, the Requirement must having matching attributes for all the mandatory attributes of the Provider.
+
+\begin{axdef}
+\_ attrmatch \_ : Requirement \rel Provider
+\where
+\forall p : Provider; r : Requirement @ \\
+\t1 r~attrmatch~p \iff p.attrs \subseteq r.attrs \land p.mandatory \subseteq \dom r.attrs
+\end{axdef}
+
+Thus the possible the Providers that satisfy a given Requirement is given as:
+
+\begin{axdef}
+satisfiedBy : Requirement \rel Provider
+\where
+ satisfiedBy = \{r : Requirement; p : Provider | r~namematch~p \land \\
+   \t1 r~typematch~p \land r~versionmatch~p \land r~attrmatch~p @ r \mapsto p\}
+\end{axdef}
+
+\subsection*{Resolver}
+
+The Resolver maintains the RequirementRepository along with the current Wiring. The current Wiring cannot contain Requirements or Providers from unresolved Modules. Every Requirement of every resolved Module must be present in the current Wiring. The current Wiring must honour the satisfiedBy relation.
+
+\begin{schema}{Resolver}
+ RequirementRepository \\
+ current : Wiring \\
+\where
+ \dom current = \bigcup \{m : resolved @ m.requirements\} \\
+ \ran current \subseteq \bigcup \{m : resolved @ m.providers\}\\
+ current \subseteq satisfiedBy
+\end{schema}
+
+Successfully resolving a set of modules simply extends the current wiring.
+
+\begin{schema}{ResolveOK}
+ \Delta Resolver \\
+ mods? : \power Module
+\where
+ sys' = sys \\
+ mods? \cap resolved = \emptyset \\
+ mods? \subseteq modules \\
+ modules = modules' \\
+ resolved \cup mods? \subseteq resolved' \\
+ current \subseteq current' \\
+\end{schema}
+
+\end{document}

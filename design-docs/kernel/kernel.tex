@@ -1,0 +1,570 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+%\markboth{Draft}{Draft}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 6 pt
+\parindent 0 pt
+
+\title{dm Kernel 2.0 (v0.8)}
+\author{Glyn Normington}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+The Jersey release of the SpringSource dm Server is based on a separate \textit{kernel} component.
+This document provides a partial formal model of the kernel.
+\clearpage
+\pagenumbering{roman}
+\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+\renewcommand{\empty}{\emptyset}
+
+%=============================================================================
+\clearpage
+\pagenumbering{arabic}
+\section{Overview}
+
+The dm Kernel is an embeddable OSGi component that manages various kinds of artefacts which may be obtained via a repository.
+
+The embedding features of the kernel are discussed in the next section after which installation and
+uninstallation of artefacts, the runtime artefact model, and start and stop of artefacts are specified.
+
+%=============================================================================
+\clearpage
+\section{Embedding}
+
+Since the kernel may be \textit{embedded} in a larger program, it does not have sole
+control of the OSGi framework on which it runs.
+
+This is a helpful perspective even for programs like dm Server which 
+use the kernel but which do not operate directly on the OSGi framework, since application code installed in dm Server
+is free to operate directly on the OSGi framework outside the control of the kernel.
+
+To provide predictable overall behaviour, the kernel must operate on the OSGi
+framework in a well defined, and preferably intuitively appealing, way.
+
+In the absence of other programs operating directly on the OSGi framework, the kernel
+presents a relatively clean abstraction to its users.
+In the presence of such programs, the abstraction breaks down and users need to understand
+the kernel's interaction with the OSGi framework.
+
+So we need to take into account the \textit{embedded} and \textit{non-embedded} use cases in the design of the kernel.
+As observed above, the non-embedded use case merges into the embedded use case as soon
+as application code starts operating directly on the OSGi framework.
+Thankfully, this is explicit in the design of application code and the choice of third party libraries, most of which were developed without OSGi in mind.
+So the complexity of the kernel's behaviour increases in a ``pay as you go'' manner.
+
+%=============================================================================
+\clearpage
+\section{Artefacts and the Runtime Artefact Model}
+
+One of the primary functions of the kernel is to enable various kinds of \textit{artefact} to be installed
+and started.
+Artefacts include OSGi bundles, PAR files, WAR files, configurations, and \textit{plans}.
+A plan refers to zero or more artefacts which are to be installed when the plan is
+installed.
+\begin{zed}
+AType ::= BUNDLE | PAR | WAR | CONFIG | PLAN \\
+\end{zed}
+
+Certain types or arfefact may be installed in an OSGi framework.
+\begin{zed}
+OSGITYPES == \{ BUNDLE, WAR \} \\
+\end{zed}
+
+Artefacts have names and versions, although whether or how these and artefact types relate to the 
+content of an artefact need not concern us here.
+\begin{zed}
+[Artefact, AName, AVersion] \\
+\end{zed}
+
+In this specification, we deliberately ignore the distinction between artefacts, their descriptions, and
+transformed artefacts.
+
+We abbreviate the artefact type, name, version triple.
+\begin{zed}
+TNV == AType \cross AName \cross AVersion
+\end{zed}
+
+We define a relation for checking that a type, name, version triple has a supported type.
+%%inrel conformsTo
+\begin{axdef}
+\_ conformsTo \_ : TNV \rel (\power AType)
+\where
+\forall t : AType; n : AName; v : AVersion; ts : \power AType @ \\
+\t1  ((t, n, v)~conformsTo~ts )\iff (t \in ts) \\
+\end{axdef}
+
+The kernel maintains a portion of the dependency graph known as the \textit{runtime artefact model}
+and uses the OSGi framework to determine the remaining dependencies.
+The runtime artefact model records the \textit{root artefacts} (the artefacts which have been explicitly installed, \textit{roots} for short), plan resolution decisions (which
+artefact is chosen to satisfy each version range in a plan), and the bundles which are cloned
+into a plan.
+
+The runtime artefact model does not record which plan is chosen to satisfy each
+\texttt{import-library} manifest header or which bundle is chosen to satisfy
+each \texttt{import-bundle} manifest header since these headers result in package
+dependencies which are managed by the OSGi framework.
+This split is necessary to keep the dependency graph accurate.
+For example, if a bundle in the
+graph is updated and an OSGi \texttt{refreshPackages} operation is performed, the graph may change
+significantly and it would be extremely difficult, if not impossible, for the kernel to maintain an accurate copy of the OSGi framework's dependencies.
+
+The runtime artefact model also records the lifecycle state of each artefact in the model.
+\begin{zed}
+AState ::= INSTALLED | RESOLVED | STARTING | ACTIVE | \\
+\t3 STOPPING | UNINSTALLING | UNINSTALLED \\
+\end{zed}
+
+An artefact which is in the $RESOLVED$, $STARTING$, $ACTIVE$, or $STOPPING$ state is
+resolved.
+In other words $STARTING$, $ACTIVE$, and $STOPPING$ can be regarded as sub-states of
+$RESOLVED$.
+\begin{zed}
+RESOLVED\_STATES == \{ RESOLVED, STARTING, ACTIVE, \\
+\t7 STOPPING \}
+\end{zed}
+
+An artefact which is in the $STARTING$, $ACTIVE$, or $STOPPING$ state is
+active.
+In other words $STARTING$ and $STOPPING$ can be regarded in some circumstances as
+equivalent to $ACTIVE$.
+\begin{zed}
+ACTIVE\_STATES == \{ STARTING, ACTIVE, STOPPING \}
+\end{zed}
+
+The runtime artefact model has a set of supported artefact types, a collection of artefacts, each uniquely identified by type,
+name, and version, a set of root artefacts, a dependency relation, a unique state for each artefact,
+and set of resolved and actcive artefacts.
+%% inrel dependsOn
+\begin{schema}{RAM}
+types : \power AType \\
+art : TNV \pinj Artefact \\
+roots : \power TNV \\
+dependsOn : TNV \rel TNV \\
+st : TNV \pfun AState \\
+resolved : \power TNV \\
+active : \power TNV \\
+\where
+\forall  tnv : \dom art @ tnv~conformsTo~types \\
+roots \subseteq \dom art \\
+\dom st = \dom art \\
+dependsOn \subseteq \dom art \cross \dom art \\
+resolved = st\inv \limg RESOLVED\_STATES \rimg \\
+active = st\inv \limg ACTIVE\_STATES \rimg \\
+dependsOn \limg resolved \rimg \subseteq resolved \\
+dependsOn \limg active \rimg \subseteq active \\
+\end{schema}
+Each artefact in the model has a supported type.
+Each root artefact is known in the model.
+Some artefacts in the model depend on other artefacts in the model.
+Each artefact has a state.
+Resolved artefacts are those with a $RESOLVED$, $STARTING$, $ACTIVE$, or $STOPPING$ state.
+Active artefacts are those with a $STARTING$, $ACTIVE$, or $STOPPING$ state.
+Active artefacts may only depend on other active artefacts.
+
+Each kernel instance has a runtime artefact model under its sole control.
+Kernel instances running on an OSGi framework share the content of the framework.
+These relationships are depicted in Figure \ref{fig:kernel-rams}.
+\begin{figure}[h!]
+\includegraphics*[scale=1]{kernel-rams.pdf}
+\caption{Multiple kernels and runtime artefact models}
+\label{fig:kernel-rams}
+\end{figure}
+
+%=============================================================================
+\clearpage
+\section{Runtime Artefact Model Operations}
+
+Initially a runtime artefact model has a set of supported artefact types and no contents.
+\begin{schema}{RAMInit}
+RAM' \\
+types? : \power AType \\
+\where
+types' = types? \\
+art' = \empty \\
+\end{schema}
+
+The set of root artefacts may be inquired.
+\begin{schema}{RAMgetRoots}
+\Xi RAM \\
+roots! : \power TNV \\
+\where
+roots! = roots \\
+\end{schema}
+
+The set of supported artefact types may be inquired.
+\begin{schema}{RAMgetArtefactTypes}
+\Xi RAM \\
+types! : \power AType \\
+\where
+types! = types \\
+\end{schema}
+
+An artefact may be inquired by type, name, and version.
+\begin{schema}{RAMgetArtefact}
+\Xi RAM \\
+t? : AType \\
+n? : AName \\
+v? : AVersion \\
+a! : Artefact \\
+\where
+(t?, n?, v?) \in \dom art \\
+a! = art(t?, n?, v?) \\
+\end{schema}
+
+A set of artefacts may be inquired by type.
+\begin{schema}{RAMgetArtefactsByType}
+\Xi RAM \\
+t? : AType \\
+as! : \power Artefact \\
+\where
+as! = \{ tnv : \dom art | tnv~conformsTo~\{ t? \} @ art~tnv \} \\
+\end{schema}
+
+A set of artefacts may be inquired by type and name.
+\begin{schema}{RAMgetArtefactsByTypeAndName}
+\Xi RAM \\
+t? : AType \\
+n? : AName \\
+as! : \power Artefact \\
+\where
+as! = \{ tnv : \dom art; v : AVersion | tnv = (t?, n?, v) @ art~tnv \} \\
+\end{schema}
+
+A set of artefacts may be inquired by type, name, and version range.
+\begin{schema}{RAMgetArtefactsByTypeNameAndVersionRange}
+\Xi RAM \\
+t? : AType \\
+n? : AName \\
+vr? : \power AVersion \\
+as! : \power Artefact \\
+\where
+as! = \{ tnv : \dom art; v : vr? | tnv = (t?, n?, v) @ art~tnv \} \\
+\end{schema}
+
+Operations that modify the runtime artefact model do not change the set of supported types.
+\begin{schema}{RAMOp}
+\Delta RAM \\
+\where
+types' = types \\
+\end{schema}
+
+A root may be installed into the model.
+\begin{schema}{RAMInstallRootOk}
+RAMOp \\
+tnv? : TNV \\
+a? : Artefact \\
+\where
+tnv? \notin \dom art \\
+art' = art \cup \{ tnv? \mapsto a? \} \\
+roots' = roots \cup \{ tnv? \} \\
+dependsOn' = dependsOn \\
+st' = st \cup \{ tnv? \mapsto INSTALLED \} \\
+\end{schema}
+
+Resolving a root involves a number of steps each of which operates on the model.
+
+Artefacts may be installed to satisfy the transitive dependencies of roots.
+\begin{schema}{RAMInstallOk}
+RAMOp \\
+tnv? : TNV \\
+a? : Artefact \\
+\where
+tnv? \notin \dom art \\
+art' = art \cup \{ tnv? \mapsto a? \} \\
+roots' = roots \\
+dependsOn' = dependsOn \\
+st' = st \cup \{ tnv? \mapsto INSTALLED \} \\
+\end{schema}
+
+An individual dependency from one artefact in the model to another in the model may be recorded.
+\begin{schema}{RAMRecordDependency}
+RAMOp \\
+from? : TNV \\
+to? : TNV \\
+\where
+from? \in \dom art \\
+to? \in \dom art \\
+art' = art \\
+roots' = roots \\
+dependsOn' = dependsOn \cup \{ from? \mapsto to? \} \\
+\end{schema}
+
+A set of artefacts may have their state set to a given value.
+This is an operation on a set of artefacts since, for example, marking an individual artefact's state as
+resolved is insufficient for handling circular dependencies.
+\begin{schema}{RAMSetStateOk}
+RAMOp \\
+res? : \power TNV \\
+s? : AState \\
+\where
+res? \subseteq \dom art \\
+art' = art \\
+roots' = roots \\
+dependsOn' = dependsOn \\
+st' = st \oplus ( res? \cross \{ s? \} ) \\
+\end{schema}
+
+The following operation specifies the overall operation of installing and resolving a root
+using an input collection of dependencies.
+\begin{schema}{RAMResolveRootOk}
+RAMOp \\
+tnv? : TNV \\
+a? : Artefact \\
+deps? : TNV \pinj Artefact \\
+\where
+tnv? \notin \dom art \\
+\also
+art' = art \cup \{ tnv? \mapsto a? \} \cup deps? \\
+roots' = roots \cup \{ tnv? \} \\
+st ' = st \cup ((\{ tnv? \} \cup \dom deps?) \cross \{ RESOLVED \}) \\
+\also
+dependsOn \subseteq dependsOn' \\
+\dom deps? \subseteq \ran dependsOn' \\
+\end{schema}
+The root must not already be in the model.
+The root and new dependencies are added to the model in $RESOLVED$ state.
+The new dependencies are depended upon in the updated model.
+
+%=============================================================================
+\clearpage
+\section{Installing and Uninstalling Artefacts}
+
+A \textit{repository} is a collection of artefacts each uniquely identified by type, name, and version.
+\begin{zed}
+Repository == TNV \pinj Artefact
+\end{zed}
+
+A kernel may be configured with a repository from which it can install artefacts.
+A kernel which is not configured with a repository is equivalent, at least from an install perspective, to
+a kernel configured with an empty repository.
+
+So we model a kernel as having a runtime artefact model and a repository.
+\begin{schema}{Kernel}
+RAM \\
+repo : Repository \\
+\end{schema}
+
+Kernel instances may share a repository or not, as shown in Figure \ref{fig:kernel-repos}.
+\begin{figure}[h!]
+\includegraphics*[scale=0.7]{kernel-repos.pdf}
+\caption{Kernels and repositories}
+\label{fig:kernel-repos}
+\end{figure}
+
+We model kernel kernel instance creation as taking a repository parameter.
+\begin{schema}{KernelInit}
+Kernel' \\
+RAMInit \\
+repo? : Repository \\
+\where
+repo' = repo? \\
+\end{schema}
+
+Thereafter, the repository associated with a kernel can change in arbitrary ways.
+We summarise this by stating that the kernel has a notional operation which can update
+the kernel's repository arbitrarily. This operation is not implemented.
+\begin{schema}{UpdateRepository}
+\Delta Kernel \\
+\Xi RAM \\
+repo? : Repository \\
+\where
+repo' = repo? \\
+\end{schema}
+
+Kernel operations do not modify the repository.
+\begin{schema}{KernelOp}
+\Delta Kernel \\
+\where
+repo' = repo \\
+\end{schema}
+
+Certain operations on the runtime artefact model are promoted into corresponding kernel operations
+(although these will probably be grouped in a \texttt{RuntimeArtifactModel}\footnote{American spelling is used in Java interfaces and javadoc.} interface).
+\begin{zed}
+getRoots \defs RAMgetRoots \land KernelOp \\
+\also
+getArtefactTypes \defs RAMgetArtefactTypes \land KernelOp \\
+\also
+getArtefact \defs RAMgetArtefact \land KernelOp \\
+\also
+getArtefactsByType \defs RAMgetArtefactsByType \land KernelOp \\
+\also
+getArtefactsByTypeAndName \defs \\
+\t1 RAMgetArtefactsByTypeAndName \land KernelOp \\
+\also
+getArtefactsByTypeNameAndVersionRange \defs \\
+\t1 RAMgetArtefactsByTypeNameAndVersionRange \land KernelOp \\
+\end{zed}
+
+Since the contents of the repository may change during the lifetime of the kernel, we can think of a
+repository as being an input parameter to the install operation.
+Invariant relationships between the contents of the repository and the contents of the
+OSGi framework can only be maintained by a system which controls all the kernel instances
+sharing the OSGi framework and all the repositories\footnote{Retracting an artefact from a repository
+may cause the artefact's URI, that may have been previously obtained by a kernel, to become invalid and produce runtime errors in the kernel if the URI is used.}
+associated with those kernel instances.
+Any such invariants will also depend on the behaviour of any bundles which operate
+directly on the OSGi framework.
+
+An install operation on the kernel takes a single root artefact.
+This may be supplied directly or as a reference to an artefact in the kernel's repository.
+The latter form is modelled below.
+\begin{schema}{InstallOkRaw}
+KernelOp \\
+RAMResolveRootOk \\
+\where
+tnv? \in \dom repo \\
+deps? \subseteq repo \\
+a? = repo~tnv? \\
+tnv? \in resolved' \\
+\end{schema}
+The supplied artefact is installed \textit{and} resolved.
+
+\begin{zed}
+InstallOk \defs InstallOkRaw \hide (a?, deps?)
+\end{zed}
+
+Artefacts may have dependencies on other artefacts.
+For example, a plan may refer to a configuration file and a bundle may import a package which
+is exported by another bundle.
+Dependencies may be \textit{optional} or \textit{mandatory}.
+For example, an import of a package which specifies the directive \texttt{resolution:=optional}
+expresses an optional dependency on some bundle which exports that package.
+
+When the kernel installs a root, it attempts to satisfy the dependencies of the root.
+Some of these dependencies may be satisfied by artefacts that were previously installed.
+The kernel attempts to satisfy any remaining dependencies by installing artefacts
+from the kernel's repository.
+These artefacts may also have dependencies which the kernel will attempt to satisfy, and so on.
+A root's dependencies, together with their dependencies, and so on are referred to collectively
+as the \textit{transitive dependencies} of the root. 
+If any \textit{chain} of mandatory dependencies cannot be satisfied, then the installation of the
+root fails.
+
+If the kernel does not have a repository, only (directly supplied) roots may be installed in the kernel and, before a root may be installed successfully, the root's transitive dependencies must already be installed.
+
+If the installation of a root fails, any artefacts which were installed to satisfy the root's transitive dependencies must remain installed in case they are now depended upon by some other artefact
+that was installed concurrently and outside the control of the kernel.
+
+To provide some level of clean-up after install failure, the transitive dependencies may be calculated and a check made that the OSGi bundles to be installed can resolve \textit{before} the root or any of its transitive dependencies are installed in the OSGi framework.
+Since the OSGi framework may change concurrently with this calculation, the root installation
+may still fail after (correct) validation beforehand.
+This clean-up need not be fool-proof.
+
+%=============================================================================
+\clearpage
+\section{Starting and Stopping Artefacts}
+
+Installed artefacts may be started and later stopped any number of times and then, ultimately, uninstalled.
+Certain installed artefacts may be refreshed to pick up changes.
+
+The main complexity surrounds when to start and stop the transitive dependencies of a root.
+Dependencies are those defined in the runtime artefact model and package dependencies
+defined by the OSGi framework.
+Service dependencies are too dynamic and unpredictable to be useful in this context.
+
+\subsection*{Start}
+
+In general, artefacts in a dependency graph should be started in \textit{reverse dependency order}.
+This means that artefacts are started, whenever possible, after the artefacts on which they depend.
+If there are cyclic dependencies, the artefacts in each cycle could be started in an arbitrary order,
+although it may be better to choose a deterministic order such as the order of installation.
+
+Dependencies of plans are started in an order defined by the plan.
+
+When a root is installed, any implicit transitive dependency (that is, a dependency that need not
+be defined in the runtime
+artefact model) causes the artefact satisfying the dependency to be started \textit{before} the installation of the root completes.
+
+Before a root is started, the kernel starts the transitive dependencies, in reverse dependency order.
+
+Starting an artefact which is in \texttt{ACTIVE} state has no effect.
+
+Starting a root starts all its dependencies.
+\begin{schema}{RAMstartRootOk}
+RAMOp \\
+tnv? : TNV \\
+\where
+tnv? \in resolved \\
+art' = art \\
+roots' = roots \\
+dependsOn' = dependsOn \\
+st ' = st \oplus ((dependsOn\star \limg \{ tnv? \} \rimg) \cross \{ ACTIVE \}) \\
+\end{schema}
+
+\subsection*{Stop}
+
+Before a root is stopped, the kernel stops certain transitive dependencies, in dependency order.
+
+The kernel traverses the root's dependencies in the runtime artefact model and ignores dependencies in the OSGi framework. Also, the kernel 
+does not stop transitive dependencies which are depended on, in the runtime artefact model,
+by other active artefacts.
+
+Stopping an artefact which is in \texttt{INSTALLED} or \texttt{RESOLVED} state has no effect.
+
+Stopping a root stops all its unique dependencies.
+\begin{schema}{RAMstopRootOk}
+RAMOp \\
+tnv? : TNV \\
+\where
+tnv? \in \dom art \\
+st~tnv? = ACTIVE \\
+art' = art \\
+roots' = roots \\
+dependsOn' = dependsOn \\
+(dependsOn\star \limg \{ tnv? \} \rimg) \ndres st = (dependsOn\star \limg \{ tnv? \} \rimg) \ndres st' \\
+st'~tnv? = RESOLVED \\
+\end{schema}
+
+\subsection*{Kernel Operations}
+
+These operations on the runtime artefact model are promoted into corresponding kernel operations
+(although these will probably be grouped in a \texttt{Artifact} interface).
+\begin{zed}
+startRootOk \defs RAMstartRootOk \land KernelOp \\
+\also
+stopRootOk \defs RAMstopRootOk \land KernelOp \\
+\end{zed}
+
+
+%=============================================================================
+%\clearpage
+%\section{Alternative Designs}
+%
+%\subsection{Starting and Stopping Artefacts}
+%
+%Two alternative approaches to starting and stopping artefacts were considered and rejected.
+%
+%\subsection{Incremental Start}
+%The kernel keeps track of the transitive dependencies which were installed for each root and, when
+%the root is started, starts only these transitive dependencies, in reverse dependency order.
+%
+%Unfortunately, if roots with overlapping dependency graphs are installed in succession, \textit{all}
+%the roots installed prior to a given root may need to be started before the given root is started, which
+%makes this approach unattractive.
+%
+%Stopping a root is also problematic: roots would essentially need to be stopped in reverse
+%install order.
+%
+%\subsection{Immediate Start}
+%The kernel keeps track of the transitive dependencies which were installed for each root and, before
+%completing the installation of the root, starts the transitive dependencies in reverse dependency
+%order.
+%
+%Unfortunately, root plans need to be treated as a special case.
+%When a root plan is installed, only its indirect dependencies are started.
+%Without this special case, the start operation on the root plan is useless.
+
+\end{document}

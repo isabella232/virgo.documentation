@@ -1,0 +1,621 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{zed-cm}
+\usepackage{graphicx}
+%\markboth{Draft}{Draft}
+\pagestyle{myheadings}
+\begin{document}
+\parskip 6 pt
+\parindent 0 pt
+
+\title{Cloning (v0.4)}
+\author{Glyn Normington}
+\maketitle
+% The following three commands ensure the title page is stamped as
+% confidential without a page number. Page numbering is started at the
+% table of contents.
+\thispagestyle{myheadings}
+\pagenumbering{roman}
+\setcounter{page}{0}
+
+%=============================================================================
+The Jersey release of the SpringSource dm Server will support \textit{cloning}.
+This document defines cloning and explores the requirements that it must satisfy.
+
+Refer to JIRA issue \texttt{ENGINE-825} for associated code changes.
+\clearpage
+\pagenumbering{roman}
+\tableofcontents
+
+% Type checking hacks
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+%\renewcommand{\empty}{\emptyset}
+
+%=============================================================================
+\clearpage
+\pagenumbering{arabic}
+\section{Requirements}
+The requirement for cloning derives from four problems: pinning, private
+statics, discarded optional imports, and fragment hosts.
+
+\subsection{Pinning}
+
+When an OSGi bundle is resolved, its mandatory dependencies are satisfied and any
+optional dependencies that cannot be satisfied are discarded. Dependencies
+are satisfied by wiring them to bundles that satisfy local constraints,
+such as the version of an exported package belonging to the version range of a package import, and
+which satisfy global constraints such as the \textit{uses} constraints between packages.
+
+So the way in which a given resolved bundle is wired, that is the way in which its
+dependencies are wired, depends on
+the set of bundles available at the time the given bundle was resolved, the order
+in which these bundles were
+installed, which of these bundles were already resolved, and how those resolved
+bundles were wired.
+
+Indeed these factors may prevent a bundle from being resolved if its dependencies
+cannot be met in a way which satisfies all the constraints. The most basic
+reason that a bundle cannot be resolved is if its local constraints cannot be met
+by existing bundles. This can be overcome by provisioning more bundles to satisfy
+those dependencies.
+
+A more subtle reason that a bundle cannot be resolved is that
+its local constraints can be met by existing bundles but there is no way of satisfying
+the global constraints, particularly the uses constraints. In some cases, one or more
+bundles would have been capable of satisfying the local and global constraints
+if only they hadn't already been wired in a particular way. These bundles are said
+to be \textit{pinned}.
+Note that pinning arises only from an inability to satisfy global constraints.
+
+\subsection{Private Statics}
+
+A resolved bundle uses a single class loader to load its classes and resources.
+Each of the classes defined by the bundle's class loader has a set of zero or
+more static data items.
+
+Some scenarios require more than one set of static data items per bundle. For
+example, if an application uses Log4j to do logging, then the configuration
+of logging is held in Log4j statics. If more than one application was to 
+use Log4j, then to avoid those applications interfering with
+each other's logging configuration, there would need to be a separate set
+of Log4j statics per application using Log4j.
+
+In some situations, the bundle \textit{expressing a dependency} needs to ensure there
+will be a private copy of the statics of the bundle satisfying the dependency.
+In other situations, the bundle \textit{providing} the dependency needs to ensure
+its statics will always be provided as a private copy. But in yet other situations,
+for instance ActiveMQ, the bundle providing the dependency needs to ensure
+its statics will never be duplicated, for instance if it is controlling some singleton
+resource such as a queue manager.
+
+\subsection{Discarded Optional Imports}
+
+The discussion of pinning described how optional imports are discarded during resolution.
+After a bundle has been resolved, the provisioning system contents may change such
+that some optional imports which were discarded
+would no longer be discarded if the bundle was re-resolved.
+
+Discarded optional imports could be re-instated by refreshing the bundle containing the imports.
+However, such a refresh may be too disruptive, for instance if a large number of other bundles depend on the bundle being refreshed.
+
+An alternative approach is to put a private copy of the bundle inside the application.
+This copy can then wire its optional imports.
+
+Fortunately, in the cases where they are significant, discarded optional imports
+cause a resolution error, so it is not necessary to detect specifically when a scoped
+application depends on a package corresponding to a dropped optional in a bundle
+on which the application also depends.
+
+\subsection{Fragment Hosts}
+
+When a given bundle is resolved fragment bundles which specify the given bundle as a
+host may be attached to the host.
+It is not possible to attach a fragment bundle of a scoped application to a bundle in the
+global scope as this would allow application content to "leak" into the global scope.
+It would also be impossible to define the synthetic context of the application to cover the
+fragment bundle but not its host.
+
+Manually packaging a private copy of the host bundle inside the application solves this
+problem but is poor packaging.
+
+%=============================================================================
+\clearpage
+\section{Cloning}
+
+Cloning refers to the copying of a bundle or bundles into a scope.
+
+Cloning can apply to bundles or libraries.
+
+Cloning automatically driven by unsatisfied uses constraints addresses pinning and discarded optional
+imports.
+
+Cloning for private statics is specified explicitly and manually in bundle manifests.
+
+\subsection{Approach}
+
+We concentrate on cloning of bundles and libraries as
+specified in \texttt{import-bundle} and \texttt{import-library} statements and library and bundle
+declarations and on auto-cloning induced by unsatisfied uses constraints.
+
+Suppression of cloning in \texttt{import-bundle} and \texttt{import-library} statements and library and bundle
+declarations is also considered.
+
+\subsection{Divide and Conquer}
+
+Cloning poses three separate problems: determining the bundles to clone;
+creating clones and managing them subsequently; enabling Spring DM to cope with
+Spring framework clones.
+
+\subsubsection{Determining the Bundles to Clone}
+
+Cloning may be mandated or suppressed explicitly on \texttt{import-library}, \texttt{import-bundle},
+or a library or bundle declaration. The mandated cloning operations are performed first.
+
+Then zero or more bundles are added to the cloned set incrementally
+until the application resolves.
+
+The need to re-run the deployer's metadata transformations is somewhat simplified by the
+observation that the set of cloned bundles is monotonically increasing, so re-scoping never
+requires de-scoping.
+
+Finally, if we clone the Spring framework bundles used by the kernel, we need to clone the Spring DM extender and associated bundles such as ``kernel.dm''. This is discussed below.
+
+\subsubsection{Creating and Managing Clones}
+
+Clones can be created by copying bundles into an application's scope. This minimises
+sharing but is simpler to manage subsequently than creating sets of cloned bundles shared by
+more than one application.
+
+When the original copy of a cloned bundle is refreshed, the clones must also be refreshed.
+
+\subsubsection{Spring DM and Spring Framework Clones}
+
+This is the topic of the next section.
+
+Note that this problem could arise even without full cloning support if an application embedded
+the Spring framework.
+
+%=============================================================================
+\clearpage
+\section{Spring DM and Spring Framework Clones}
+
+The dm Server infrastructure is separated from the clone specific application context and deals
+in terms of the ModuleContext type standardised by OSGi RFC 124. This type should be fronted
+by a MBean for consumption by applications and third parties which do not wish to be tied to
+specific types.
+
+\begin{figure}[h!]
+\includegraphics*[scale=0.2]{cloning-v2.pdf}
+\caption{Reusing Spring DM Core and Conforming to a Standard API}
+\label{fig:cloningv2}
+\end{figure}
+
+The Wight release of the server extended the Spring DM application context type. Although this
+is necessary to support Spring Web applications, the personality SPI should offer a set of
+specific contracts, for example to allow beans to be added to an application context.
+\textit{Need to consider resource loading and context class loading and whether these
+have any implications for cloning.}
+
+This design also removes a number of issues associated with the BundleStarter having to track
+the creation of application contexts by the Spring DM extender by introducing a much more direct
+ModuleContextFactory interface implemented by a clone specific instance.
+
+%=============================================================================
+\clearpage
+\section{Z Specification}
+
+\subsection{Introduction}
+An abstract model is constructed which should be just sufficient to reason about cloning.
+
+\subsection{Types}
+Bundles are uniquely identified by bundle id.
+Bundles are uniquely identified at any point in their
+lifecycle by bundle symbolic name and version, although these may change if the bundle is updated.
+Bundles also have content that is not modelled further here.
+\begin{zed}
+[BundleId, BSN, BV, BundleContent]
+\end{zed}
+
+Bundles have a bundle symbolic name, a bundle version, and some content which is not further
+described.
+\begin{schema}{Bundle}
+bsn : BSN \\
+bv : BV \\
+content : BundleContent \\
+\end{schema}
+
+An OSGi framework identifies each bundle by id. Each bundle is also uniquely identified by
+the combination of its bundle symbolic name and bundle version.
+\begin{schema}{Framework}
+bundles : BundleId \pinj Bundle \\
+nv : BSN \cross BV \pinj Bundle \\
+bid : BSN \cross BV \pinj BundleId \\
+\where
+nv = \{ b : \ran bundles @ (b.bsn, b.bv) \mapsto b \} \\
+bid = bundles\inv \circ nv \\
+\end{schema}
+
+Successfully installing a bundle adds it to the bundles in the framework.
+Since $bundles$ is an injection, the installed bundle's symbolic name and version must not identify another bundle in the framework.
+Since $nv$ is an injection, the bundle id that identifies the installed bundle was not previously in use.
+\begin{schema}{FInstall}
+\Delta Framework \\
+bundleData? : Bundle \\
+\where
+\exists id : BundleId @ bundles' = bundles \cup \{ id \mapsto bundleData? \} \\
+\end{schema}
+
+Successfully updating a bundle with a given id replaces the bundle in the framework and therefore
+requires that the updated bundle's symbolic name and version do not clash with those of another
+bundle in the framework.
+\begin{schema}{FUpdate}
+\Delta Framework \\
+id? : BundleId \\
+bundleData? : Bundle \\
+\where
+id? \in \dom bundles \\
+bundles' = bundles \oplus \{ id? \mapsto bundleData? \} \\
+\end{schema}
+
+It is also possible to update a bundle with a given symbolic name and version.
+Again the updated bundle's symbolic name and version must not clash with those of another
+bundle in the framework.
+\begin{schema}{FUpdateNV}
+\Delta Framework \\
+bsn? : BSN \\
+bv? : BV \\
+bundleData? : Bundle \\
+\where
+\exists id? : BundleId | id? = bid(bsn?, bv?) @ FUpdate \\
+\end{schema}
+
+Any installed bundle may be uninstalled.
+\begin{schema}{FUninstall}
+\Delta Framework \\
+id? : BundleId \\
+\where
+id? \in \dom bundles \\
+bundles' =  \{ id? \} \ndres bundles \\
+\end{schema}
+
+%------------------------------------------------------------------------------------------------------------------------------------------
+\subsection{Scope}
+Informally, cloning involves copying a bundle into a scope. So we make the notion of scope
+precise.
+
+A scope is a collection of bundles, indexed by their symbolic names and versions, some of which are clones.
+\begin{schema}{Scope}
+snv : BSN \cross BV \pinj Bundle \\
+clones : \power (BSN \cross BV) \\
+\where
+snv = \{ b : \ran snv @ (b.bsn, b.bv) \mapsto b \} \\
+clones \subseteq \dom snv \\
+\end{schema}
+
+A bundle may be added to a scope.
+\begin{schema}{AddBundle}
+\Delta Scope \\
+bundleData? : Bundle \\
+\where
+\ran snv' = \ran snv \cup \{ bundleData? \} \\
+\end{schema}
+
+\begin{zed}
+Add \defs [AddBundle | clones' = clones]
+\end{zed}
+
+A clone of a bundle may also be added to a scope.
+\begin{zed}
+AddClone \defs [AddBundle | clones' = clones \cup \{ (bundleData?.bsn, bundleData?.bv)\} ]
+\end{zed}
+
+A bundle may be updated in a scope.
+\begin{schema}{UpdateNVInScope}
+\Delta Scope \\
+bsn? : BSN \\
+bv? : BV \\
+bundleData? : Bundle \\
+\where
+(bsn?, bv?) \in \dom snv \\
+snv' = snv \oplus \{ (bsn?, bv?) \mapsto bundleData? \} \\
+clones' = clones \\
+\end{schema}
+
+Any clone of a bundle may be updated in a scope.
+\begin{schema}{UpdateCloneNVInScope}
+\Delta Scope \\
+bsn? : BSN \\
+bv? : BV \\
+bundleData? : Bundle \\
+\where
+bsn? = bundleData?.bsn \\
+bv? = bundleData?.bv \\
+(bsn?, bv?) \in clones \implies snv' = snv \oplus \{ (bsn?, bv?) \mapsto bundleData? \} \\
+(bsn?, bv?) \notin clones \implies snv' = snv \\
+clones' = clones \\
+\end{schema}
+The above operation is undefined if the bundle symbolic name or bundle version are changed by the update.
+In such circumstances, the implementation escalates the update for the named scope by
+uninstalling and then re-installing it.
+
+A bundle may be removed from a scope.
+\begin{schema}{Remove}
+\Delta Scope \\
+b? : Bundle \\
+\where
+snv' = snv \nrres \{ b? \} \\
+clones' = clones \setminus \{ snv\inv~b? \} \\
+\end{schema}
+
+%------------------------------------------------------------------------------------------------------------------------------------------
+\subsection{Kernel}
+
+In a kernel, certain scopes are named.
+\begin{zed}
+[ScopeName]
+\end{zed}
+
+We define a utility function for extracting the $snv$ function from a scope.
+\begin{axdef}
+scopesnv : Scope \fun (BSN \cross BV \pinj Bundle) \\
+\where
+scopesnv = (\lambda  Scope @ snv) \\
+\end{axdef}
+
+A kernel has an OSGi framework, a single global scope, and a collection of named scopes.
+The scopes partition the bundles in the framework.
+The global scope does not have any clones.
+
+The schema defines two components of the state in terms of the others.
+$isGlobal$  is the set of bundles in the global scope.
+$scopeName$ gives the name of the scope containing each bundle which is not in the global scope.
+\begin{schema}{Kernel}
+Framework \\
+g : Scope \\
+s : ScopeName \pinj Scope \\
+isGlobal : \power (BSN \cross BV) \\
+scopeName : BSN \cross BV \pfun ScopeName \\
+\where
+scopesnv \circ s \partition nv \setminus g.snv \\ 
+g.clones = \emptyset \\
+isGlobal = \dom g.snv \\
+\dom scopeName = \dom nv \setminus isGlobal \\
+\forall bsn : BSN; bv : BV | (bsn, bv) \in \dom scopeName @ \\
+\t1 (bsn, bv) \in \dom ((scopesnv \circ s \circ scopeName)(bsn, bv)) \\
+\end{schema}
+
+We define some promotion schemas.
+
+Some operations are directed at the global scope but may also affect named scopes.
+\begin{schema}{GlobalScopeOp}
+\Delta Kernel \\
+\Delta Scope \\
+\where
+g = \theta Scope \\
+g' = \theta Scope' \\
+\end{schema}
+
+Some operations directed at the global scope do not affect named scopes.
+\begin{schema}{GlobalOnlyScopeOp}
+GlobalScopeOp
+\where
+s' = s \\
+\end{schema}
+
+Some operations are directed at a specific named scope but may also affect the global scope
+and other named scopes.
+\begin{schema}{NamedScopeOp}
+\Delta Kernel \\
+\Delta Scope \\
+sn? : ScopeName \\
+\where
+sn? \in \dom s \\
+sn? \in \dom s' \\
+s~sn? = \theta Scope \\
+s'~sn? = \theta Scope' \\
+\end{schema}
+
+Some operations are directed at a specific named scope and do not affect the global scope
+or any other named scopes.
+\begin{schema}{NamedOnlyScopeOp}
+\Delta Kernel \\
+\Delta Scope \\
+sn? : ScopeName \\
+\where
+sn? \in \dom s \\
+g' = g \\
+s~sn? = \theta Scope \\
+s' = s \oplus \{ sn? \mapsto \theta Scope' \} \\
+\end{schema}
+
+\subsubsection{Installing Bundles}
+
+A bundle may be installed in the global scope. The bundle is installed in the OSGi framework and added to
+the global scope.
+\begin{zed}
+InstallGlobal \defs \exists \Delta Scope @ GlobalOnlyScopeOp \land FInstall \land Add \\
+\end{zed}
+
+Bundles may also be installed in a named scope.
+The bundle is installed in the OSGi framework and added to the named scope.
+Unfortunately, this does not have the desired scoping effect: the operation is not defined for a bundle
+whose symbolic name and version clash with those of an existing bundle.
+\begin{zed}
+InstallInNamedScopeRaw \defs \exists \Delta Scope @ NamedOnlyScopeOp \land FInstall \land Add \\
+\end{zed}
+
+In order to prevent a bundle in a named scope from clashing with a bundle with the same symbolic name
+and version in another scope, the bundle's symbolic name is transformed by prefixing it with the scope name.
+\begin{axdef}
+prefix : ScopeName \cross BSN \inj BSN \\
+\end{axdef}
+
+A prefixing schema is defined for convenience.
+The bundle's symbolic name is prefixed with the scope name but the bundle version and content are
+unchanged.
+\begin{schema}{PrefixBundle}
+b, pb : Bundle \\
+sn? : ScopeName \\
+\where
+ pb.bsn = prefix(sn?, b.bsn) \\
+ pb.bv = b.bv \\
+ pb.content = b.content \\
+\end{schema}
+$PrefixBundle$ ignores content which refers to symbolic names of bundles in the scope.
+Modelling how such content is scoped would bloat the specification and add little value.
+
+A bundle is installed in a named scope by transforming its symbolic name and then installing the transformed
+bundle in the OSGi framework and adding the transformed bundle to the named scope.
+\begin{zed}
+InstallInNamedScope \defs (InstallInNamedScopeRaw[pb / bundleData?] \land \\
+\t6 PrefixBundle[bundleData? / b]) \hide (pb) \\
+\end{zed}
+
+\subsubsection{Cloning Bundles}
+Bundles may also be cloned into a named scope.
+The bundle is installed in the OSGi framework and cloned into the named scope.
+Again, this does not have the desired scoping effect: the operation is not defined for a bundle
+whose symbolic name and version clash with those of an existing bundle.
+\begin{zed}
+CloneRaw \defs \exists \Delta Scope @ NamedOnlyScopeOp \land FInstall \land AddClone \\
+\end{zed}
+
+A bundle is cloned into a named scope by transforming its symbolic name and then installing the transformed
+bundle in the OSGi framework and cloning the transformed bundle into the named scope.
+\begin{zed}
+Clone \defs (CloneRaw[pb / bundleData?] \land \\
+\t6 PrefixBundle[bundleData? / b]) \hide (pb) \\
+\end{zed}
+
+\subsubsection{Updating Bundles}
+
+A bundle in the global scope may be updated. Any clones of the bundle are also updated.
+\begin{schema}{UpdateGbl}
+GlobalScopeOp \\
+FUpdate \\
+UpdateNVInScope \\
+\where
+bsn? = (bundles~id?).bsn \\
+bv? =  (bundles~id?).bv \\
+(bsn?, bv?) \in isGlobal \\
+\dom s' = \dom s \\
+\forall sn? : \dom s @ \\
+\t1 NamedScopeOp \land \\
+\t1 (\exists pb : Bundle @ \\
+\t2 UpdateCloneNVInScope[pb / bundleData?] \land \\
+\t2 PrefixBundle[bundleData? / b]) \\
+\end{schema}
+
+\begin{zed}
+UpdateGlobal \defs \exists \Delta Scope; bsn? : BSN; bv? : BV @ UpdateGbl \\
+\end{zed}
+
+A bundle in a named scope is updated by updating it in the OSGi framework and
+in the named scope.
+\begin{schema}{UpdateInNS}
+NamedOnlyScopeOp \\
+FUpdate \\
+UpdateNVInScope \\
+\where
+bsn? = (bundles~id?).bsn \\
+bv? =  (bundles~id?).bv \\
+(bsn?, bv?) \notin isGlobal \\
+sn? = scopeName(bsn?, bv?) \\
+\end{schema}
+
+\begin{zed}
+UpdateInNamedScope \defs \exists \Delta Scope; bsn? : BSN; bv? : BV; sn? : ScopeName @ UpdateInNS \\
+\end{zed}
+
+The update operation need not distinguish between the global and named scope cases.
+\begin{zed}
+Update \defs UpdateGlobal \lor UpdateInNamedScope \\
+\end{zed}
+
+There is a corresponding update operation which takes a symbolic name and version.
+\begin{schema}{UpdateNV}
+\Delta Kernel \\
+bsn? : BSN \\
+bv? : BV \\
+bundleData? : Bundle \\
+\where
+\exists id? : BundleId | id? = bid(bsn?, bv?) @ Update \\
+\end{schema}
+
+\subsubsection{Uninstalling Bundles}
+A bundle is uninstalled from the global scope by uninstalling it from the OSGi framework and
+removing it from the global scope.
+
+\begin{schema}{UninstallGbl}
+GlobalOnlyScopeOp \\
+FUninstall \\
+Remove \\
+\where
+b? = bundles~id? \\
+\end{schema}
+
+\begin{zed}
+UninstallGlobal \defs \exists \Delta Scope; b? : Bundle @ UninstallGbl \\
+\end{zed}
+Note that the above operation does not uninstall any clones of the bundle being uninstalled.
+
+A bundle is uninstalled from a named scope by uninstalling it from the OSGi framework and
+removing it from the named scope.
+\begin{schema}{UninstallFromNS}
+NamedOnlyScopeOp \\
+FUninstall \\
+Remove \\
+\where
+b? = bundles~id? \\
+\end{schema}
+
+\begin{zed}
+UninstallFromNamedScope \defs \exists \Delta Scope; b? : Bundle @ UninstallFromNS \\
+\end{zed}
+Note that the above operation \textit{can} be used to uninstall a cloned bundle.
+
+The uninstall operation need not distinguish between the global and named scope cases.
+\begin{zed}
+Uninstall \defs UninstallGlobal \lor UninstallFromNamedScope \\
+\end{zed}
+
+%=============================================================================
+\clearpage
+\section{Alternative Designs}
+
+Figures \ref{fig:cloningv3} and \ref{fig:cloningv1} show alternative designs which were considered
+and rejected.
+
+Both designs reproduce the Spring DM extender inside each clone which causes complications for
+listening.
+Cloned extenders need to ignore events outside their `scope' and the non-cloned extender
+needs to ignore events associated with clones.
+So it seems preferable to initiate the building of application contexts at the level of deploying a bundle and delegate building the application context to a clone-specific standard delegate.
+
+Figure \ref{fig:cloningv3} forces much kernel and server code to be cloned with corresponding
+overhead. This makes it much more difficult to integrate with dm Server wide infrastructure such as
+management and third party code as this also would need cloning.
+In the limit, this design clones most of the kernel and server and would be better implemented by
+hosting each clone in its own server instance.
+Although it should be possible to host each clone on its own server instance, this should not be forced
+on the users.
+Especially during development, it is convenient to deploy multiple versions of applications and the
+libraries they use concurrently.
+
+Figure \ref{fig:cloningv1} on the other hand requires a complex mapping of cloned to standard
+types. The whole mapping is somewhat wasteful given that there is no need to generate cloned
+events in the first place (except perhaps to support legacy Spring DM applications).
+
+\begin{figure}[h!]
+\includegraphics*[scale=0.2]{cloning-v3.pdf}
+\caption{Reusing All of Spring DM and Cloning the Kernel}
+\label{fig:cloningv3}
+\end{figure}
+
+\begin{figure}[h!]
+\includegraphics*[scale=0.2]{cloning-v1.pdf}
+\caption{Reusing All of Spring DM and Adapting to the Kernel}
+\label{fig:cloningv1}
+\end{figure}
+
+\end{document}

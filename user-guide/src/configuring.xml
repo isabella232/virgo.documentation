@@ -17,42 +17,117 @@
 	</itemizedlist> 
 	
     <section id="configuring-kernel" >
-	<title>Configuring the @kernel.product.name@ and User Region</title>
-	<para>This section provides information about configuring the @short.product.name@ kernel and the user region by updating the following files in the <literal>$SERVER_HOME/config</literal> directory:</para>
+        <title>Configuring the @kernel.product.name@ and User Region</title>
+        <para>This section provides information about configuring the @short.product.name@ kernel and the user region.</para>
 
-	<table id="configuring-kernel-table" colsep="1" frame="all" rowsep="1">
-	    <title>Kernel Configuration Files </title>
-		<tgroup cols="2">
-		   <thead>
-			<row>
-				<entry>Property File (prefixed by <literal>org.eclipse.virgo</literal>)</entry>
-				<entry>Description</entry>
-			</row>
-		  </thead>
-		  <tbody>
-			<row>
-				<entry><literal>.kernel.properties</literal></entry>
-				<entry>Configures <link linkend="configuring-deployment">deployment</link>. </entry>
-			</row>
-			<row>
-				<entry><literal>.kernel.userregion.properties</literal></entry>
-				<entry>Configures the <link linkend="configuring-user-region">user region</link> of @short.product.name@ and enables the OSGi console.</entry>
-			</row>
-			<row>
-				<entry><literal>.kernel.users.properties</literal></entry>
-				<entry>Configures the <link linkend="configuring-authentication">users that are allowed to access</link> the Admin Console, and roles to which they map. </entry>
-			</row>
-			<row>
-				<entry><literal>.kernel.jmxremote.access.properties</literal></entry>
-				<entry>Configures the <link linkend="configuring-authentication">permissions for users</link> that are allowed to access the Admin Console. </entry>
-			</row>
-	     		<row>
-				<entry><literal>.kernel.authentication.config</literal></entry>
-				<entry>Configures the <link linkend="configuring-authentication">Java Authentication and Authorization Service (JAAS)</link> for the Tomcat server users.</entry>
-			</row>
-		  </tbody>
-		</tgroup>
-	  </table>
+        <section id="configuring-kernel-properties">
+            <title>Configuring kernel</title>
+
+            <para>To change any of the kernel properties, provide the new value to the startup script. For example: <literal>$SERVER_HOME/bin/startup.sh -Forg.eclipse.virgo.kernel.startup.wait.limit=3600</literal>.  The following table describes all properties.</para>
+            <table id="configuring-kernel-table" colsep="1" frame="all" rowsep="1">
+                <title>Kernel Configuration Properties</title>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Property (prefixed by <literal>org.eclipse.virgo</literal>)</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><literal>.kernel.home</literal></entry>
+                            <entry>Specifies the location of the @kernel.product.name@. The property defaults to <literal>$SERVER_HOME</literal>.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.kernel.config</literal></entry>
+                            <entry>Specifies the location of the @kernel.product.name@ and User Region <link linkend="configuring-kernel-files">configuration files</link>. The default value is <literal>$SERVER_HOME/config</literal>. The location of the configuration files can also be specified using <link linkend="starting-stopping-configuration-directory"><literal>-configDir</literal> startup parameter</link>.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.kernel.domain</literal></entry>
+                            <entry>Specifies the <ulink url="http://download.oracle.com/javase/6/docs/api/javax/management/ObjectName.html">JMX domain</ulink> that should be used by the @kernel.product.name@. The default value is <literal>org.eclipse.virgo.kernel</literal>.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.kernel.startup.wait.limit</literal></entry>
+                            <entry>Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to start the kernel. The default value is <literal>180</literal> seconds.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </section>
+
+        <section id="configuring-kernel-files">
+            <title>Configuration files</title>
+            <para>The configuration of the @kernel.product.name@ and User Region by default is located in the <literal>$SERVER_HOME/config</literal> directory:</para>
+            <table id="configuring-kernel-files-table" colsep="1" frame="all" rowsep="1">
+                <title>Kernel Configuration Files </title>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Property File (prefixed by <literal>org.eclipse.virgo</literal>)</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><literal>.kernel.properties</literal></entry>
+                            <entry>Configures <link linkend="configuring-deployment">deployment</link>. </entry>
+                        </row>
+                        <row>
+                            <entry><literal>.kernel.userregion.properties</literal></entry>
+                            <entry>Configures the <link linkend="configuring-user-region">user region</link> of @short.product.name@ and enables the OSGi console.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.kernel.users.properties</literal></entry>
+                            <entry>Configures the <link linkend="configuring-authentication">users that are allowed to access</link> the Admin Console, and roles to which they map. </entry>
+                        </row>
+                        <row>
+                            <entry><literal>.kernel.jmxremote.access.properties</literal></entry>
+                            <entry>Configures the <link linkend="configuring-authentication">permissions for users</link> that are allowed to access the Admin Console. </entry>
+                        </row>
+                        <row>
+                            <entry><literal>.kernel.authentication.config</literal></entry>
+                            <entry>Configures the <link linkend="configuring-authentication">Java Authentication and Authorization Service (JAAS)</link> for the Tomcat server users.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </section>
+
+        <section id="configuring-deployment">
+        <title>Configuring Deployment</title>
+
+        <para>You can configure two properties of deployment: the pickup directory into which you copy applications for hot-deployment and the deployment timeout.  </para>
+        <para>To change any of these properties, edit the <literal>deployer.XXX</literal> properties of the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file.  The following table describes these properties.  </para>
+        <table id="configuring-deployment-table" colsep="1" frame="all" rowsep="1">
+                  <title>Deployment Configuration Properties</title>
+              <tgroup cols="2">
+                <thead>
+                <row>
+                    <entry>Property</entry>
+                    <entry>Description</entry>
+                </row>
+                 </thead>
+                 <tbody>
+                <row>
+                    <entry><literal>deployer.pickupDirectory</literal></entry>
+                    <entry>Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.  Relative paths are relative to <literal>$SERVER_HOME</literal>.  The default value is <literal>./pickup</literal>.</entry>
+                </row>
+                <row>
+                    <entry><literal>deployer.timeout</literal></entry>
+                    <entry>Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to deploy a bundle, library, or plan.  The default value is <literal>300</literal>.  If you want to disable deployment timeout, specify <literal>0</literal>.</entry>
+                </row>
+                </tbody>
+             </tgroup>
+            </table>
+
+                     <para>The following listing displays the default configuration distributed with the @short.product.name@; only relevant sections of the <literal>org.eclipse.virgo.kernel.properties</literal> file are shown. </para>
+
+            <programlisting><![CDATA[deployer.timeout=300
+    deployer.pickupDirectory=pickup]]></programlisting>
+
+            <para>As the default configuration shows, the default pickup directory is <literal>$SERVER_HOME/pickup</literal> and the deployment timeout is 300 seconds.
+            </para>
+        </section>
 
     <section id="configuring-deployment">
 	<title>Configuring Deployment</title>
@@ -944,7 +1019,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 	<section id="configuring-hosted-repo">
 		<title>Configuring a Hosted Repository</title>
 		<para>You configure a @short.product.name@ instance to host a repository 
-		by editing the <literal>$SERVER_HOME/config/org.eclipse.virgo.repository.hosted.properties</literal> file; 
+		by editing the <literal>$SERVER_HOME/config/org.eclipse.virgo.apps.repository.properties</literal> file; 
 		remote clients can then access the artifacts in this hosted repository and use them locally.
 		</para>
               <para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
@@ -1022,7 +1097,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 		   </tbody>
 		  </tgroup>
 		</table>
-		<para>The following sample shows a <literal>org.eclipse.virgo.repository.hosted.properties</literal> file with a single external repository 
+		<para>The following sample shows a <literal>org.eclipse.virgo.apps.repository.properties</literal> file with a single external repository 
 		called <literal>my-hosted-repo</literal> with search pattern <literal>$SERVER_HOME/repository/hosted/*</literal>.
 		<programlisting><![CDATA[my-hosted-repo.type=external
 my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
