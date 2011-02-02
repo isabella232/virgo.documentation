@@ -7,7 +7,7 @@
 \parskip 6 pt
 \parindent 0 pt
 
-\title{Regions in Virgo (v0.7)}
+\title{Regions in Virgo (v0.8)}
 \author{Glyn Normington\\Steve Powell}
 
 \maketitle
@@ -259,21 +259,18 @@ the proto-region either by being added to the proto-region or by being imported 
 
 \subsection{Indexed Region}
 
-An indexed region adds some indices, and thereby some constraints, to a proto-region.
+An indexed region adds an index, and thereby some constraints, to a proto-region.
 
-The indices are: a function identifying the bundles in the region by
-symbolic name and version; and a function identifying the bundles in the region by location.
+The index is a function identifying the bundles in the region by location.
 \begin{schema}{IndexedRegion}
   ProtoRegion \\
-  nv : BSN \cross BVer \pinj Bundle \\
   l : BLoc \pinj Bundle \\
 \where
-  nv = \{ b : bundles @ (bid~b) \mapsto b \} \\
   l = \{ b : bundles @ b.location \mapsto b \} \\
 \end{schema}
-The signature imposes the constraint of injectivity on both indices.
+The signature imposes the constraint of injectivity on the index.
 Thus an indexed region contains a set of bundles each of which is uniquely identified
-both by its bundle symbolic name and bundle version and by its location.
+by its location.
 
 \subsection{OpenRegion}
 
@@ -335,20 +332,19 @@ We define a nil region.
 
 \subsection{Adding a Bundle to a Region}
 
-Bundles are typically added to regions \textit{under} the bundle install operation (ideally using a bundle install
-hook which is yet to be defined) so that the bundle is associated with its region by the time the
+Bundles are typically added to regions \textit{under} the bundle install operation
+so that the bundle is associated with its region by the time the
 install completes.
 
 A bundle may also be added to a region after the bundle is installed, although this opens up a window in
 which the bundle does not belong to any region.
 
 A bundle can be added to a region provided the region does not already contain a bundle with
-the given bundle's symbolic name and bundle version or a bundle with the given bundle's location.
+the given bundle's location.
 \begin{schema}{RegionAddBundleOk}
   \Delta Region \\
   b? : Bundle \\
 \where
-  (bid~b?) \notin \dom nv \\
   b?.location \notin \dom l \\
   bundles' = bundles \cup \{ b? \} \\
   importedPkg' = importedPkg \\
@@ -372,9 +368,7 @@ Regions with consistent indexing may be combined to produce a composite region u
 \t4 pkg = r1.pkg \cup r2.pkg \land \\
 \t4 svc = r1.svc \cup r2.svc)) \\
 \end{axdef}
-The precondition of $\sqcup$ is that the input regions have consistent bundle spaces, that is no bundle in one
-region has the same symbolic name and version as a bundle in the other region.
-Also, no bundle in one region has the same location as a bundle in the other region.
+The precondition of $\sqcup$ is that no bundle in one region has the same location as a bundle in the other region.
 
 $\sqcup$ is idempotent, commutative, and associative (where defined) and $NIL$ acts as a zero.
 \begin{argue}
@@ -523,8 +517,6 @@ We define an infix $\downarrow$ operator to apply a filter to a region and produ
   (\_ \downarrow \_) = (\lambda r : Region;  f : Filter @ \\
 \t3   (\mu Region | \\
 \t4 bundles = \{ b : r.bundles | (bid~b) \in f.bf @ xb(b, f) \} \land \\
-\t4 nv = f.bf \dres r.nv \land \\
-\t4 l = nv \circ bid \circ r.l \land \\
 \t4 pkg = r.pkg \cap f.pf \land \\
 \t4 svc = r.svc \cap f.sf )) \\
 \end{axdef}
@@ -574,12 +566,6 @@ So the bundles in a region can see all the bundles, exported packages, and servi
 \t3 squash(r2) \downarrow filter(rid,r2) \}))\\
 \end{schema}
 
-This schema places a constraint on the system that a bundle in any given region, can never see two
-distinct bundles with identical bundle symbolic names and versions.
-We go further than this when adding connections and bundles and make sure that the filters
-never clash over a bundle symbolic name and version and that the bundles in a given region never clash
-with the filters associated with the connections from the given region.
-
 The $squash$ function is well defined but this isn't immediately obvious.
 Since there are finitely many regions, the $\bigsqcup$ expression in the constraint is well defined.
 Also, we need to be sure that there is a $squash$ function which satisfies the constraint.
@@ -591,24 +577,11 @@ be applied compared to the non-looping path to that region.
 
 \subsection{Connecting Regions Together}
 
-We define a condition on an output system of connected regions which states that
-for a given input region identifier, any filters connecting the corresponding region to distinct
-regions do not overlap on any bundle symbolic name and bundle version.
-\begin{schema}{FiltersConsistent}
-   ConnectedRegions' \\
-   r? : RId \\
-\where
-  (\forall s, t : RId; f, g : Filter | (r?, s) \mapsto f \in filter' \land (r?, t) \mapsto g \in filter' @ \\
-\t1 f.bf \cap g.bf = \emptyset )
-\end{schema}
-
-We define an operation to connect two regions with a filter which must be consistent with
-the other filters associated with the first of the regions.
+We define an operation to connect two regions with a filter.
 \begin{schema}{ConnectOk}
   \Delta ConnectedRegions \\
   r?, s? : RId \\
   f? : Filter \\
-  FiltersConsistent \\
 \where
   (r?, s?) \notin \dom filter \\
   \theta Regions' = \theta Regions \\
