@@ -7,7 +7,7 @@
 \parskip 6 pt
 \parindent 0 pt
 
-\title{Regions in Virgo (v0.8)}
+\title{Regions in Virgo (v0.81)}
 \author{Glyn Normington\\Steve Powell}
 
 \maketitle
@@ -26,7 +26,7 @@ The model is defined using the Z specification language. An introduction provide
 description of regions and how they influence framework hooks for readers who are not familiar with Z.
 
 We are grateful to Rob Harrop for reviewing this model and raising several corrections and
-points of clarification.
+points of clarification and to Dave Kemper for pointing out an inconsistency.
 
 \clearpage
 \pagenumbering{roman}
@@ -491,7 +491,7 @@ The $fp$ function passes a set of exported packages through a filter.
   fp = \{ ps : \power Package; f : Filter @ ((ps, f), ps \cap f.pf) \}
 \end{axdef}
 
-The $fp$ function passes a set of published services through a filter.
+The $fs$ function passes a set of published services through a filter.
 \begin{axdef}
   fs : \power Service \cross Filter \fun \power Service \\
 \where
