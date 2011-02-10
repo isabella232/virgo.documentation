@@ -534,11 +534,10 @@ Filters can be applied in any order with the same effect.
   \shows \forall r : Region; f, g : Filter @ (r \downarrow f) \downarrow g = (r \downarrow g) \downarrow f \\
 \end{argue}
 
-$\downarrow$ distributes over $\sqcup$ (where defined). Note that $\downarrow$ is defined to bind
-more tightly than $\sqcup$.
+$\downarrow$ distributes over $\sqcup$ (where defined).
 \begin{argue}
   \shows \forall f : Filter; r, s : Region @ \\
-\t1 f \downarrow (r \sqcup s) = f \downarrow r \sqcup f \downarrow s \\
+\t1(r \sqcup s) \downarrow f= (r \downarrow f) \sqcup (s \downarrow f) \\
 \end{argue}
 
 %=============================================================================
