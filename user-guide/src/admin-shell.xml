@@ -7,8 +7,14 @@
 	<para>
 		The Equinox console is not enabled by default.  To enable it place the setting
 <programlisting><![CDATA[osgi.console=2401]]></programlisting>
-		in the <literal>org.eclipse.virgo.kernel.userregion.properties</literal> file in the <literal>config</literal> directory.
+		in the <literal>org.eclipse.virgo.kernel.launch.properties</literal> file in the <literal>lib</literal> directory.
 		Any free port can be used, but 2401 is the usual default.
+	</para>
+	<para>
+		Alternatively, you can enable the Equinox console when starting Virgo by passing the <literal>-Fosgi.console</literal>
+		parameter to the startup script, for example:
+		<programlisting><![CDATA[
+startup.sh -Fosgi.console=2401 ]]></programlisting>
 	</para>
 	<para>
 		You can run the Equinox console via telnet to the configured port, for example:

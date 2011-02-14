@@ -183,8 +183,8 @@ deployer.pickupDirectory=pickup]]></programlisting>
 		<para>
 			<emphasis role="bold">WARNING:</emphasis>
 			We strongly recommend that you update only the
-			<literal>initialArtifacts</literal> and the <literal>osgi.console</literal>
-			properties; updating other properties could cause
+			<literal>initialArtifacts</literal>
+			property; updating other properties could cause
 			@short.product.name@ to fail. These properties are documented for your
 			information.
 		</para>
@@ -201,34 +201,79 @@ deployer.pickupDirectory=pickup]]></programlisting>
 		     <tbody>
 			<row>
 				<entry><literal>baseBundles</literal></entry>
-				<entry>Specifies the hard-coded list of bundles that @short.product.name@ installs directly into the user region. @product.name@ does not perform any automatic dependency satisfaction for these bundles; in other words, you only get the bundles in the list and nothing more. </entry>
+				<entry>Specifies the hard-coded list of bundles that @short.product.name@ installs directly into the user region.
+					@product.name@ does not perform any automatic dependency satisfaction for these bundles; in other words, you only get the bundles
+					in the list and nothing more. </entry>
+			</row>
+			<row>
+				<entry><literal>bundleImports</literal></entry>
+				<entry>
+					<para>
+						Specifies the bundles in the kernel that @short.product.name@ imports into the user region so that they are visible to bundles in the user region.
+						This property supports an optional <literal>bundle-version</literal> attribute which specifies a version range.
+						By default only the system bundle is imported.
+					</para>
+					<para>
+						Note that packages exported by these bundles are not automatically made available in the user region: these must be specified using the
+						<literal>packageImports</literal> property.
+					</para>
+				</entry>
 			</row>
 			<row>
 				<entry><literal>packageImports</literal></entry>
-				<entry>Specifies the packages that exist in the kernel that @short.product.name@ imports into the user region so that they are in turn available to be imported by bundles in the user region. This property supports a <literal>.*</literal> wildcard.  For example, <literal>org.eclipse.virgo.util.*</literal> will import all packages that start with <literal>org.eclipse.virgo.util</literal>.</entry>
+				<entry>
+					<para>
+						Specifies the packages in the kernel that @short.product.name@ imports into the user region so that they are in turn available to be
+						imported by bundles in the user region.
+						This property supports a <literal>.*</literal> wildcard which is expanded based on the packages available in the kernel
+						when the user region is created.
+						For example, <literal>org.eclipse.virgo.util.*</literal> will import all packages that start with
+						<literal>org.eclipse.virgo.util.</literal> (but <emphasis>not</emphasis> the package <literal>org.eclipse.virgo.util</literal>).
+					</para>
+					<para>
+						The property also supports matching attributes such as <literal>version</literal>, <literal>bundle-symbolic-name</literal>,
+				 		<literal>bundle-version</literal>, and user-defined attributes. This can be used to import all the packages of a bundle imported using the
+						<literal>bundleImports</literal> property.
+						For example the following imports all the packages of the system bundle:
+						<programlisting><![CDATA[packageImports=*;bundle-symbolic-name="org.eclipse.osgi",\
+ ...]]></programlisting>
+						Note that if a package is specified more than once in <literal>packageImports</literal>, the last occurrence is used and the earlier
+						occurrences are ignored.
+						For this reason, it is recommended that imports specifying matching attributes are placed earlier in the list than other imports so that
+						if an import is	specified with and without matching attributes, the form without the matching attributes is used.
+					</para>
+				</entry>
 			</row>
 			<row>
 				<entry><literal>serviceImports</literal></entry>
-				<entry>Specifies the services in the kernel that are imported into the user region so that they're available to bundles in the user region.  </entry>
+				<entry>Specifies the services in the kernel that are imported into the user region so they are available to bundles in the user region.  </entry>
 			</row>
 			<row>
 				<entry><literal>serviceExports</literal></entry>
-				<entry>Specifies the services in the user region that are exported to the kernel so that they're available to bundles in the kernel.  </entry>
-			</row>
-			<row>
-				<entry><literal>inheritedFrameworkProperties</literal></entry>
-				<entry>Specifies the framework properties, configured in the <literal>$SERVER_HOME/lib/org.eclipse.virgo.kernel.launch.properties</literal> file, that will also be set on the user region's nested framework.</entry>
-			</row>
-			<row>
-				<entry><literal>osgi.console</literal></entry>
-				<entry>Specifies the port number which the Equinox console will use. 
-				The usual port number is 2401. 
-				If specified, the Equinox console is enabled (with the Equinox Console Extension) during user region start. 
-				If not specified, the Equinox console is not available.</entry>
+				<entry>Specifies the services in the user region that are exported to the kernel so they are available to bundles in the kernel.  </entry>
 			</row>
 			<row>
 				<entry><literal>initialArtifacts</literal></entry>
-				<entry>Specifies the artifacts that @short.product.name@ deploys into the user region when the server starts. @product.name@ performs dependency satisfaction when it deploys these artifacts.  This means that you only need to list the top-level artifacts that you care about; @short.product.name@ automatically installs any other artifacts upon which they depend from the repository.
+				<entry>
+					<para>
+						Specifies the artifacts that @short.product.name@ deploys into the user region when the server starts.
+						@product.name@ performs dependency satisfaction when it deploys these artifacts.
+						This means that you only need to list the top-level artifacts that you care about; @short.product.name@ automatically installs,
+						from the repository, any other artifacts upon which they depend.
+					</para>
+					<para>
+						The artifacts are specified as a comma separated list of URI strings of the form:
+						<programlisting><![CDATA[repository://type/name[/version]]]></programlisting>
+						where <literal>type</literal> is the artifact type (e.g. "plan", "par", "bundle",
+						"configuration"), <literal>name</literal> is the (symbolic) name of the artifact, and, optionally,
+						<literal>version</literal> is the version of the artifact.
+						If <literal>version</literal> is omitted and there is at least one artifact in the repository with the given type and name, then the
+						artifact with the highest version is selected.
+						So, for example, the following entries are valid:
+						<programlisting><![CDATA[initialArtifacts=...,\
+ repository://plan/APlan,\
+ repository://bundle/ABundle/1.0]]></programlisting>
+					</para>
 				</entry>
 			</row>
 		    </tbody>
@@ -1146,8 +1191,8 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 				properties most relevant to users are described in the following table.
 			</para>
 			<para>
-				<emphasis role="bold">WARNING:</emphasis> We strongly recommend that you update only the
-				<literal>org.eclipse.virgo.suppress.heap.dumps</literal> property; updating the other properties could cause @short.product.name@
+				<emphasis role="bold">WARNING:</emphasis> We strongly recommend that you update only the <literal>osgi.console</literal> and
+				<literal>org.eclipse.virgo.suppress.heap.dumps</literal> properties; updating the other properties could cause @short.product.name@
 				to fail. These properties are documented for your information only.
 			</para>
 		
@@ -1178,12 +1223,11 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 						</row>
 						<row>
 							<entry><literal>osgi.console</literal></entry>
-							<entry>
-								Specifies the port number which will be used by an Equinox console <emphasis role="bold">attached to the kernel</emphasis>. 
-								The usual port number is 2402, to avoid clashing with any console attached to the user region. 
-								If specified, the Equinox console is enabled (without the Equinox Console Extension) during kernel start. 
-								If not specified, the Equinox console is not available for the kernel.
-							</entry>
+							<entry>Specifies the port number which the Equinox console will use. 
+							The usual port number is 2401. 
+							If specified, the Equinox console is enabled (with the Equinox Console Extension) during user region start. 
+							If not specified, the Equinox console is not available unless the parameter <literal>-Fosgi.console</literal>
+							is passed to the startup script.</entry>
 						</row>
 						<row>
 							<entry><literal>osgi.java.profile</literal></entry>
@@ -1238,6 +1282,11 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 							<entry>
 								<para>
 									This property specifies the packages which are exported by the system bundle.
+								</para>
+								<para>
+									Although the system bundle is typically imported into the user region, any additional packages will not be
+									visible in the user region unless you also import them using the <literal>packagedImports</literal> property.
+									See <link linkend="configuring-user-region">Configuring the User Region</link> for instructions.
 								</para>
 								<para>
 									It is very occasionally necessary to extend the set, for example when configuring email logging appenders since the

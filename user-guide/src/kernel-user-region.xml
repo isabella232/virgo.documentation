@@ -14,7 +14,8 @@
 		  </listitem>
 		</itemizedlist>
 
-		<para>When you download and install @product.name@ you get both the kernel and web server support (configured in the user region).  You can also <ulink url="http://www.eclipse.org/virgo/download/">download and use the kernel</ulink> on its own if you do not plan on deploying Web applications.  </para>
+		<para>When you download and install @product.name@ you get both the kernel and web server support (configured in the user region).  You can also <ulink url="http://www.eclipse.org/virgo/download/">download and use the kernel</ulink> on its own if you do not plan on deploying Web applications or using the
+		web-based Admin Console and you'll get the kernel and a minimal user region (with no web support).</para>
 		
 		<para>The following graphic shows how the kernel and user region make up @short.product.name@:</para>
 		<imagedata fileref="images/kernel-user-region.png" width="885px" depth="805px" />
@@ -89,11 +90,12 @@
 			the administration tasks you perform. In particular, when you use the
 			Admin Console to manage Web Server, you do not see
 			the many bundles that are internal to the kernel. The only exceptions
-			are the kernel bundles that @short.product.name@ uses for region
+			are bundles in the kernel region, typically just the system bundle, which are configured to be
+			visible in the user region and the kernel bundles that @short.product.name@ uses for region
 			management, which are required to be installed in the user region.
 		</para>
 
-		<para>This isolation has many other benefits. For example, it is no longer necessary for the kernel and user applications to use the same version of the Spring Framework. In fact the kernel installs only those parts of the Spring Framework that it needs.  If you update the kernel, it is far less likely that you will also need to upgrade or adjust the applications to accomodate a new version of the kernel. The kernel implementation is therefore much more stable and resilient and applications are much more likely to survive kernel upgrades between releases.  </para>
+		<para>This isolation has many other benefits. For example, it is not necessary for the kernel and user applications to use the same version of the Spring Framework. In fact the kernel installs only those parts of the Spring Framework that it needs.  If you update the kernel, it is far less likely that you will also need to upgrade or adjust the applications to accomodate a new version of the kernel. The kernel implementation is therefore much more stable and resilient and applications are much more likely to survive kernel upgrades between releases.  </para>
 		<para>When you install @short.product.name@, the kernel creates a single user region.
 			The kernel and the user region are configured independently of each other; see <link linkend="configuring">Configuring @short.product.name@</link> for details. 		
 		</para>
