@@ -129,42 +129,6 @@
             </para>
         </section>
 
-    <section id="configuring-deployment">
-	<title>Configuring Deployment</title>
-
-	<para>You can configure two properties of deployment: the pickup directory into which you copy applications for hot-deployment and the deployment timeout.  </para>
-	<para>To change any of these properties, edit the <literal>deployer.XXX</literal> properties of the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file.  The following table describes these properties.  </para>
-	<table id="configuring-deployment-table" colsep="1" frame="all" rowsep="1">
-	    	  <title>Deployment Configuration Properties</title>
-		  <tgroup cols="2">
-		    <thead>
-			<row>
-				<entry>Property</entry>
-				<entry>Description</entry>
-			</row>
-		     </thead>
-		     <tbody>
-			<row>
-				<entry><literal>deployer.pickupDirectory</literal></entry>
-				<entry>Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.  Relative paths are relative to <literal>$SERVER_HOME</literal>.  The default value is <literal>./pickup</literal>.</entry>
-			</row>
-			<row>
-				<entry><literal>deployer.timeout</literal></entry>
-				<entry>Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to deploy a bundle, library, or plan.  The default value is <literal>300</literal>.  If you want to disable deployment timeout, specify <literal>0</literal>.</entry>
-			</row>
-		    </tbody>
-		 </tgroup>
-		</table>
-
-                 <para>The following listing displays the default configuration distributed with the @short.product.name@; only relevant sections of the <literal>org.eclipse.virgo.kernel.properties</literal> file are shown. </para>
-
-		<programlisting><![CDATA[deployer.timeout=300
-deployer.pickupDirectory=pickup]]></programlisting>
-
-		<para>As the default configuration shows, the default pickup directory is <literal>$SERVER_HOME/pickup</literal> and the deployment timeout is 300 seconds. 
-		</para>
-	</section>
-
 	<section id="configuring-user-region">
 		<title>Configuring the User Region</title>
 		<para>
