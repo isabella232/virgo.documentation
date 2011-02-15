@@ -134,11 +134,13 @@ Manifest-Version: 1.0
 					<listitem>A PAR file has an application name, version, symbolic name, and description.</listitem>
 					<listitem>The artifacts of a PAR file are scoped so that they cannot
 						be shared accidentally by other applications. The scope forms a boundary for automatic
-						propagation of load time weaving and bundle refresh.</listitem>
-					<listitem>The artifacts of a PAR have their exported packages imported by the
+						propagation of load time weaving and bundle refresh.
+						See <link linkend="developing-applications-plans-scoping">Plans and Scoping</link> for more on scoping.
+					</listitem>
+					<listitem>Since a PAR is scoped, its artifacts have their exported packages imported by the
 						synthetic context bundle which is used for thread context class loading. So,
 						for example, hibernate will be able to load classes of any of the exported
-						packages of the artifacts in a PAR file using <code>Class.forName()</code> (or equivalent).</listitem>
+						packages of the bundles in a PAR file using <code>Class.forName()</code> (or equivalent).</listitem>
 					<listitem>The PAR file is visible to management interfaces.</listitem>
 					<listitem>The PAR file can be undeployed and redeployed as a unit.</listitem>
 				</itemizedlist>
@@ -440,6 +442,21 @@ Manifest-Version: 1.0
   &lt;/beans:bean&gt;
 &lt;/service&gt;</programlisting>
 
+			<para>
+				A scope forms a boundary for automatic propagation of load time weaving and bundle refresh.
+				Additionally, a synthetic context bundle is generated for each scope. This bundle imports all the packages exported by other bundles in the scope.
+				The class loader of the synthetic context bundle is used for thread context class loading. So,
+				for example, hibernate will be able to load classes of any of the exported
+				packages of the bundles in a scope using <code>Class.forName()</code> (or equivalent).
+			</para>
+			<para>
+				To ensure predictable class loading behaviour and avoid other issues associated with <emphasis>split packages</emphasis> (packages whose classes
+				are split across more than one bundle), the synthetic context bundle has a restriction:
+				<emphasis role="bold">no package may be exported by more than one
+				bundle in the scope</emphasis>.
+				If this restriction is broken, the scoped application will fail to deploy.
+				This restriction can cause problems for <link linkend="scoping-and-substitutable-exports">substitutable exports</link>.
+			</para>
 		</section>
 
 	</section><!-- end plans -->

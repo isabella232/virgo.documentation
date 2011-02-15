@@ -100,5 +100,33 @@
 			An updated Hibernate EJB fragment with version 3.4.0.GA-A which fixes this problem is available from the
 			<ulink url="http://ebr.springsource.com/repository/app/">SpringSource Enterprise Bundle Repository</ulink>.
 		</para>
+	</section>
+	<section id="scoping-and-substitutable-exports">
+		<title>Scoping and Substitutable Exports</title>
+		<para>
+			The restriction described in <link linkend="developing-applications-plans-scoping">Plans and Scoping</link> that
+			no package may be exported by more than one	bundle in a given scope can cause problems for bundles with
+			<emphasis>substitutable exports</emphasis>. A substitutable export is a package which is exported and imported
+			by the same bundle. The OSGi framework will discard either the import or the export of the package when the
+			bundle is resolved.
+		</para>
+		<para>
+			However, if more than one bundle in a scope has a substitutable export of the same package, then Virgo will fail
+			to deploy the scoped application because the above restriction appears to be broken. Virgo could only spot that
+			the restriction was not actually being broken by second guessing the resolution behaviour of the OSGi framework,
+			something that Virgo generally avoids because of the fragility of that approach.
+		</para>
+		<para>
+			It may be possible to work around this issue by omitting one of the bundles containing the substitutable export
+			from the scoped application.
+		</para>
+		<para>
+			It may also be possible to work around this issue by moving the bundles containing the substitutable exports outside the scope,
+			although this will not give correct behaviour if the bundles' exported packages need to be available for thread
+			context class loading. 
+		</para>
+		<para>
+			See <ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=330643">bug 330643</ulink> for an example of this issue.
+		</para>
 	</section>	
 </chapter>
