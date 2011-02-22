@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+        "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="admin-shell">
-	<title>Equinox Console</title>
+    <title>Equinox Console</title>
 
-	<para>
-		The Equinox console is not enabled by default.  To enable it place the setting
-<programlisting><![CDATA[osgi.console=2401]]></programlisting>
-		in the <literal>org.eclipse.virgo.kernel.launch.properties</literal> file in the <literal>lib</literal> directory.
-		Any free port can be used, but 2401 is the usual default.
-	</para>
-	<para>
-		Alternatively, you can enable the Equinox console when starting Virgo by passing the <literal>-Fosgi.console</literal>
-		parameter to the startup script, for example:
-		<programlisting><![CDATA[
-startup.sh -Fosgi.console=2401 ]]></programlisting>
-	</para>
-	<para>
-		You can run the Equinox console via telnet to the configured port, for example:
-	</para>
-	<programlisting><![CDATA[prompt$ telnet localhost 2401
+    <section id="admin-shell-enable">
+        <title>Enabling Equinox Console</title>
+
+        <para>
+            The Equinox console is not enabled by default. To enable it place the setting
+            <programlisting><![CDATA[osgi.console=2401]]></programlisting>
+            in the <literal>org.eclipse.virgo.kernel.launch.properties</literal> file in the <literal>lib</literal>
+            directory. Any free port can be used, but 2401 is the usual default.
+        </para>
+
+        <para>
+            Alternatively, you can enable the Equinox console when starting Virgo by passing the
+            <literal>-Fosgi.console</literal> parameter to the startup script, for example:
+            <section>
+                <title>Microsoft Windows</title>
+                <programlisting><![CDATA[prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat "-Fosgi.console=2401"]]></programlisting>
+            </section>
+            <section>
+                <title>Linux</title>
+                <programlisting><![CDATA[prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh -Fosgi.console=2401]]></programlisting>
+            </section>
+        </para>
+
+        <para>
+            You can run the Equinox console via telnet to the configured port:
+            <programlisting><![CDATA[prompt$ telnet localhost 2401
 Trying ::1...
 Connected to localhost.
 Escape character is '^]'.
 
 osgi> ]]></programlisting>
+        </para>
+    </section>
 
 	<section id="admin-shell-using-vsh">
 		<title>Using the Equinox Console Extension (<literal>vsh</literal>)</title>
