@@ -847,7 +847,7 @@ chain=ext,usr]]></programlisting>
 				<listitem>
 				<para>
 				<emphasis><literal>remote-repository-name</literal></emphasis> refers to the name of the remote repository, 
-				as specified in the <literal>hostedRepository.properties</literal> file of the remote @short.product.name@ instance.
+				as specified in the <literal>org.eclipse.virgo.apps.repository.properties</literal> file of the remote @short.product.name@ instance.
 				</para>
 				</listitem>
 			</itemizedlist>
@@ -998,7 +998,7 @@ chain=ext,usr,maven-repo]]></programlisting>
 		this means that there is a @short.product.name@ instance running on host <literal>my-host</literal> 
 		whose Tomcat server listens at the default port, <literal>8080</literal>, 
 		and this server instance hosts a repository called <literal>my-hosted-repo</literal>, 
-		configured in the <literal>hostedRepository.properties</literal> file of the remote server instance.  
+		configured in the <literal>org.eclipse.virgo.apps.repository.properties</literal> file of the remote server instance.  
 		The remote repository checks for changes in the hosted repository every 30 seconds.
 		</para>
 		<para>The watched repository is called <literal>watched-repo</literal> and the directory that holds the artifacts 
@@ -1039,9 +1039,9 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
              </itemizedlist> 
               </para>
              <para>For example, <literal>my-hosted-repo.type=external</literal> specifies that the <literal>type</literal> property 
-             of the <literal>my-hosted-repository</literal> repository is <literal>external</literal>.
+             of the <literal>my-hosted-repo</literal> repository is <literal>external</literal>.
              </para>
-		<para>The following table lists the properties that you can include in the <literal>hostedRepository.properties</literal> file. 
+		<para>The following table lists the properties that you can include in the <literal>org.eclipse.virgo.apps.repository.properties</literal> file. 
 		</para>
 	        <table id="hosted-repository-properties-table" colsep="1" frame="all" rowsep="1">
 	          <title>Hosted Repository Properties</title>
