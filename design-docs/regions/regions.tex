@@ -176,7 +176,7 @@ filtered out on the way from C to A.
 
 The remaining chapters provide a formal, albeit partial, model of bundles, regions, filters, and how
 regions are connected together, via filters, into a directed graph.
-The model finally indicates how it may be implemented using framework hooks.
+The model finally defines the behaviour of framework hooks in terms of the directed graph of regions.
 
 %=============================================================================
 \clearpage
@@ -237,14 +237,6 @@ It is unusual, and usually bad practice, to include the primary key (in this cas
 an entity in the entity's schema.
 We do it here to ensure that all bundles are
 distinct and use this property later when determining which region a bundle belongs to.
-
-We define a helper function for extracting a pair consisting of the bundle symbolic name and bundle
-version from a bundle. This will be used for filtering bundles.
-\begin{axdef}
-  bnv : Bundle \fun (BSN \cross BVer) \\
-\where
-  bnv =  (\lambda Bundle @ (name, version)) \\
-\end{axdef}
 
 %=============================================================================
 \clearpage
@@ -480,55 +472,55 @@ When we later connect the regions together, we will need to define which bundles
 packages, and services are visible across each connection from one region to another.
 We'll do this using a \textit{filter}.
 
-A filter specifies bundles, packages, and services. Packages and services are specified
+A filter specifies sets of bundles, packages, and services.
 \begin{schema}{Filter}
-  bf : \power (BSN \cross BVer) \\
+  bf : \power Bundle \\
   pf : \power Package \\
   sf : \power Service \\
 \end{schema}
 
 We define some helper functions to perform filtering.
 
-The $xb$ function applies a filter to a bundle by filtering its exported packages and published services.
+The $filterPackages$ function passes a set of exported packages through a filter.
 \begin{axdef}
-  xb : Bundle \cross Filter \fun Bundle
+  filterPackages : \power Package \cross Filter \fun \power Package \\
 \where
-  xb = (\lambda b: Bundle; f : Filter @ \\
+  filterPackages = \{ ps : \power Package; f : Filter @ ((ps, f), ps \cap f.pf) \}
+\end{axdef}
+
+The $filterServices$ function passes a set of published services through a filter.
+\begin{axdef}
+  filterServices : \power Service \cross Filter \fun \power Service \\
+\where
+  filterServices = \{ ss : \power Service; f : Filter @ ((ss, f), ss \cap f.sf) \}
+\end{axdef}
+
+The $bundleView$ function produces a filtered view of a bundle by applying a filter to the bundle's exported packages and published services.
+\begin{axdef}
+  bundleView : Bundle \cross Filter \fun Bundle
+\where
+  bundleView = (\lambda b: Bundle; f : Filter @ \\
 \t1  (\mu Bundle | \\
 \t2 name = b.name \land \\
 \t2 version = b.version \land \\
 \t2 location = b.location \land \\
-\t2 exportedPackages = b.exportedPackages \cap f.pf \land \\
-\t2 publishedServices = b.publishedServices \cap f.sf))
+\t2 exportedPackages = filterPackages(b.exportedPackages, f) \land \\
+\t2 publishedServices = filterServices(b.publishedServices, f)))
 \end{axdef}
 
-The $fb$ function passes a set of bundles through a filter and then
-applies the filter to the remaining bundles.
+The $filterBundles$ function passes a set of bundles through a filter.
+The result is the set of filtered views of the bundles allowed by the filter.
 \begin{axdef}
-  fb : \power Bundle \cross Filter \fun \power Bundle \\
+  filterBundles : \power Bundle \cross Filter \fun \power Bundle \\
 \where
-  fb = (\lambda bs : \power Bundle; f : Filter @ \{ b : bs | (bnv~b) \in f.bf @ xb(b, f) \}) \\
-\end{axdef}
-
-The $fp$ function passes a set of exported packages through a filter.
-\begin{axdef}
-  fp : \power Package \cross Filter \fun \power Package \\
-\where
-  fp = \{ ps : \power Package; f : Filter @ ((ps, f), ps \cap f.pf) \}
-\end{axdef}
-
-The $fs$ function passes a set of published services through a filter.
-\begin{axdef}
-  fs : \power Service \cross Filter \fun \power Service \\
-\where
-  fs = \{ ss : \power Service; f : Filter @ ((ss, f), ss \cap f.sf) \}
+  filterBundles = (\lambda bs : \power Bundle; f : Filter @ \{ b : bs \cap f.bf @ bundleView(b, f) \}) \\
 \end{axdef}
 
 We also define the most permissive filter.
 \begin{axdef}
   TOP : Filter
 \where
-  TOP.bf = BSN \cross BVer \\
+  TOP.bf = Bundle \\
   TOP.pf = Package \\
   TOP.sf = Service \\
 \end{axdef}
@@ -536,15 +528,15 @@ We also define the most permissive filter.
 \subsection{Filtering Regions}
 
 %%inop \downarrow 6
-We define an infix $\downarrow$ operator to apply a filter to a region and produce another region.
+We define an infix operator $\downarrow$ to apply a filter to a region and produce another region.
 \begin{axdef}
   \_ \downarrow \_ : Region \cross Filter \fun Region \\
 \where
   (\_ \downarrow \_) = (\lambda r : Region;  f : Filter @ \\
 \t3   (\mu Region | \\
-\t4 bundles = \{ b : r.bundles | (bnv~b) \in f.bf @ xb(b, f) \} \land \\
-\t4 pkg = r.pkg \cap f.pf \land \\
-\t4 svc = r.svc \cap f.sf )) \\
+\t4 bundles = filterBundles(r.bundles, f) \land \\
+\t4 pkg = filterPackages(r.pkg, f) \land \\
+\t4 svc = filterServices(r.svc, f))) \\
 \end{axdef}
 $\downarrow$ is total since packages and services not filtered out which are exported or published by a
 bundle which \textit{is} filtered out end up
@@ -562,7 +554,8 @@ Filters can be applied in any order with the same effect.
 
 $\downarrow$ distributes over $\sqcup$ (where defined).
 \begin{argue}
-  \shows \forall f : Filter; r, s : Region @ \\
+  \shows \forall f : Filter; r, s : Region | (r, s) \in ConsistentRegionPairs @ \\
+\t1 (r \downarrow f, s \downarrow f) \in ConsistentRegionPairs \land \\
 \t1(r \sqcup s) \downarrow f= (r \downarrow f) \sqcup (s \downarrow f) \\
 \end{argue}
 
@@ -573,63 +566,69 @@ $\downarrow$ distributes over $\sqcup$ (where defined).
 
 We now connect up regions to form a directed graph.
 
-Regions are connected by filters.
-Every region is connected to itself by the most permissive filter.
+Certain pairs of distinct regions are connected by filters. The net effect of connecting a region to other
+regions is that the region may then be able to see bundles, exported packages, and services in other regions.
+This net effect is modelled as a collection of textit{net} regions.
+
+Every region can be considered to be connected to itself by the most permissive filter.
 So the bundles in a region can see all the bundles, exported packages, and services in that region.
-\begin{schema}{ConnectedRegions}
+\begin{schema}{RegionDigraph}
   Regions \\
   filter : RId \cross RId \pfun Filter \\
-  squash : RId \pfun Region \\
+  net : RId \pfun Region \\
 \where
-  first~\limg \dom filter \rimg = rids \\
-  second~\limg \dom filter \rimg = rids \\
-  (\forall rid : rids @ filter(rid, rid) = TOP) \\
-  \dom squash = rids \\
+  \dom filter \subseteq (rids \cross rids) \setminus \id RId \\
+  \dom net = rids \\
   (\forall rid : rids @ \\
-\t1 (\LET r == reg~rid @ \\
-\t2 squash(rid) = r \sqcup \bigsqcup \{ r2 : RId | (rid, r2) \in \dom filter \land r2 \neq rid @ \\
-\t3 squash(r2) \downarrow filter(rid,r2) \}))\\
+\t1 net~rid = (reg~rid) \sqcup \bigsqcup \{ r : RId | (rid, r) \in \dom filter @ (net~r) \downarrow filter(rid, r)\})\\
 \end{schema}
 
-The $squash$ function is well defined but this isn't immediately obvious.
+The $net$ function is well defined but this isn't immediately obvious.
 Since there are finitely many regions, the $\bigsqcup$ expression in the constraint is well defined.
-Also, we need to be sure that there is a $squash$ function which satisfies the constraint.
+Also, we need to be sure that there is a $net$ function which satisfies the constraint.
 This turns out to be the case because if we start at a given region $r$ and then form all the non-looping
 paths to other regions, then we can apply all the filters along each non-looping path and then
-use $\bigsqcup$ to combine the results to form $squash~r$ observing that visiting the same region via
+use $\bigsqcup$ to combine the results to form $net~r$ observing that visiting the same region via
 a longer, looping path does not affect the result since more filters will
 be applied compared to the non-looping path to that region.
 
 \subsection{Connecting Regions Together}
 
-We define an operation to connect two regions with a filter.
+We define an operation to connect two distinct regions with a filter.
 \begin{schema}{ConnectOk}
-  \Delta ConnectedRegions \\
+  \Delta RegionDigraph \\
   r?, s? : RId \\
   f? : Filter \\
 \where
+  r? \neq s? \\
   (r?, s?) \notin \dom filter \\
   \theta Regions' = \theta Regions \\
   filter' = filter \cup \{ (r?, s?) \mapsto f? \} \\
 \end{schema}
 
-\subsection{Promoting Multiple Region Operations}
+\subsection{Adding a Bundle to a Region}
 
-We promote the add bundle operation and add a constraint that the bundle being added must not 
-have a bundle symbolic name and version which is present in a filter associated with the region
-the bundle is being added to.
+Adding a bundle to a region in the directed graph adds the bundle to a region in the
+system of multiple regions and affects no connections or filters.
+We add a constraint that the bundle being added must not 
+be present in a filter associated with the region the bundle is being added to.
+This is to avoid a bundle in a region clashing with a bundle from a connected region.
 \begin{schema}{CRAddBundleOk}
-  \Delta ConnectedRegions \\
+  \Delta RegionDigraph \\
   RegionsAddBundleOk \\
 \where
   filter' = filter \\
   (\forall s : RId; f : Filter | (rid?, s) \mapsto f \in filter @ \\
-\t1 (bnv~b?) \notin f.bf) \\ 
+\t1 b? \notin f.bf) \\ 
 \end{schema}
 
-We also promote the get region operation for completeness.
+\subsection{Determining a Bundle's Region}
+
+A bundle's region in the directed graph is the same as the bundle's
+region in the syste, of multiple bundles.
+This operation does not affect any connections or filters.
 \begin{zed}
-  CRGetRegionOk \defs \Xi ConnectedRegions \land GetRegionOk \\
+  CRGetRegionOk \defs \Xi RegionDigraph \land GetRegionOk \\
 \end{zed}
 
 %=============================================================================
@@ -637,57 +636,81 @@ We also promote the get region operation for completeness.
 \section{Framework Hooks}
 \label{cha:fhooks}
 
-We now describe the behaviour of framework hooks sufficient to implement our model
-of connected regions.
+We can now describe the behaviour of framework hooks in terms of our directed graph of regions.
 
+A bundle `find' operation, such as \texttt{BundleContext.getBundles}, is returned only the
+candidates in the net region of the bundle performing the operation.
+
+That is, the bundle performing a bundle `find' operation is returned the bundles in its own region
+and bundles in connected regions that are allowed by the corresponding filters.
 \begin{schema}{BundleFindHook}
-  \Xi ConnectedRegions \\
+  \Xi RegionDigraph \\
   finder? : Bundle \\
   candidates? : \power Bundle \\
   found! : \power Bundle \\
 \where
   finder? \in allBundles \\
-  found! = candidates? \cap (squash(breg~finder?.location)).bundles \\
+  found! = candidates? \cap (net(breg~finder?.location)).bundles \\
 \end{schema}
 
+A bundle listener receives only events for bundles in the net region of the bundle that was used
+to register the listener.
+
+That is, the bundle listener receives events for bundles in the region used to register the listener
+and for bundles in connected regions that are allowed by the corresponding filters.
 \begin{schema}{BundleEventHook}
-  \Xi ConnectedRegions \\
+  \Xi RegionDigraph \\
   listeners? : \power Bundle \\
   eb? : Bundle \\
   fl! : \power Bundle \\
 \where
   listeners? \subseteq allBundles \\
-  fl! = \{ l : listeners? | eb? \in (squash(breg~l.location)).bundles \} \\
+  fl! = \{ l : listeners? | eb? \in (net(breg~l.location)).bundles \} \\
 \end{schema}
 
+A bundle being resolved may wire only to exported packages and bundles in the net region of the
+bundle.
+
+That is, the bundle may wire to exported packages and bundles in its own region and to
+exported packages and bundles in connected regions that are allowed by the corresponding filters.
 \begin{schema}{ResolverHookFilterMatches}
-  \Xi ConnectedRegions \\
+  \Xi RegionDigraph \\
   requirer? : Bundle \\
   candidates? : \power Package \\
   filtered! : \power Package \\
 \where
   requirer? \in allBundles \\
-  filtered! = candidates? \cap (squash(breg~requirer?.location)).pkg \\
+  filtered! = candidates? \cap (net(breg~requirer?.location)).pkg \\
 \end{schema}
 
+A service `find' operation is returned only the
+candidates in the net region of the bundle performing the operation.
+
+That is, the bundle performing a service `find' operation is returned the services in its own region
+and services in connected regions that are allowed by the corresponding filters.
 \begin{schema}{ServiceFindHook}
-  \Xi ConnectedRegions \\
+  \Xi RegionDigraph \\
   finder? : Bundle \\
   candidates? : \power Service \\
   found! : \power Service \\
 \where
   finder? \in allBundles \\
-  found! = candidates? \cap (squash(breg~finder?.location)).svc \\
+  found! = candidates? \cap (net(breg~finder?.location)).svc \\
 \end{schema}
 
+A service listener receives only events for services in the net region of the bundle that was used
+to register the listener.
+
+That is, the service listener receives events for services in the region used to register the listener
+and for services in connected regions that are allowed by the corresponding filters.
 \begin{schema}{ServiceEventHook}
-  \Xi ConnectedRegions \\
+  \Xi RegionDigraph \\
   listeners? : \power Bundle \\
   es? : Service \\
   fl! : \power Bundle \\
 \where
   listeners? \subseteq allBundles \\
-  fl! = \{ l : listeners? | es? \in (squash(breg~l.location)).svc \} \\
+  fl! = \{ l : listeners? | es? \in (net(breg~l.location)).svc \} \\
 \end{schema}
 
 %=============================================================================
