@@ -7,7 +7,7 @@
 \parskip 6 pt
 \parindent 0 pt
 
-\title{Regions in Virgo (v0.81)}
+\title{Regions in Virgo (v0.9)}
 \author{Glyn Normington\\Steve Powell}
 
 \maketitle
@@ -93,7 +93,7 @@ We now consider visibility from the perspective of each of the framework hooks.
 
 \subsection{Bundle Find Hook}
 
-The bundle find hooks limits the bundles that a bundle in a given region sees when listing bundles using
+The bundle find hook limits the bundles that a bundle in a given region sees when listing bundles using
 \texttt{BundleContext.getBundles}.
 
 For example, Figure \ref{fig:bfind} shows a bundle W which finds bundles W, X, and Y.
@@ -107,7 +107,7 @@ It does not find Z which is filtered out.
 
 \subsection{Bundle Event Hook}
 
-The bundle event hooks limits the bundle events that a bundle listener in a given region receives.
+The bundle event hook limits the bundle events that a bundle listener in a given region receives.
 
 For example, Figure \ref{fig:bevent} shows a bundle W which has a bundle listener.
 Bundle W's bundle listener receives events for W, X, and Y. It does not receive events for bundle Z which is filtered out. 
@@ -120,7 +120,7 @@ Bundle W's bundle listener receives events for W, X, and Y. It does not receive 
 
 \subsection{Service Find Hook}
 
-The service find hooks limits the services that a bundle in a given region sees when looking up services.
+The service find hook limits the services that a bundle in a given region sees when looking up services.
 
 For example, Figure \ref{fig:sfind} shows a bundle W which can look up services s and t but not u which is filtered out.
 \begin{figure}[h!]
@@ -132,7 +132,7 @@ For example, Figure \ref{fig:sfind} shows a bundle W which can look up services 
 
 \subsection{Service Event Hook}
 
-The service event hooks limits the service events that a service listener in a given region receives.
+The service event hook limits the service events that a service listener in a given region receives.
 
 For example, Figure \ref{fig:sevent} shows a bundle W which has a service listener.
 Bundle W's service listener receives events for s and t. It does not receive events for service u which is filtered out. 
@@ -183,33 +183,37 @@ The model finally indicates how it may be implemented using framework hooks.
 \section{Basic Types}
 \label{cha:basics}
 
-Some basic types need defining.
+Some basic types define the primitives used in the model.
 
 \subsection*{Bundles}
 
-Bundles are identified by a bundle symbolic name and bundle version, but uniquely identified in the
+Bundles have a bundle symbolic name and a bundle version and are uniquely identified in the
 OSGi framework by a bundle location.
 \begin{zed}
   [BSN, BVer, BLoc]
 \end{zed}
+Note that as of OSGi R4.3 when the framework property \texttt{org.osgi.framework.bsnversion}
+is set to \texttt{multiple}, the combination of bundle symbolic name and bundle version is no
+longer guaranteed to uniquely identify a bundle in the OSGi framework.
 
 \subsection*{Packages}
 
-We abstract the notion of package version and the attributes associated with package imports and exports.
+We do not need the notion of package version and the attributes associated with package imports
+and exports, so we simply declare a set of package objects.
 \begin{zed}
   [Package]
 \end{zed}
 
 \subsection*{Services}
 
-We abstract all the details of services.
+Neither do we need details of services.
 \begin{zed}
   [Service]
 \end{zed}
 
 \subsection*{Regions}
 
-Regions are identified by a region identifer.
+Regions are identified by a region identifier. Again we need no further details.
 \begin{zed}
   [RId]
 \end{zed}
@@ -229,17 +233,17 @@ publishes zero or more services.
   exportedPackages : \power Package \\
   publishedServices : \power Service \\
 \end{schema}
-It is unusual, and usually bad practice, to include the primary key (in this case the location) of
+It is unusual, and usually bad practice, to include the primary key (in this case the $location$) of
 an entity in the entity's schema.
 We do it here to ensure that all bundles are
 distinct and use this property later when determining which region a bundle belongs to.
 
 We define a helper function for extracting a pair consisting of the bundle symbolic name and bundle
-version from a bundle. 
+version from a bundle. This will be used for filtering bundles.
 \begin{axdef}
-  bid : Bundle \fun (BSN \cross BVer) \\
+  bnv : Bundle \fun (BSN \cross BVer) \\
 \where
-  bid =  (\lambda Bundle @ (name, version)) \\
+  bnv =  (\lambda Bundle @ (name, version)) \\
 \end{axdef}
 
 %=============================================================================
@@ -251,15 +255,17 @@ We build up to a definition of a region in several small steps.
 
 \subsection{Proto-Region}
 
-A proto-region contains a set of bundles which are installed in the framework and associated with
-the proto-region either by being added to the proto-region or by being imported into the proto-region.
+A proto-region is a set of bundles.
+These are intended to represent the bundles installed in the framework and associated with the proto-region.
 \begin{schema}{ProtoRegion}
   bundles : \power Bundle \\
 \end{schema}
+We will see later that bundles may be associated with a proto-region either by being added to the region or by
+being `imported' from another region.
 
 \subsection{Indexed Region}
 
-An indexed region adds an index, and thereby some constraints, to a proto-region.
+An indexed region is a proto-region with an index of a certain sort.
 
 The index is a function identifying the bundles in the region by location.
 \begin{schema}{IndexedRegion}
@@ -269,8 +275,9 @@ The index is a function identifying the bundles in the region by location.
   l = \{ b : bundles @ b.location \mapsto b \} \\
 \end{schema}
 The signature imposes the constraint of injectivity on the index.
-Thus an indexed region contains a set of bundles each of which is uniquely identified
+Thus an indexed region is a set of bundles each of which is uniquely identified
 by its location.
+Notice that \textbf{all} the bundles in the proto-region are indexed.
 
 \subsection{OpenRegion}
 
@@ -332,7 +339,7 @@ We define a nil region.
 
 \subsection{Adding a Bundle to a Region}
 
-Bundles are typically added to regions \textit{under} the bundle install operation
+Bundles are typically added to regions \textit{as part of} the bundle install operation
 so that the bundle is associated with its region by the time the
 install completes.
 
@@ -350,7 +357,7 @@ the given bundle's location.
   importedPkg' = importedPkg \\
   importedSvc' = importedSvc \\
 \end{schema}
-Note that $localPkg'$, $localSvc'$, $pkg'$, and $svc'$ are determined by the constraints of $Region'$.
+Note that $l'$, $localPkg'$, $localSvc'$, $pkg'$, and $svc'$ are determined by the constraints of $Region'$.
 
 \subsection{Combining Regions}
 
@@ -402,22 +409,22 @@ Since $\sqcup$ is commutative, associative, idempotent, and has a zero, we defin
 \section{Multiple Regions}
 \label{cha:multiregions}
 
-A system of multiple regions has a finite, indexed collection of regions, a convenience function of all the
+A system of multiple regions has a finite, indexed collection of regions, 
+convenience sets of all the bundles and of all the
 region identifiers in the system, and a function for
 determining the region identifier of any bundle in the system.
 \begin{schema}{Regions}
   reg : RId \ffun Region \\
   allBundles : \power Bundle \\
   rids : \power RId \\
-  breg : Bundle \pfun RId \\
+  breg : BLoc \pfun RId \\
 \where
  allBundles = \bigcup \{ r : \ran reg@ r.bundles \} \\
  rids = \dom reg \\
- breg = \{ b : Bundle; rid : rids | b \in (reg~rid).bundles @ (b, rid) \} \\
+ breg = \{ b : Bundle; rid : rids | b \in (reg~rid).bundles @ (b.location, rid) \} \\
 \end{schema}
-Since $breg$ is a function, no bundle can belong to more than one region.
-This is a constraint on the regions in the collection expressed by the functionality of $breg$
-rather than by a quantification over the bundles in the regions.
+Since $breg$ is a function, a bundle's location uniquely identifies the bundle and no bundle
+can belong to more than one region.
 
 \subsection{Determining a Bundle's Region}
 
@@ -428,12 +435,15 @@ We expose the convenience function as an operation for determining a bundle's re
   r! : Region \\
 \where
   b? \in allBundles \\
-  r! = reg(breg~b?) \\
+  r! = reg(breg~b?.location) \\
 \end{schema}
 
 \subsection{Promoting Region Operations}
 
-We define a fairly standard promotion schema.
+We define a fairly standard schema for promoting operations on a single region into
+operations on the system of multiple regions.
+The region to be operated on is singled out using a region identifier and all other regions are left
+unchanged.
 \begin{schema}{PromoteRegion}
   \Delta Regions \\
   \Delta Region \\
@@ -449,12 +459,28 @@ Then we promote the operation to add a bundle.
   RegionsAddBundleOk \defs (\exists \Delta Region @ PromoteRegion \land RegionAddBundleOk) \\
 \end{zed}
 
+This operation has the signature below, which shows that it is now an operation on the
+system of multiple regions.
+%%unchecked
+\begin{schema}{RegionsAddBundleOk}
+  \Delta Regions \\
+  rid? : RId \\
+  b? : Bundle \\
+\where
+  \ldots
+\end{schema}
+
 %=============================================================================
 \clearpage
 \section{Filters}
 \label{cha:filters}
 
-A filter specifies sets of bundles, exported packages, and services.
+So far the regions in the system are independent of each other.
+When we later connect the regions together, we will need to define which bundles,
+packages, and services are visible across each connection from one region to another.
+We'll do this using a \textit{filter}.
+
+A filter specifies bundles, packages, and services. Packages and services are specified
 \begin{schema}{Filter}
   bf : \power (BSN \cross BVer) \\
   pf : \power Package \\
@@ -481,7 +507,7 @@ applies the filter to the remaining bundles.
 \begin{axdef}
   fb : \power Bundle \cross Filter \fun \power Bundle \\
 \where
-  fb = (\lambda bs : \power Bundle; f : Filter @ \{ b : bs | (bid~b) \in f.bf @ xb(b, f) \}) \\
+  fb = (\lambda bs : \power Bundle; f : Filter @ \{ b : bs | (bnv~b) \in f.bf @ xb(b, f) \}) \\
 \end{axdef}
 
 The $fp$ function passes a set of exported packages through a filter.
@@ -516,7 +542,7 @@ We define an infix $\downarrow$ operator to apply a filter to a region and produ
 \where
   (\_ \downarrow \_) = (\lambda r : Region;  f : Filter @ \\
 \t3   (\mu Region | \\
-\t4 bundles = \{ b : r.bundles | (bid~b) \in f.bf @ xb(b, f) \} \land \\
+\t4 bundles = \{ b : r.bundles | (bnv~b) \in f.bf @ xb(b, f) \} \land \\
 \t4 pkg = r.pkg \cap f.pf \land \\
 \t4 svc = r.svc \cap f.sf )) \\
 \end{axdef}
@@ -598,7 +624,7 @@ the bundle is being added to.
 \where
   filter' = filter \\
   (\forall s : RId; f : Filter | (rid?, s) \mapsto f \in filter @ \\
-\t1 (bid~b?) \notin f.bf) \\ 
+\t1 (bnv~b?) \notin f.bf) \\ 
 \end{schema}
 
 We also promote the get region operation for completeness.
@@ -621,7 +647,7 @@ of connected regions.
   found! : \power Bundle \\
 \where
   finder? \in allBundles \\
-  found! = candidates? \cap (squash(breg~finder?)).bundles \\
+  found! = candidates? \cap (squash(breg~finder?.location)).bundles \\
 \end{schema}
 
 \begin{schema}{BundleEventHook}
@@ -631,7 +657,7 @@ of connected regions.
   fl! : \power Bundle \\
 \where
   listeners? \subseteq allBundles \\
-  fl! = \{ l : listeners? | eb? \in (squash(breg~l)).bundles \} \\
+  fl! = \{ l : listeners? | eb? \in (squash(breg~l.location)).bundles \} \\
 \end{schema}
 
 \begin{schema}{ResolverHookFilterMatches}
@@ -641,7 +667,7 @@ of connected regions.
   filtered! : \power Package \\
 \where
   requirer? \in allBundles \\
-  filtered! = candidates? \cap (squash(breg~requirer?)).pkg \\
+  filtered! = candidates? \cap (squash(breg~requirer?.location)).pkg \\
 \end{schema}
 
 \begin{schema}{ServiceFindHook}
@@ -651,7 +677,7 @@ of connected regions.
   found! : \power Service \\
 \where
   finder? \in allBundles \\
-  found! = candidates? \cap (squash(breg~finder?)).svc \\
+  found! = candidates? \cap (squash(breg~finder?.location)).svc \\
 \end{schema}
 
 \begin{schema}{ServiceEventHook}
@@ -661,7 +687,7 @@ of connected regions.
   fl! : \power Bundle \\
 \where
   listeners? \subseteq allBundles \\
-  fl! = \{ l : listeners? | es? \in (squash(breg~l)).svc \} \\
+  fl! = \{ l : listeners? | es? \in (squash(breg~l.location)).svc \} \\
 \end{schema}
 
 %=============================================================================
