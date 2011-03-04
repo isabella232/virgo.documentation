@@ -19,7 +19,7 @@
 This document provides a formal model of how Virgo divides the OSGi framework into a directed graph
 of \textit{regions}.
 
-The model will inform the work on \textbf{Bug 330776} ``Re-implement user region using
+The model informed the work on \textbf{Bug 330776} ``Re-implement user region using
 framework hooks instead of nested framework''.
 
 The model is defined using the Z specification language. An introduction provides an informal
@@ -53,7 +53,7 @@ The kernel runs in its own region and applications run in a \textit{user region}
 
 Virgo 2.1.0 implemented the user region as a nested framework, but Equinox
 has deprecated the nested framework support in favour of \textit{framework hooks}
-which are being defined for OSGi 4.3.
+which are being defined for OSGi R4.3.
 \textbf{Bug 330776} re-implements the user region using the OSGi framework and service
 registry hooks.
 
@@ -187,12 +187,12 @@ Some basic types define the primitives used in the model.
 
 \subsection*{Bundles}
 
-Bundles have a bundle symbolic name and a bundle version and are uniquely identified in the
-OSGi framework by a bundle location.
+Bundles are uniquely identified in the OSGi framework by a bundle location, whose details are not
+important here.
 \begin{zed}
-  [BSN, BVer, BLoc]
+  [BLoc]
 \end{zed}
-Note that as of OSGi R4.3 when the framework property \texttt{org.osgi.framework.bsnversion}
+Note that, as of OSGi R4.3, when the framework property \texttt{org.osgi.framework.bsnversion}
 is set to \texttt{multiple}, the combination of bundle symbolic name and bundle version is no
 longer guaranteed to uniquely identify a bundle in the OSGi framework.
 
@@ -211,24 +211,13 @@ Neither do we need details of services.
   [Service]
 \end{zed}
 
-\subsection*{Regions}
-
-Regions are identified by a region identifier. Again we need no further details.
-\begin{zed}
-  [RId]
-\end{zed}
-
 %=============================================================================
 \clearpage
 \section{Bundle}
 \label{cha:bundle}
 
-A bundle has a bundle symbolic name and bundle version, exports zero or more packages, and
-publishes zero or more services.
-
+A bundle has a location, exports zero or more packages, and publishes zero or more services.
 \begin{schema}{Bundle}
-  name : BSN \\
-  version : BVer \\
   location : BLoc \\
   exportedPackages : \power Package \\
   publishedServices : \power Service \\
@@ -250,10 +239,8 @@ We build up to a definition of a region in several small steps.
 A proto-region is a set of bundles.
 These are intended to represent the bundles installed in the framework and associated with the proto-region.
 \begin{schema}{ProtoRegion}
-  bundles : \power Bundle \\
+  localBundles : \power Bundle \\
 \end{schema}
-We will see later that bundles may be associated with a proto-region either by being added to the region or by
-being `imported' from another region.
 
 \subsection{Indexed Region}
 
@@ -264,7 +251,7 @@ The index is a function identifying the bundles in the region by location.
   ProtoRegion \\
   l : BLoc \pinj Bundle \\
 \where
-  l = \{ b : bundles @ b.location \mapsto b \} \\
+  l = \{ b : localBundles @ b.location \mapsto b \} \\
 \end{schema}
 The signature imposes the constraint of injectivity on the index.
 Thus an indexed region is a set of bundles each of which is uniquely identified
@@ -281,38 +268,41 @@ and services published by bundles in the region.
   localPkg : \power Package \\
   localSvc : \power Service \\
 \where
-  localPkg = \bigcup \{ b : bundles @ b.exportedPackages \} \\
-  localSvc = \bigcup \{ b : bundles @ b.publishedServices \} \\
+  localPkg = \bigcup \{ b : localBundles @ b.exportedPackages \} \\
+  localSvc = \bigcup \{ b : localBundles @ b.publishedServices \} \\
 \end{schema}
-We allow a given exported package to be associated with more than one bundle, which can happen if a bundle uses
-\texttt{require-bundle} with the reexport option.
-We also allow a given service to be published by more than one bundle, which can never happen, but which causes
-no difficulty for this model and would complicate the model if we constrained it.
+%We allow a given exported package to be associated with more than one bundle,
+%which can happen if a bundle uses
+%\texttt{require-bundle} with the reexport option.
+%We also allow a given service to be published by more than one bundle,
+%which can never happen, but which causes
+%no difficulty for this model and would complicate the model if we constrained it.
 
 \subsection{LinkedRegion}
 
-A linked region is an open region with additional sets of imported packages and services.
+A linked region is an open region with additional sets of imported bundles, packages, and services.
 
 \begin{schema}{LinkedRegion}
   OpenRegion \\
+  importedBundles : \power Bundle \\
   importedPkg : \power Package \\
   importedSvc : \power Service \\  
 \end{schema}
-The imported packages and services come into play later when regions are filtered and combined
+The imported bundles, packages, and services come into play later when regions are filtered and combined
 because it will be possible to filter out a bundle but not its exported packages or published services.
 We want to represent the result as a region for simplicity, so the region needs to have a way
 of recording packages and services which are `detached' from their bundle(s).
 
-We do not need a corresponding set of imported bundles because these can be stored in $bundles$.
-
 \subsection{Region}
 
-A region is a linked region in which we derive sets of all packages and all services.
+A region is a linked region in which we derive sets of all bundles, all packages, and all services.
 \begin{schema}{Region}
   LinkedRegion \\
+  bundles : \power Bundle \\
   pkg : \power Package \\
   svc : \power Service \\
 \where
+  bundles = localBundles \cup importedBundles \\
   pkg = localPkg \cup importedPkg \\
   svc = localSvc \cup importedSvc \\
 \end{schema}
@@ -320,13 +310,13 @@ The local and imported packages are not necessarily disjoint and neither are the
 services. This is important as packages exported by and services published by imported bundles
 are classified as both local and imported.
 
-We define a nil region.
+We define a nil region with no local or imported bundles, packages, or services.
 \begin{axdef}
   NIL : Region \\
 \where
  NIL.bundles = \emptyset \\
- NIL.importedPkg = \emptyset \\
- NIL.importedSvc = \emptyset \\
+ NIL.pkg = \emptyset \\
+ NIL.svc = \emptyset \\
  \end{axdef}
 
 \subsection{Adding a Bundle to a Region}
@@ -401,10 +391,21 @@ Since $\sqcup$ is commutative, associative, idempotent, and has a zero, we defin
 \section{Multiple Regions}
 \label{cha:multiregions}
 
-A system of multiple regions has a finite, indexed collection of regions, 
-convenience sets of all the bundles and of all the
-region identifiers in the system, and a function for
-determining the region identifier of any bundle in the system.
+We now describe a system comprising multiple regions.
+
+Regions are identified by a region identifier, whose details are not important here.
+\begin{zed}
+  [RId]
+\end{zed}
+
+The system of multiple regions has a collection of regions indexed by region identifier.
+The collection is finite so that certain operations, described later, are well defined.
+ 
+The system has convenience sets of all the bundles and of all the region identifiers in the system.
+These sets are derived from the indexed collection.
+
+The system also has a function for determining the region identifier of any bundle in the system from the
+bundle's location.
 \begin{schema}{Regions}
   reg : RId \ffun Region \\
   allBundles : \power Bundle \\
@@ -415,8 +416,8 @@ determining the region identifier of any bundle in the system.
  rids = \dom reg \\
  breg = \{ b : Bundle; rid : rids | b \in (reg~rid).bundles @ (b.location, rid) \} \\
 \end{schema}
-Since $breg$ is a function, a bundle's location uniquely identifies the bundle and no bundle
-can belong to more than one region.
+Since $breg$ is a function, no bundle location can belong to more than one region.
+Since a bundle's location uniquely identifies the bundle in its region, it follows that a bundle's location uniquely identifies the bundle in the system of multiple regions.
 
 \subsection{Determining a Bundle's Region}
 
@@ -501,8 +502,6 @@ The $bundleView$ function produces a filtered view of a bundle by applying a fil
 \where
   bundleView = (\lambda b: Bundle; f : Filter @ \\
 \t1  (\mu Bundle | \\
-\t2 name = b.name \land \\
-\t2 version = b.version \land \\
 \t2 location = b.location \land \\
 \t2 exportedPackages = filterPackages(b.exportedPackages, f) \land \\
 \t2 publishedServices = filterServices(b.publishedServices, f)))
