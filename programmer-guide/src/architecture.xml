@@ -3,40 +3,30 @@
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="architecture">
 	<title>Deployment Architecture</title>
-	<para>
-		The @product.name@
-		offers several choices when it comes to deploying applications. Each choice offers certain advantages, and it is
-		important to understand those in order to make the right choice for your application. In this chapter, we take a
-		closer look at the choices offered, compare them, and provide guidelines in choosing the right one based on your
-		specific needs. 
-	</para>
-	<para>
-		The @short.product.name@ supports standard self-contained WAR files thus allowing you to use the @product.name@
-		as an enhanced web server. The @short.product.name@ also supports the 
-		<emphasis>Shared Libraries</emphasis>
-		WAR format which allows for slimmer WAR files that depend on OSGi bundles instead of including JAR files inside the
-		WAR. The
-		<emphasis>Shared Services</emphasis>
-		WAR format allows developers to further reduce the complexity of standard WARs by deploying services and
-		infrastructure bundles alongside the WAR. A shared services WAR will then consume the services published by those
-		bundles. To complete the picture, the @short.product.name@ supports the new OSGi-standard
-		<emphasis>Web Bundle</emphasis>
-		deployment format for web applications that builds on the benefits provided by a shared services WAR. In addition
-		to this @short.product.name@ provides additional conveniences for developing and deploying Spring MVC-based web
-		applications.
-	</para>
-	<para>For applications consisting of multiple bundles and web applications, plans and the PAR format are the
-		primary deployment models that take advantage of OSGi capabilities. We will explore all of these formats and their
-		suitability later in this guide.</para>
-
-<!-- ======================================================================= -->
-<!-- ======================================================================= -->
+	<para> The @product.name@ offers several choices when it comes to deploying applications. Each
+		choice offers certain advantages, and it is important to understand those in order to make
+		the right choice for your application. In this chapter, we take a closer look at the choices
+		offered, compare them, and provide guidelines in choosing the right one based on your
+		specific needs. </para>
+	<para> The @short.product.name@ supports standard self-contained WAR files thus allowing you to
+		use the @product.name@ as an enhanced web server. The @short.product.name@ also supports the
+			<emphasis>Shared Libraries</emphasis> WAR format which allows for slimmer WAR files that
+		depend on OSGi bundles instead of including JAR files inside the WAR. The <emphasis>Shared
+			Services</emphasis> WAR format allows developers to further reduce the complexity of
+		standard WARs by deploying services and infrastructure bundles alongside the WAR. A shared
+		services WAR will then consume the services published by those bundles. To complete the
+		picture, the @short.product.name@ supports the new OSGi-standard <emphasis>Web
+		Bundle</emphasis> deployment format for web applications that builds on the benefits
+		provided by a shared services WAR. In addition to this @short.product.name@ provides
+		additional conveniences for developing and deploying Spring MVC-based web applications. </para>
+	<para>For applications consisting of multiple bundles and web applications, plans and the PAR
+		format are the primary deployment models that take advantage of OSGi capabilities. We will
+		explore all of these formats and their suitability later in this guide.</para>
+	<!-- ======================================================================= -->
+	<!-- ======================================================================= -->
 	<section id="architecture-deployment-formats">
 		<title>Supported Deployment Formats</title>
-		<para>
-			The @product.name@
-			supports applications packaged in the following formats: 
-		</para>
+		<para> The @product.name@ supports applications packaged in the following formats: </para>
 		<orderedlist>
 			<listitem>
 				<para><link linkend="architecture-raw-osgi-bundles">Raw OSGi Bundles</link></para>
@@ -57,150 +47,136 @@
 				<para><link linkend="architecture-configurations">Configurations</link></para>
 			</listitem>
 		</orderedlist>
-		<para>
-			When you deploy an application to the @short.product.name@, each deployment artifact (e.g., a single bundle, WAR, PAR, or
-			plan) passes through a deployment pipeline. This deployment pipeline is responsible for processing applications of certain 
-			types (i.e., application type). The @bundle.version@ release of the @short.product.name@ natively supports deployers analogous
-			to each of the aforementioned packaging options.
-		</para>
-		<para>
-			Let&rsquo;s take a closer look now at each of the supported deployment and packaging options to explore which one is best
-			suited for your applications.
-		</para>
+		<para> When you deploy an application to the @short.product.name@, each deployment artifact
+			(e.g., a single bundle, WAR, PAR, or plan) passes through a deployment pipeline. This
+			deployment pipeline is responsible for processing applications of certain types (i.e.,
+			application type). The @bundle.version@ release of the @short.product.name@ natively
+			supports deployers analogous to each of the aforementioned packaging options. </para>
+		<para> Let&rsquo;s take a closer look now at each of the supported deployment and packaging
+			options to explore which one is best suited for your applications. </para>
 		<section id="architecture-raw-osgi-bundles">
 			<title>Raw OSGi Bundles</title>
-			<para>
-				At its core, the @product.name@
-				is an OSGi container. Thus any OSGi-compliant bundle can be deployed directly on the @short.product.name@ unmodified.
-				You&rsquo;ll typically deploy an application as a single bundle or a set of stand-alone bundles if you&rsquo;d like to publish or
-				consume services globally within the container via the OSGi Service Registry. 
-			</para>
+			<para> At its core, the @product.name@ is an OSGi container. Thus any OSGi-compliant
+				bundle can be deployed directly on the @short.product.name@ unmodified. You&rsquo;ll
+				typically deploy an application as a single bundle or a set of stand-alone bundles
+				if you&rsquo;d like to publish or consume services globally within the container via
+				the OSGi Service Registry. </para>
 		</section>
 		<section id="architecture-wars">
 			<title>WAR Deployment Formats</title>
-			<para>
-				For Web Application Archives (WAR), the @product.name@
-				provides support for the following three formats. 
-			</para>
+			<para> For Web Application Archives (WAR), the @product.name@ provides support for the
+				following three formats. </para>
 			<orderedlist>
 				<listitem>
 					<para><link linkend="architecture-standard-war">Standard WAR</link></para>
 				</listitem>
 				<listitem>
-					<para><link linkend="architecture-shared-libraries-war">Shared Libraries WAR</link></para>
+					<para><link linkend="architecture-shared-libraries-war">Shared Libraries
+						WAR</link></para>
 				</listitem>
 				<listitem>
-					<para><link linkend="architecture-shared-services-war">Shared Services WAR</link></para>
+					<para><link linkend="architecture-shared-services-war">Shared Services
+						WAR</link></para>
 				</listitem>
 			</orderedlist>
-			<para> Each of these formats plays a distinct role in the incremental migration path from a standard Java EE WAR to
-				an OSGi-ified web application.</para>
+			<para> Each of these formats plays a distinct role in the incremental migration path
+				from a standard Java EE WAR to an OSGi-ified web application.</para>
 			<section id="architecture-standard-war">
 				<title>Standard WAR</title>
-				<para>
-					Standard WAR files are supported directly in the @short.product.name@. At deployment time, the WAR file is
-					transformed into an OSGi bundle and installed into Tomcat. All the standard WAR contracts are honored, and your
-					existing WAR files should just drop in and deploy without change. Support for standard, unmodified WAR files
-					allows you to try out the @product.name@ on your existing web applications and then gradually migrate toward the
-					<emphasis>Shared Libraries WAR</emphasis>
-					and
-					<emphasis>Shared Services WAR</emphasis>
-					formats.
-				</para>
-				<para> In addition to the standard support for WARs that you would expect from Tomcat, the @short.product.name@ also
-					enables the following features:</para>
+				<para> Standard WAR files are supported directly in the @short.product.name@. At
+					deployment time, the WAR file is transformed into an OSGi bundle and installed
+					into Tomcat. All the standard WAR contracts are honored, and your existing WAR
+					files should just drop in and deploy without change. Support for standard,
+					unmodified WAR files allows you to try out the @product.name@ on your existing
+					web applications and then gradually migrate toward the <emphasis>Shared
+						Libraries WAR</emphasis> and <emphasis>Shared Services WAR</emphasis>
+					formats. </para>
+				<para> In addition to the standard support for WARs that you would expect from
+					Tomcat, the @short.product.name@ also enables the following features:</para>
 				<orderedlist>
 					<listitem>
-						<para>Spring-driven load-time weaving (see Section 6.8.4, “Load-time weaving with AspectJ in the
-							Spring Framework").</para>
+						<para>Spring-driven load-time weaving (see Section 6.8.4, “Load-time weaving
+							with AspectJ in the Spring Framework").</para>
 					</listitem>
 					<listitem>
-						<para>Diagnostic information such as FFDC (first failure data capture)</para>
+						<para>Diagnostic information such as FFDC (first failure data
+						capture)</para>
 					</listitem>
 				</orderedlist>
-				<para> The main benefit of this application style is familiarity -- everyone knows how to create a WAR file! You can
-					take advantage of the @short.product.name@&rsquo;s added feature set without modifying the application. The application
-					can also be deployed on other Servlet containers or Java EE application servers.</para>
-				<para>
-					You may choose this application style if the application is fairly simple and small. You may also prefer this style
-					even for large and complex applications as a starting point and migrate to the other styles over time as discussed
-					in
-					<xref linkend="migrating-to-osgi" />
-					.
-				</para>
+				<para> The main benefit of this application style is familiarity -- everyone knows
+					how to create a WAR file! You can take advantage of the
+					@short.product.name@&rsquo;s added feature set without modifying the
+					application. The application can also be deployed on other Servlet containers or
+					Java EE application servers.</para>
+				<para> You may choose this application style if the application is fairly simple and
+					small. You may also prefer this style even for large and complex applications as
+					a starting point and migrate to the other styles over time as discussed in <xref
+						linkend="migrating-to-osgi"/> . </para>
 			</section>
 			<section id="architecture-shared-libraries-war">
 				<title>Shared Libraries WAR</title>
-				<para>
-					If you have experience with developing and packaging web applications using the standard WAR format, you&rsquo;re
-					certainly familiar with the pains of library bloat. So, unless you&rsquo;re installing shared libraries in a common
-					library folder for your Servlet container, you have to pack all JARs required by your web application in
-					<literal>/WEB-INF/lib</literal>. 
-					Prior to the release of the @product.name@, such library bloat has essentially been the norm for web applications, but
-					now there is a better solution! The Shared Libraries WAR format reduces your application&rsquo;s deployment footprint and
-					eradicates library bloat by allowing you to declare dependencies on libraries via standard OSGi manifest headers
-					such as
-					<literal>Import-Package</literal>
-					and
-					<literal>Require-Bundle</literal>
-					. The @short.product.name@ provides additional support for simplifying dependency management via the
-					<literal>Import-Library</literal>
-					and
-					<literal>Import-Bundle</literal>
-					manifest headers which are essentially macros that get expanded into OSGi-compliant
-					<literal>Import-Package</literal>
-					statements.
-				</para>
+				<para> If you have experience with developing and packaging web applications using
+					the standard WAR format, you&rsquo;re certainly familiar with the pains of
+					library bloat. So, unless you&rsquo;re installing shared libraries in a common
+					library folder for your Servlet container, you have to pack all JARs required by
+					your web application in <literal>/WEB-INF/lib</literal>. Prior to the release of
+					the @product.name@, such library bloat has essentially been the norm for web
+					applications, but now there is a better solution! The Shared Libraries WAR
+					format reduces your application&rsquo;s deployment footprint and eradicates
+					library bloat by allowing you to declare dependencies on libraries via standard
+					OSGi manifest headers such as <literal>Import-Package</literal> and <literal
+						>Require-Bundle</literal> . The @short.product.name@ provides additional
+					support for simplifying dependency management via the <literal
+					>Import-Library</literal> and <literal>Import-Bundle</literal> manifest headers
+					which are essentially macros that get expanded into OSGi-compliant <literal
+						>Import-Package</literal> statements. </para>
 				<tip>
-					<para>
-						For detailed information on which libraries are already available, check out the
-						<ulink url="http://www.springsource.com/repository">@ebr@
-						</ulink>
-						.
+					<para> For detailed information on which libraries are already available, check
+						out the <ulink url="http://www.springsource.com/repository">@ebr@ </ulink> .
 					</para>
 				</tip>
 			</section>
 			<section id="architecture-shared-services-war">
 				<title>Shared Services WAR</title>
-				<para>
-					Once you&rsquo;ve begun taking advantage of declarative dependency management with a Shared Libraries WAR, you&rsquo;ll likely
-					find yourself wanting to take the next step toward reaping further benefits of an OSGi container: sharing services
-					between your OSGi-compliant bundles and your web applications. By building on the power and simplicity of
-					Spring-DM, the
-					<emphasis>Shared Services WAR</emphasis>
-					format puts the OSGi Service Registry at your finger tips. As a best practice you&rsquo;ll typically publish services
-					from your domain, service, and infrastructure bundles via
-					<literal>&lt;osgi:service ... /&gt;</literal>
-					and then consume them in your web application&rsquo;s ApplicationContext via
-					<literal>&lt;osgi:reference ... /&gt;</literal>.
-					Doing so promotes programming to interfaces and allows you to completely decouple your web-specific deployment
-					artifacts from your domain model, service layer, etc., and that&rsquo;s certainly a step in the right direction. Of the
-					three supported WAR deployment formats, the Shared Services WAR is by far the most attractive in terms of
-					modularity and reduced overall footprint of your web applications.
+				<para> Once you&rsquo;ve begun taking advantage of declarative dependency management
+					with a Shared Libraries WAR, you&rsquo;ll likely find yourself wanting to take
+					the next step toward reaping further benefits of an OSGi container: sharing
+					services between your OSGi-compliant bundles and your web applications. By
+					building on the power and simplicity of Spring-DM, the <emphasis>Shared Services
+						WAR</emphasis> format puts the OSGi Service Registry at your finger tips. As
+					a best practice you&rsquo;ll typically publish services from your domain,
+					service, and infrastructure bundles via <literal>&lt;osgi:service ...
+					/&gt;</literal> and then consume them in your web application&rsquo;s
+					ApplicationContext via <literal>&lt;osgi:reference ... /&gt;</literal>. Doing so
+					promotes programming to interfaces and allows you to completely decouple your
+					web-specific deployment artifacts from your domain model, service layer, etc.,
+					and that&rsquo;s certainly a step in the right direction. Of the three supported
+					WAR deployment formats, the Shared Services WAR is by far the most attractive in
+					terms of modularity and reduced overall footprint of your web applications.
 				</para>
 			</section>
 			<section id="architecture-war-gemini">
 				<title>WARs and the Gemini Web Container</title>
-				<para>
-					@product.name@ fully supports the OSGi Web Applications standard. Using the reference implementation from Gemini Web that  
-					was developed by SpringSource from an offshoot of the original @short.product.name@ codebase. This RI is now fully 
-					integrated in @short.product.name@ as the basis of the support for web application deployment. 
-				</para>
-				<para>
-					The Web Container specification introduces the concept of a <emphasis>web application bundle</emphasis>, which is a WAR 
-					that is also a bundle. The specification defines how WAR files are transformed into bundles automatically as needed. 
-				</para>
-				<para>
-					You can find an introduction to the Web Container in blog entries written by the @short.product.name@ team 
-					<ulink url="http://blog.springsource.com/2009/05/27/introduction-to-the-osgi-web-container/">here</ulink> 
-					and <ulink url="http://blog.springsource.com/2009/06/01/what-the-osgi-web-container-means-for-dm-server/">here</ulink>.
-				</para>
+				<para> @product.name@ fully supports the OSGi Web Applications standard. Using the
+					reference implementation from Gemini Web that was developed by SpringSource from
+					an offshoot of the original @short.product.name@ codebase. This RI is now fully
+					integrated in @short.product.name@ as the basis of the support for web
+					application deployment. </para>
+				<para> The Web Container specification introduces the concept of a <emphasis>web
+						application bundle</emphasis>, which is a WAR that is also a bundle. The
+					specification defines how WAR files are transformed into bundles automatically
+					as needed. </para>
+				<para> You can find an introduction to the Web Container in blog entries written by
+					the @short.product.name@ team <ulink
+						url="http://blog.springsource.com/2009/05/27/introduction-to-the-osgi-web-container/"
+						>here</ulink> and <ulink
+						url="http://blog.springsource.com/2009/06/01/what-the-osgi-web-container-means-for-dm-server/"
+						>here</ulink>. </para>
 				<section id="architecture-war-gemini-extensions">
 					<title>Extensions to the Web Container</title>
-					<para>
-						@product.name@ provides a variety of extensions to the Web Container that allow you to construct sophisticated applications.
-						The table below, summarizes the extensions that are available or in development.
-					</para>
+					<para> @product.name@ provides a variety of extensions to the Web Container that
+						allow you to construct sophisticated applications. The table below,
+						summarizes the extensions that are available or in development. </para>
 					<table colsep="1" rowsep="3">
 						<tgroup cols="2">
 							<colspec width="1*"/>
@@ -216,24 +192,30 @@
 							<tbody>
 								<row>
 									<entry>Auto-import of system packages</entry>
-									<entry>All packages exported by the system bundle are automatically imported by web bundles</entry>
-									<entry>This feature is being discussed for inclusion in the specification</entry>
+									<entry>All packages exported by the system bundle are
+										automatically imported by web bundles</entry>
+									<entry>This feature is being discussed for inclusion in the
+										specification</entry>
 								</row>
 								<row>
 									<entry>Instrumentable ClassLoaders</entry>
-									<entry>All web bundle ClassLoaders are instrumentable by Spring&rsquo;s load-time weaving infrastructure.</entry>
-									<entry></entry>
+									<entry>All web bundle ClassLoaders are instrumentable by
+										Spring&rsquo;s load-time weaving infrastructure.</entry>
+									<entry/>
 								</row>
 								<row>
 									<entry>Support for exploded bundles/WARs</entry>
-									<entry>Bundles/WARs in directory form can be deployed as web bundles</entry>
-									<entry></entry>
+									<entry>Bundles/WARs in directory form can be deployed as web
+										bundles</entry>
+									<entry/>
 								</row>
 								<row>
 									<entry>Support for scanning TLDs in dependencies</entry>
-									<entry>As per the Web Container specification, all TLDs located inside a web bundle are located using the rules 
-									defined in the JSP 2.1 specification. In @short.product.name@, the dependencies of a web bundle are also scanned 
-									for TLDs following the rules outlined in JSP 2.1</entry>
+									<entry>As per the Web Container specification, all TLDs located
+										inside a web bundle are located using the rules defined in
+										the JSP 2.1 specification. In @short.product.name@, the
+										dependencies of a web bundle are also scanned for TLDs
+										following the rules outlined in JSP 2.1</entry>
 								</row>
 							</tbody>
 						</tgroup>
@@ -243,167 +225,187 @@
 		</section>
 		<section id="architecture-web-bundles">
 			<title>Web Modules</title>
-			<para>
-				Web Modules have been removed in favour of war files and web bundles following the OSGi Web Applications specification.
-				We believe our users will benefit more from a standard model than one that is @short.product.name@-specific.
-			</para>
+			<para> Web Modules have been removed in favour of war files and web bundles following
+				the OSGi Web Applications specification. We believe our users will benefit more from
+				a standard model than one that is @short.product.name@-specific. </para>
 		</section>
-
 		<section id="architecture-pars">
 			<title>PAR</title>
-			<para>
-				A PAR is a standard JAR which contains all of the modules of your application (e.g., service,
-				domain, and infrastructure bundles as well as a WAR or web module for web applications) in a single deployment unit.
-				This allows you to deploy, refresh, and undeploy your entire application as a single entity. If you are familiar with Java
-				EE, it is worth noting that a PAR can be considered a replacement for an EAR (Enterprise Archive) within the context
-				of an OSGi container. As an added bonus, modules within a PAR can be refreshed independently and on-the-fly, for
-				example via the @product.name@ Tool Suite (see <xref linkend="tooling" />).
-			</para>
-			<para>
-				Many of the benefits of the PAR format are due to the underlying OSGi infrastructure, including:
-				<itemizedlist>
-					<listitem><para> Fundamentally modularized applications: instead of relying on fuzzy boundaries between logical modules
-						in a monolithic application, this style promotes physically separated modules in the form of OSGi bundles. Then
-						each module may be developed separately, promoting parallel development and loose coupling.</para></listitem>
-					<listitem><para> Robust versioning of various modules: the versioning capability offered by OSGi is much more
-						comprehensive than any alternatives. Each module can specify a version range for each of its dependencies. Bundles
-						are isolated from each other in such a way that multiple versions of a bundle may be used simultaneously in an
-						application.</para></listitem>
-					<listitem><para> Improved serviceability: each bundle may be deployed or undeployed in a running application. This allows
-						modifying the existing application to fix bugs, improve performance, and even to add new features without having
-						to restart the application.</para></listitem>
-				</itemizedlist>
-			</para>
-			<para> Furthermore, PARs scope the modules of your application within the @short.product.name@. Scoping provides both a
-				physical and logical application boundary, effectively shielding the internals of your application from other PARs deployed
-				within the @short.product.name@. This means your application doesn&rsquo;t have to worry about clashing with other running
-				applications (e.g., in the OSGi Service Registry). You get support for load-time weaving, classpath scanning, context class
-				loading, etc., and the @short.product.name@ does the heavy lifting for you to make all this work seamlessly in an OSGi
-				environment. If you want to take full advantage of all that the @product.name@ and OSGi have to offer, packaging and deploying
-				your applications as a PAR is a good choice, although plans are an even better one, as described in the next section.</para>
+			<para> A PAR is a standard JAR which contains all of the modules of your application
+				(e.g., service, domain, and infrastructure bundles as well as a WAR or web module
+				for web applications) in a single deployment unit. This allows you to deploy,
+				refresh, and undeploy your entire application as a single entity. If you are
+				familiar with Java EE, it is worth noting that a PAR can be considered a replacement
+				for an EAR (Enterprise Archive) within the context of an OSGi container. As an added
+				bonus, modules within a PAR can be refreshed independently and on-the-fly, for
+				example via the @product.name@ Tool Suite (see <xref linkend="tooling"/>). </para>
+			<para> Many of the benefits of the PAR format are due to the underlying OSGi
+				infrastructure, including: <itemizedlist>
+					<listitem>
+						<para> Fundamentally modularized applications: instead of relying on fuzzy
+							boundaries between logical modules in a monolithic application, this
+							style promotes physically separated modules in the form of OSGi bundles.
+							Then each module may be developed separately, promoting parallel
+							development and loose coupling.</para>
+					</listitem>
+					<listitem>
+						<para> Robust versioning of various modules: the versioning capability
+							offered by OSGi is much more comprehensive than any alternatives. Each
+							module can specify a version range for each of its dependencies. Bundles
+							are isolated from each other in such a way that multiple versions of a
+							bundle may be used simultaneously in an application.</para>
+					</listitem>
+					<listitem>
+						<para> Improved serviceability: each bundle may be deployed or undeployed in
+							a running application. This allows modifying the existing application to
+							fix bugs, improve performance, and even to add new features without
+							having to restart the application.</para>
+					</listitem>
+				</itemizedlist></para>
+			<para> Furthermore, PARs scope the modules of your application within the
+				@short.product.name@. Scoping provides both a physical and logical application
+				boundary, effectively shielding the internals of your application from other PARs
+				deployed within the @short.product.name@. This means your application doesn&rsquo;t
+				have to worry about clashing with other running applications (e.g., in the OSGi
+				Service Registry). You get support for load-time weaving, classpath scanning,
+				context class loading, etc., and the @short.product.name@ does the heavy lifting for
+				you to make all this work seamlessly in an OSGi environment. If you want to take
+				full advantage of all that the @product.name@ and OSGi have to offer, packaging and
+				deploying your applications as a PAR is a good choice, although plans are an even
+				better one, as described in the next section.</para>
 			<tip>
 				<title>OSGi != multiple JARs</title>
-				<para>
-					Note that while physically separated modules can, in theory, be implemented simply using multiple
-					JARs, complex versioning requirements often make this impractical. For example,
-					consider the situation depicted in the diagram below. 
-
-					<itemizedlist>
-						<listitem><para>Bundle A depends on version 1.0.0 of bundle B and version 2.0.0 of bundle C.</para></listitem>
-						<listitem><para>Bundle B depends on version 1.0.0 of bundle C.</para></listitem>
-					</itemizedlist>
-
-					Suppose that versions 1.0.0 and 2.0.0 of bundle C are neither backward nor forward compatible. Traditional monolithic
-					applications cannot handle such situations: either bundle A or bundle B would need reworking which undermines
-					truly independent development. OSGi&rsquo;s versioning scheme enables this scenario to be implemented in a robust manner.
-					If it is desirable to rework the application to share a single version of C, then this can be planned in and is not forced.
-				</para>
-				<mediaobject><imageobject><imagedata fileref="images/architecture-bundle-versioning.png" /></imageobject></mediaobject>
+				<para> Note that while physically separated modules can, in theory, be implemented
+					simply using multiple JARs, complex versioning requirements often make this
+					impractical. For example, consider the situation depicted in the diagram below. <itemizedlist>
+						<listitem>
+							<para>Bundle A depends on version 1.0.0 of bundle B and version 2.0.0 of
+								bundle C.</para>
+						</listitem>
+						<listitem>
+							<para>Bundle B depends on version 1.0.0 of bundle C.</para>
+						</listitem>
+					</itemizedlist> Suppose that versions 1.0.0 and 2.0.0 of bundle C are neither
+					backward nor forward compatible. Traditional monolithic applications cannot
+					handle such situations: either bundle A or bundle B would need reworking which
+					undermines truly independent development. OSGi&rsquo;s versioning scheme enables
+					this scenario to be implemented in a robust manner. If it is desirable to rework
+					the application to share a single version of C, then this can be planned in and
+					is not forced. </para>
+				<mediaobject>
+					<imageobject><imagedata fileref="images/architecture-bundle-versioning.png"
+					/></imageobject>
+				</mediaobject>
 			</tip>
 		</section>
 		<section id="architecture-plans">
 			<title>Plans</title>
-			<para>
-				A plan is similar to a PAR in that it encapsulates all of the artifacts of your application in a single deployment unit. 
-				The main difference, however, is that a plan is simply an XML file that lists the artifacts of your application; 
-				a PAR, by contrast, is an actual JAR file that physically contains the artifacts.  
-				Just like a PAR, you deploy, refresh, and undeploy a plan as a single entity. 
-				We highly recommends the use of plans for creating applications.
-			</para>
-			<para>
-				When you create a plan, you can specify that the included bundles and services are in a scope that isolates them 
-				from the rest of @product.name@ 
-				and its deployments. 
-				This scoping ensures that the bundles wire to each other and see each other&rsquo;s services in preference to services 
-				from outside the scope. 
-				Scoping also prevents application code from leaking into the global scope or scope of another application. 
-				In addition, a plan can link the lifecycle of a group of bundles together atomically, which ensures that install, 
-				start, stop, and uninstall events 
-				on a single artifact in the plan are escalated to all artifacts in the plan.  
-				You can, however, disable both of these features by simply updating an attribute in the plan.
-			</para>
-			<para>
-				The general benefits of using plans are similar to those of using PARs; see <link linkend="architecture-pars">PAR</link> for details.  
-				Plans offer added benefits, however, such as the ability to control the deployment order of your application: 
-				the order in which you list artifacts in the plan&rsquo;s XML file is the order in which @short.product.name@ deploys them.  
-				Additionally, because plans specify the artifacts that make up an application by reference, it is easier to share content 
-				between plans as well as update individual parts of a plan without having to physically repackage (re-JAR) it.
-			</para>
+			<para> A plan is similar to a PAR in that it encapsulates all of the artifacts of your
+				application in a single deployment unit. The main difference, however, is that a
+				plan is simply an XML file that lists the artifacts of your application; a PAR, by
+				contrast, is an actual JAR file that physically contains the artifacts. Just like a
+				PAR, you deploy, refresh, and undeploy a plan as a single entity. We highly
+				recommends the use of plans for creating applications. </para>
+			<para> When you create a plan, you can specify that the included bundles and services
+				are in a scope that isolates them from the rest of @product.name@ and its
+				deployments. This scoping ensures that the bundles wire to each other and see each
+				other&rsquo;s services in preference to services from outside the scope. Scoping
+				also prevents application code from leaking into the global scope or scope of
+				another application. In addition, a plan can link the lifecycle of a group of
+				bundles together atomically, which ensures that install, start, stop, and uninstall
+				events on a single artifact in the plan are escalated to all artifacts in the plan.
+				You can, however, disable both of these features by simply updating an attribute in
+				the plan. </para>
+			<para> The general benefits of using plans are similar to those of using PARs; see <link
+					linkend="architecture-pars">PAR</link> for details. Plans offer added benefits,
+				however, such as the ability to control the deployment order of your application:
+				the order in which you list artifacts in the plan&rsquo;s XML file is the order in
+				which @short.product.name@ deploys them. Additionally, because plans specify the
+				artifacts that make up an application by reference, it is easier to share content
+				between plans as well as update individual parts of a plan without having to
+				physically repackage (re-JAR) it. </para>
 		</section>
 		<section id="architecture-configurations">
 			<title>Configurations</title>
-			<para>
-				A Configuration is simply a Java properties file. When deployed it will be recognised by the deployer and installed in to 
-				<emphasis>Configuration Admin</emphasis> for later use by your applications. The name that it will be installed under or PID 
-				(Persistent Identity) will be the name of the properties file less any extension. How to consume configuration data 
-				is discussed <link linkend="developing-applications-configuration-artifacts">later</link>.
-			</para>
+			<para>A Configuration is simply a Java properties file. When deployed it will be
+				recognised by the deployer and installed in to <emphasis>Configuration
+				Admin</emphasis> for later use by your applications. @short.product.name@ supports
+				both singleton (ManagedService) and factory (ManagedServiceFactory) configuration.
+				(see section 104.6 in the Compendium Specification) </para>
+			<para>For singleton configuration the name that it will be installed under or PID
+				(Persistent Identity) can be specified within the properties file with
+					<emphasis>service.pid</emphasis> property. If service.pid property is not
+				defined, deployer will base PID on the name of the properties file less any
+				extension. Factory Configuration is supported by specifying
+					<emphasis>service.factoryPid</emphasis> property. In this case actual PID will
+				be created by <emphasis>Configuration Admin</emphasis> (see section 104.6 in the
+				Compendium Specification).</para>
+			<para>How to consume configuration data is discussed <link
+					linkend="developing-applications-configuration-artifacts">later</link>. </para>
 		</section>
 	</section>
-
-<!-- ======================================================================= -->
-<!-- ======================================================================= -->
-
+	<!-- ======================================================================= -->
+	<!-- ======================================================================= -->
 	<section id="architecture-dependency-types">
 		<title>Dependency Types</title>
-		<para>
-			In an OSGi environment, there are two kinds of dependencies between various bundles: <emphasis>type</emphasis>
-			dependency and <emphasis>service</emphasis> dependency.
-			<itemizedlist>
+		<para> In an OSGi environment, there are two kinds of dependencies between various bundles:
+				<emphasis>type</emphasis> dependency and <emphasis>service</emphasis> dependency. <itemizedlist>
 				<listitem>
 					<para>
-						<emphasis role="bold">Type dependency</emphasis>: A bundle may depend on a type exported by another
-						bundle thus creating a type dependency. Type dependencies are managed through <literal>Import-Package</literal>
-						and <literal>Export-Package</literal> directives in the OSGi manifest. This kind of dependency is similar
-						to a JAR file using types in other JAR files from the classpath. However, as we&rsquo;ve seen earlier, there are
-						significant differences.
-					</para>
+						<emphasis role="bold">Type dependency</emphasis>: A bundle may depend on a
+						type exported by another bundle thus creating a type dependency. Type
+						dependencies are managed through <literal>Import-Package</literal> and
+							<literal>Export-Package</literal> directives in the OSGi manifest. This
+						kind of dependency is similar to a JAR file using types in other JAR files
+						from the classpath. However, as we&rsquo;ve seen earlier, there are
+						significant differences. </para>
 				</listitem>
 				<listitem>
 					<para>
-						<emphasis role="bold">Service dependency</emphasis>: A bundle may also publish services (preferably using
-						Spring-DM), and other bundles may consume those services. If two bundles depend on the same service, both
-						will be communicating effectively to the same object. More specifically, any state for that service will
-						be shared between all the clients of that service. This kind of arrangement is similar to the commonly
-						seen client-server interaction through mechanisms such as RMI or Web Services.
-					</para>
+						<emphasis role="bold">Service dependency</emphasis>: A bundle may also
+						publish services (preferably using Spring-DM), and other bundles may consume
+						those services. If two bundles depend on the same service, both will be
+						communicating effectively to the same object. More specifically, any state
+						for that service will be shared between all the clients of that service.
+						This kind of arrangement is similar to the commonly seen client-server
+						interaction through mechanisms such as RMI or Web Services. </para>
 				</listitem>
-			</itemizedlist>
-		</para>
+			</itemizedlist></para>
 	</section>
-
-<!-- ======================================================================= -->
-<!-- ======================================================================= -->
-
+	<!-- ======================================================================= -->
+	<!-- ======================================================================= -->
 	<section id="architecture-forming-bundles">
 		<title>A guide to forming bundles</title>
-		<para>
-			So what makes a good application suitable for deployment on the @product.name@? Since OSGi is at the heart of the
-			@short.product.name@, modular applications consisting of bundles, which each represent distinct functionality and
-			well-defined boundaries, can take maximum advantage of the OSGi container&rsquo;s capabilities. The core ideas behind forming
-			bundles require following good software engineering practices: separation of concerns, minimum coupling, and communication
-			through clear interfaces. In this section, we look at a few approaches that you may use to create modular applications
-			for @product.name@ deployment. Please consider the following discussion as guidelines and not as rules. 
-		</para>
-		<para> Bundles can be formed along horizontal slices of layering and vertical slices of function. The objective is to
-			enable independent development of each bundle and minimize the skills required to develop each bundle.</para>
-		<para>
-			For example, an application could have the following bundles: <emphasis>infrastructure</emphasis>,
-			<emphasis>domain</emphasis>, <emphasis>repository</emphasis>, <emphasis>service</emphasis>, and
+		<para> So what makes a good application suitable for deployment on the @product.name@? Since
+			OSGi is at the heart of the @short.product.name@, modular applications consisting of
+			bundles, which each represent distinct functionality and well-defined boundaries, can
+			take maximum advantage of the OSGi container&rsquo;s capabilities. The core ideas behind
+			forming bundles require following good software engineering practices: separation of
+			concerns, minimum coupling, and communication through clear interfaces. In this section,
+			we look at a few approaches that you may use to create modular applications for
+			@product.name@ deployment. Please consider the following discussion as guidelines and
+			not as rules. </para>
+		<para> Bundles can be formed along horizontal slices of layering and vertical slices of
+			function. The objective is to enable independent development of each bundle and minimize
+			the skills required to develop each bundle.</para>
+		<para> For example, an application could have the following bundles:
+				<emphasis>infrastructure</emphasis>, <emphasis>domain</emphasis>,
+				<emphasis>repository</emphasis>, <emphasis>service</emphasis>, and
 			<emphasis>web</emphasis> as shown in the following diagram.</para>
-		<para>
-			<mediaobject><imageobject><imagedata fileref="images/bundle-dependencies-layers.png" /></imageobject></mediaobject>
-				
-			Each bundle consists of types appropriate for that layer and exports packages and services to be used by other
-			layers. Let&rsquo;s examine each bundle in more detail:
-			<table id="architecture-forming-bundles-across-layers-table" colsep="1" frame="all" rowsep="1">
+		<para><mediaobject>
+				<imageobject><imagedata fileref="images/bundle-dependencies-layers.png"
+				/></imageobject>
+			</mediaobject> Each bundle consists of types appropriate for that layer and exports
+			packages and services to be used by other layers. Let&rsquo;s examine each bundle in
+			more detail: <table id="architecture-forming-bundles-across-layers-table" colsep="1"
+				frame="all" rowsep="1">
 				<title>Bundles across layers</title>
 				<tgroup cols="5">
-					<colspec colwidth="1*" />
-					<colspec colwidth="2*" />
-					<colspec colwidth="1*" />
-					<colspec colwidth="1*" />
-					<colspec colwidth="1*" />
+					<colspec colwidth="1*"/>
+					<colspec colwidth="2*"/>
+					<colspec colwidth="1*"/>
+					<colspec colwidth="1*"/>
+					<colspec colwidth="1*"/>
 					<thead>
 						<row>
 							<entry>Bundles</entry>
@@ -423,7 +425,8 @@
 						</row>
 						<row>
 							<entry>Domain</entry>
-							<entry>Depends: for example, if JPA is used to annotate persistent types, then JPA packages.</entry>
+							<entry>Depends: for example, if JPA is used to annotate persistent
+								types, then JPA packages.</entry>
 							<entry>Public domain types</entry>
 							<entry>None</entry>
 							<entry>None</entry>
@@ -451,15 +454,15 @@
 						</row>
 					</tbody>
 				</tgroup>
-			</table>
-		</para>
-		<para>
-			Within each layer, you may create bundles for each subsystem representing a vertical slice of business functionality.
-			For example, as shown in the following figure, the service layer is divided into two bundles each representing
-			separate business functionalities.
-			<mediaobject><imageobject><imagedata fileref="images/bundle-dependencies-verticals.png" /></imageobject></mediaobject>
-		</para>
-		<para> You can similarly separate the repositories, domain classes, and web controllers based on the business role
-			they play.</para>
+			</table></para>
+		<para> Within each layer, you may create bundles for each subsystem representing a vertical
+			slice of business functionality. For example, as shown in the following figure, the
+			service layer is divided into two bundles each representing separate business
+			functionalities. <mediaobject>
+				<imageobject><imagedata fileref="images/bundle-dependencies-verticals.png"
+				/></imageobject>
+			</mediaobject></para>
+		<para> You can similarly separate the repositories, domain classes, and web controllers
+			based on the business role they play.</para>
 	</section>
 </chapter>
