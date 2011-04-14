@@ -747,7 +747,7 @@ chain=ext,usr]]></programlisting>
 			<entry> <para>Specifies the URI of the hosted repository to which a remote repository connects.  
 			The value of this property takes the following format:
 			</para>
-                      <para><literal>http://</literal><emphasis><literal>host</literal></emphasis><literal>:</literal><emphasis><literal>port</literal></emphasis><literal>/org.eclipse.virgo.server.repository/</literal><emphasis><literal>remote-repository-name</literal></emphasis></para>
+				<para><literal>http://</literal><emphasis><literal>host</literal></emphasis><literal>:</literal><emphasis><literal>port</literal></emphasis><literal>/org.eclipse.virgo.apps.repository/</literal><emphasis><literal>remote-repository-name</literal></emphasis></para>
                       <para>where:
 			<itemizedlist>
 				<listitem>
@@ -910,7 +910,7 @@ chain=ext,usr,maven-repo]]></programlisting>
 		</para>
 		<para>The remote repository is called <literal>remote-repo</literal>.  
 		The URI of the hosted repository from which <literal>remote-repo</literal> gets its artifacts is 
-		<literal>http://my-host:8080/org.eclipse.virgo.server.repository/my-hosted-repo</literal>; 
+		<literal>http://my-host:8080/org.eclipse.virgo.apps.repository/my-hosted-repo</literal>;
 		this means that there is a @short.product.name@ instance running on host <literal>my-host</literal> 
 		whose Tomcat server listens at the default port, <literal>8080</literal>, 
 		and this server instance hosts a repository called <literal>my-hosted-repo</literal>, 
@@ -929,7 +929,7 @@ usr.type=watched
 usr.watchDirectory=repository/usr
 
 remote-repo.type=remote
-remote-repo.uri=http://my-host:8080/org.eclipse.virgo.server.repository/my-hosted-repo
+remote-repo.uri=http://my-host:8080/org.eclipse.virgo.apps.repository/my-hosted-repo
 remote-repo.indexRefreshInterval=30
 
 watched-repo.type=watched
