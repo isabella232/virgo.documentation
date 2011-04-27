@@ -56,4 +56,16 @@
 			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=328683">bug 328683</ulink>.
 		</para>
 	</section>
+	<section id="windows-deletion">
+		<title>Problem Deleting Installation Directory under Windows</title>
+		<para>
+			Sometimes Microsoft Windows won't let you delete the Web Server installation directory, typically because of long paths
+			inside the <literal>work</literal> directory.
+	 	</para>
+		<para>
+			You can return the Web Server server to a clean state by running the startup script with the options
+			<literal>-clean -noStart</literal>, after which you should be able to delete the installation directory.
+			See <link linkend="cleaning-without-starting">Cleaning  @product.name@ without Starting it</link> for more information.
+		</para>
+	</section>
 </appendix>

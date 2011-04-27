@@ -370,6 +370,39 @@ prompt> bin\shutdown.bat -immediate</screen>
 prompt> bin\shutdown.bat -jmxport 9090</screen>
 	    </section>
 	  </section>
+		  <section id="cleaning-without-starting">
+		    <title>Cleaning  @product.name@ without Starting it</title>
+		    <para>
+				When you clean @product.name@, the startup script removes the <literal>SERVER_HOME/work</literal> directory (and hence all
+				running applications) as well as all trace, log and dump files.  It leaves the
+				<literal>SERVER_HOME/repository</literal> and <literal>SERVER_HOME/pickup</literal> directories untouched,
+				which means that any applications previously hot deployed will be automatically reinstalled next time the Web Server is started.
+		    </para>
+		    <para>
+				Cleaning is useful when you want to start the Web Server from a clean state next time, but you don't want to start the Web Server yet.
+			</para>
+			<para>
+				Cleaning is also useful for tidying up the directory structure. For example, sometimes Microsoft Windows won't let you delete the Web
+				Server installation directory.
+				See <link linkend="windows-deletion">Problem Deleting Installation Directory under Windows</link> for more details.
+			</para>
+		    <section>
+		      <title>Linux</title>
+		      <para>
+		        To clean @product.name@, open a terminal window and run <literal>startup.sh -clean -noStart</literal>:
+		      </para>
+		      <screen>prompt$ cd $SERVER_HOME
+prompt$ bin/startup.sh -clean -noStart</screen>
+		    </section>
+		    <section>
+		      <title>Microsoft Windows</title>
+		      <para>
+		        To clean @product.name@, open a command window and run <literal>startup.bat -clean -noStart</literal>:
+		      </para>
+		      <screen>prompt> cd %SERVER_HOME%
+prompt> bin\startup.bat -clean -noStart</screen>
+		    </section>
+		  </section>
 	
 </chapter>
 
