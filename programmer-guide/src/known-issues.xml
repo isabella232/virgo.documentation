@@ -138,7 +138,7 @@
 		<para>
 			To avoid this, install EclipseLink's <literal>javax.persistence</literal> bundle early. To install this bundle before
 			any applications are deployed, list the bundle in the <literal>initialArtifacts</literal> property described in the
-			<ulink url="../../user-guide/html/index.html">User Guide</ulink>.
+			<ulink url="../../virgo-user-guide/html/index.html">User Guide</ulink>.
 		</para>
 		<para>
 			See <ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=337826">bug 337826</ulink> for details.
