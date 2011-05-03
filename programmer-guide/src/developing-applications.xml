@@ -899,17 +899,17 @@ Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";<emp
 			    Making a dependency available for provisioning is simply a matter of copying it to the appropriate location in the
 			    @short.product.name@&rsquo;s local provisioning repository. By default this is
 			    <literal>SERVER_HOME/repository/usr</literal>. A more detailed discussion of the provisioning
-			    repository can be found in the <ulink url="../../user-guide/html/index.html">User Guide</ulink>.
+			    repository can be found in the <ulink url="../../virgo-user-guide/html/index.html">User Guide</ulink>.
 			</para>
 	    </section>
 	</section>
 	<section id="developing-applications-application-trace">
 		<title>Application trace</title>
 	    <para>
-		    As described in the <ulink url="../../user-guide/html/index.html">User Guide</ulink> @product.name@ provides support for
+		    As described in the <ulink url="../../virgo-user-guide/html/index.html">User Guide</ulink> @product.name@ provides support for
 		    per-application trace. @product.name@ provides SLF4J with Logback logging for Event Logging and Tracing. 
 		    Application trace is configured in the <literal>serviceability.xml</literal> file.
-		    See the <ulink url="../../user-guide/html/index.html">User Guide</ulink> for more details.
+		    See the <ulink url="../../virgo-user-guide/html/index.html">User Guide</ulink> for more details.
 		</para> 
     </section> 
        <section id="developing-applications-versioning">

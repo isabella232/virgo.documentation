@@ -18,7 +18,7 @@
 				Libraries are another example.  Some third-party dependencies consist of multiple bundles but are logically one unit.  To support this, the @product.name@ introduces the concept of a library.  A library is a collection of related bundles that can be referenced as a whole.  You typically express the dependencies between your application and third-party libraries using the <literal>Import-Package</literal>, <literal>Import-Bundle</literal>, or <literal>Import-Library</literal> manifest header in the <literal>MANIFEST.MF</literal> file of your application.  The <literal>Import-Package</literal> header is standard to OSGi; <literal>Import-Bundle</literal> and <literal>Import-Library</literal>, however, are specific to @product.name@.  
 			</para>
 			<para>
-				For additional details about the creation and usage of libraries, as well as general information about dependencies, see <ulink url="../../programmer-guide/html/index.html">Programmer&rsquo;s Guide</ulink>. 
+				For additional details about the creation and usage of libraries, as well as general information about dependencies, see <ulink url="../../virgo-programmer-guide/html/index.html">Programmer&rsquo;s Guide</ulink>. 
 			</para>
 			<para>
 				In @product.name@, you store all third-party dependencies required by your applications, such as Spring Framework and Hibernate, as artifacts in the provisioning repository.   As mentioned above, you can store the following types of artifacts in the repository:
