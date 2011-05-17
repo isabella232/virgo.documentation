@@ -14,6 +14,7 @@
 	  <listitem><para><link linkend="configuring-provisioning-repository">Configuring the local provisioning repository.</link></para></listitem>
 	  <listitem><para><link linkend="configuring-hosted-repo">Configuring the hosted repository.</link></para></listitem>
 	  <listitem><para><link linkend="configuring-osgi-framework">Configuring the OSGi framework.</link></para></listitem>
+	  <listitem><para><link linkend="configuring-framework-extensions">Configuring framework extensions and fragments on the system bundle.</link></para></listitem>
 	</itemizedlist> 
 	
     <section id="configuring-kernel" >
@@ -1267,6 +1268,54 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 				</tgroup>
 		  	</table>
 		</section>
+	</section>
+	
+	<section id="configuring-framework-extensions" >
+	<title>Configuring framework extensions and fragments on the system bundle</title>
+	
+		<para>
+			This section provides information about configuring framework extensions and fragments on the system bundle. Deployment of such bundles is not allowed in @short.product.name@. This is because by refreshing or uninstalling them the system.bundle is also refreshed, leading to server crash.
+		</para>
+		<para>
+			<emphasis role="bold">NOTE:</emphasis> This only applies for fragments on the system bundle. All other fragment bundles have no deployment restrictions.
+		</para>
+		<para>
+			Generally its best to avoid usage of such fragment bundles as they are a common OSGi framework issue and often require restarting the framework.
+			However sometimes there are no other options and one has to use framework extensions or fragments on system bundle.
+		</para>
+		<para>
+			Here's how to configure that in several steps without bringing instability to your @short.product.name@:
+		</para>
+		<para>
+			<emphasis role="bold">1.</emphasis> Place your fragment bundle in the <literal>/lib/kernel</literal> directory of your @short.product.name@ installation.
+			<para>
+				Lets say we have bundle with
+			</para>
+			<programlisting>
+symbolic name: <emphasis>testFragment</emphasis>, version: <emphasis>1.0.0</emphasis> and filename: <emphasis>testFragmentBinary_1.0.0.jar</emphasis>
+			</programlisting>
+		</para>
+		<para>
+			<emphasis role="bold">2.</emphasis> Configure the <literal>org.eclipse.virgo.kernel.launch.properties</literal> file in <literal>/lib</literal> to include the just copied fragment or framework extension bundle.
+			<para>
+				Add a line at the end of the <literal>launcher.bundles</literal> property similar to this one:		
+			</para>
+			<programlisting>
+<emphasis>file:lib/kernel/testFragmentBinary_1.0.0.jar@start</emphasis>
+			</programlisting>
+			<tip>
+				Don't forget to add <literal>,\</literal> at the end of the previous last bundle in the <literal>launcher.bundles</literal> list.
+			</tip>
+		</para>
+		<para>
+			<emphasis role="bold">3.</emphasis> Configure the <literal>org.eclipse.virgo.kernel.userregion.properties</literal> file in <literal>/config</literal> folder to import the fragment bundle or framework extension in the user region.
+			<para>
+				Add to the <literal>bundleImports</literal> property a new line describing the fragment bundle using its symbolic name and version.
+			</para>
+			<programlisting>
+bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFragment;bundle-version="0"</emphasis>
+			</programlisting>
+		</para>
 	</section>
 	
 </chapter>

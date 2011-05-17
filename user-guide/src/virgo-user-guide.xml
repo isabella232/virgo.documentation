@@ -62,6 +62,10 @@
 				<firstname>Hristo</firstname>
 				<surname>Iliev</surname>
 			</author>
+			<author>
+				<firstname>Borislav</firstname>
+				<surname>Kapukaranov</surname>
+			</author>
 		</authorgroup>
 
 		<legalnotice>
@@ -84,6 +88,11 @@
 					<listitem>
 					<para>
 						Hristo Iliev, SAP AG - Setting jmx.properties permissions
+					</para>
+					</listitem>
+					<listitem>
+					<para>
+						Borislav Kapukaranov, SAP AG - Configuring framework extensions and fragments on system bundle
 					</para>
 					</listitem>
 				</itemizedlist>
