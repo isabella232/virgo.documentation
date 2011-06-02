@@ -706,7 +706,7 @@ password          = secret</screen>
 				<literal>javax.servlet.http;version="2.5"</literal>
 			</listitem>
 			<listitem>
-				<literal>javax.servlet.jsp";version="2.1"</literal>
+				<literal>javax.servlet.jsp;version="2.1"</literal>
 			</listitem>
 			<listitem>	
 				<literal>javax.servlet.jsp.el;version="2.1"</literal>
@@ -715,7 +715,7 @@ password          = secret</screen>
 				<literal>javax.servlet.jsp.tagext;version="2.1"</literal>
 			</listitem>	
 			<listitem>	
-				<literal>javax.el";version="1.0"</literal>
+				<literal>javax.el;version="1.0"</literal>
 			</listitem>	
 		</itemizedlist>
 
