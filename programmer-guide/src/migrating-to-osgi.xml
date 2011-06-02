@@ -49,7 +49,7 @@
 			<para>
 				If you are not yet familiar with OSGi or simply want to deploy an existing web application on the @product.name@,
 				you can deploy a standard WAR and leverage the @short.product.name@ with a minimal learning curve. In fact reading the 
-				<ulink url="../../user-guide/html/index.html">@product.name@ User Guide</ulink>
+				<ulink url="../../virgo-user-guide/html/index.html">@product.name@ User Guide</ulink>
 				is pretty much all that you need to do to get started. Furthermore, you will gain
 				familiarity with the @product.name@, while preparing to take advantage of the other formats. 
 			</para>

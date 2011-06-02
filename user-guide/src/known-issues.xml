@@ -46,16 +46,6 @@
 			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=307737">bug 307737</ulink> which also describes a workaround.
 		</para>
 	</section>
-	<section id="web-application-context-configuration">
-		<title>Web Application Context Configuration File Copying</title>
-		<para>If a web application, packaged as an archive rather than a directory, includes context configuration in <literal>META-INF/context.xml</literal>,
-		Virgo copies this file to <literal>$SERVER_HOME/config/[enginename]/[hostname]/[contextpath].xml</literal>.
-		If the application is redeployed, the copy of the context configuration overrides any updated context configuration included in 
-		<literal>META-INF/context.xml</literal>. To use the updated context configuration, the user must delete the copy of the file before redeploying.
-		This is covered by
-			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=328683">bug 328683</ulink>.
-		</para>
-	</section>
 	<section id="windows-deletion">
 		<title>Problem Deleting Installation Directory under Windows</title>
 		<para>

@@ -14,6 +14,7 @@
 	  <listitem><para><link linkend="configuring-provisioning-repository">Configuring the local provisioning repository.</link></para></listitem>
 	  <listitem><para><link linkend="configuring-hosted-repo">Configuring the hosted repository.</link></para></listitem>
 	  <listitem><para><link linkend="configuring-osgi-framework">Configuring the OSGi framework.</link></para></listitem>
+	  <listitem><para><link linkend="configuring-framework-extensions">Configuring framework extensions and fragments on the system bundle.</link></para></listitem>
 	</itemizedlist> 
 	
     <section id="configuring-kernel" >
@@ -503,7 +504,6 @@ role.admin=juliet</programlisting>
 
 	<Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
 	<Listener className="org.apache.catalina.core.JasperListener" />
-	<Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
 	<Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
 
 	<Listener className="org.eclipse.virgo.web.tomcat.ServerLifecycleLoggingListener"/>
@@ -527,8 +527,8 @@ role.admin=juliet</programlisting>
 					roleClassNames="org.eclipse.virgo.kernel.authentication.Role"/>
 
 			<Host name="localhost"  appBase="webapps"
-					unpackWARs="true" autoDeploy="true"
-					xmlValidation="false" xmlNamespaceAware="false">
+					unpackWARs="false" autoDeploy="false"
+					deployOnStartup="false" createDirs="false">
 
 				<Valve className="org.apache.catalina.valves.AccessLogValve" directory="serviceability/logs/access"
 					prefix="localhost_access_log." suffix=".txt" pattern="common" resolveHosts="false"/>
@@ -542,7 +542,7 @@ role.admin=juliet</programlisting>
 	<section id="overview-tomcat-servlet-container">
 	  <title>Description of the Default Apache Tomcat Configuration</title>
 		<para>
-		  The following bullets describe the main elements and attributes in the default <literal>tomcat-server.xml</literal> file; for details about updating this file to further configure the embedded Apache Tomcat server, see the <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/config/index.html">Apache Tomcat Configuration Reference</ulink>.
+		  The following bullets describe the main elements and attributes in the default <literal>tomcat-server.xml</literal> file; for details about updating this file to further configure the embedded Apache Tomcat server, see the <ulink url="http://tomcat.apache.org/tomcat-7.0-doc/config/index.html">Apache Tomcat Configuration Reference</ulink>.
 		</para>
 
 		<tip>
@@ -590,17 +590,13 @@ role.admin=juliet</programlisting>
 
 		<listitem> <para>The <literal>&lt;Realm&gt;</literal> child element of <literal>&lt;Engine&gt;</literal> represents a database of 
 		users, passwords, and mapped roles used for authentication in this service.  Virgo Web Server uses an implementation of the Tomcat 6 Realm interface that authenticates users through the Java Authentication and Authorization Service (JAAS) framework which is provided as part of the standard J2SE API.</para>
-		   <para>With the JAASRealm, you can combine practically any conceivable security realm with Tomcat's container managed authentication.  For details, see <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/realm-howto.html">Realm Configuration</ulink>.</para>
+		   <para>With the JAASRealm, you can combine practically any conceivable security realm with Tomcat's container managed authentication.  For details, see <ulink url="http://tomcat.apache.org/tomcat-7.0-doc/realm-howto.html">Realm Configuration</ulink>.</para>
 
 		</listitem>
 		<listitem><para>The <literal>&lt;Host&gt;</literal> child element represents a virtual host, 
 		which is an association of a network name for a server (such as <literal>www.mycompany.com</literal>) with the particular 
 		server on which Catalina is running.  
 		The servlet container unpacks Web applications into a directory hierarchy if they are deployed as WAR files. 
-		The <literal>xmlValidation</literal> attribute specifies that the servlet container does not validate XML files when parsing them, 
-		or in other words, it accepts invalid XML. 
-		The <literal>xmlNamespaceAware</literal> attribute specifies that the servlet container does not take namespaces into account 
-		when reading XML files. 
 		</para></listitem>
 
 		<listitem><para>Finally, the <literal>org.apache.catalina.valves.AccessLogValve</literal> valve creates log files 
@@ -618,7 +614,7 @@ role.admin=juliet</programlisting>
 			<para> The @product.name@ supports the configuration of any connector supported by Apache Tomcat. 
 			See the default configuration above for syntax examples, and for further details of the configuration properties 
 			supported for various <literal>&lt;Connector&gt;</literal> implementations, 
-			consult the official <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/config/http.html">Tomcat HTTP Connector</ulink> documentation.
+			consult the official <ulink url="http://tomcat.apache.org/tomcat-7.0-doc/config/http.html">Tomcat HTTP Connector</ulink> documentation.
 			</para>
 			<tip>
 				<title>Configuring SSL for Tomcat</title>
@@ -627,7 +623,7 @@ role.admin=juliet</programlisting>
 				The password for this <filename>keystore</filename> file is <literal>changeit</literal>.  
 				This <filename>keystore</filename> file is intended for testing purposes only. 
 				For detailed instructions on how to configure Tomcat&rsquo;s SSL support, 
-				consult the official <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/ssl-howto.html">Tomcat SSL Configuration HOW-TO</ulink>.
+				consult the official <ulink url="http://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html">Tomcat SSL Configuration HOW-TO</ulink>.
 				</para>
 			</tip>
 		</section>
@@ -638,7 +634,7 @@ role.admin=juliet</programlisting>
 				@product.name@ supports standard Apache Tomcat cluster configuration.
 				By default, clustering of the embedded servlet container is disabled, 
 				and the default configuration does not include any clustering information.  
-				See  <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/cluster-howto.html">Tomcat Clustering/Session Replication HOW-TO</ulink> 
+				See  <ulink url="http://tomcat.apache.org/tomcat-7.0-doc/cluster-howto.html">Tomcat Clustering/Session Replication HOW-TO</ulink> 
 				for detailed information about enabling and configuring clustering.
 			</para>
 		</section>
@@ -647,8 +643,8 @@ role.admin=juliet</programlisting>
 				<title>Context Configuration</title>
 				<para>
 					@product.name@ supports standard Apache Tomcat web application context configuration.
-					The <ulink url="http://tomcat.apache.org/tomcat-6.0-doc/config/index.html">Apache Tomcat Configuration Reference</ulink> has a section on
-					<ulink url="http://tomcat.apache.org/tomcat-6.0-doc/config/context.html">The Context Container</ulink> which describes the mechanism that
+					The <ulink url="http://tomcat.apache.org/tomcat-7.0-doc/config/index.html">Apache Tomcat Configuration Reference</ulink> has a section on
+					<ulink url="http://tomcat.apache.org/tomcat-7.0-doc/config/context.html">The Context Container</ulink> which describes the mechanism that
 					is used in @short.product.name@ for searching context configuration files and details the context configuration properties.
 				</para>
 				<para>
@@ -702,10 +698,6 @@ role.admin=juliet</programlisting>
 						</para>
 						</listitem>
 					</itemizedlist>
-				</para>
-				<para>
-					See <link linkend="web-application-context-configuration">Web Application Context Configuration File Copying</link> for a known issue related to
-					providing a context configuration file inside a web application archive.
 				</para>
 			</section>
 
@@ -1267,6 +1259,54 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 				</tgroup>
 		  	</table>
 		</section>
+	</section>
+	
+	<section id="configuring-framework-extensions" >
+	<title>Configuring framework extensions and fragments on the system bundle</title>
+	
+		<para>
+			This section provides information about configuring framework extensions and fragments on the system bundle. Deployment of such bundles is not allowed in @short.product.name@. This is because by refreshing or uninstalling them the system.bundle is also refreshed, leading to server crash.
+		</para>
+		<para>
+			<emphasis role="bold">NOTE:</emphasis> This only applies for fragments on the system bundle. All other fragment bundles have no deployment restrictions.
+		</para>
+		<para>
+			Generally its best to avoid usage of such fragment bundles as they are a common OSGi framework issue and often require restarting the framework.
+			However sometimes there are no other options and one has to use framework extensions or fragments on system bundle.
+		</para>
+		<para>
+			Here's how to configure that in several steps without bringing instability to your @short.product.name@:
+		</para>
+		<para>
+			<emphasis role="bold">1.</emphasis> Place your fragment bundle in the <literal>/lib/kernel</literal> directory of your @short.product.name@ installation.
+			<para>
+				Lets say we have bundle with
+			</para>
+			<programlisting>
+symbolic name: <emphasis>testFragment</emphasis>, version: <emphasis>1.0.0</emphasis> and filename: <emphasis>testFragmentBinary_1.0.0.jar</emphasis>
+			</programlisting>
+		</para>
+		<para>
+			<emphasis role="bold">2.</emphasis> Configure the <literal>org.eclipse.virgo.kernel.launch.properties</literal> file in <literal>/lib</literal> to include the just copied fragment or framework extension bundle.
+			<para>
+				Add a line at the end of the <literal>launcher.bundles</literal> property similar to this one:		
+			</para>
+			<programlisting>
+<emphasis>file:lib/kernel/testFragmentBinary_1.0.0.jar@start</emphasis>
+			</programlisting>
+			<tip>
+				Don't forget to add <literal>,\</literal> at the end of the previous last bundle in the <literal>launcher.bundles</literal> list.
+			</tip>
+		</para>
+		<para>
+			<emphasis role="bold">3.</emphasis> Configure the <literal>org.eclipse.virgo.kernel.userregion.properties</literal> file in <literal>/config</literal> folder to import the fragment bundle or framework extension in the user region.
+			<para>
+				Add to the <literal>bundleImports</literal> property a new line describing the fragment bundle using its symbolic name and version.
+			</para>
+			<programlisting>
+bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFragment;bundle-version="0"</emphasis>
+			</programlisting>
+		</para>
 	</section>
 	
 </chapter>
