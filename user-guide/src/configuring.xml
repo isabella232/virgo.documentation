@@ -489,6 +489,48 @@ role.admin=juliet</programlisting>
 
     </section>
 
+	<section id="configuring-web">
+		<title>Configuring the Web Integration Layer</title>
+		<para>
+			@product.name@ integrates an OSGi-enhanced version of the <ulink url="http://tomcat.apache.org/">Tomcat Servlet Container</ulink>
+			in order to provide support for deploying Java EE WARs and OSGi <emphasis>Web Application Bundles</emphasis>.
+			You configure the behaviour of the Web Integration Layer using the properties file called <literal>org.eclipse.virgo.web.properties</literal>.
+			As with the other @short.product.name@ configuration files, the <literal>org.eclipse.virgo.web.properties</literal> file is located in the <literal>$SERVER_HOME/config</literal> directory. 
+		</para>
+		<para>The following table describes the properties.  </para>
+        <table id="configuring-web-integration-layer" colsep="1" frame="all" rowsep="1">
+                  <title>Web Integration Layer Properties</title>
+              <tgroup cols="2">
+                <thead>
+                	<row>
+                    	<entry>Property</entry>
+                    	<entry>Description</entry>
+                	</row>
+                </thead>
+                <tbody>
+                	<row>
+                    	<entry><literal>WABHeaders</literal></entry>
+                    	<entry>
+							<para>
+								Specifies how Web Application Bundle manifest headers are processed.
+							</para>
+							<para>
+								A value of <literal>defaulted</literal> causes @short.product.name@ to set certain headers to default values if they are not specified.
+								This was how @short.product.name@ behaved prior to version 3.
+							</para>
+							<para>
+								A value of <literal>strict</literal> causes @short.product.name@ to interpret certain headers in strict compliance with the OSGi Web Applications specification if they are not specified.
+							</para>
+							<para>
+								The default value is <literal>defaulted</literal>.
+							</para>
+						</entry>
+                	</row>
+                </tbody>
+             </tgroup>
+		</table>
+	</section>
+
 	<section id="configuring-tomcat">
 		<title>Configuring the Embedded Tomcat Servlet Container</title>
 		<para>
