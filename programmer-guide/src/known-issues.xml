@@ -50,33 +50,18 @@
 		<para>
 			The Gemini Web container conforms to the OSGi Web Applications specification and does not apply default values
 			to the headers of a Web Application Bundle. However, SpringSource dm Server 2.0.x applies default values
-			to certain headers (see below) and so Virgo modifies the behaviour of Gemini Web so that it applies default
+			to certain headers (see <link linkend="developing-applications-automatic-imports-web">Web Application Manifest
+			Processing</link> for details) and so Virgo Web Server 2.1.x modified the behaviour of Gemini Web so that it applied default
 			values consistently with dm Server 2.0.x.
 		</para>
 		<para>
-			This restriction is intended to ease migration to Virgo 2.1.0 and may be removed in a later release.
+			This behaviour is changed as of @product.name@ 3.0. @short.product.name@ now conforms strictly to the
+			OSGi Web Applications specification.
 		</para>
 		<para>
-			The following defaults are applied to a Web Application Bundle:
-			<itemizedlist>
-				<listitem>
-					<literal>Bundle-ManifestVersion</literal> is set to <literal>2</literal>
-				</listitem>
-				<listitem>
-					<literal>Bundle-SymbolicName</literal> is generated from the path from which the bundle was installed
-				</listitem>
-				<listitem>
-					<literal>Bundle-ClassPath</literal> is set to <literal>WEB-INF/classes</literal> followed by the JARs in
-					<literal>WEB-INF/lib</literal> in an unspecified order, followed by any transitive dependencies declared
-					by the JARs in <literal>WEB-INF/lib</literal>
-				</listitem>
-				<listitem>
-					<literal>Import-Package</literal> is extended to import a fixed set of <classname>javax.servlet.*</classname>
-					packages, <classname>javax.el</classname>, and packages which are exported by the system bundle but not
-					provided by the bundle (see <link linkend="developing-applications-automatic-imports-web">Automatic Imports
-					for the Web Personality</link> for details)
-				</listitem>
-			</itemizedlist>
+			As a migration aid, <emphasis>which may not be supported in a future release</emphasis>, users may configure the @short.product.name@ Web Integration
+			Layer to apply default values to the headers of a Web Application Bundle.
+			See "Configuring the Web Integration Layer" in the <ulink url="../../virgo-user-guide/html/index.html">User Guide</ulink> for details.
 		</para>
 	</section>
 	<section id="hibernate-resolution-issue">

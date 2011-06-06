@@ -687,17 +687,55 @@ password          = secret</screen>
 
 
 	<section id="developing-applications-automatic-imports-web">
-		<title>Automatic Imports for the Web subsystem</title>
+		<title>Web Application Manifest Processing</title>
 		<para>
-			The @product.name@ generates automatic package imports (i.e., via the
-			<literal>Import-Package</literal> manifest header) for the web subsystem&rsquo;s 
-			artifacts. This section lists which packages are automatically generated.
+			@product.name@ generates automatic package imports (i.e., via the
+			<literal>Import-Package</literal> manifest header) for certain web applications.
+			This section lists which packages are automatically generated.
 		</para>
 		<para>
-			All WARs, as required by the OSGi Web Applications specification, and Web application bundles (see <link linkend="known-issues-web-bundle-default-headers">Default Web 
-			Application Bundle Headers</link>) will automatically import the following packages:
+			@short.product.name@ supports Web Application Bundles (WABs) as defined by the OSGi Web Applications Specification and WAR files.
+			A WAR will typically not contain any OSGi defined manifest headers.
+			A WAB is distinguished from a WAR by the presence of one or more of the following OSGi defined headers:
+				<itemizedlist>
+					<listitem>
+						<literal>Bundle-SymbolicName</literal>
+					</listitem>
+					<listitem>
+						<literal>Bundle-Version</literal>
+					</listitem>
+					<listitem>	
+						<literal>Bundle-ManifestVersion</literal>
+					</listitem>
+					<listitem>	
+						<literal>Import-Package</literal>
+					</listitem>
+					<listitem>
+						<literal>Web-ContextPath</literal>
+					</listitem>
+				</itemizedlist>
 		</para>
-		
+		<para>
+			As required by the OSGi Web Applications specification, the following defaults are applied to a WAR:
+			<itemizedlist>
+				<listitem>
+					<literal>Bundle-ManifestVersion</literal> is set to <literal>2</literal>
+				</listitem>
+				<listitem>
+					<literal>Bundle-SymbolicName</literal> is generated from the path from which the bundle was installed
+				</listitem>
+				<listitem>
+					<literal>Bundle-ClassPath</literal> is set to <literal>WEB-INF/classes</literal> followed by the JARs in
+					<literal>WEB-INF/lib</literal> in an unspecified order, followed by any transitive dependencies declared
+					by the JARs in <literal>WEB-INF/lib</literal>
+				</listitem>
+				<listitem>
+					<literal>Import-Package</literal> is extended in an implementation defined way, as described below
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>
+			The following packages are automatically imported into WARs:		
 		<itemizedlist>
 			<listitem>
 				<literal>javax.servlet;version="2.5"</literal>
@@ -718,12 +756,13 @@ password          = secret</screen>
 				<literal>javax.el;version="1.0"</literal>
 			</listitem>	
 		</itemizedlist>
+		</para>
 
 		<para>
 			In addition to the above-described imports, @short.product.name@ will also
 			generate automatic imports for all of the packages that are exported by the system
-			bundle, unless an import for the package already exists in the artifact&rsquo;s manifest,
-			or the artifact contains the package, i.e. within <literal>WEB-INF/classes</literal>,
+			bundle, unless an import for the package already exists in the WAR&rsquo;s manifest,
+			or the WAR contains the package, i.e. within <literal>WEB-INF/classes</literal>,
 			or in a jar file in <literal>WEB-INF/lib</literal>. When an import is generated, it
 			is versioned such that it exactly matches the version or versions of the package that
 			are exported from the system bundle. For example, a package that&rsquo;s exported only at
@@ -731,6 +770,14 @@ password          = secret</screen>
 			<literal>[1.0.0,1.0.0]</literal>, and a package that&rsquo;s exported at version
 			<literal>1.0.0</literal> and version <literal>2.0.0</literal> will generate an import 
 			with a version of <literal>[1.0.0,2.0.0]</literal>.
+		</para>
+		
+		<para>
+			Web Application Bundles are not subject to the above manifest processing.
+			This is a change of behaviour compared to Virgo Web Server 2.1.x.
+			See (see <link linkend="known-issues-web-bundle-default-headers">Default Web 
+			Application Bundle Headers</link>) if you need the old behaviour until you
+			have changed your WABs to match the new behaviour.
 		</para>
 		
 		<tip>

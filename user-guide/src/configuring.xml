@@ -513,16 +513,21 @@ role.admin=juliet</programlisting>
                     	<entry>
 							<para>
 								Specifies how Web Application Bundle manifest headers are processed.
+								See "Web Application Manifest Processing" in the
+								<ulink url="../../virgo-programmer-guide/html/index.html">Programmer Guide</ulink> for details.
+							</para>
+							<para>
+								A value of <literal>strict</literal> causes @short.product.name@ to interpret certain headers in strict compliance with
+								the OSGi Web Applications specification if they are not specified.
 							</para>
 							<para>
 								A value of <literal>defaulted</literal> causes @short.product.name@ to set certain headers to default values if they are not specified.
 								This was how @short.product.name@ behaved prior to version 3.
+								<emphasis>This value is provided as a migration aid and may not be supported in future releases.</emphasis>
+								A warning event log message (WE0006W) is generated if this value is specified.
 							</para>
 							<para>
-								A value of <literal>strict</literal> causes @short.product.name@ to interpret certain headers in strict compliance with the OSGi Web Applications specification if they are not specified.
-							</para>
-							<para>
-								The default value is <literal>defaulted</literal>.
+								The default value is <literal>strict</literal>.
 							</para>
 						</entry>
                 	</row>
