@@ -27,29 +27,66 @@
             <para>To change any of the kernel properties, provide the new value to the startup script. For example: <literal>$SERVER_HOME/bin/startup.sh -Forg.eclipse.virgo.kernel.startup.wait.limit=3600</literal>.  The following table describes all properties.</para>
             <table id="configuring-kernel-table" colsep="1" frame="all" rowsep="1">
                 <title>Kernel Configuration Properties</title>
-                <tgroup cols="2">
+                <tgroup cols="3">
                     <thead>
                         <row>
-                            <entry>Property (prefixed by <literal>org.eclipse.virgo</literal>)</entry>
-                            <entry>Description</entry>
+                            <entry>
+								Property (prefixed by <literal>org.eclipse.virgo</literal>)
+							</entry>
+                            <entry>
+								Description
+							</entry>
+							<entry>
+								Default Value
+							</entry>
                         </row>
                     </thead>
                     <tbody>
                         <row>
-                            <entry><literal>.kernel.home</literal></entry>
-                            <entry>Specifies the location of the @kernel.product.name@. The property defaults to <literal>$SERVER_HOME</literal>.</entry>
+                            <entry>
+								<literal>.kernel.home</literal>
+							</entry>
+                            <entry>
+								Specifies the location of the @kernel.product.name@.
+							</entry>
+							<entry>
+								<literal>$SERVER_HOME</literal>
+							</entry>
                         </row>
                         <row>
-                            <entry><literal>.kernel.config</literal></entry>
-                            <entry>Specifies the location of the @kernel.product.name@ and User Region <link linkend="configuring-kernel-files">configuration files</link>. The default value is <literal>$SERVER_HOME/config</literal>. The location of the configuration files can also be specified using <link linkend="starting-stopping-configuration-directory"><literal>-configDir</literal> startup parameter</link>.</entry>
+                            <entry>
+								<literal>.kernel.config</literal>
+							</entry>
+                            <entry>
+								Specifies the location of the @kernel.product.name@ and User Region <link linkend="configuring-kernel-files">configuration files</link>. 		
+								The location of the configuration files can also be specified using
+								<link linkend="starting-stopping-configuration-directory"><literal>-configDir</literal> startup parameter</link>.
+							</entry>
+							<entry>
+								<literal>$SERVER_HOME/config</literal>
+							</entry>
                         </row>
                         <row>
-                            <entry><literal>.kernel.domain</literal></entry>
-                            <entry>Specifies the <ulink url="http://download.oracle.com/javase/6/docs/api/javax/management/ObjectName.html">JMX domain</ulink> that should be used by the @kernel.product.name@. The default value is <literal>org.eclipse.virgo.kernel</literal>.</entry>
+                            <entry>
+								<literal>.kernel.domain</literal>
+							</entry>
+                            <entry>
+								Specifies the <ulink url="http://download.oracle.com/javase/6/docs/api/javax/management/ObjectName.html">JMX domain</ulink> that should be
+								used by the @kernel.product.name@.
+							</entry>
+							<entry>
+								<literal>org.eclipse.virgo.kernel</literal>
+							</entry>
                         </row>
                         <row>
-                            <entry><literal>.kernel.startup.wait.limit</literal></entry>
-                            <entry>Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to start the kernel. The default value is <literal>180</literal> seconds.</entry>
+                            <entry>
+								<literal>.kernel.startup.wait.limit</literal>
+							</entry>
+                            <entry>
+								Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to start the kernel.
+							</entry>
+							<entry><literal>180</literal>
+							</entry>
                         </row>
                     </tbody>
                 </tgroup>
@@ -101,21 +138,44 @@
         <para>To change any of these properties, edit the <literal>deployer.XXX</literal> properties of the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.properties</literal> file.  The following table describes these properties.  </para>
         <table id="configuring-deployment-table" colsep="1" frame="all" rowsep="1">
                   <title>Deployment Configuration Properties</title>
-              <tgroup cols="2">
+              <tgroup cols="3">
                 <thead>
                 <row>
-                    <entry>Property</entry>
-                    <entry>Description</entry>
+                    <entry>
+						Property
+					</entry>
+                    <entry>
+						Description
+					</entry>
+					<entry>
+						Default Value
+					</entry>
                 </row>
                  </thead>
                  <tbody>
                 <row>
-                    <entry><literal>deployer.pickupDirectory</literal></entry>
-                    <entry>Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.  Relative paths are relative to <literal>$SERVER_HOME</literal>.  The default value is <literal>./pickup</literal>.</entry>
+                    <entry>
+						<literal>deployer.pickupDirectory</literal>
+					</entry>
+                    <entry>
+						Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.
+						Relative paths are relative to <literal>$SERVER_HOME</literal>.
+					</entry>
+					<entry>
+						<literal>./pickup</literal>
+					</entry>
                 </row>
                 <row>
-                    <entry><literal>deployer.timeout</literal></entry>
-                    <entry>Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to deploy a bundle, library, or plan.  The default value is <literal>300</literal>.  If you want to disable deployment timeout, specify <literal>0</literal>.</entry>
+                    <entry>
+						<literal>deployer.timeout</literal>
+					</entry>
+                    <entry>
+						Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to deploy a bundle, library, or plan.
+						If you want to disable deployment timeout, specify <literal>0</literal>.
+					</entry>
+					<entry>
+						  <literal>300</literal>  
+					</entry>
                 </row>
                 </tbody>
              </tgroup>
@@ -124,9 +184,9 @@
                      <para>The following listing displays the default configuration distributed with the @short.product.name@; only relevant sections of the <literal>org.eclipse.virgo.kernel.properties</literal> file are shown. </para>
 
             <programlisting><![CDATA[deployer.timeout=300
-    deployer.pickupDirectory=pickup]]></programlisting>
+deployer.pickupDirectory=pickup]]></programlisting>
 
-            <para>As the default configuration shows, the default pickup directory is <literal>$SERVER_HOME/pickup</literal> and the deployment timeout is 300 seconds.
+            <para>So the default deployment timeout is 300 seconds and the default pickup directory is <literal>$SERVER_HOME/pickup</literal>.
             </para>
         </section>
 
@@ -500,16 +560,25 @@ role.admin=juliet</programlisting>
 		<para>The following table describes the properties.  </para>
         <table id="configuring-web-integration-layer" colsep="1" frame="all" rowsep="1">
                   <title>Web Integration Layer Properties</title>
-              <tgroup cols="2">
+              <tgroup cols="3">
                 <thead>
                 	<row>
-                    	<entry>Property</entry>
-                    	<entry>Description</entry>
+                    	<entry>
+							Property
+						</entry>
+                    	<entry>
+							Description
+						</entry>
+						<entry>
+							Default Value
+						</entry>
                 	</row>
                 </thead>
                 <tbody>
                 	<row>
-                    	<entry><literal>WABHeaders</literal></entry>
+                    	<entry>
+							<literal>WABHeaders</literal>
+						</entry>
                     	<entry>
 							<para>
 								Specifies how Web Application Bundle manifest headers are processed.
@@ -526,9 +595,9 @@ role.admin=juliet</programlisting>
 								<emphasis>This value is provided as a migration aid and may not be supported in future releases.</emphasis>
 								A warning event log message (WE0006W) is generated if this value is specified.
 							</para>
-							<para>
-								The default value is <literal>strict</literal>.
-							</para>
+						</entry>
+						<entry>
+							<literal>strict</literal>
 						</entry>
                 	</row>
                 </tbody>
@@ -796,115 +865,169 @@ chain=ext,usr]]></programlisting>
 		<literal>$SERVER_HOME/config/org.eclipse.virgo.repository.properties</literal>.
 		<table id="repository-options-table" colsep="1" frame="all" rowsep="1">
 		<title>Repository Properties</title>
-		  <tgroup cols="2">
- 		    <thead>
+		  <tgroup cols="3">
+ 		  	<thead>
 		      <row>
-			<entry>Property</entry>
-			<entry>Description</entry>
+				<entry>
+					Property
+				</entry>
+				<entry>
+					Description
+				</entry>
+				<entry>
+					Default Value
+				</entry>
 		      </row>
 		    </thead>
 		    <tbody>
 		      <row>
-			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.type</literal></entry>
-			<entry> 
-                          <para>
-                            Specifies the type of path.  You can set this property to one of the following three valid values:
-			    <itemizedlist>
-				<listitem>
-				<para>
-				<literal>external</literal>: Specifies that this path points to a number of directories that satisfy a given search pattern 
-				and are local to the current @product.name@ instance. 
-				Use the <literal>searchPattern</literal> property to specify the directory search pattern.
-				</para>
-				</listitem>
-				<listitem>
-				<para>
-				<literal>watched</literal>: Specifies that this path points to a single directory, local to the current @product.name@ instance.  
-				@product.name@ regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
-				Use the <literal>watchDirectory</literal> property to specify the watched directory 
-				and the <literal>watchInterval</literal> property 
-				to specify how often @short.product.name@ checks the directory.
-				</para>
-				</listitem>
-				<listitem>
-				<para>
-				<literal>remote</literal>: Specifies that the path points to a remotely-hosted repository, 
-				hosted by a remote instance of @product.name@.  
-				Use the <literal>uri</literal> property to specify the full URI of the remote repository.  
-				You can also specify the optional <literal>indexRefreshInterval</literal> property. 
-				</para>
-				</listitem>
-			    </itemizedlist>
-                          </para> 
+				<entry>
+					<emphasis><literal>repository-name</literal></emphasis><literal>.type</literal>
+				</entry>
+				<entry> 
+                	<para>
+                    	Specifies the type of path.  You can set this property to one of the following three valid values:
+			    		<itemizedlist>
+							<listitem>
+								<para>
+									<literal>external</literal>: Specifies that this path points to a number of directories that satisfy a given search pattern 
+									and are local to the current @product.name@ instance. 
+									Use the <literal>searchPattern</literal> property to specify the directory search pattern.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<literal>watched</literal>: Specifies that this path points to a single directory, local to the current @product.name@ instance.  
+									@product.name@ regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
+									Use the <literal>watchDirectory</literal> property to specify the watched directory 
+									and the <literal>watchInterval</literal> property to specify how often @short.product.name@ checks the directory.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<literal>remote</literal>: Specifies that the path points to a remotely-hosted repository, 
+									hosted by a remote instance of @product.name@.  
+									Use the <literal>uri</literal> property to specify the full URI of the remote repository.  
+									You can also specify the optional <literal>indexRefreshInterval</literal> property. 
+								</para>
+							</listitem>
+			    		</itemizedlist>
+              		</para> 
 
-			  <para>See <link linkend="configuring-repository-watched-versus-external">Watched or External Repository?</link> 
-			  for additional information about when to configure watched or external repositories for your particular environment.
-			  </para>
-			</entry>
+			  		<para>
+						See <link linkend="configuring-repository-watched-versus-external">Watched or External Repository?</link> 
+			  			for additional information about when to configure watched or external repositories for your particular environment.
+			  		</para>
+				</entry>
+				<entry>
+					<emphasis>no default</emphasis>
+				</entry>
 		      </row>
 		      <row>
-			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.searchPattern</literal></entry>
-			<entry> <para>Specifies the pattern that an external repository uses when deciding which local directories it should search 
-			when identifying artifacts.  Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=external</literal>. 
-			See <link linkend="configuring-provisioning-repository-search-paths" >Search Paths: Additional Information</link> 
-			for detailed information about specifying a search pattern.  
-			</para> </entry>
+				<entry>
+					<emphasis><literal>repository-name</literal></emphasis><literal>.searchPattern</literal>
+				</entry>
+				<entry>
+					<para>
+						Specifies the pattern that an external repository uses when deciding which local directories it should search 
+						when identifying artifacts.  Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=external</literal>. 
+						See <link linkend="configuring-provisioning-repository-search-paths" >Search Paths: Additional Information</link> 
+						for detailed information about specifying a search pattern.  
+					</para>
+				</entry>
+				<entry>
+					<emphasis>no default</emphasis>
+				</entry>
 		      </row>
 		      <row>
-			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.watchDirectory</literal></entry>
-			<entry> <para>Specifies the single directory of a watched repository. 
-			You can specify either an absolute or relative pathname for the directory.  
-			If you specify a relative pathname, it is relative  to the root of the @short.product.name@ installation (<literal>$SERVER_HOME</literal>).  
-			Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=watched</literal>.
-			</para></entry>
+				<entry>
+					<emphasis><literal>repository-name</literal></emphasis><literal>.watchDirectory</literal>
+				</entry>
+				<entry>
+					<para>
+						Specifies the single directory of a watched repository. 
+						You can specify either an absolute or relative pathname for the directory.  
+						If you specify a relative pathname, it is relative  to the root of the @short.product.name@ installation (<literal>$SERVER_HOME</literal>).  
+						Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=watched</literal>.
+					</para>
+				</entry>
+				<entry>
+					<emphasis>no default</emphasis>
+				</entry>
 		      </row>
 		      <row>
-			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.watchInterval</literal></entry>
-			<entry> <para>Specifies the interval in seconds between checks of a watched directory by a watched repository.  
-			This property is optional, if it is not specified the default interval of 5 seconds is used.  
-			Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=watched</literal>. 
-			</para> </entry>
+				<entry>
+					<emphasis><literal>repository-name</literal></emphasis><literal>.watchInterval</literal>
+				</entry>
+				<entry>
+					<para>
+						Specifies the interval in seconds between checks of a watched directory by a watched repository.  
+						Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=watched</literal>. 
+					</para>
+				</entry>
+				<entry>
+					<literal>5</literal>
+				</entry>
 		      </row>
 		      <row>
-			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.uri</literal></entry>
-			<entry> <para>Specifies the URI of the hosted repository to which a remote repository connects.  
-			The value of this property takes the following format:
-			</para>
-				<para><literal>http://</literal><emphasis><literal>host</literal></emphasis><literal>:</literal><emphasis><literal>port</literal></emphasis><literal>/org.eclipse.virgo.apps.repository/</literal><emphasis><literal>remote-repository-name</literal></emphasis></para>
-                      <para>where:
-			<itemizedlist>
-				<listitem>
-				<para>
-				<emphasis><literal>host</literal></emphasis> refers to the computer on which the remote @short.product.name@ instance hosts the remote repository.
-				</para>
-				</listitem>
-				<listitem>
-				<para>
-				<emphasis><literal>port</literal></emphasis> refers to Tomcat listen port of the remote @short.product.name@ instance which hosts the remote repository.
-				</para>
-				</listitem>
-				<listitem>
-				<para>
-				<emphasis><literal>remote-repository-name</literal></emphasis> refers to the name of the remote repository, 
-				as specified in the <literal>org.eclipse.virgo.apps.repository.properties</literal> file of the remote @short.product.name@ instance.
-				</para>
-				</listitem>
-			</itemizedlist>
-                       </para>
-                       <para>Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=remote</literal>.
-                       </para> </entry>
+				<entry>
+					<emphasis><literal>repository-name</literal></emphasis><literal>.uri</literal>
+				</entry>
+				<entry>
+					<para>
+						Specifies the URI of the hosted repository to which a remote repository connects.  
+						The value of this property takes the following format:
+					</para>
+					<para>						<literal>http://</literal><emphasis><literal>host</literal></emphasis><literal>:</literal><emphasis><literal>port</literal></emphasis><literal>/org.eclipse.virgo.apps.repository/</literal><emphasis><literal>remote-repository-name</literal></emphasis>
+					</para>
+                    <para>
+						where:
+						<itemizedlist>
+							<listitem>
+								<para>
+									<emphasis><literal>host</literal></emphasis> refers to the computer on which the remote @short.product.name@
+									instance hosts the remote repository.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<emphasis><literal>port</literal></emphasis> refers to Tomcat listen port of the remote @short.product.name@
+									instance which hosts the remote repository.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<emphasis><literal>remote-repository-name</literal></emphasis> refers to the name of the remote repository, 
+									as specified in the <literal>org.eclipse.virgo.apps.repository.properties</literal> file of the remote @short.product.name@ instance.
+								</para>
+							</listitem>
+						</itemizedlist>
+               		</para>
+                    <para>
+						Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=remote</literal>.
+                    </para>
+				</entry>
+				<entry>
+					<emphasis>no default</emphasis>
+				</entry>
 		      </row>
 		      <row>
-			<entry><emphasis><literal>repository-name</literal></emphasis><literal>.indexRefreshInterval</literal></entry>
-			<entry>
-				<para>
-					Specifies the interval in seconds between checks by a remote repository that 
-					its local copy of the hosted repository index is up-to-date 
-					(a remote repository acts as a proxy for a hosted repository and thus it holds a local copy of the hosted repository&rsquo;s index). 
-					This property is optional,
-					if it is not specified the default interval of 5 seconds is used.
-				</para> 
-				<para>Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=remote</literal>.</para> </entry>
+				<entry>
+					<emphasis><literal>repository-name</literal></emphasis><literal>.indexRefreshInterval</literal>
+				</entry>
+				<entry>
+					<para>
+						Specifies the interval in seconds between checks by a remote repository that 
+						its local copy of the hosted repository index is up-to-date 
+						(a remote repository acts as a proxy for a hosted repository and thus it holds a local copy of the hosted repository&rsquo;s index). 
+					</para> 
+					<para>
+						Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=remote</literal>.
+					</para>
+				</entry>
+				<entry>
+					<literal>5</literal>
+				</entry>
 		      </row>
 		    </tbody>
 		  </tgroup>
