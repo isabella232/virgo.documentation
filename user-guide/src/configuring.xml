@@ -605,6 +605,15 @@ role.admin=juliet</programlisting>
 		</table>
 	</section>
 
+	<section id="configuring-jetty">
+		<title>Configuring the Embedded Jetty Servlet Container</title>
+		<para>
+			The @jetty.product.name@ contains a standard Jetty configuration file at <literal>SERVER_HOME/jetty/etc/jetty.xml</literal>. 
+			This has been tailored to it's @product.name@ environment, to make modifications please refer to the
+			<ulink url="http://wiki.eclipse.org/Jetty/Howto/Configure_Jetty#Using_Jetty_XML">Jetty documentation</ulink>.
+		</para>
+	</section>
+	
 	<section id="configuring-tomcat">
 		<title>Configuring the Embedded Tomcat Servlet Container</title>
 		<para>

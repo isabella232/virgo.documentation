@@ -34,8 +34,22 @@
 			The workaround for this issue is to make all types that require proxying public.
 		</para>
 	</section>
+	<section id="known-issues-jetty-restrictions">
+		<title>@jetty.product.name@ Restrictions</title>
+		<para>
+			The following Jetty features are not supported.
+			<itemizedlist>
+				<listitem>
+					Tag Libraries other than the standard Apache Tag Library.
+				</listitem>
+				<listitem>
+					Jetty 7 does not support the Servlet 3.0 spec. When Jetty 8.0 is released the Virgo Jetty Server will move up in a following release.
+				</listitem>
+			</itemizedlist>
+		</para>
+	</section>
 	<section id="known-issues-tomcat-restrictions">
-		<title>Tomcat Restrictions</title>
+		<title>@tomcat.product.name@ Restrictions</title>
 		<para>
 			The following Tomcat features are not supported.
 			<itemizedlist>
