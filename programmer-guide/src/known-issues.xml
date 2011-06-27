@@ -69,11 +69,11 @@
 			values consistently with dm Server 2.0.x.
 		</para>
 		<para>
-			This behaviour is changed as of @product.name@ 3.0. @short.product.name@ now conforms strictly to the
+			This behaviour is changed as of @tomcat.product.name@ 3.0. @tomcat.product.name.short@ now conforms strictly to the
 			OSGi Web Applications specification.
 		</para>
 		<para>
-			As a migration aid, <emphasis>which may not be supported in a future release</emphasis>, users may configure the @short.product.name@ Web Integration
+			As a migration aid, <emphasis>which may not be supported in a future release</emphasis>, users may configure the @tomcat.product.name.short@ Web Integration
 			Layer to apply default values to the headers of a Web Application Bundle.
 			See "Configuring the Web Integration Layer" in the <ulink url="../../virgo-user-guide/html/index.html">User Guide</ulink> for details.
 		</para>

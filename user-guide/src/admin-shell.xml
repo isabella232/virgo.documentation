@@ -162,7 +162,7 @@ osgi> ]]></programlisting>
 	  <section id="admin-shell-vsh-bundle-command">
 		<title>bundle Subcommand</title>
 
-		<para>Use the <literal>bundle</literal> subcommand to manage the lifecycle of bundles deployed to @short.product.name@ and to gather information about deployed bundles, such as diagnostic information, header information, and so on. </para>
+		<para>Use the <literal>bundle</literal> subcommand to manage the lifecycle of bundles deployed to @tomcat.product.name.short@ and to gather information about deployed bundles, such as diagnostic information, header information, and so on. </para>
 		<para>The following table lists the options you can specify for this subcommand.</para>
 
         	<table id="admin-shell-vsh-bundle-command-table" colsep="1" frame="all" rowsep="1">
@@ -853,7 +853,7 @@ osgi> </programlisting>
 
     <section id="admin-shell-class-loading">
         <title>Class Loading Commands</title>
-        <para>The class loading commands in @short.product.name@ provide the ability to list all bundles that:
+        <para>The class loading commands in @tomcat.product.name.short@ provide the ability to list all bundles that:
             <itemizedlist>
                 <listitem><para><emphasis role="bold">contain</emphasis> a class</para></listitem>
                 <listitem><para><emphasis role="bold">export</emphasis> a class</para></listitem>
@@ -902,7 +902,7 @@ osgi> </programlisting>
 
         <section id="admin-shell-cl-clhas">
             <title>clhas command</title>
-            <para>Use the <literal>clhas</literal> command to list the classes contained in the bundles deployed to @short.product.name@ and to solve class loading issues.</para>
+            <para>Use the <literal>clhas</literal> command to list the classes contained in the bundles deployed to @tomcat.product.name.short@ and to solve class loading issues.</para>
             <para>The command accepts as a parameter the fully qualified class name (in the form <emphasis>package.class</emphasis>).</para>
             <para>A bundle is listed only if the class can be loaded. If the class is successfully loaded a check is made if the loading was delegated to another bundle. The command lists only the leaves in the class loading hierarchy - i.e. the bundles that actually contain the class and not the ones that delegate to another bundle via import/require mechanisms.</para>
 

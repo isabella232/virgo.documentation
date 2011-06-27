@@ -51,7 +51,7 @@
 	
 	<section id="kernel-installation-post">
 		<title>Post-installation steps</title>
-	    Follow the same <link linkend="installation-post">Post-installation steps</link> as for @product.name@.
+	    Follow the same <link linkend="installation-post">Post-installation steps</link> as for @tomcat.product.name@.
 	</section>
 	
 </chapter>

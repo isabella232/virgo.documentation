@@ -7,7 +7,7 @@
 	<section id="prerequisites-environment">
 		<title>Runtime Environment</title>
 		<para>
-			The @product.name@ requires Java SE 6 or later to be installed. Java is available from
+			The @tomcat.product.name@ requires Java SE 6 or later to be installed. Java is available from
 			<ulink url="http://java.sun.com/javase/downloads/index.jsp">Sun</ulink> and elsewhere.
 		</para>
 	</section>
@@ -15,7 +15,7 @@
 	<section id="prerequisites-references">
 		<title>References</title>
 		<para>
-			To make effective use of the @product.name@, you should also refer to the following guides:
+			To make effective use of the @tomcat.product.name@, you should also refer to the following guides:
 		</para>
 		<itemizedlist>
 			<listitem><ulink url="../../virgo-user-guide/html/index.html">@project.name@ User Guide</ulink></listitem>

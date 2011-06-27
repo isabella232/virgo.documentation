@@ -6,7 +6,7 @@
 <section id="event-log-codes-format">   <title>Format of the event log codes</title>
 
 <para>
-Event log codes issued by @short.product.name@ have the general syntax
+Event log codes issued by @tomcat.product.name.short@ have the general syntax
 <literal>&lt;XXnnnnL&gt;</literal> where:
 <informaltable frame="none" colsep="0" rowsep="0" pgwide="0">
   <tgroup cols="2">
@@ -16,7 +16,7 @@ Event log codes issued by @short.product.name@ have the general syntax
       <row> 
 <entry><literal>XX</literal></entry>
 <entry>
-is a two-letter code (upper-case) identifying the area of the @short.product.name@ code which issued the log message;
+is a two-letter code (upper-case) identifying the area of the @tomcat.product.name.short@ code which issued the log message;
 </entry>
 </row><row>
 <entry><literal>nnnn</literal></entry>

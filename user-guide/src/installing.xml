@@ -2,11 +2,11 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="installation">
-	<title>Installing @product.name@</title>
+	<title>Installing @tomcat.product.name@</title>
 	<section id="installation-prereqs">
 		<title>Prerequisites</title>
 		<para>
-			The @product.name@, or @short.product.name@ for short, requires Java SE 6 or later to be installed. Java is available from
+			The @tomcat.product.name@, or @tomcat.product.name.short@ for short, requires Java SE 6 or later to be installed. Java is available from
 			<ulink url="http://www.java.com/">http://www.java.com/</ulink> and elsewhere.
 		</para>
 	</section>
@@ -15,7 +15,7 @@
 		<section>
 			<title>Downloading the ZIP file</title>
 			<para>
-				@product.name@ is distributed as a ZIP file. This can be downloaded from 
+				@tomcat.product.name@ is distributed as a ZIP file. This can be downloaded from 
 				<ulink url="http://www.eclipse.org/virgo/download/">here</ulink>.
 			</para>
 		</section>
@@ -24,7 +24,7 @@
 			<section  id="installation-zip-installing-linux">
 				<title>Linux</title>
 				<para>
-					To install the @product.name@ on Linux, unzip the distribution package to the desired installation directory. 
+					To install the @tomcat.product.name@ on Linux, unzip the distribution package to the desired installation directory. 
 					For example, to install into <literal>/opt</literal>:
 				</para>
 				<screen>prompt$ unzip virgo-web-server-@bundle.version@.zip -d /opt</screen>
@@ -32,14 +32,14 @@
 					This creates a directory called <literal>virgo-web-server-@bundle.version@</literal> under <literal>/opt</literal>.
 				</para>
 				<para>
-					@product.name@ requires write access to the installation directory, in this case <literal>/opt/virgo-web-server-@bundle.version@</literal>.
+					@tomcat.product.name@ requires write access to the installation directory, in this case <literal>/opt/virgo-web-server-@bundle.version@</literal>.
 					Typically this means it must be run as the user that installed it, or the installation directory&rsquo;s ownership must be changed.
 				</para>
 			</section>
 			<section  id="installation-zip-installing-win">
 				<title>Microsoft Windows</title>
 				<para>
-					To install the @product.name@ on Windows, unzip the distribution package to the desired installation directory.
+					To install the @tomcat.product.name@ on Windows, unzip the distribution package to the desired installation directory.
 					You should use a zip application such as 7zip, not the built-in folder decompression.  Note that both Windows and
 					Java have some issues with long file names and file paths, so we recommend installing to the root directory of
 					your chosen drive.
@@ -55,7 +55,7 @@
 			<section id="installation-post-env-java">
 				<title>JAVA_HOME</title>
 				<para>
-					The @product.name@ uses the <literal>JAVA_HOME</literal> environment variable to locate the <literal>java</literal>
+					The @tomcat.product.name@ uses the <literal>JAVA_HOME</literal> environment variable to locate the <literal>java</literal>
 					executable. Configure this environment variable to point to the home directory of the Java 6 installation on your computer.
 				</para>
 			</section>
@@ -63,9 +63,9 @@
 				<title>SERVER_HOME</title>
 				<para>
 					As a convenience it is recommended that you create an environment variable that points
-					to the @product.name@ installation directory. Note that the @product.name@ does not require that
+					to the @tomcat.product.name@ installation directory. Note that the @tomcat.product.name@ does not require that
 					such an environment variable has been set. This variable may have any name of your
-					choosing. The @product.name@&rsquo;s documentation assumes that the variable is named
+					choosing. The @tomcat.product.name@&rsquo;s documentation assumes that the variable is named
 					<literal>SERVER_HOME</literal>. 
 				</para>
 				<section id="installation-post-env-server-linux">
@@ -111,12 +111,12 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 		<section id="installation-post-env-server-win-troubleshooting">
 			<title>Microsoft Windows - Troubleshooting</title>
 			<para>
-				When starting the @product.name@ on some variants of Windows you might encounter a problem with file permissions. 
+				When starting the @tomcat.product.name@ on some variants of Windows you might encounter a problem with file permissions. 
 				The error looks like this.
 			</para>
 			<screen>WARNING: jmxPermissions.vbs did not update the permissions of C:\virgo\config\org.eclipse.virgo.kernel.jmxremote.access.properties. Check the file has the correct permissions.</screen>
 			<para>
-				If the @short.product.name@ starts at this point you can skip this section and carry on. However to secure your 
+				If the @tomcat.product.name.short@ starts at this point you can skip this section and carry on. However to secure your 
 				installation you have to set correct permissions. To do so, go to the &lsquo;config&rsquo; directory of the installation
 				in Windows Explorer.
 			</para>
@@ -132,7 +132,7 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 			</para>
 			<para>
 				Within the security page select the &lsquo;Advanced&rsquo; options. On the &lsquo;Owner&rsquo; tab, choose the owner
-				that you are trying to run the @short.product.name@ as and select &lsquo;Apply&rsquo;.
+				that you are trying to run the @tomcat.product.name.short@ as and select &lsquo;Apply&rsquo;.
 			</para>
 			<para>
 				<imagedata fileref="images/install-windows-3-AdvanceSettingsOwner.png" />
@@ -145,7 +145,7 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 				<imagedata fileref="images/install-windows-4-AllSetReadAndExecute.png" />
 			</para>
 			<para>
-				Once all these steps are complete you can proceed to start the @short.product.name@.
+				Once all these steps are complete you can proceed to start the @tomcat.product.name.short@.
 			</para>
 			<screen>C:\dev\virgo-web-server-2.1.0.RELEASE>bin\startup.bat
 [2009-12-08 13:09:09.545] startup-tracker              &lt;KE0001I&gt; Kernel starting.</screen>

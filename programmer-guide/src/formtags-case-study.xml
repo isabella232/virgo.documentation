@@ -34,7 +34,7 @@
 	</para>
 	<para>
 		Each of these migration steps will produce a web application
-		that can be deployed and run on the @short.product.name@.
+		that can be deployed and run on the @tomcat.product.name.short@.
 	</para>
 	<para>
 		After summarising the process, an example <literal>plan</literal> is shown which is another way of 
@@ -89,13 +89,13 @@
 		<para>
 			We begin with a standard WAR deployment.
 			<note>
-				The @product.name@ supports the standard Java EE WAR packaging
+				The @tomcat.product.name@ supports the standard Java EE WAR packaging
 				and deployment format as a first-class citizen, and there are many
-				benefits to deploying a standard WAR file on the @short.product.name@ including,
+				benefits to deploying a standard WAR file on the @tomcat.product.name.short@ including,
 				but not limited to: tooling support, runtime error diagnostics, FFDC
 				(first failure data capture), etc.
 				In addition, support for standard WAR deployment provides an easy on-ramp
-				for trying out the @product.name@ with existing web applications.
+				for trying out the @tomcat.product.name@ with existing web applications.
 			</note>
 		</para>
 		<para>
@@ -112,7 +112,7 @@
 			the <literal>SERVER_HOME/pickup</literal> directory for hot deployment.
 		</para>
 		<para>
-			You should then see the @short.product.name@ produce console output similar to the following:
+			You should then see the @tomcat.product.name.short@ produce console output similar to the following:
 		</para>
 		<note>
 			<para>The console output has been reformatted to fit this document.</para>
@@ -156,7 +156,7 @@
 		</para>
 		<para>
 			The first step of the migration towards benefiting from an OSGi
-			container is to retrieve the dependencies from the @short.product.name@&rsquo;s bundle
+			container is to retrieve the dependencies from the @tomcat.product.name.short@&rsquo;s bundle
 			repository at runtime.  This can significantly reduce the time it takes to build
 			and deploy the application.  It also enables the enforcement of policies
 			regarding the use of third-party libraries.
@@ -171,7 +171,7 @@
 		<para>
 			The Form Tags application uses JSTL standard tag libraries.
 			Thus, you need to choose a JSTL provider, for example the
-			Apache implementation which comes with the @short.product.name@. To use the
+			Apache implementation which comes with the @tomcat.product.name.short@. To use the
 			Apache implementation of JSTL, you need to express your dependency
 			as outlined in the following manifest listing.
 			Because it is a single bundle, <literal>Import-Bundle</literal> is
@@ -188,7 +188,7 @@
 		<tip>
 			<para>
 				How do you determine the name of a library definition provided
-				by the @product.name@?
+				by the @tomcat.product.name@?
 				Use the <ulink url="http://www.springsource.com/repository">@ebr@</ulink>.
 			</para>
 		</tip>
@@ -206,11 +206,11 @@ Bundle-SymbolicName: org.springframework.showcase.formtags-shared-libs
  .1.2"
 </programlisting>
 		You can see the <literal>Import-Library</literal> and <literal>Import-Bundle</literal>
-		directives that instruct the @short.product.name@ to add the appropriate package imports to the bundle
+		directives that instruct the @tomcat.product.name.short@ to add the appropriate package imports to the bundle
 		classpath used by this WAR file.
 		</para>
 		<para>
-			Deploying the shared libraries WAR onto the @short.product.name@ should result
+			Deploying the shared libraries WAR onto the @tomcat.product.name.short@ should result
 			in console output similar to the following:
 		</para>
 		<note>
@@ -278,7 +278,7 @@ Import-Library: org.springframework.spring;version="[2.5.4,3.1.0)"
 				<literal>org.springframework.showcase.formtags.service-shared-services</literal>.
 				Note that the name of the bundle typically describes the package
 				that the bundle primarily exports.
-				If you take a look at the <literal>repository/bundles/ext</literal> in the @short.product.name@
+				If you take a look at the <literal>repository/bundles/ext</literal> in the @tomcat.product.name.short@
 				directory, you&rsquo;ll see that names are almost always indicative of the contents of the bundle.
 				For this example, however, we have also appended
 				&quot;<literal>-shared-services</literal>&quot;
@@ -288,7 +288,7 @@ Import-Library: org.springframework.spring;version="[2.5.4,3.1.0)"
 					In OSGi, the combination of <literal>Bundle-SymbolicName</literal>
 					and <literal>Bundle-Version</literal> is used to uniquely identify
 					a bundle within the OSGi container. Furthermore, when you deploy
-					a bundle to the @product.name@, for example via the <literal>pickup</literal>
+					a bundle to the @tomcat.product.name@, for example via the <literal>pickup</literal>
 					directory, a bundle&rsquo;s filename is also used to uniquely identify it for
 					the purpose of supporting <emphasis>hot deployment</emphasis> via
 					the file system.
@@ -355,10 +355,10 @@ Import-Library: org.springframework.spring;version="[2.5.4,3.1.0)"
 				<literal>org.springframework.showcase.formtags.service.UserManager</literal> API.
 			</para>
 			<para>
-				The service bundle should now be ready to deploy on the @short.product.name@.
+				The service bundle should now be ready to deploy on the @tomcat.product.name.short@.
 				So copy <literal>/dist/formtags-shared-services-services*</literal>
 				to the <literal>SERVER_HOME/pickup</literal> directory.
-				Output similar to the following should appear in the @short.product.name@&rsquo;s console:
+				Output similar to the following should appear in the @tomcat.product.name.short@&rsquo;s console:
 			</para>
 			<note>
 				<para>The console output has been reformatted to fit this document.</para>
@@ -414,7 +414,7 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 				<literal>WebApplicationContext</literal> to be able to reference services from the OSGi Service Registry,
 				you must explicitly set the <literal>contextClass</literal> Servlet context parameter to the fully qualified
 				class name of a <literal>ConfigurableWebApplicationContext</literal> which is OSGi-enabled. When deploying
-				Shared Services WARs to the @product.name@, you should use
+				Shared Services WARs to the @tomcat.product.name@, you should use
 				<literal>org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext</literal>. This will
 				then enable the use of Spring-DM&rsquo;s <literal>&lt;reference ... /&gt;</literal> within your root
 				<literal>WebApplicationContext</literal> (i.e., in <literal>applicationContext.xml</literal>).
@@ -514,7 +514,7 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 		<title>Form Tags PAR</title>
 		<para>
 			The final step in the migration is that of a full blown
-			OSGi application with web support. The @product.name@ introduces a
+			OSGi application with web support. The @tomcat.product.name@ introduces a
 			new packaging and deployment format: the PAR.
 
 			A PAR is a standard JAR with a &quot;<literal>.par</literal>&quot;
@@ -616,8 +616,8 @@ Application-Name: FormTags Showcase Application (PAR)
 				<xref linkend="developing-applications"/>.
 			</para>
 			<para>
-				You can now deploy the PAR on the @short.product.name@, for example by copying
-				<literal>/dist/formtags-par*.par</literal> to the @short.product.name@&rsquo;s
+				You can now deploy the PAR on the @tomcat.product.name.short@, for example by copying
+				<literal>/dist/formtags-par*.par</literal> to the @tomcat.product.name.short@&rsquo;s
 				<literal>pickup</literal> directory.
 				You should then see console output similar to the following:
 			</para>
@@ -647,7 +647,7 @@ Application-Name: FormTags Showcase Application (PAR)
 	<section id="formtags-case-study-summary">
 		<title>Summary of the Form Tags Migration</title>
 		<para>
-			The @product.name@ provides out-of-the-box support for deploying
+			The @tomcat.product.name@ provides out-of-the-box support for deploying
 			standard Java EE WAR files. In addition support for
 			<emphasis>Shared Libraries</emphasis> and <emphasis>Shared Services</emphasis>
 			WAR formats provides a logical migration path away from standard,
@@ -663,7 +663,7 @@ Application-Name: FormTags Showcase Application (PAR)
 			process yourself. This will help you better understand the concepts and
 			principles at work.  In addition, it is highly recommended that you
 			familiarize yourself with the Eclipse-based
-			<emphasis>@product.name@ Tools</emphasis> support which is discussed in
+			<emphasis>@tomcat.product.name@ Tools</emphasis> support which is discussed in
 			<xref linkend="tooling" />.
 		</para>
 	</section>

@@ -8,7 +8,7 @@
 
 	<para>
 		<ulink url="../../virgo-programmer-guide/html/index.html">
-			@product.name@ Programmer Guide
+			@tomcat.product.name@ Programmer Guide
 		</ulink>
 	</para>
 	

@@ -5,13 +5,13 @@
 	<title>Tooling</title>
 	<para>
 		SpringSource provides a set of plug-ins for the Eclipse IDE that streamline the development
-		lifecycle of OSGi bundles and PAR applications. The @product.name@ Tools build on top
+		lifecycle of OSGi bundles and PAR applications. The @tomcat.product.name@ Tools build on top
 		of the Eclipse Web Tools Project (WTP).
 	</para>
 	<para>
-		The @product.name@ Tools support the creation of new OSGi bundle and PAR projects within Eclipse, and the
+		The @tomcat.product.name@ Tools support the creation of new OSGi bundle and PAR projects within Eclipse, and the
 		conversion of existing projects into OSGi bundle projects. Projects can then be deployed and debugged on a running
-		@short.product.name@ from within Eclipse.
+		@tomcat.product.name.short@ from within Eclipse.
 	</para>
 	<section id="tooling-installation">
 		<title>Installation</title>
@@ -64,10 +64,10 @@
 		</para>
 	</section>
 	<section id="tooling-running">
-		<title>Running a @product.name@ instance within Eclipse</title>
+		<title>Running a @tomcat.product.name@ instance within Eclipse</title>
 		<para>
 			After installing the Tools from the update site outlined in the previous section, you
-			will be able to configure an instance of the @short.product.name@ inside Eclipse.
+			will be able to configure an instance of the @tomcat.product.name.short@ inside Eclipse.
 		</para>
 		<para>
 			To do so bring up the WTP Servers view (i.e.,
@@ -79,19 +79,19 @@
 				<guimenuitem>Servers</guimenuitem>
 			</menuchoice>).
 			You can now right-click in the view and select "<menuchoice><guimenu>New</guimenu><guimenuitem>Server</guimenuitem></menuchoice>".
-			This will bring up a "New Server" dialog. Select "@product.name@ v2.1 Server"
+			This will bring up a "New Server" dialog. Select "@tomcat.product.name@ v2.1 Server"
 			in the "Virgo" category and click "<guibutton>Next</guibutton>".
 		</para>
 		<para>
 			<imagedata fileref="images/tooling-new-server.png" format="PNG" />
 		</para>
 		<para>
-			Within the "New Server Wizard" point to the installation directory of the @product.name@
-			and finish the wizard. After finishing the wizard you should see a @product.name@
+			Within the "New Server Wizard" point to the installation directory of the @tomcat.product.name@
+			and finish the wizard. After finishing the wizard you should see a @tomcat.product.name@
 			entry in the Servers view.
 		</para>
 		<para>
-			To start, stop, and debug the created @product.name@ instance use the toolbar or the context
+			To start, stop, and debug the created @tomcat.product.name@ instance use the toolbar or the context
 			menu actions of the Servers view.
 		</para>
 		<para>
@@ -101,12 +101,12 @@
 	<section id="tooling-repository-editor">
 		<title>Bundle and Library Provisioning</title>
 		<para>
-			After successful configuration of an instance of the @product.name@ in Eclipse you can use
+			After successful configuration of an instance of the @tomcat.product.name@ in Eclipse you can use
 			the Repository Browser to very easily install bundles and libraries from the remote
 			SpringSource Enterprise Bundle Repository.
 		</para>
 		<para>
-			To open the Repository Browser double-click a @product.name@ instance in the Servers
+			To open the Repository Browser double-click a @tomcat.product.name@ instance in the Servers
 			view and select the "Repository" tab in the server editor. Please note that opening of the
 			Editor may take a few seconds as the contents of the local repository needs to be indexed
 			before opening.
@@ -119,7 +119,7 @@
 			@ebr@ and displays matching results. The search can
 			take parts of bundle symbolic names, class or package names and allows wildcards such as
 			&lsquo;?&rsquo; and &lsquo;*&rsquo;. By selecting the checkbox left to a matching bundle and/or library and clicking
-			the "Download" button it is	very easy to install new bundles in the @product.name@. For your
+			the "Download" button it is	very easy to install new bundles in the @tomcat.product.name@. For your
 			convenience JARs containing the bundle source code can be automatically downloaded as well.
 		</para>
 		<para>
@@ -135,7 +135,7 @@
 	<section id="tooling-config">
 		<title>Setting up Eclipse Projects</title>
 		<para>
-			The @product.name@ supports different deployment units as discussed earlier in this guide. The
+			The @tomcat.product.name@ supports different deployment units as discussed earlier in this guide. The
 			Tools define specific project types to support the development of OSGi and PAR projects.
 		</para>
 		<section id="tooling-config-creating-new-projects">
@@ -143,7 +143,7 @@
 			<para>
 				There are two New Project Wizards available within Eclipse that allow for creating
 				new OSGi bundle and PAR projects. The projects created by the wizards are deployable
-				to the integrated @short.product.name@ instance without requiring any additional steps.
+				to the integrated @tomcat.product.name.short@ instance without requiring any additional steps.
 			</para>
 			<para>
 				<imagedata fileref="images/tooling-new-project-wizards.png" format="PNG" />
@@ -156,7 +156,7 @@
 		<section id="tooling-config-migrating-existing-projects">
 			<title>Migrating existing Java Projects</title>
 			<para>
-				To migrate an existing Java Project to be used with the @short.product.name@, the Tools
+				To migrate an existing Java Project to be used with the @tomcat.product.name.short@, the Tools
 				provide a migration action that adds the required meta data to the project.
 				The migration will not change your project&rsquo;s source layout.
 			</para>
@@ -193,14 +193,14 @@
 			</para>
 			<para>
 				The Tools address this problem by providing an Eclipse classpath container that
-				uses an @product.name@-specific dependency resolution mechanism. This classpath
+				uses an @tomcat.product.name@-specific dependency resolution mechanism. This classpath
 				container makes resolved dependencies available on the project&rsquo;s classpath but allows
 				only access to those package that are imported explicitly (e.g., via <code>Import-Package</code>)
 				or implicitly by using <code>Import-Library</code> or <code>Import-Bundle</code>.
 			</para>
 			<para>
 				To use the automatic dependency resolution, an OSGi bundle or PAR project needs to be
-				targeted to a configured @product.name@ instance. This can be done from the project&rsquo;s
+				targeted to a configured @tomcat.product.name@ instance. This can be done from the project&rsquo;s
 				preferences by selecting the runtime on the "Targeted Runtimes" preference page.
 			</para>
 			<para>
@@ -219,7 +219,7 @@
 			</para>
 			<para>
 				The classpath container will automatically attach Java source code to the classpath
-				entries by looking for source JARs next to the binary JARs in the @product.name@&rsquo;s
+				entries by looking for source JARs next to the binary JARs in the @tomcat.product.name@&rsquo;s
 				repository. You can also manually override the source code attachment by using the
 				properties dialog on a single JAR entry. This manual attachment will always override
 				the convention-based attachment.
@@ -229,7 +229,7 @@
 			<title>Editing the Manifest</title>
 			<para>
 				The Tools provide a Bundle Manifest Editor that assists the developer to create and
-				edit MANIFEST.MF files. The editor understands the @product.name@ specific headers
+				edit MANIFEST.MF files. The editor understands the @tomcat.product.name@ specific headers
 				like <code>Import-Library</code> and <code>Import-Bundle</code> and provides content
 				assist features while editing source code. Furthermore a Eclipse Form-based UI is also
 				available.
@@ -240,7 +240,7 @@
 			</para>
 			<para>
 				<note>
-					Please note that the @product.name@ specific manifest headers appear in green color
+					Please note that the @tomcat.product.name@ specific manifest headers appear in green color
 					to distinguish them from those headers defined in the OSGi specification. This also
 					makes navigating much easier.
 				</note>
@@ -251,12 +251,12 @@
 			<para>
 				The content assist proposals in the source tab as well as in the UI-based tabs are
 				resolved from the bundle and library repository of an installed and configured
-				@product.name@. Therefore it is important to target the project or PAR to a specific
-				@short.product.name@ instance to indicate to the tooling which bundle repository to use.
+				@tomcat.product.name@. Therefore it is important to target the project or PAR to a specific
+				@tomcat.product.name.short@ instance to indicate to the tooling which bundle repository to use.
 			</para>
 			<para>
 				<note>
-					If a OSGi bundle project is not targeted to a @short.product.name@ instance, either
+					If a OSGi bundle project is not targeted to a @tomcat.product.name.short@ instance, either
 					directory or indirectly via a PAR project&rsquo;s targetting, the manifest editor will not
 					be able to provide content assist for importing packages, bundles, and libraries.
 				</note>
@@ -276,11 +276,11 @@
 		<title>Deploying Applications</title>
 		<para>
 			Currently the Tools support direct deployment of WTP Dynamic Web Projects, OSGi
-			bundle and PAR projects to the @short.product.name@ from directly within Eclipse.
+			bundle and PAR projects to the @tomcat.product.name.short@ from directly within Eclipse.
 		</para>
 		<para>
-			To deploy an application to the @product.name@ just bring up the context menu on the configured
-			@short.product.name@ runtime in the Servers view and choose "Add or Remove Projects...". In the
+			To deploy an application to the @tomcat.product.name@ just bring up the context menu on the configured
+			@tomcat.product.name.short@ runtime in the Servers view and choose "Add or Remove Projects...". In the
 			dialog, select the desired project and add it to the list of "Configured projects".
 		</para>
 		<para>
@@ -288,20 +288,20 @@
 		</para>
 		<note>
 			<para>
-				Deploying and undeploying an application from the @short.product.name@ certainly works
-				while the @product.name@ is running, but you can also add or remove projects if the
-				@short.product.name@ is not running.
+				Deploying and undeploying an application from the @tomcat.product.name.short@ certainly works
+				while the @tomcat.product.name@ is running, but you can also add or remove projects if the
+				@tomcat.product.name.short@ is not running.
 			</para>
 		</note>
 		<para>
-			Once an application is deployed on the @product.name@ the tooling support will automatically
+			Once an application is deployed on the @tomcat.product.name@ the tooling support will automatically
 			pick up any change to source files -- for example, Java and XML context files -- and refresh the
-			deployed application on the @short.product.name@.
+			deployed application on the @tomcat.product.name.short@.
 		</para>
 		<para>
 			The wait time between a change and the actual refresh can be configured
 			in the configuration editor of the runtime. To bring up that editor,
-			double-click on the configured @product.name@ instance in the Servers view.
+			double-click on the configured @tomcat.product.name@ instance in the Servers view.
 		</para>
 	</section>
 </chapter>

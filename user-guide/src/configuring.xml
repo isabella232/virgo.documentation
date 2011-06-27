@@ -5,7 +5,7 @@
     <title>Configuration</title>
     <titleabbrev>Configuration</titleabbrev>
 
-	<para>You use configuration files in the <literal>$SERVER_HOME/config</literal> directory to configure @short.product.name@.  You can also configure the OSGi framework  using files in <literal>$SERVER_HOME/lib</literal>. This section divides the configuration of the server into the following high-level tasks:</para>
+	<para>You use configuration files in the <literal>$SERVER_HOME/config</literal> directory to configure @tomcat.product.name.short@.  You can also configure the OSGi framework  using files in <literal>$SERVER_HOME/lib</literal>. This section divides the configuration of the server into the following high-level tasks:</para>
 
 	<itemizedlist> 
 	  <listitem><para><link linkend="configuring-kernel">Configuring the kernel and the user region.</link></para></listitem>
@@ -19,7 +19,7 @@
 	
     <section id="configuring-kernel" >
         <title>Configuring the @kernel.product.name@ and User Region</title>
-        <para>This section provides information about configuring the @short.product.name@ kernel and the user region.</para>
+        <para>This section provides information about configuring the @tomcat.product.name.short@ kernel and the user region.</para>
 
         <section id="configuring-kernel-properties">
             <title>Configuring kernel</title>
@@ -83,7 +83,7 @@
 								<literal>.kernel.startup.wait.limit</literal>
 							</entry>
                             <entry>
-								Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to start the kernel.
+								Specifies the amount of time, in seconds, after which @tomcat.product.name.short@ times out while trying to start the kernel.
 							</entry>
 							<entry><literal>180</literal>
 							</entry>
@@ -112,7 +112,7 @@
                         </row>
                         <row>
                             <entry><literal>.kernel.userregion.properties</literal></entry>
-                            <entry>Configures the <link linkend="configuring-user-region">user region</link> of @short.product.name@ and enables the OSGi console.</entry>
+                            <entry>Configures the <link linkend="configuring-user-region">user region</link> of @tomcat.product.name.short@ and enables the OSGi console.</entry>
                         </row>
                         <row>
                             <entry><literal>.kernel.users.properties</literal></entry>
@@ -170,7 +170,7 @@
 						<literal>deployer.timeout</literal>
 					</entry>
                     <entry>
-						Specifies the amount of time, in seconds, after which @short.product.name@ times out while trying to deploy a bundle, library, or plan.
+						Specifies the amount of time, in seconds, after which @tomcat.product.name.short@ times out while trying to deploy a bundle, library, or plan.
 						If you want to disable deployment timeout, specify <literal>0</literal>.
 					</entry>
 					<entry>
@@ -181,7 +181,7 @@
              </tgroup>
             </table>
 
-                     <para>The following listing displays the default configuration distributed with the @short.product.name@; only relevant sections of the <literal>org.eclipse.virgo.kernel.properties</literal> file are shown. </para>
+                     <para>The following listing displays the default configuration distributed with the @tomcat.product.name.short@; only relevant sections of the <literal>org.eclipse.virgo.kernel.properties</literal> file are shown. </para>
 
             <programlisting><![CDATA[deployer.timeout=300
 deployer.pickupDirectory=pickup]]></programlisting>
@@ -193,7 +193,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 	<section id="configuring-user-region">
 		<title>Configuring the User Region</title>
 		<para>
-			The user region is the subsystem of @short.product.name@ that
+			The user region is the subsystem of @tomcat.product.name.short@ that
 			supports deployed applications, both your own user applications and
 			those of the server itself, such as the Admin Console. The user region
 			is deliberately isolated from the kernel, which makes it much simpler
@@ -210,7 +210,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 			We strongly recommend that you update only the
 			<literal>initialArtifacts</literal>
 			property; updating other properties could cause
-			@short.product.name@ to fail. These properties are documented for your
+			@tomcat.product.name.short@ to fail. These properties are documented for your
 			information.
 		</para>
 
@@ -226,15 +226,15 @@ deployer.pickupDirectory=pickup]]></programlisting>
 		     <tbody>
 			<row>
 				<entry><literal>baseBundles</literal></entry>
-				<entry>Specifies the hard-coded list of bundles that @short.product.name@ installs directly into the user region.
-					@product.name@ does not perform any automatic dependency satisfaction for these bundles; in other words, you only get the bundles
+				<entry>Specifies the hard-coded list of bundles that @tomcat.product.name.short@ installs directly into the user region.
+					@tomcat.product.name@ does not perform any automatic dependency satisfaction for these bundles; in other words, you only get the bundles
 					in the list and nothing more. </entry>
 			</row>
 			<row>
 				<entry><literal>bundleImports</literal></entry>
 				<entry>
 					<para>
-						Specifies the bundles in the kernel that @short.product.name@ imports into the user region so that they are visible to bundles in the user region.
+						Specifies the bundles in the kernel that @tomcat.product.name.short@ imports into the user region so that they are visible to bundles in the user region.
 						This property supports an optional <literal>bundle-version</literal> attribute which specifies a version range.
 						By default only the system bundle is imported.
 					</para>
@@ -248,7 +248,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 				<entry><literal>packageImports</literal></entry>
 				<entry>
 					<para>
-						Specifies the packages in the kernel that @short.product.name@ imports into the user region so that they are in turn available to be
+						Specifies the packages in the kernel that @tomcat.product.name.short@ imports into the user region so that they are in turn available to be
 						imported by bundles in the user region.
 						This property supports a <literal>.*</literal> wildcard which is expanded based on the packages available in the kernel
 						when the user region is created.
@@ -281,9 +281,9 @@ deployer.pickupDirectory=pickup]]></programlisting>
 				<entry><literal>initialArtifacts</literal></entry>
 				<entry>
 					<para>
-						Specifies the artifacts that @short.product.name@ deploys into the user region when the server starts.
-						@product.name@ performs dependency satisfaction when it deploys these artifacts.
-						This means that you only need to list the top-level artifacts that you care about; @short.product.name@ automatically installs,
+						Specifies the artifacts that @tomcat.product.name.short@ deploys into the user region when the server starts.
+						@tomcat.product.name@ performs dependency satisfaction when it deploys these artifacts.
+						This means that you only need to list the top-level artifacts that you care about; @tomcat.product.name.short@ automatically installs,
 						from the repository, any other artifacts upon which they depend.
 					</para>
 					<para>
@@ -309,7 +309,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 	<section id="configuring-authentication">
 		<title>Configuring Authentication</title>
 	<para>
-		@product.name@ uses the
+		@tomcat.product.name@ uses the
 		<ulink
 			url="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html">Java Authentication and Authorization Service (JAAS)</ulink>
 		framework to authenticate the administration user that connects to Web
@@ -318,15 +318,15 @@ deployer.pickupDirectory=pickup]]></programlisting>
 		files that you need to update if you want to change the administration
 		user, change their password, and so on.
 	</para>
-		<para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.authentication.config</literal> file configures the underlying authentication technology for @short.product.name@.  The short file consists of the following entry:</para>
+		<para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.authentication.config</literal> file configures the underlying authentication technology for @tomcat.product.name.short@.  The short file consists of the following entry:</para>
 
 		<programlisting>virgo-kernel {
         org.eclipse.virgo.kernel.authentication.KernelLoginModule REQUIRED;
 };</programlisting>
 
-		<para>The entry is named <literal>virgo-kernel</literal>.  This name corresponds to the <literal>&lt;Realm&gt;</literal> element in the <literal>$SERVER_HOME/config/tomcat-server.xml</literal> file that configures the JAAS authentication mechanism for the <literal>Catalina</literal> service of the <link linkend="configuring-tomcat">Tomcat servlet container</link>.  The <literal>virgo-kernel</literal> entry specifies that the JAAS LoginModule that @short.product.name@ uses to authenticate users is <literal>org.eclipse.virgo.kernel.authentication.KernelLoginModule</literal> and that this <literal>KernelLoginModule</literal> is required to "succeed" in order for authentication to be considered successful. The <literal>KernelLoginModule</literal> succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for Web Server is <literal>admin/springsource</literal>. </para>
+		<para>The entry is named <literal>virgo-kernel</literal>.  This name corresponds to the <literal>&lt;Realm&gt;</literal> element in the <literal>$SERVER_HOME/config/tomcat-server.xml</literal> file that configures the JAAS authentication mechanism for the <literal>Catalina</literal> service of the <link linkend="configuring-tomcat">Tomcat servlet container</link>.  The <literal>virgo-kernel</literal> entry specifies that the JAAS LoginModule that @tomcat.product.name.short@ uses to authenticate users is <literal>org.eclipse.virgo.kernel.authentication.KernelLoginModule</literal> and that this <literal>KernelLoginModule</literal> is required to "succeed" in order for authentication to be considered successful. The <literal>KernelLoginModule</literal> succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for Web Server is <literal>admin/springsource</literal>. </para>
 
-	       <para>You configure the administration user in the <literal>org.eclipse.virgo.kernel.users.properties</literal> file.  The default file for a freshly installed @short.product.name@ is as follows:</para>
+	       <para>You configure the administration user in the <literal>org.eclipse.virgo.kernel.users.properties</literal> file.  The default file for a freshly installed @tomcat.product.name.short@ is as follows:</para>
 
 		<programlisting>##################
 # User definitions
@@ -362,9 +362,9 @@ user.juliet=supersecret
 ##################
 role.admin=juliet</programlisting>
 	
-		<para>Be sure to restart @short.product.name@ after you make this change for it to take effect.</para>
+		<para>Be sure to restart @tomcat.product.name.short@ after you make this change for it to take effect.</para>
 
-		<para>The final file involved in @short.product.name@ authentication is <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.jmxremote.access.properties</literal>.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:</para>
+		<para>The final file involved in @tomcat.product.name.short@ authentication is <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.jmxremote.access.properties</literal>.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:</para>
 		<programlisting>admin=readwrite</programlisting>
 	<para>
 		The only other value you can enter is
@@ -379,17 +379,17 @@ role.admin=juliet</programlisting>
     <section id="configuring-serviceability">
       <title>Configuring Serviceability</title>
 
-	<para>The serviceability sub-system of @short.product.name@ allows you to gather and view data and information that you can then use to diagnose problems and failures.  Serviceability includes data from:</para>
+	<para>The serviceability sub-system of @tomcat.product.name.short@ allows you to gather and view data and information that you can then use to diagnose problems and failures.  Serviceability includes data from:</para>
 	<itemizedlist>
 		<listitem><para>
-		Service dumps: Contain a snapshot of all the important state from the running @short.product.name@ instance when an internal failure or thread deadlock is detected.
+		Service dumps: Contain a snapshot of all the important state from the running @tomcat.product.name.short@ instance when an internal failure or thread deadlock is detected.
 		</para>
-  	             <para>You configure service dumps for @product.name@ using the <link linkend="configuring-serviceability-medic">org.eclipse.virgo.medic.properties</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file also includes some additional logging configuration.</para>
+  	             <para>You configure service dumps for @tomcat.product.name@ using the <link linkend="configuring-serviceability-medic">org.eclipse.virgo.medic.properties</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file also includes some additional logging configuration.</para>
 		</listitem>
 		<listitem><para>
-		Event logs and server/application (trace) logging: Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>.  This means that you now have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
+		Event logs and server/application (trace) logging: Logging support in @tomcat.product.name.short@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>.  This means that you now have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
 		</para>
-  	             <para>You configure logging for @product.name@ using the <link linkend="configuring-serviceability-logback">serviceability.xml</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file is essentially the Logback <literal>logback.xml</literal> (or <literal>logback-test.xml</literal>) configuration file but renamed for @short.product.name@. </para>
+  	             <para>You configure logging for @tomcat.product.name@ using the <link linkend="configuring-serviceability-logback">serviceability.xml</link> file in the <literal>$SERVER_HOME/config</literal> directory.  This file is essentially the Logback <literal>logback.xml</literal> (or <literal>logback-test.xml</literal>) configuration file but renamed for @tomcat.product.name.short@. </para>
 		</listitem>
 	</itemizedlist>
 
@@ -398,8 +398,8 @@ role.admin=juliet</programlisting>
 	<section id="configuring-serviceability-medic">
 	  <title>The org.eclipse.virgo.medic.properties File</title>
 
-	  <para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.medic.properties</literal> file configures @short.product.name@ service dumps and whether you want to capture <literal>System.out</literal> and <literal>System.err</literal> output to your application's trace file. </para>
-  	  <para>The following table describes the properties you can include in the <literal>$SERVER_HOME/config/org.eclipse.virgo.medic.properties</literal> file. This file configures serviceability properties that @short.product.name@ includes in addition to those supplied by the Logback, configured in the <literal>serviceability.xml</literal> file.</para>
+	  <para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.medic.properties</literal> file configures @tomcat.product.name.short@ service dumps and whether you want to capture <literal>System.out</literal> and <literal>System.err</literal> output to your application's trace file. </para>
+  	  <para>The following table describes the properties you can include in the <literal>$SERVER_HOME/config/org.eclipse.virgo.medic.properties</literal> file. This file configures serviceability properties that @tomcat.product.name.short@ includes in addition to those supplied by the Logback, configured in the <literal>serviceability.xml</literal> file.</para>
 
           <table id="medic-properties-table" colsep="1" frame="all" rowsep="1">
             <title>Serviceability Properties</title>
@@ -414,12 +414,12 @@ role.admin=juliet</programlisting>
   
   	        <row>
   	  	  <entry><literal>dump.root.directory</literal></entry>
-  	  	  <entry>Specifies the directory to which @short.product.name@ writes the service dumps.  The directory name is relative to <literal>$SERVER_HOME</literal>.  </entry>
+  	  	  <entry>Specifies the directory to which @tomcat.product.name.short@ writes the service dumps.  The directory name is relative to <literal>$SERVER_HOME</literal>.  </entry>
 	        </row>
 
 	        <row>
 		  <entry><literal>log.wrapSysOut</literal></entry>
-		  <entry>Specifies whether you want to capture <literal>System.out</literal> output from your applications to the application trace file.  The output is logged by @short.product.name@'s root logger, which captures <literal>INFO</literal> level and above. 
+		  <entry>Specifies whether you want to capture <literal>System.out</literal> output from your applications to the application trace file.  The output is logged by @tomcat.product.name.short@'s root logger, which captures <literal>INFO</literal> level and above. 
 			<para>Valid values for this property are <literal>true</literal> to capture <literal>System.out</literal> output, or <literal>false</literal> to disable the capture.</para>
 			<para>For more information, see <link linkend="sysout-and-syserr">System.out and System.err</link>.</para>
 		  </entry>
@@ -427,7 +427,7 @@ role.admin=juliet</programlisting>
 
 	        <row>
 		  <entry><literal>log.wrapSysErr</literal></entry>
-		  <entry>Specifies whether you want to capture <literal>System.err</literal> output from your applications to the application trace file.  The output is logged by @short.product.name@'s root logger, which captures <literal>INFO</literal> level and above. 
+		  <entry>Specifies whether you want to capture <literal>System.err</literal> output from your applications to the application trace file.  The output is logged by @tomcat.product.name.short@'s root logger, which captures <literal>INFO</literal> level and above. 
 			<para>Valid values for this property are <literal>true</literal> to capture <literal>System.err</literal> output, or <literal>false</literal> to disable the capture.</para>
 			<para>For more information, see <link linkend="sysout-and-syserr">System.out and System.err</link>.</para>
 		  </entry>
@@ -440,9 +440,9 @@ role.admin=juliet</programlisting>
 	</section>
 	<section id="configuring-serviceability-logback">
 	  <title>The serviceability.xml File</title>
-		<para>Logging support in @short.product.name@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>, which is a successor of the log4j project. The Logback logging framework is faster, more reliable, and easier to use than log4j and certain other logging systems.</para>
-  	        <para>You configure logging for @product.name@ using the <literal>$SERVER_HOME/config/serviceability.xml</literal> file.  This file is the standard Logback <literal>logback.xml</literal> or <literal>logback-test.xml</literal> configuration file, but renamed for @short.product.name@. </para>
-		<para>The following listing shows the default <literal>serviceability.xml</literal> file in a freshly-installed @short.product.name@; see the text after the listing for a brief overview of the file:</para>
+		<para>Logging support in @tomcat.product.name.short@ is based on <ulink url="http://logback.qos.ch/">Logback</ulink>, which is a successor of the log4j project. The Logback logging framework is faster, more reliable, and easier to use than log4j and certain other logging systems.</para>
+  	        <para>You configure logging for @tomcat.product.name@ using the <literal>$SERVER_HOME/config/serviceability.xml</literal> file.  This file is the standard Logback <literal>logback.xml</literal> or <literal>logback-test.xml</literal> configuration file, but renamed for @tomcat.product.name.short@. </para>
+		<para>The following listing shows the default <literal>serviceability.xml</literal> file in a freshly-installed @tomcat.product.name.short@; see the text after the listing for a brief overview of the file:</para>
 		<programlisting language="xml"><![CDATA[<configuration>
 	<appender name="SIFTED_LOG_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
 		<discriminator>
@@ -520,11 +520,11 @@ role.admin=juliet</programlisting>
 
 </configuration>]]></programlisting>
 
-	<para>Logback allows @short.product.name@ to use logger, appender, and encoder (layout) objects to log messages according to message type and level and to format these messages and define where they are written.  The default <literal>serviceability.xml</literal> file shown above includes four appenders and three loggers (two user and one root.)</para>
+	<para>Logback allows @tomcat.product.name.short@ to use logger, appender, and encoder (layout) objects to log messages according to message type and level and to format these messages and define where they are written.  The default <literal>serviceability.xml</literal> file shown above includes four appenders and three loggers (two user and one root.)</para>
 
-	<para>The main information to get from this file is that @short.product.name@ writes log messages to four different locations that map to the four appenders:</para>
+	<para>The main information to get from this file is that @tomcat.product.name.short@ writes log messages to four different locations that map to the four appenders:</para>
 	<itemizedlist>
-		<listitem><para>The <literal>SIFTED_LOG_FILE</literal> appender logs both global and application-specific messages to the <literal>$SERVER_HOME/serviceability/logs/</literal><emphasis><literal>applicationName</literal></emphasis><literal>/log.log</literal> file, where <emphasis><literal>applicationName</literal></emphasis> refers to the name of the application.   The log messages for the @short.product.name@ itself are logged to the <literal>$SERVER_HOME/serviceability/logs/virgo-server/log.log</literal> file. Because this appender creates different log files for each application, it is called a <emphasis>sifting appender</emphasis>.   </para>
+		<listitem><para>The <literal>SIFTED_LOG_FILE</literal> appender logs both global and application-specific messages to the <literal>$SERVER_HOME/serviceability/logs/</literal><emphasis><literal>applicationName</literal></emphasis><literal>/log.log</literal> file, where <emphasis><literal>applicationName</literal></emphasis> refers to the name of the application.   The log messages for the @tomcat.product.name.short@ itself are logged to the <literal>$SERVER_HOME/serviceability/logs/virgo-server/log.log</literal> file. Because this appender creates different log files for each application, it is called a <emphasis>sifting appender</emphasis>.   </para>
 		<para>
 			The default behaviour of these trace files is that, once <literal>log.log</literal> reaches a 10Mb limit, it rolls into a series of files named	
 			<literal>log_</literal><emphasis>i</emphasis><literal>.log</literal> where <emphasis>i</emphasis> ranges from 1 to 4, and logging continues in 
@@ -534,7 +534,7 @@ role.admin=juliet</programlisting>
 		 <para><literal>[2008-05-15 09:09:46.940] server-dm-2 org.apache.coyote.http11.Http11Protocol I Initializing Coyote HTTP/1.1 on http-48080</literal></para>
 		</listitem>
 		<listitem><para>The <literal>LOG_FILE</literal> appender is very similar to the first one, but it logs <emphasis>all</emphasis> log messages to the <literal>$SERVER_HOME/serviceability/log/log.log</literal> file rather than sifting application-specific messages to their own log file.  The rolling policy and message format for this appender is similar to that of the <literal>SIFTED_LOG_FILE</literal> appender.</para></listitem>
-		<listitem><para>The <literal>EVENT_LOG_STDOUT</literal> appender does not log messages to a file, but rather to the console window from which you started @short.product.name@. For example:</para>
+		<listitem><para>The <literal>EVENT_LOG_STDOUT</literal> appender does not log messages to a file, but rather to the console window from which you started @tomcat.product.name.short@. For example:</para>
 		 <para><literal>[2010-10-25 16:20:49.367] Thread-3   &lt;WE0000I&gt; Starting web bundle 'org.eclipse.virgo.apps.admin.web' version '2.1.0.RELEASE' with context path '/admin'.</literal></para>
 		</listitem>
 
@@ -543,7 +543,7 @@ role.admin=juliet</programlisting>
 
 	<para>The loggers and root logger specify the level of log that is written for each of the referenced appenders.</para>
 
-	<para>Typically, the default logging configuration as specified by the <literal>serviceability.xml</literal> file is adequate for all @short.product.name@ environments.  However, if you want to customize the logging framework further, you can edit this file as well as the <literal>org.eclipse.virgo.medic.properties</literal>.  See the <ulink url="http://logback.qos.ch/manual/index.html">logback documentation</ulink> for detailed information about the architecture and the configuration of Logback.</para>
+	<para>Typically, the default logging configuration as specified by the <literal>serviceability.xml</literal> file is adequate for all @tomcat.product.name.short@ environments.  However, if you want to customize the logging framework further, you can edit this file as well as the <literal>org.eclipse.virgo.medic.properties</literal>.  See the <ulink url="http://logback.qos.ch/manual/index.html">logback documentation</ulink> for detailed information about the architecture and the configuration of Logback.</para>
 	</section>
 
 
@@ -552,10 +552,12 @@ role.admin=juliet</programlisting>
 	<section id="configuring-web">
 		<title>Configuring the Web Integration Layer</title>
 		<para>
-			@product.name@ integrates an OSGi-enhanced version of the <ulink url="http://tomcat.apache.org/">Tomcat Servlet Container</ulink>
-			in order to provide support for deploying Java EE WARs and OSGi <emphasis>Web Application Bundles</emphasis>.
-			You configure the behaviour of the Web Integration Layer using the properties file called <literal>org.eclipse.virgo.web.properties</literal>.
-			As with the other @short.product.name@ configuration files, the <literal>org.eclipse.virgo.web.properties</literal> file is located in the <literal>$SERVER_HOME/config</literal> directory. 
+			@tomcat.product.name@ integrates an OSGi-enhanced version of the <ulink url="http://tomcat.apache.org/">Tomcat Servlet Container</ulink>
+			in order to provide support for deploying Java EE WARs and OSGi <emphasis>Web Application Bundles</emphasis>. The @jetty.product.name@
+			does not provide support for Java EE WARs but does for <emphasis>Web Application Bundles</emphasis>. For @tomcat.product.name@ you 
+			configure the behaviour of the Web Integration Layer using the properties file called <literal>org.eclipse.virgo.web.properties</literal>.
+			The <literal>org.eclipse.virgo.web.properties</literal> file is located in the <literal>$SERVER_HOME/config</literal> directory along with 
+			the other @tomcat.product.name.short@ configuration files, or <literal>$SERVER_HOME/jetty</literal> for @jetty.product.name@. 
 		</para>
 		<para>The following table describes the properties.  </para>
         <table id="configuring-web-integration-layer" colsep="1" frame="all" rowsep="1">
@@ -586,14 +588,17 @@ role.admin=juliet</programlisting>
 								<ulink url="../../virgo-programmer-guide/html/index.html">Programmer Guide</ulink> for details.
 							</para>
 							<para>
-								A value of <literal>strict</literal> causes @short.product.name@ to interpret certain headers in strict compliance with
+								A value of <literal>strict</literal> causes @tomcat.product.name.short@ to interpret certain headers in strict compliance with
 								the OSGi Web Applications specification if they are not specified.
 							</para>
 							<para>
-								A value of <literal>defaulted</literal> causes @short.product.name@ to set certain headers to default values if they are not specified.
-								This was how @short.product.name@ behaved prior to version 3.
+								A value of <literal>defaulted</literal> causes @tomcat.product.name.short@ to set certain headers to default values if they are not specified.
+								This was how @tomcat.product.name.short@ behaved prior to version 3.
 								<emphasis>This value is provided as a migration aid and may not be supported in future releases.</emphasis>
 								A warning event log message (WE0006W) is generated if this value is specified.
+							</para>
+							<para>
+								The @jetty.product.name@ will always operate in <literal>strict</literal> mode.
 							</para>
 						</entry>
 						<entry>
@@ -609,7 +614,7 @@ role.admin=juliet</programlisting>
 		<title>Configuring the Embedded Jetty Servlet Container</title>
 		<para>
 			The @jetty.product.name@ contains a standard Jetty configuration file at <literal>SERVER_HOME/jetty/etc/jetty.xml</literal>. 
-			This has been tailored to it's @product.name@ environment, to make modifications please refer to the
+			This has been tailored to the @umbrella.product.name@, to make modifications please refer to the
 			<ulink url="http://wiki.eclipse.org/Jetty/Howto/Configure_Jetty#Using_Jetty_XML">Jetty documentation</ulink>.
 		</para>
 	</section>
@@ -617,12 +622,12 @@ role.admin=juliet</programlisting>
 	<section id="configuring-tomcat">
 		<title>Configuring the Embedded Tomcat Servlet Container</title>
 		<para>
-			@product.name@
+			@tomcat.product.name@
 			embeds an OSGi-enhanced version of the <ulink url="http://tomcat.apache.org/">Tomcat Servlet Container</ulink>
 			in order to provide support for deploying Java EE WARs and OSGi <emphasis>Web Application Bundles</emphasis>. 
-			You configure the embedded Servlet container using the standard Apache Tomcat configuration.   The main difference is that the configuration file is called <filename>tomcat-server.xml</filename> rather than <literal>server.xml</literal>.  As with the other @short.product.name@ configuration files, the <literal>tomcat-server.xml</literal> file is located in the <literal>$SERVER_HOME/config</literal> directory. 
+			You configure the embedded Servlet container using the standard Apache Tomcat configuration.   The main difference is that the configuration file is called <filename>tomcat-server.xml</filename> rather than <literal>server.xml</literal>.  As with the other @tomcat.product.name.short@ configuration files, the <literal>tomcat-server.xml</literal> file is located in the <literal>$SERVER_HOME/config</literal> directory. 
 		</para>
-		<para>Here's an extract of the default configuration distributed with the @short.product.name@.
+		<para>Here's an extract of the default configuration distributed with the @tomcat.product.name.short@.
 		</para>
 		<programlisting language="xml"><![CDATA[<?xml version='1.0' encoding='utf-8'?>
 <Server port="8005" shutdown="SHUTDOWN">
@@ -672,14 +677,14 @@ role.admin=juliet</programlisting>
 
 		<tip>
 		  <title>Relative paths</title>
-		  <para>If the configured path to a directory or file does not represent an absolute path, @short.product.name@ typically interprets it as a path relative to the <filename>$SERVER_HOME</filename> directory.</para>
+		  <para>If the configured path to a directory or file does not represent an absolute path, @tomcat.product.name.short@ typically interprets it as a path relative to the <filename>$SERVER_HOME</filename> directory.</para>
 		</tip>
 
 		<itemizedlist>
 		  <listitem><para>The root element of the <literal>tomcat-server.xml</literal> file is <literal>&lt;Server&gt;</literal>. The attributes of this element represent the characteristics of the entire embedded Tomcat servlet container. The <literal>shutdown</literal> attribute specifies the command string that the shutdown port number receives via a TCP/IP connection in order to shut down the servlet container. The <literal>port</literal> attribute specifies the TCP/IP port number that listens for a shutdown message.</para></listitem>
 
       		  <listitem><para>The <literal>&lt;Listener&gt;</literal> XML elements specify the list of lifecycle listeners that monitor and manage the embedded Tomcat servlet container. Each listener class is a Java Management Extensions (JMX) MBean that listens to a specific component of the servlet container and has been programmed to do something at certain lifecycle events of the component, such as before starting up, after stopping, and so on.</para>
-			<para> The first four <literal>&lt;Listener&gt;</literal> elements configure standard Tomcat lifecycle listeners. The listener implemented by the <literal>org.eclipse.virgo.web.tomcat.ServerLifecycleLoggingListener</literal> class is specific to @product.name@ and manages server lifecycle logging.
+			<para> The first four <literal>&lt;Listener&gt;</literal> elements configure standard Tomcat lifecycle listeners. The listener implemented by the <literal>org.eclipse.virgo.web.tomcat.ServerLifecycleLoggingListener</literal> class is specific to @tomcat.product.name@ and manages server lifecycle logging.
 		</para> </listitem>
 
 		<listitem><para>The <literal>&lt;Service&gt;</literal> XML element groups together one or more connectors and a single engine. Connectors define a transport mechanism, such as HTTP, that clients use to to send and receive messages to and from the associated service. There are many transports that a client can use, which is why a <literal>&lt;Service&gt;</literal> element can have many <literal>&lt;Connector&gt;</literal> elements. The engine then defines how these requests and responses that the connector receives and sends are in turn handled by the servlet container; you can define only a single <literal>&lt;Engine&gt;</literal> element for any given <literal>&lt;Service&gt;</literal> element.</para>
@@ -736,14 +741,14 @@ role.admin=juliet</programlisting>
 
 		<section id="configuring-tomcat-connectors">
 			<title>Connector Configuration</title>
-			<para> The @product.name@ supports the configuration of any connector supported by Apache Tomcat. 
+			<para> The @tomcat.product.name@ supports the configuration of any connector supported by Apache Tomcat. 
 			See the default configuration above for syntax examples, and for further details of the configuration properties 
 			supported for various <literal>&lt;Connector&gt;</literal> implementations, 
 			consult the official <ulink url="http://tomcat.apache.org/tomcat-7.0-doc/config/http.html">Tomcat HTTP Connector</ulink> documentation.
 			</para>
 			<tip>
 				<title>Configuring SSL for Tomcat</title>
-				<para> The @product.name@ distribution includes a preconfigured <filename>$SERVER_HOME/config/keystore</filename> 
+				<para> The @tomcat.product.name@ distribution includes a preconfigured <filename>$SERVER_HOME/config/keystore</filename> 
 				file that contains a single self-signed SSL Certificate. 
 				The password for this <filename>keystore</filename> file is <literal>changeit</literal>.  
 				This <filename>keystore</filename> file is intended for testing purposes only. 
@@ -756,7 +761,7 @@ role.admin=juliet</programlisting>
 		<section id="configuring-tomcat-clustering">
 			<title>Cluster Configuration</title>
 			<para>
-				@product.name@ supports standard Apache Tomcat cluster configuration.
+				@tomcat.product.name@ supports standard Apache Tomcat cluster configuration.
 				By default, clustering of the embedded servlet container is disabled, 
 				and the default configuration does not include any clustering information.  
 				See  <ulink url="http://tomcat.apache.org/tomcat-7.0-doc/cluster-howto.html">Tomcat Clustering/Session Replication HOW-TO</ulink> 
@@ -767,10 +772,10 @@ role.admin=juliet</programlisting>
 			<section id="configuring-tomcat-contexts">
 				<title>Context Configuration</title>
 				<para>
-					@product.name@ supports standard Apache Tomcat web application context configuration.
+					@tomcat.product.name@ supports standard Apache Tomcat web application context configuration.
 					The <ulink url="http://tomcat.apache.org/tomcat-7.0-doc/config/index.html">Apache Tomcat Configuration Reference</ulink> has a section on
 					<ulink url="http://tomcat.apache.org/tomcat-7.0-doc/config/context.html">The Context Container</ulink> which describes the mechanism that
-					is used in @short.product.name@ for searching context configuration files and details the context configuration properties.
+					is used in @tomcat.product.name.short@ for searching context configuration files and details the context configuration properties.
 				</para>
 				<para>
 					Context configuration files may be placed in the following locations,
@@ -804,7 +809,7 @@ role.admin=juliet</programlisting>
                     </itemizedlist>
 				</para>
 				<para>
-					Note that the following context configuration features are not supported in @product.name@:
+					Note that the following context configuration features are not supported in @tomcat.product.name@:
 					<itemizedlist>
 						<listitem>
 						<para>
@@ -831,7 +836,7 @@ role.admin=juliet</programlisting>
 	<section id="configuring-provisioning-repository">
 		<title>Configuring the Local Provisioning Repository</title>
 		<para>
-		    You configure the locations that @product.name@ includes in its provisioning repository 
+		    You configure the locations that @tomcat.product.name@ includes in its provisioning repository 
 		    by editing the <literal>org.eclipse.virgo.repository.properties</literal> file in the <literal>$SERVER_HOME/config</literal> directory.  
 		    </para>
 		<para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
@@ -846,13 +851,13 @@ role.admin=juliet</programlisting>
 		with name <literal>ext</literal> is <literal>external</literal>.  
         </para>
 		<para>
-			The <literal>chain</literal> property specifies the order in which @product.name@ searches the individual repositories 
+			The <literal>chain</literal> property specifies the order in which @tomcat.product.name@ searches the individual repositories 
 			when it looks for dependencies.  
 			The <literal>chain</literal> property uses the names of the individual repositories as specified in the individual repository properties; 
 			for example, in the property <literal>ext.type=external</literal>, the name of the repository is <literal>ext</literal>.
 		</para>
 		<para>
-			The default repository configuration for a newly installed @product.name@ is as follows:
+			The default repository configuration for a newly installed @tomcat.product.name@ is as follows:
 			<programlisting><![CDATA[ext.type=external
 ext.searchPattern=repository/ext/{artifact}
 
@@ -864,9 +869,9 @@ chain=ext,usr]]></programlisting>
 
         
         <para>
-		The default configuration shown above has two searchpaths corresponding to the two default sub-directories of the <literal>$SERVER_HOME/repository</literal> directory created when you first install @short.product.name@: <literal>ext</literal> and <literal>usr</literal>. @product.name@ searches each of these individual repositories when locating entries for inclusion in the repository.  </para>
+		The default configuration shown above has two searchpaths corresponding to the two default sub-directories of the <literal>$SERVER_HOME/repository</literal> directory created when you first install @tomcat.product.name.short@: <literal>ext</literal> and <literal>usr</literal>. @tomcat.product.name@ searches each of these individual repositories when locating entries for inclusion in the repository.  </para>
 	 <para>
-	        The <literal>chain</literal> property shows the order in which @product.name@ searches the individual repositories: first <literal>ext</literal> and then <literal>usr</literal>. 
+	        The <literal>chain</literal> property shows the order in which @tomcat.product.name@ searches the individual repositories: first <literal>ext</literal> and then <literal>usr</literal>. 
 	</para>
 	<para>
 		The following table lists all the available properties that you can use to configure an individual repository.
@@ -900,22 +905,22 @@ chain=ext,usr]]></programlisting>
 							<listitem>
 								<para>
 									<literal>external</literal>: Specifies that this path points to a number of directories that satisfy a given search pattern 
-									and are local to the current @product.name@ instance. 
+									and are local to the current @tomcat.product.name@ instance. 
 									Use the <literal>searchPattern</literal> property to specify the directory search pattern.
 								</para>
 							</listitem>
 							<listitem>
 								<para>
-									<literal>watched</literal>: Specifies that this path points to a single directory, local to the current @product.name@ instance.  
-									@product.name@ regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
+									<literal>watched</literal>: Specifies that this path points to a single directory, local to the current @tomcat.product.name@ instance.  
+									@tomcat.product.name@ regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
 									Use the <literal>watchDirectory</literal> property to specify the watched directory 
-									and the <literal>watchInterval</literal> property to specify how often @short.product.name@ checks the directory.
+									and the <literal>watchInterval</literal> property to specify how often @tomcat.product.name.short@ checks the directory.
 								</para>
 							</listitem>
 							<listitem>
 								<para>
 									<literal>remote</literal>: Specifies that the path points to a remotely-hosted repository, 
-									hosted by a remote instance of @product.name@.  
+									hosted by a remote instance of @tomcat.product.name@.  
 									Use the <literal>uri</literal> property to specify the full URI of the remote repository.  
 									You can also specify the optional <literal>indexRefreshInterval</literal> property. 
 								</para>
@@ -956,7 +961,7 @@ chain=ext,usr]]></programlisting>
 					<para>
 						Specifies the single directory of a watched repository. 
 						You can specify either an absolute or relative pathname for the directory.  
-						If you specify a relative pathname, it is relative  to the root of the @short.product.name@ installation (<literal>$SERVER_HOME</literal>).  
+						If you specify a relative pathname, it is relative  to the root of the @tomcat.product.name.short@ installation (<literal>$SERVER_HOME</literal>).  
 						Use this property together with <emphasis><literal>repository-name</literal></emphasis><literal>.type=watched</literal>.
 					</para>
 				</entry>
@@ -994,20 +999,20 @@ chain=ext,usr]]></programlisting>
 						<itemizedlist>
 							<listitem>
 								<para>
-									<emphasis><literal>host</literal></emphasis> refers to the computer on which the remote @short.product.name@
+									<emphasis><literal>host</literal></emphasis> refers to the computer on which the remote @tomcat.product.name.short@
 									instance hosts the remote repository.
 								</para>
 							</listitem>
 							<listitem>
 								<para>
-									<emphasis><literal>port</literal></emphasis> refers to Tomcat listen port of the remote @short.product.name@
+									<emphasis><literal>port</literal></emphasis> refers to Tomcat listen port of the remote @tomcat.product.name.short@
 									instance which hosts the remote repository.
 								</para>
 							</listitem>
 							<listitem>
 								<para>
 									<emphasis><literal>remote-repository-name</literal></emphasis> refers to the name of the remote repository, 
-									as specified in the <literal>org.eclipse.virgo.apps.repository.properties</literal> file of the remote @short.product.name@ instance.
+									as specified in the <literal>org.eclipse.virgo.apps.repository.properties</literal> file of the remote @tomcat.product.name.short@ instance.
 								</para>
 							</listitem>
 						</itemizedlist>
@@ -1044,14 +1049,14 @@ chain=ext,usr]]></programlisting>
 	</para>
 	<section id="configuring-repository-watched-versus-external">
 		<title>Should I Configure a Watched or External Repository?</title>
-		<para>The main difference between a watched and an external repository is that @product.name@ regularly scans watched directories 
+		<para>The main difference between a watched and an external repository is that @tomcat.product.name@ regularly scans watched directories 
 		and automatically picks up any changed artifacts, 
-		while @short.product.name@ scans external directories only at startup, and then only if there is no cached index available.  
-		This means that @short.product.name@ always performs a scan of an external repository when you start the server 
+		while @tomcat.product.name.short@ scans external directories only at startup, and then only if there is no cached index available.  
+		This means that @tomcat.product.name.short@ always performs a scan of an external repository when you start the server 
 		with the <literal>-clean</literal> (as this deletes the index) and only scans during a normal startup if the index isn&rsquo;t there because, 
 		for example, this is the first time you start the server. 
 		</para>
-		<para>There is a performance cost associated with using a watched repository due to @short.product.name@ using resources 
+		<para>There is a performance cost associated with using a watched repository due to @tomcat.product.name.short@ using resources 
 		to scan the directory at the configured interval.  
 		The cost is small if the watched repository contains just a few artifacts; however, 
 		the performance cost increases as the number of artifacts increases.
@@ -1059,9 +1064,9 @@ chain=ext,usr]]></programlisting>
 		<para> For this reason, we recommend that you put most of your dependencies in external repositories, 
 		even when in development mode. 
 		If you make any changes to the artifacts in the external repositories, 
-		remember to restart @short.product.name@ with the <literal>-clean</literal> option so that the server picks up any changes.  
+		remember to restart @tomcat.product.name.short@ with the <literal>-clean</literal> option so that the server picks up any changes.  
 		Use watched directories for artifacts that you are prototyping, actively updating, or when adding new dependencies 
-		so that @short.product.name@ quickly and easily picks them up.  
+		so that @tomcat.product.name.short@ quickly and easily picks them up.  
 		To increase performance even during development, however, you can use an external repository for most of your dependencies, 
 		in particular the ones that are fairly static. 
 		</para>
@@ -1077,7 +1082,7 @@ chain=ext,usr]]></programlisting>
 	            The <emphasis><literal>repository-name</literal></emphasis><literal>.searchPattern</literal> and 
 	            <emphasis><literal>repository-name</literal></emphasis><literal>.watchDirectory</literal> properties specify search paths 
 	            for external and watched repositories, respectively, 
-	            that define a physical location that @product.name@ searches when looking for a library or bundle dependency. 
+	            that define a physical location that @tomcat.product.name@ searches when looking for a library or bundle dependency. 
 	            If a search path is relative, its location is relative to the root of the installation, 
 	            in other words, the <literal>$SERVER_HOME</literal> directory.
    	        </para>
@@ -1092,7 +1097,7 @@ chain=ext,usr]]></programlisting>
 		            Allowing wildcards to be named in this way is intended to improve the readability of search path configuration.
 		        </para>
 		        <para>
-			        In addition to supporting the above-described form of wildcards, @product.name@ also supports Ant-style paths, 
+			        In addition to supporting the above-described form of wildcards, @tomcat.product.name@ also supports Ant-style paths, 
 			        that is <literal>*</literal> and <literal>**</literal> can be used to represent any directory and 
 			        any series of directories, respectively. 
 			        For example, <literal>repository/usr/{bundle}</literal> and <literal>repository/usr/*</literal> 
@@ -1100,7 +1105,7 @@ chain=ext,usr]]></programlisting>
 			    </para>
 			    <para>
 				    A common usage of the <literal>**</literal> wildcard is to allow dependencies stored in a directory structure of varying depth, 
-				    such as a local Maven repository, to be provisioned by the @product.name@.
+				    such as a local Maven repository, to be provisioned by the @tomcat.product.name@.
 				</para>
 			</section>
 		</section>
@@ -1160,13 +1165,13 @@ chain=ext,usr,maven-repo]]></programlisting>
 	    <section id="configuring-repository-examples-remote-watched">
 	        <title>Add remote and watched repositories</title>
 		<para>The following example shows the default <literal>org.eclipse.virgo.repository.properties</literal> file 
-		from a freshly-installed @short.product.name@, but then updated to include new remote and watched repositories.  
+		from a freshly-installed @tomcat.product.name.short@, but then updated to include new remote and watched repositories.  
 		Both of these repositories are part of the repository chain. 
 		</para>
 		<para>The remote repository is called <literal>remote-repo</literal>.  
 		The URI of the hosted repository from which <literal>remote-repo</literal> gets its artifacts is 
 		<literal>http://my-host:8080/org.eclipse.virgo.apps.repository/my-hosted-repo</literal>;
-		this means that there is a @short.product.name@ instance running on host <literal>my-host</literal> 
+		this means that there is a @tomcat.product.name.short@ instance running on host <literal>my-host</literal> 
 		whose Tomcat server listens at the default port, <literal>8080</literal>, 
 		and this server instance hosts a repository called <literal>my-hosted-repo</literal>, 
 		configured in the <literal>org.eclipse.virgo.apps.repository.properties</literal> file of the remote server instance.  
@@ -1174,7 +1179,7 @@ chain=ext,usr,maven-repo]]></programlisting>
 		</para>
 		<para>The watched repository is called <literal>watched-repo</literal> and the directory that holds the artifacts 
 		is <literal>repository/watched</literal>, 
-		relative to the installation directory of the @short.product.name@ instance.  
+		relative to the installation directory of the @tomcat.product.name.short@ instance.  
 		The server checks for changes in this watched repository every 5 seconds.
 		</para>
 		<programlisting><![CDATA[ext.type=external
@@ -1198,7 +1203,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 
 	<section id="configuring-hosted-repo">
 		<title>Configuring a Hosted Repository</title>
-		<para>You configure a @short.product.name@ instance to host a repository 
+		<para>You configure a @tomcat.product.name.short@ instance to host a repository 
 		by editing the <literal>$SERVER_HOME/config/org.eclipse.virgo.apps.repository.properties</literal> file; 
 		remote clients can then access the artifacts in this hosted repository and use them locally.
 		</para>
@@ -1227,7 +1232,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 			<row>
 				<entry><emphasis><literal>repository-name</literal></emphasis><literal>.type</literal></entry>
 				<entry>Specifies the type of path of the hosted repository.  
-				All paths are local to the current @short.product.name@ instance. 
+				All paths are local to the current @tomcat.product.name.short@ instance. 
 				You can set this property to one of the following valid values:
 	<itemizedlist>
 
@@ -1240,9 +1245,9 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 	<listitem>
 	<para>
 	<literal>watched</literal>: Specifies that this path points to a single directory. 
-	@product.name@ regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
+	@tomcat.product.name@ regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
 	Use the <literal>watchDirectory</literal> property to specify the actual watched directory and the <literal>watchInterval</literal> property 
-	to specify how often @short.product.name@ checks the directory.
+	to specify how often @tomcat.product.name.short@ checks the directory.
 	</para>
 	</listitem>
 	</itemizedlist>
@@ -1264,7 +1269,7 @@ chain=ext,usr,remote-repo,watched-repo]]></programlisting>
 				<entry><emphasis><literal>repository-name</literal></emphasis><literal>.watchDirectory</literal></entry>
 			<entry> <para>Specifies the single directory of a watched hosted repository. 
 			You can specify either an absolute or relative pathname for the directory.  
-			If you specify a relative pathname, it is relative to the root of the @short.product.name@ installation (<literal>$SERVER_HOME</literal>).  
+			If you specify a relative pathname, it is relative to the root of the @tomcat.product.name.short@ installation (<literal>$SERVER_HOME</literal>).  
 			Use this property when <literal>repository-name.type=watched</literal>.
 			</para></entry>
 			</row>
@@ -1327,7 +1332,7 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 			</para>
 			<para>
 				<emphasis role="bold">WARNING:</emphasis> We strongly recommend that you update only the <literal>osgi.console</literal> and
-				<literal>org.eclipse.virgo.suppress.heap.dumps</literal> properties; updating the other properties could cause @short.product.name@
+				<literal>org.eclipse.virgo.suppress.heap.dumps</literal> properties; updating the other properties could cause @tomcat.product.name.short@
 				to fail. These properties are documented for your information only.
 			</para>
 		
@@ -1385,7 +1390,7 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 			</para>
 			<para>
 				<emphasis role="bold">WARNING:</emphasis> We advise you not to change the framework profile unless you are sure you know exactly what
-				you are doing; updating the profile could cause @short.product.name@ to fail.
+				you are doing; updating the profile could cause @tomcat.product.name.short@ to fail.
 			</para>
 		
 			<table id="configuring-framework-profile-table" colsep="1" frame="all" rowsep="1">
@@ -1408,7 +1413,7 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 									boot delegated and must not be specified in this property.
 								</para>
 								<para>
-									A common reason for adding packages to this property is to run @short.product.name@ under a performance profiler.
+									A common reason for adding packages to this property is to run @tomcat.product.name.short@ under a performance profiler.
 								</para>
 							</entry>
 						</row>
@@ -1444,7 +1449,7 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 	<title>Configuring framework extensions and fragments on the system bundle</title>
 	
 		<para>
-			This section provides information about configuring framework extensions and fragments on the system bundle. Deployment of such bundles is not allowed in @short.product.name@. This is because by refreshing or uninstalling them the system.bundle is also refreshed, leading to server crash.
+			This section provides information about configuring framework extensions and fragments on the system bundle. Deployment of such bundles is not allowed in @tomcat.product.name.short@. This is because by refreshing or uninstalling them the system.bundle is also refreshed, leading to server crash.
 		</para>
 		<para>
 			<emphasis role="bold">NOTE:</emphasis> This only applies for fragments on the system bundle. All other fragment bundles have no deployment restrictions.
@@ -1454,10 +1459,10 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 			However sometimes there are no other options and one has to use framework extensions or fragments on system bundle.
 		</para>
 		<para>
-			Here's how to configure that in several steps without bringing instability to your @short.product.name@:
+			Here's how to configure that in several steps without bringing instability to your @tomcat.product.name.short@:
 		</para>
 		<para>
-			<emphasis role="bold">1.</emphasis> Place your fragment bundle in the <literal>/lib/kernel</literal> directory of your @short.product.name@ installation.
+			<emphasis role="bold">1.</emphasis> Place your fragment bundle in the <literal>/lib/kernel</literal> directory of your @tomcat.product.name.short@ installation.
 			<para>
 				Lets say we have bundle with
 			</para>

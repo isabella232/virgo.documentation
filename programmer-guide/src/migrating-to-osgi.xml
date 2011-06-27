@@ -6,7 +6,7 @@
 	<para>
 		Taking on a new technology such as OSGi may seem a bit daunting at first,
 		but a proven set of migration steps can help ease the journey. Teams
-		wishing to migrate existing applications to run on the @product.name@
+		wishing to migrate existing applications to run on the @tomcat.product.name@
 		will find that their applications typically fall into one of the following
 		categories.
 
@@ -26,7 +26,7 @@
 					of application, you will typically either deploy your application
 					as multiple individual bundles, as a single PAR file, or as a plan,
 					which is the recommended approach for deploying applications on
-					the @product.name@. See <xref linkend="migrating-to-osgi-par-plan" /> for details.
+					the @tomcat.product.name@. See <xref linkend="migrating-to-osgi-par-plan" /> for details.
 				</para>
 			</listitem>
 		</itemizedlist>
@@ -37,7 +37,7 @@
 		<title>Migrating Web Applications</title>
 		<para>
 			Many applications may start with the standard WAR format for web applications and
-			gradually migrate to a more OSGi-oriented architecture. Since the @product.name@ 
+			gradually migrate to a more OSGi-oriented architecture. Since the @tomcat.product.name@ 
 			offers several benefits to all supported deployment formats, it provides a smooth
 			migration path. Of course, depending on your application&rsquo;s complexity and your
 			experience with OSGi, you may choose to start immediately with an OSGi-based
@@ -47,11 +47,11 @@
 		<section id="migrating-to-osgi-web-standard-war">
 			<title>Standard WAR</title>
 			<para>
-				If you are not yet familiar with OSGi or simply want to deploy an existing web application on the @product.name@,
-				you can deploy a standard WAR and leverage the @short.product.name@ with a minimal learning curve. In fact reading the 
-				<ulink url="../../virgo-user-guide/html/index.html">@product.name@ User Guide</ulink>
+				If you are not yet familiar with OSGi or simply want to deploy an existing web application on the @tomcat.product.name@,
+				you can deploy a standard WAR and leverage the @tomcat.product.name.short@ with a minimal learning curve. In fact reading the 
+				<ulink url="../../virgo-user-guide/html/index.html">@tomcat.product.name@ User Guide</ulink>
 				is pretty much all that you need to do to get started. Furthermore, you will gain
-				familiarity with the @product.name@, while preparing to take advantage of the other formats. 
+				familiarity with the @tomcat.product.name@, while preparing to take advantage of the other formats. 
 			</para>
 		</section>
 		<section id="migrating-to-osgi-web-shared-libraries-war">
@@ -109,12 +109,12 @@
 			packaged as a PAR. The blue elements within the <emphasis>Application</emphasis> box constitute
 			the bundles of the application. Each of these bundles imports types from other bundles within
 			the PAR using <literal>Import-Package</literal>. The green elements in the left column represent
-			<emphasis>libraries</emphasis> installed on the @short.product.name@. The PAR&rsquo;s bundles reference these
+			<emphasis>libraries</emphasis> installed on the @tomcat.product.name.short@. The PAR&rsquo;s bundles reference these
 			libraries using <literal>Import-Library</literal>. The purple element in the left column
-			represents a bundle within the @short.product.name@&rsquo;s bundle repository which is imported by the DAO
+			represents a bundle within the @tomcat.product.name.short@&rsquo;s bundle repository which is imported by the DAO
 			bundle using <literal>Import-Bundle</literal>. In contrast to a traditional, monolithic
 			WAR deployment, the PAR format provides both a logical and physical application boundary
-			and simultaneously allows the application to benefit from both the OSGi container and the @product.name@.
+			and simultaneously allows the application to benefit from both the OSGi container and the @tomcat.product.name@.
 			<mediaobject><imageobject><imagedata fileref="images/migrating-to-osgi-par-structure.png" /></imageobject></mediaobject>
 		</para>
 		</section>

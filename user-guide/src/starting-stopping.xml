@@ -2,48 +2,48 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="starting-stopping">
-	  <title>Starting and Stopping @product.name@</title>
-        <titleabbrev>Starting and Stopping @short.product.name@</titleabbrev>
+	  <title>Starting and Stopping @tomcat.product.name@</title>
+        <titleabbrev>Starting and Stopping @tomcat.product.name.short@</titleabbrev>
 	  <section>
-	    <title>Starting @product.name@</title>
+	    <title>Starting @tomcat.product.name@</title>
 	    <para>
-	      To start @product.name@ run the <literal>startup.sh</literal> (Linux) or <literal>startup.bat</literal> (Windows) script.  
+	      To start @tomcat.product.name@ run the <literal>startup.sh</literal> (Linux) or <literal>startup.bat</literal> (Windows) script.  
 	      For both platforms, the script is located in the <literal>SERVER_HOME/bin</literal> directory.
 	    </para>
 	    <section>
 	      <title>Linux</title>
 	      <para>
-	        To start @product.name@, open a terminal window and run <literal>startup.sh</literal>:
+	        To start @tomcat.product.name@, open a terminal window and run <literal>startup.sh</literal>:
 	      </para>
 	      <screen>prompt$ cd $SERVER_HOME
 prompt$ bin/startup.sh</screen>
 	      <para>
-	        Once @product.name@ has started, the console will display a log message
+	        Once @tomcat.product.name@ has started, the console will display a log message
 	        similar to the one shown below, along with other status messages:
 	      </para>
 
 	      <screen>[2009-11-30 12:12:12.111] Thread-2   &lt;UR0001I&gt; User region ready.</screen>
-	      <para>The preceding message indicates that you can start using @short.product.name@.</para>
+	      <para>The preceding message indicates that you can start using @tomcat.product.name.short@.</para>
 	    </section>
 	    <section>
 	      <title>Microsoft Windows</title>
 	      <para>
-	        To start @product.name@, open a command-window and run <literal>startup.bat</literal>:
+	        To start @tomcat.product.name@, open a command-window and run <literal>startup.bat</literal>:
 	      </para>
 	      <screen>prompt> cd %SERVER_HOME%
 prompt> bin\startup.bat</screen>
 	      <para>
-	        Once @product.name@ has started, the console will display a log message
+	        Once @tomcat.product.name@ has started, the console will display a log message
 	        similar to the one shown below, along with other status messages:
 	      <screen>[2009-11-30 12:12:12.111] Thread-2   &lt;UR0001I&gt; User region ready.</screen>
-	      <para>The preceding message indicates that you can start using @short.product.name@.</para>
+	      <para>The preceding message indicates that you can start using @tomcat.product.name.short@.</para>
 	      </para>
 	    </section>
 	  </section>
 	  <section>
 	    <title>Starting in Clean Mode</title>
 	    <para>
-			When you start @product.name@ in clean mode, the startup script removes the <literal>SERVER_HOME/work</literal> directory (and hence all
+			When you start @tomcat.product.name@ in clean mode, the startup script removes the <literal>SERVER_HOME/work</literal> directory (and hence all
 			running applications) as well as all trace, log and dump files.  It leaves the
 			<literal>SERVER_HOME/repository</literal> and <literal>SERVER_HOME/pickup</literal> directories untouched,
 			which means that any applications previously hot deployed will be automatically reinstalled.
@@ -51,7 +51,7 @@ prompt> bin\startup.bat</screen>
 	    <section>
 	      <title>Linux</title>
 	      <para>
-	        To start @product.name@ in clean mode, open a terminal window and run <literal>startup.sh -clean</literal>:
+	        To start @tomcat.product.name@ in clean mode, open a terminal window and run <literal>startup.sh -clean</literal>:
 	      </para>
 	      <screen>prompt$ cd $SERVER_HOME
 prompt$ bin/startup.sh -clean </screen>
@@ -59,7 +59,7 @@ prompt$ bin/startup.sh -clean </screen>
 	    <section>
 	      <title>Microsoft Windows</title>
 	      <para>
-	        To start @product.name@ in clean mode, open a command window and run <literal>startup.bat -clean</literal>:
+	        To start @tomcat.product.name@ in clean mode, open a command window and run <literal>startup.bat -clean</literal>:
 	      </para>
 	      <screen>prompt> cd %SERVER_HOME%
 prompt> bin\startup.bat -clean</screen>
@@ -70,7 +70,7 @@ prompt> bin\startup.bat -clean</screen>
 	    <section>
 	      <title>Linux</title>
 	      <para>
-	        To start @product.name@ in debug mode, run
+	        To start @tomcat.product.name@ in debug mode, run
 	        <literal>startup.sh</literal> passing in the
 	        <literal>-debug</literal> argument:
 	      </para>
@@ -93,7 +93,7 @@ prompt$ bin/startup.sh -debug 8001</screen>
 	      <screen>prompt$ cd $SERVER_HOME
 prompt$ bin/startup.sh -debug -suspend</screen>
 	      <para>
-	        This starts the debug agent, but prevents @product.name@ from actually
+	        This starts the debug agent, but prevents @tomcat.product.name@ from actually
 	        starting until a debugger attaches to the agent. This can be useful
 	        when trying to diagnose problems that occur during startup.
 	      </para>
@@ -101,7 +101,7 @@ prompt$ bin/startup.sh -debug -suspend</screen>
 	    <section>
 	      <title>Microsoft Windows</title>
 	      <para>
-	        To start @product.name@ in debug mode, run
+	        To start @tomcat.product.name@ in debug mode, run
 	        <literal>startup.bat</literal> passing in the
 	        <literal>-debug</literal> argument:
 	      </para>
@@ -124,7 +124,7 @@ prompt> bin\startup.bat -debug 8001</screen>
 	      <screen>prompt> cd %SERVER_HOME%
 prompt> bin\startup.bat -debug -suspend</screen>
 	      <para>
-	        This starts the debug agent, but prevents @product.name@ from actually
+	        This starts the debug agent, but prevents @tomcat.product.name@ from actually
 	        starting until a debugger attaches to the agent. This can be useful
 	        when trying to diagnose problems that occur during startup.
 	      </para>
@@ -132,7 +132,7 @@ prompt> bin\startup.bat -debug -suspend</screen>
 	  </section>
 		  <section>
 		    <title>Starting with JMX Access Modifications</title>
-			The @product.name@ always starts with JMX access enabled, allowing you to use a management tool such as JConsole 
+			The @tomcat.product.name@ always starts with JMX access enabled, allowing you to use a management tool such as JConsole 
 			to attach to the Web Server instance.
 			By default both local access and remote access over SSL with username and password
 			authentication are provided. The default port for secure JMX access is <literal>9875</literal> 
@@ -140,7 +140,7 @@ prompt> bin\startup.bat -debug -suspend</screen>
 			<section>
 				<title>Linux</title>
 				<para>
-					To start @product.name@ with default JMX access enabled, run <literal>startup.sh</literal> passing
+					To start @tomcat.product.name@ with default JMX access enabled, run <literal>startup.sh</literal> passing
 					in no arguments:
 				</para>
 				<screen>prompt$ cd $SERVER_HOME
@@ -171,13 +171,13 @@ prompt$ bin/jconsole.sh </screen>
 				<screen>prompt$ cd $SERVER_HOME
 prompt$ bin/startup.sh -jmxport 9090</screen>
 				<para>
-					This will start the @product.name@ with JMX enabled for remote connections on port <literal>9090</literal>.
+					This will start the @tomcat.product.name@ with JMX enabled for remote connections on port <literal>9090</literal>.
 				</para>
 				<para>
 					<imagedata fileref="images/jmx-remote-attach-jmxport.png"/>
 				</para>
 
-		                <para>To start the JMX remote access with a custom username and password, update the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the custom username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart @short.product.name@ for the changes to take effect.</para>
+		                <para>To start the JMX remote access with a custom username and password, update the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the custom username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart @tomcat.product.name.short@ for the changes to take effect.</para>
 	 <para>For example, if you want change the JMX remote access username to <literal>zebedee</literal> with password <literal>florence</literal>, change the file as follows: 
 		</para>
        		<programlisting>##################
@@ -203,14 +203,14 @@ role.admin=zebedee</programlisting>
 				<screen>prompt$ cd $SERVER_HOME
 prompt$ bin/startup.sh -keystore customKeystore -keystorePassword customKeystorePassword</screen>
 				<para>
-					This will start the @product.name@ with JMX enabled for remote connections using an SSL certificate from
+					This will start the @tomcat.product.name@ with JMX enabled for remote connections using an SSL certificate from
 					<literal>customKeystore</literal> with a password of <literal>customKeystorePassword</literal>.
 				</para>
 			</section>
 		    <section>
 		      <title>Microsoft Windows</title>
 				<para>
-					To start @product.name@ with default JMX access enabled, run <literal>startup.bat</literal> passing
+					To start @tomcat.product.name@ with default JMX access enabled, run <literal>startup.bat</literal> passing
 					in no arguments:
 				</para>
 				<screen>prompt> cd %SERVER_HOME%
@@ -240,13 +240,13 @@ prompt> bin\jconsole.bat </screen>
 				<screen>prompt> cd %SERVER_HOME%
 prompt> bin\startup.bat -jmxport 9090</screen>
 				<para>
-					This will start the @product.name@ with JMX enabled for remote connections on port
+					This will start the @tomcat.product.name@ with JMX enabled for remote connections on port
 					<literal>9090</literal>.
 				</para>
 				<para>
 					<imagedata fileref="images/jmx-remote-attach-jmxport.png"/>
 				</para>
-		                <para>To start the JMX remote access with a custom username and password, update the <literal>%SERVER_HOME%\config\org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the custom username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart @short.product.name@ for the changes to take effect.</para>
+		                <para>To start the JMX remote access with a custom username and password, update the <literal>%SERVER_HOME%\config\org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the custom username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart @tomcat.product.name.short@ for the changes to take effect.</para>
 	 <para>For example, if you want change the JMX remote access username to <literal>zebedee</literal> with password <literal>florence</literal>, change the file as follows: 
 		</para>
        		<programlisting>##################
@@ -272,7 +272,7 @@ role.admin=zebedee</programlisting>
 				<screen>prompt> cd %SERVER_HOME%
 prompt> bin\startup.bat -keystore customKeystore -keystorePassword customKeystorePassword</screen>
 				<para>
-					This will start the @product.name@ with JMX enabled for remote attach using an SSL certificate from
+					This will start the @tomcat.product.name@ with JMX enabled for remote attach using an SSL certificate from
 					<literal>customKeystore</literal> with a password of <literal>customKeystorePassword</literal>.
 				</para>
 		</section>
@@ -281,14 +281,14 @@ prompt> bin\startup.bat -keystore customKeystore -keystorePassword customKeystor
 		<title>Starting with a Custom Configuration Directory</title>
 		<para>
 			Use the <literal>-configDir</literal> option to specify an alternate <literal>config</literal> directory, different from the
-			default <literal>SERVER_HOME/config</literal> directory. This option allows you to use the same @product.name@ 
+			default <literal>SERVER_HOME/config</literal> directory. This option allows you to use the same @tomcat.product.name@ 
 			installation to run multiple instances of Web Server . Simply create a config directory for each
 			instance, specify unique port numbers, logging and tracing directories, and so on. and then specify that directory
-			when starting @product.name@.
+			when starting @tomcat.product.name@.
 		</para>
 		<para>
 			If you specify a relative path for the <literal>-configDir</literal> parameter, 
-			the startup script interprets the path as relative to the root of the @product.name@ installation, 
+			the startup script interprets the path as relative to the root of the @tomcat.product.name@ installation, 
 			and not relative to the directory from which you execute the <literal>startup</literal> script. 
 		</para>
 		<para>
@@ -297,13 +297,13 @@ prompt> bin\startup.bat -keystore customKeystore -keystorePassword customKeystor
 		</para>
 		<section>
 			<title>Linux</title>
-			To start @product.name@ using a config directory of <literal>/config/node1</literal>:
+			To start @tomcat.product.name@ using a config directory of <literal>/config/node1</literal>:
 			<screen>prompt$ cd $SERVER_HOME
 prompt$ bin/startup.sh -configDir /config/node1</screen>
 		</section>
 		<section>
 			<title>Windows</title>
-			To start @product.name@ using a config directory of <literal>c:\config\node1</literal>:
+			To start @tomcat.product.name@ using a config directory of <literal>c:\config\node1</literal>:
 			<screen>prompt> cd %SERVER_HOME%
 prompt> bin\startup.bat -configDir c:\config\node1</screen>
 		</section>
@@ -311,7 +311,7 @@ prompt> bin\startup.bat -configDir c:\config\node1</screen>
   <section id="starting-stopping-properties">
       <title>Start properties</title>
       <para>
-          You can use the properties in <link linkend="configuring-kernel">Configuring kernel</link> section to customize @product.name@. To specify a custom console port:
+          You can use the properties in <link linkend="configuring-kernel">Configuring kernel</link> section to customize @tomcat.product.name@. To specify a custom console port:
         <section>
           <title>Linux</title>
           <screen>prompt$ cd $SERVER_HOME
@@ -325,16 +325,16 @@ prompt> bin\startup.bat "-Fosgi.console=1234"</screen>
       </para>
   </section>
 	  <section>
-	    <title>Stopping @product.name@</title>
+	    <title>Stopping @tomcat.product.name@</title>
 	    <section>
 	      <title>Linux</title>
 	      <para>
-	        To stop a running instance of @product.name@, start a new terminal window and run the <literal>shutdown.sh</literal> script:
+	        To stop a running instance of @tomcat.product.name@, start a new terminal window and run the <literal>shutdown.sh</literal> script:
 	      </para>
 	      <screen>prompt$ cd $SERVER_HOME
 prompt$ bin/shutdown.sh</screen>
 	      <para>
-	        To stop a running instance of @product.name@ immediately, bypassing normal shutdown
+	        To stop a running instance of @tomcat.product.name@ immediately, bypassing normal shutdown
 		processing, run <literal>shutdown.sh</literal> with the <literal>-immediate</literal> option:
 	      </para>
 	      <screen>prompt$ cd $SERVER_HOME
@@ -351,12 +351,12 @@ prompt$ bin/shutdown.sh -jmxport 9090</screen>
 	    <section>
 	      <title>Microsoft Windows</title>
 	      <para>
-	        To stop a running instance of @product.name@, start a new console window and run the <literal>shutdown.bat</literal> script:
+	        To stop a running instance of @tomcat.product.name@, start a new console window and run the <literal>shutdown.bat</literal> script:
 	      </para>
 	      <screen>prompt> cd %SERVER_HOME%
 prompt> bin\shutdown.bat</screen>
 	      <para>
-	        To stop a running instance of @product.name@ immediately, bypassing normal shutdown
+	        To stop a running instance of @tomcat.product.name@ immediately, bypassing normal shutdown
 			processing, run <literal>shutdown.bat</literal> with the <literal>-immediate</literal> option:
 	      </para>
 	      <screen>prompt> cd %SERVER_HOME%
@@ -371,9 +371,9 @@ prompt> bin\shutdown.bat -jmxport 9090</screen>
 	    </section>
 	  </section>
 		  <section id="cleaning-without-starting">
-		    <title>Cleaning  @product.name@ without Starting it</title>
+		    <title>Cleaning  @tomcat.product.name@ without Starting it</title>
 		    <para>
-				When you clean @product.name@, the startup script removes the <literal>SERVER_HOME/work</literal> directory (and hence all
+				When you clean @tomcat.product.name@, the startup script removes the <literal>SERVER_HOME/work</literal> directory (and hence all
 				running applications) as well as all trace, log and dump files.  It leaves the
 				<literal>SERVER_HOME/repository</literal> and <literal>SERVER_HOME/pickup</literal> directories untouched,
 				which means that any applications previously hot deployed will be automatically reinstalled next time the Web Server is started.
@@ -389,7 +389,7 @@ prompt> bin\shutdown.bat -jmxport 9090</screen>
 		    <section>
 		      <title>Linux</title>
 		      <para>
-		        To clean @product.name@, open a terminal window and run <literal>startup.sh -clean -noStart</literal>:
+		        To clean @tomcat.product.name@, open a terminal window and run <literal>startup.sh -clean -noStart</literal>:
 		      </para>
 		      <screen>prompt$ cd $SERVER_HOME
 prompt$ bin/startup.sh -clean -noStart</screen>
@@ -397,7 +397,7 @@ prompt$ bin/startup.sh -clean -noStart</screen>
 		    <section>
 		      <title>Microsoft Windows</title>
 		      <para>
-		        To clean @product.name@, open a command window and run <literal>startup.bat -clean -noStart</literal>:
+		        To clean @tomcat.product.name@, open a command window and run <literal>startup.bat -clean -noStart</literal>:
 		      </para>
 		      <screen>prompt> cd %SERVER_HOME%
 prompt> bin\startup.bat -clean -noStart</screen>

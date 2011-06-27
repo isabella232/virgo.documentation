@@ -18,12 +18,12 @@
 		<title>Invoking the Admin Console</title>
 		<para>
 			To use the Admin Console, start the
-			@product.name@ and then enter the following URL in your 
+			@tomcat.product.name@ and then enter the following URL in your 
 			browser of choice.
 		</para>
 		<screen>http://localhost:8080/admin</screen>
 		<para>
-			Replace <literal>localhost</literal> with the hostname of the computer on which the @product.name@ is running if it is not the same as the computer on which you are running your browser.  </para>
+			Replace <literal>localhost</literal> with the hostname of the computer on which the @tomcat.product.name@ is running if it is not the same as the computer on which you are running your browser.  </para>
 		<para>The Admin Console uses basic authentication, therefore you will need to enter the default administration ID and password.
 		</para>
 		<screen>ID: admin 

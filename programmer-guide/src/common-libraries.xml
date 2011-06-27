@@ -15,7 +15,7 @@
 				into any bundle that uses Hibernate directly.
 			</para>
 			<para>
-			      	Additionally, if other bundles in your application contain types to be persisted by Hibernate, then be sure to specify the <code>import-scope</code> directive of the <literal>Import-Bundle</literal> header in the bundle that uses Hibernate directly.  The <literal>import-scope</literal> directive tells @product.name@ to implicitly import the bundle into all other bundles that make up the application; this ensures that bundles that indirectly depend on the generated Hibernate classes have access to them, but you do not have to explicitly update their <code>Import-Bundle</code> header, ensuring modularity.  For example:
+			      	Additionally, if other bundles in your application contain types to be persisted by Hibernate, then be sure to specify the <code>import-scope</code> directive of the <literal>Import-Bundle</literal> header in the bundle that uses Hibernate directly.  The <literal>import-scope</literal> directive tells @tomcat.product.name@ to implicitly import the bundle into all other bundles that make up the application; this ensures that bundles that indirectly depend on the generated Hibernate classes have access to them, but you do not have to explicitly update their <code>Import-Bundle</code> header, ensuring modularity.  For example:
 			</para>
 	           <programlisting>
 Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";<emphasis role="bold">import-scope:=application</emphasis></programlisting>

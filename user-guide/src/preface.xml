@@ -3,7 +3,7 @@
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="preface">
 	<title>
-		Preface - @product.name@ User Guide
+		Preface - @tomcat.product.name@ User Guide
 	</title>
 
 	<section id="Audience">

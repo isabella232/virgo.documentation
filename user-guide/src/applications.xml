@@ -7,9 +7,9 @@
 	<section id="deployment-deploying">
 		<title>Deploying Artifacts</title>
 		<para>
-			In the context of @product.name@, <emphasis>deploying</emphasis> refers to installing an artifact to the server and then starting it to make it available to users.  Typically, when you install an artifact, @short.product.name@ automatically starts it as long as the server is able to successfully resolve all its dependencies.  For this reason, the terms <emphasis>deploying</emphasis> and <emphasis>installing</emphasis> are often used interchangeably. 
+			In the context of @tomcat.product.name@, <emphasis>deploying</emphasis> refers to installing an artifact to the server and then starting it to make it available to users.  Typically, when you install an artifact, @tomcat.product.name.short@ automatically starts it as long as the server is able to successfully resolve all its dependencies.  For this reason, the terms <emphasis>deploying</emphasis> and <emphasis>installing</emphasis> are often used interchangeably. 
 		</para>
-		<para>You deploy artifacts to @product.name@ using either the hot-deploy directory on the file system or by using the Admin Console.  The artifacts that you can deploy to @short.product.name@ are:
+		<para>You deploy artifacts to @tomcat.product.name@ using either the hot-deploy directory on the file system or by using the Admin Console.  The artifacts that you can deploy to @tomcat.product.name.short@ are:
 		</para>
 		<itemizedlist>
 		  <listitem>Bundles, including Web applications</listitem>
@@ -37,14 +37,14 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 			<para>
 				If there is a problem with the deployment, such as the server being unable to resolve all dependencies, the console and log both show an error message to help you with troubleshooting.
 			</para>
-			<para>If there are no problems, @short.product.name@ automatically starts the artifact so that it is immediately available to users.
+			<para>If there are no problems, @tomcat.product.name.short@ automatically starts the artifact so that it is immediately available to users.
 			</para>
 		</section>
 
 		<section id="deployment-deploying-manual">
 			<title>Deploying Using the Admin Console</title>
 			<para>
-				The Admin Console allows you to upload a file, which will be deployed automatically, from your local file system to the @product.name@. As soon as @product.name@ deploys the artifact,  it appears in the list of artifacts in the Admin Console.  Note that the GUI for uploading varies according to the browser and operating system you use.
+				The Admin Console allows you to upload a file, which will be deployed automatically, from your local file system to the @tomcat.product.name@. As soon as @tomcat.product.name@ deploys the artifact,  it appears in the list of artifacts in the Admin Console.  Note that the GUI for uploading varies according to the browser and operating system you use.
 			</para>
 
 			<para>See <link linkend="admin-console-install-artifacts">Installing a New Artifact</link> for details about using the Admin Console to install (deploy) an artifact.  See <link linkend="admin-console">The Web Admin Console</link> for general information about the Admin Console.</para> 
@@ -55,15 +55,15 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 			<para>
 				When you deploy an artifact, either using hot-deployment or the Admin Console, Web Server copies the file to its work directory (<literal>SERVER_HOME/work</literal>) and registers it in its internal registry. 
 				The server then checks any dependencies the artifact might have to see if
-				deployment can go ahead, and if all dependencies are resolved, @product.name@ starts the artifact.
-				Because of all these additional internal activities, you should NOT simply copy the artifact into the <literal>work</literal> directory and assume it will be deployed, because @product.name@ will not do so.
+				deployment can go ahead, and if all dependencies are resolved, @tomcat.product.name@ starts the artifact.
+				Because of all these additional internal activities, you should NOT simply copy the artifact into the <literal>work</literal> directory and assume it will be deployed, because @tomcat.product.name@ will not do so.
 			</para>
 		</section>
 		<section id="deployment-deploying-ordering">
 			<title>Deployment Ordering</title>
 			<para>
 				When deploying bundles that have dependencies, it is important 
-				that you deploy them in the correct order. @product.name@ 
+				that you deploy them in the correct order. @tomcat.product.name@ 
 				honors this ordering when it redeploys the artifacts on startup. 
 			</para>
 			<para>
@@ -74,7 +74,7 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 		<section id="deployment-deploying-restrictions">
 			<title>Restrictions</title>
 			<para>
-				@product.name@ does not support deploying fragment bundles. Typically, fragment bundles should be placed in <literal>$SERVER_HOME/repository/ext</literal>
+				@tomcat.product.name@ does not support deploying fragment bundles. Typically, fragment bundles should be placed in <literal>$SERVER_HOME/repository/ext</literal>
 				or <literal>$SERVER_HOME/repository/usr</literal> so that they will be installed automatically with their host bundles.
 			</para>
 		</section>
@@ -83,7 +83,7 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 	<section id="deployment-undeploy">
 		<title>Undeploying Artifacts</title>
 		<para>
-			You undeploy artifacts from @product.name@ by using either the hot-deploy directory on the file system, or the Admin Console.
+			You undeploy artifacts from @tomcat.product.name@ by using either the hot-deploy directory on the file system, or the Admin Console.
 		</para>
 		<para><emphasis role="bold">Note:</emphasis>  As with deploying, in this guide the terms <emphasis>undeploying</emphasis> and <emphasis>uninstalling</emphasis> are used interchangeably.</para>
 
@@ -95,7 +95,7 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 			<programlisting>prompt$ cd $SERVER_HOME/pickup
 prompt$ rm helloWorld.war</programlisting>
 			<para>
-				When @product.name@ completes the undeployment of the artifact, messages similar to the following appear in the log:
+				When @tomcat.product.name@ completes the undeployment of the artifact, messages similar to the following appear in the log:
 			</para>
 			<screen>[2009-12-10 06:46:33.254] fs-watcher   &lt;HD0001I&gt; Hot deployer processing 'DELETED' event for file 'helloWorld.war'.
 [2009-12-10 06:46:33.259] Thread-3     &lt;WE0002I&gt; Stopping web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
