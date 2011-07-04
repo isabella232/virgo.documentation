@@ -1476,7 +1476,7 @@ symbolic name: <emphasis>testFragment</emphasis>, version: <emphasis>1.0.0</emph
 				Add a line at the end of the <literal>launcher.bundles</literal> property similar to this one:		
 			</para>
 			<programlisting>
-<emphasis>file:lib/kernel/testFragmentBinary_1.0.0.jar@start</emphasis>
+<emphasis>file:lib/kernel/testFragmentBinary_1.0.0.jar</emphasis>
 			</programlisting>
 			<tip>
 				Don't forget to add <literal>,\</literal> at the end of the previous last bundle in the <literal>launcher.bundles</literal> list.
