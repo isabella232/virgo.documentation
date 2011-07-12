@@ -272,6 +272,71 @@
 			</para>
 		</section>
 	</section>
+	<section id="tooling-pars">
+		<title>Developing PARs</title>
+		<para>
+			In @project.name@, applications consisting of multiple bundles can be packaged as a PAR.
+		</para>
+
+		<para>
+			To create a PAR, right-click in the <emphasis>Package Explorer</emphasis> and select <menuchoice><guimenu>New</guimenu>
+			<guimenuitem>Project…</guimenuitem></menuchoice>. In the dialog that opens select
+			<menuchoice><guimenu>EclipseRT</guimenu><guimenuitem>PAR Project</guimenuitem></menuchoice> and press
+			<emphasis>Next</emphasis>:
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/new-par-project.png" format="PNG" align="center" width="9cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/new-par-project.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+		</para>
+		<para>
+			In the New PAR Project dialog, ensure the <emphasis>Use default location</emphasis> option is unchecked,
+			enter a suitable name for the project, set the location to a suitable directory,
+			and press <emphasis>Next</emphasis>. For example, the Greenpages sample PAR project would look like this:
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/create-par-project.png" format="PNG" align="center" width="9cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/create-par-project.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+		</para>
+		<para>
+			In the next dialog, some of the PAR properties are pre-populated.
+			Set the Application Name and the Version as appropriate, then
+			ensure that the <emphasis>Target Runtime</emphasis>
+			is set to <emphasis>Virgo Web Server (Runtime) ...</emphasis> and press <emphasis>Next</emphasis>.
+			For example:
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/par-content.png" format="PNG" align="center" width="10cm"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/par-content.png" format="PNG" align="center"/>
+			</imageobject>
+		</mediaobject>
+		</para>
+			<para>
+			In the next dialog, select the bundles so that they are contained in the PAR and press <emphasis>Finish</emphasis>.
+			For example:
+			<mediaobject>
+				<imageobject role="fo">
+					<imagedata fileref="images/bundle-references.png" format="PNG" align="center" width="9cm"/>
+				</imageobject>
+				<imageobject role="html">
+					<imagedata fileref="images/bundle-references.png" format="PNG" align="center"/>
+				</imageobject>
+			</mediaobject>
+		</para>
+			
+		<para>
+			The PAR project is then created.
+		</para>
+	</section>
 	<section id="tooling-deploying">
 		<title>Deploying Applications</title>
 		<para>

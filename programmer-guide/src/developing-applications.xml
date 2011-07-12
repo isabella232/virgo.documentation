@@ -631,13 +631,9 @@ password          = secret</screen>
 <!-- ======================================================================= -->
 
 	<section id="developing-applications-programmatic-access">
-		<title>Programmatic Access to The Deployer Pipeline</title>
+		<title>Programmatic Access to the Servlet Context</title>
 		<para>
-			Typically access to features are provided automatically via custom 
-			manifest headers or other configuration mechanisms. There may be situations, 
-			however, for which programmatic access to such features is desirable or necessary.
-			This section describes how to programmatically access features from application 
-			code in a bundle. 
+			This section describes how to programmatically access the servlet context to obtain the WebApplicationContext or the BundleContext. 
 		</para>
 		<section id="developing-applications-programmatic-access-web">
 			<title>Programmatic Access to Web Features</title>
