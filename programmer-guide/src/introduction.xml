@@ -30,7 +30,7 @@
 			<itemizedlist>
 				<listitem><ulink url="http://www.springframework.org/">Spring Framework</ulink>, obviously!</listitem>
 				<listitem><ulink url="http://tomcat.apache.org/">Tomcat</ulink> as the web container.</listitem>
-				<listitem><ulink url="http://www.osgi.org/Specifications/HomePage">OSGi R4.2</ulink>.</listitem>
+				<listitem><ulink url="http://www.osgi.org/Specifications/HomePage">OSGi R4.3</ulink>.</listitem>
 				<listitem><ulink url="http://www.eclipse.org/equinox/">Equinox</ulink> as the OSGi implementation.</listitem>
 				<listitem><ulink url="http://www.springframework.org/osgi/">Spring Dynamic Modules for OSGi</ulink> for working with OSGi in a Spring application.</listitem>
 				<listitem><ulink url="http://www.springsource.com/products/sts">SpringSource Tool Suite</ulink> for developing applications.</listitem>
