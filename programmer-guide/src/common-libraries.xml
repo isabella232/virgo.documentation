@@ -4,37 +4,6 @@
 <chapter id="common-libraries">
 	<title>Working with Common Enterprise Libraries</title>
     <titleabbrev>Common Libraries</titleabbrev>
-	<section id="common-libraries-spring">
-		<title>Working with Spring</title>
-		<section id="common-libraries-spring-bundor-template">
-			<title>Importing Spring in a Bundlor Template</title>
-				<para>
-					It is good practice to restrict the version of Spring packages that your application imports to a suitable version range.
-					This can be achieved by adding the following, for example, to a Bundlor <filename>template.mf</filename> file:
-<programlisting><![CDATA[Import-Template: 
- org.springframework.*;version="[3.0.0, 3.1.0)"]]>
-</programlisting>
-					(Be careful not to leave trailing spaces on lines or insert blank lines in this file. An exception is that there
-					must be one trailing space after the header's colon to indicate that the header continues on the next line.)
-				</para>
-		</section>
-		<section id="common-libraries-spring-component-scanning">
-			<title>Enabling Component Scanning</title>
-			<para>
-				Spring will detect annotations such as <classname>@Controller</classname> and create a bean of controller type, 
-				<emphasis>provided that</emphasis> it scans the classpath for these.
-				Spring&rsquo;s component scanning is enabled by inserting a <literal>context</literal> tag 
-				in one of the Spring bean definition files.
-			</para>
-			<para>
-				For example, the Greenpages sample has a file <filename>WEB-INF/greenpages-servlet.xml</filename> in the
-				<literal>src/main/webapp</literal> folder containing the following lines:
-<programlisting language="xml"><![CDATA[	<!-- enable classpath scanning -->
-	<context:component-scan base-package="greenpages.web" />]]>
-</programlisting>
-			</para>
-		</section>
-	</section>
 	<section id="common-libraries-hibernate">
 		<title>Working with Hibernate</title>
 		<section id="common-libraries-hibernate-import">
