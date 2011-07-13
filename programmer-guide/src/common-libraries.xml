@@ -11,9 +11,9 @@
 				<para>
 					It is good practice to restrict the version of Spring packages that your application imports to a suitable version range.
 					This can be achieved by adding the following, for example, to a Bundlor <filename>template.mf</filename> file:
-		<programlisting><![CDATA[Import-Template: 
-		 org.springframework.*;version="[3.0.0, 3.1.0)"]]>
-		</programlisting>
+<programlisting><![CDATA[Import-Template: 
+ org.springframework.*;version="[3.0.0, 3.1.0)"]]>
+</programlisting>
 					(Be careful not to leave trailing spaces on lines or insert blank lines in this file. An exception is that there
 					must be one trailing space after the header's colon to indicate that the header continues on the next line.)
 				</para>
@@ -29,9 +29,9 @@
 			<para>
 				For example, the Greenpages sample has a file <filename>WEB-INF/greenpages-servlet.xml</filename> in the
 				<literal>src/main/webapp</literal> folder containing the following lines:
-	<programlisting language="xml"><![CDATA[	<!-- enable classpath scanning -->
-		<context:component-scan base-package="greenpages.web" />]]>
-	</programlisting>
+<programlisting language="xml"><![CDATA[	<!-- enable classpath scanning -->
+	<context:component-scan base-package="greenpages.web" />]]>
+</programlisting>
 			</para>
 		</section>
 	</section>
