@@ -4,7 +4,6 @@
 	<path id="bundles">
 		<pathelement location="${basedir}/../user-guide"/>
 		<pathelement location="${basedir}/../programmer-guide"/>
-		<pathelement location="${basedir}/../getting-started"/>
 	</path>
 
 	<property file="${basedir}/../build.properties"/>
