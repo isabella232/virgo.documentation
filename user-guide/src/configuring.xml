@@ -553,11 +553,12 @@ role.admin=juliet</programlisting>
 		<title>Configuring the Web Integration Layer</title>
 		<para>
 			@tomcat.product.name@ integrates an OSGi-enhanced version of the <ulink url="http://tomcat.apache.org/">Tomcat Servlet Container</ulink>
-			in order to provide support for deploying Java EE WARs and OSGi <emphasis>Web Application Bundles</emphasis>. The @jetty.product.name@
-			does not provide support for Java EE WARs but does for <emphasis>Web Application Bundles</emphasis>. For @tomcat.product.name@ you 
+			in order to provide support for deploying Java EE WARs and OSGi <emphasis>Web Application Bundles</emphasis>.
+		</para>
+		<para>
+			For @tomcat.product.name@ you 
 			configure the behaviour of the Web Integration Layer using the properties file called <literal>org.eclipse.virgo.web.properties</literal>.
-			The <literal>org.eclipse.virgo.web.properties</literal> file is located in the <literal>$SERVER_HOME/config</literal> directory along with 
-			the other @tomcat.product.name.short@ configuration files, or <literal>$SERVER_HOME/jetty</literal> for @jetty.product.name@. 
+			The <literal>org.eclipse.virgo.web.properties</literal> file is located in the <literal>$SERVER_HOME/repository/ext</literal> directory. 
 		</para>
 		<para>The following table describes the properties.  </para>
         <table id="configuring-web-integration-layer" colsep="1" frame="all" rowsep="1">
@@ -608,10 +609,17 @@ role.admin=juliet</programlisting>
                 </tbody>
              </tgroup>
 		</table>
+		<para>
+			There is no Web Integration Layer in @jetty.product.name@. The relevant configuration is described in
+			<link linkend="configuring-jetty">Configuring the Embedded Jetty Servlet Container</link>.
+		</para>
 	</section>
 
 	<section id="configuring-jetty">
 		<title>Configuring the Embedded Jetty Servlet Container</title>
+		<para>
+			@jetty.product.name@ supports <emphasis>Web Application Bundles</emphasis>, but does not provide support for Java EE WARs.
+		</para>
 		<para>
 			The @jetty.product.name@ contains a standard Jetty configuration file at <literal>SERVER_HOME/jetty/etc/jetty.xml</literal>. 
 			This has been tailored to the @umbrella.product.name@, to make modifications please refer to the
