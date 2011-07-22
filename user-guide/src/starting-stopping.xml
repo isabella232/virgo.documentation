@@ -308,22 +308,6 @@ prompt$ bin/startup.sh -configDir /config/node1</screen>
 prompt> bin\startup.bat -configDir c:\config\node1</screen>
 		</section>
 	</section>
-  <section id="starting-stopping-properties">
-      <title>Start properties</title>
-      <para>
-          You can use the properties in <link linkend="configuring-kernel">Configuring kernel</link> section to customize @tomcat.product.name@. To specify a custom console port:
-        <section>
-          <title>Linux</title>
-          <screen>prompt$ cd $SERVER_HOME
-prompt$ bin/startup.sh -Fosgi.console=1234</screen>
-        </section>
-        <section>
-          <title>Windows</title>
-          <screen>prompt> cd %SERVER_HOME%
-prompt> bin\startup.bat "-Fosgi.console=1234"</screen>
-        </section>
-      </para>
-  </section>
 	  <section>
 	    <title>Stopping @tomcat.product.name@</title>
 	    <section>

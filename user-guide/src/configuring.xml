@@ -24,7 +24,7 @@
         <section id="configuring-kernel-properties">
             <title>Configuring kernel</title>
 
-            <para>To change any of the kernel properties, provide the new value to the startup script. For example: <literal>$SERVER_HOME/bin/startup.sh -Forg.eclipse.virgo.kernel.startup.wait.limit=3600</literal>.  The following table describes all properties.</para>
+            <para>To change any of the kernel properties, provide the new value to the startup script. The following table describes all properties.</para>
             <table id="configuring-kernel-table" colsep="1" frame="all" rowsep="1">
                 <title>Kernel Configuration Properties</title>
                 <tgroup cols="3">
@@ -1368,14 +1368,6 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 								First Failure Data Capture (FFDC) event. When the heap dumps are produced they will be located along with
 								the other dump artifacts in the <literal>$SERVER_HOME/serviceability/dump/</literal> folder.
 							</entry>
-						</row>
-						<row>
-							<entry><literal>osgi.console</literal></entry>
-							<entry>Specifies the port number which the Equinox console will use. 
-							The usual port number is 2401. 
-							If specified, the Equinox console is enabled (with the Equinox Console Extension) during user region start. 
-							If not specified, the Equinox console is not available unless the parameter <literal>-Fosgi.console</literal>
-							is passed to the startup script.</entry>
 						</row>
 						<row>
 							<entry><literal>osgi.java.profile</literal></entry>
