@@ -5,10 +5,10 @@
 	<title>Preface</title>
 	<para>
 		Increasing complexity in modern enterprise applications is a fact of life.
-		You not only have to deal with complex business logic, but also a myriad
+		Developers not only have to deal with complex business logic, but also a myriad
 		of other concerns such as security, auditing, exposing business
 		functionality to external applications, and managing the evolution of
-		that functionality and technologies. The Spring Framework addresses these 
+		these concerns. The Spring Framework addresses these 
 		needs by offering a Plain-Old Java Object (POJO) based solution that 
 		lets you focus on your business logic.
 	</para>
@@ -20,8 +20,9 @@
 		This is where the @umbrella.product.name@ comes into play. It offers a simple yet
 		comprehensive platform to develop, deploy, and service enterprise
 		applications. In this Programmer Guide, we explore the runtime portions of the
-		@umbrella.product.name@, the @tomcat.product.name@ and the @kernel.product.name@, and learn how to develop
-		applications to benefit from their capabilities.
+		@umbrella.product.name@, the @tomcat.product.name@, @jetty.product.name@ and the 
+		@kernel.product.name@, and learn how to develop applications to benefit from their 
+		capabilities.
 	</para>
 	<simplesect>
 		<title>A Note to @kernel.product.name@ Programmers</title>

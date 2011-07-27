@@ -3,7 +3,6 @@
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="introduction">
 	<title>Introduction to the @tomcat.product.name@</title>
-    <titleabbrev>Introduction to @tomcat.product.name.short@</titleabbrev>
 	<section id="introduction-preface">
 		<title>Overview</title>
 		<para>
@@ -23,7 +22,7 @@
 			enterprise applications. 
 		</para>
 		<section id="introduction-constituents">
-			<title>What makes up the @tomcat.product.name@?</title>
+			<title>What Makes up the @tomcat.product.name@?</title>
 			<para>
 				The @tomcat.product.name@ is built on top of the following core technologies: 
 			</para>
@@ -56,21 +55,20 @@
 		</para>
 		<para>
 			To maintain a minimal runtime footprint, OSGi bundles are installed on demand by the
-			@kernel.product.name.short@ provisioning subsystem. This allows for an application to be installed into a running
+			@kernel.product.name.short@. This allows for an application to be installed into a running
 			@tomcat.product.name.short@ and for its dependencies to be satisfied from an external repository. Not only
 			does this remove the need to manually install all your application dependencies, which
 			would be tedious, but it also keeps memory usage to a minimum.
 		</para>
 		<para>
 			As shown in the figure, @kernel.product.name.short@ runs on top of Equinox within a standard Java
-			Virtual Machine. Above the @kernel.product.name.short@ is a layer of subsystems which contribute functionality
-			to the @tomcat.product.name.short@. Subsystems typically provide additional services to the basic OSGi container
-			such as serviceability, management, and specific artifact deployment such as web application.
+			Virtual Machine. Above the @kernel.product.name.short@ further layers contribute functionality
+			to the @tomcat.product.name.short@. Such as management, serviceability and web application support.
 		</para>
 		<para>
 			Version @bundle.version@ of the @tomcat.product.name@ supports <emphasis>bundle</emphasis>, 
 			<emphasis>plan</emphasis>, <emphasis>PAR</emphasis>, <emphasis>configuration</emphasis>,
-			<emphasis>web</emphasis>, and <emphasis>WAR</emphasis> artifacts, which enable
+			<emphasis>Web Application Bundle (WAB)</emphasis>, and <emphasis>WAR</emphasis> artifacts, which enable
 			you to build sophisticated web applications. This includes support for
 			standard Java EE WARs, "shared library" WARs, and "shared services" WARs, each of
 			which will be covered in greater detail in <xref linkend="architecture" />.
@@ -87,7 +85,7 @@
 		</para>
 
 		<section id="introduction-unified-deployment">
-			<title>Deployment options and migration paths</title>
+			<title>Deployment Options and Migration Paths</title>
 			<para>
 				While many applications deployed in the @tomcat.product.name@ will take advantage
 				of OSGi capabilities, not all applications need such sophistication.
@@ -102,7 +100,7 @@
 		</section>
 
 		<section id="introduction-simplified-deployment">
-			<title>Simplified development and deployment of OSGi-based applications</title> 
+			<title>Simplified Development and Deployment of OSGi-based Applications</title> 
 			<para>
 				Prior to the release of the @tomcat.product.name@, developing and deploying OSGi
 				applications involved inherent complexity such as:
@@ -184,7 +182,7 @@
 		</section>
 
 		<section id="introduction-diagnostics">
-			<title>Enhanced diagnostics during deployment and in production</title>
+			<title>Enhanced Diagnostics During Deployment and in Production</title>
 			<para>
 			    Identifying why an application won&rsquo;t deploy or which particular library
 			    dependencies are unsatisfied is the cause of many headaches!

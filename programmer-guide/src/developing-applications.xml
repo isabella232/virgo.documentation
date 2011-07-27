@@ -395,7 +395,10 @@ Manifest-Version: 1.0
 		  <screen>Bundle-SymbolicName: org.eclispe.virgo.exciting.app</screen>
 		  <para>If the bundle does not contain a <code>META-INF/MANIFEST.MF</code> file, then the name of the bundle is its filename minus the <code>.jar</code> or <code>.war</code> extension.</para>
  </listitem>
-		  <listitem><para><emphasis role="bold">Configuration File</emphasis>: The name of a configuration file is its filename minus the <code>.properties</code> extension. </para></listitem>
+			<listitem><para><emphasis role="bold">Configuration File</emphasis>: The name of a configuration or PID (Persistent Identity) is its filename minus the <code>.properties</code> extension. The PID can also be specified within the properties file with the 
+					<emphasis>service.pid</emphasis> property.
+					</para>
+			</listitem>
 		  <listitem><para><emphasis role="bold">Plan</emphasis>: The name of a plan is the value of the required <code>name</code> attribute of the <code>&lt;plan&gt;</code> element in the plan&rsquo;s XML file.  In the following XML snippet, the plan name is <code>multi-artifact.plan</code>:</para> 
 		<screen>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;plan name="<emphasis role="bold">multi-artifact.plan</emphasis>" version="1.0.0" scoped="true" atomic="true"
