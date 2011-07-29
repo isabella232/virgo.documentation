@@ -23,7 +23,7 @@
 		</para>
 	</section>
 	<section id="known.issues.cglib">
-		<title>Creating proxies with CGLIB for package-protected types</title>
+		<title>Creating proxies with CGLIB for Package Protected Types</title>
 		<para>
 			In traditional Java EE applications user types are loaded by the same <classname>ClassLoader</classname> as
 			CGLIB. This allows CGLIB to proxy package-protected types. In OSGi environments, user types and CGLIB will
@@ -43,7 +43,8 @@
 					Tag Libraries other than the standard Apache Tag Library.
 				</listitem>
 				<listitem>
-					Jetty 7 does not support the Servlet 3.0 spec. When Jetty 8.0 is released the Virgo Jetty Server will move up in a following release.
+					Jetty 7 does not support the Servlet 3.0 spec. When Jetty 8.0 is released the Virgo Jetty Server will 
+					move up in a later release.
 				</listitem>
 			</itemizedlist>
 		</para>
@@ -81,23 +82,22 @@
 	<section id="hibernate-resolution-issue">
 		<title>Hibernate Resolution Issue</title>
 		<para>
-			Applications using Hibernate 3.4.0.GA need to upgrade the Hibernate EJB fragment bundle to version 3.4.0.GA-A.
-			The symptoms are that the application will fail to resolve due to missing imports of packages such as
-			<literal>org.hibernate.ejb.transaction</literal>.
+			Applications using Hibernate 3.4.0.GA need to upgrade the JBoss Hibernate Entity manager fragment bundle to version 3.4.0.GA-A.
+			The symptoms are that the application will fail to resolve due to missing imports of packages such as <literal>org.hibernate.ejb.transaction</literal> 
+			and JBoss Hibernate Annotations <literal>com.springsource.org.hibernate.annotations</literal>.
 			See <ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=335174">bug 335174</ulink> for details.
 		</para>
 		<para>
-			The Hibernate EJB fragment bundle <literal>com.springsource.org.hibernate.ejb</literal> v3.4.0.GA in the
+			The JBoss Hibernate Entity manager fragment bundle <literal>com.springsource.org.hibernate.ejb</literal> v3.4.0.GA in the
 			<ulink url="http://ebr.springsource.com/repository/app/">SpringSource Enterprise Bundle Repository</ulink>
 			depends on the package <literal>org.slf4j</literal> with a version range that excludes the version of the
-			package provided with Virgo.
-			The net effect is that Hibernate EJB fragment bundle fails to attach to its host
+			package provided with Virgo. The net effect is that Hibernate EJB fragment bundle fails to attach to its host
 			<literal>com.springsource.org.hibernate</literal> and the host then does not export the packages the application
 			may need, such as <literal>org.hibernate.ejb.transaction</literal>.
 		</para>
 		<para>
-			An updated Hibernate EJB fragment with version 3.4.0.GA-A which fixes this problem is available from the
-			<ulink url="http://ebr.springsource.com/repository/app/">SpringSource Enterprise Bundle Repository</ulink>.
+			An updated JBoss Hibernate Entity manager fragment and JBoss Hibernate Annotations with versions 3.4.0.GA-A which fixes this 
+			problem is available from the <ulink url="http://ebr.springsource.com/repository/app/">SpringSource Enterprise Bundle Repository</ulink>.
 		</para>
 	</section>
 	<section id="scoping-and-substitutable-exports">

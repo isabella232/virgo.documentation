@@ -335,17 +335,20 @@
 	<!-- ======================================================================= -->
 	<section id="architecture-dependency-types">
 		<title>Dependency Types</title>
-		<para> In an OSGi environment, there are two kinds of dependencies between various bundles:
-				<emphasis>type</emphasis> dependency and <emphasis>service</emphasis> dependency. <itemizedlist>
+		<para> 
+			In an OSGi environment, there are two kinds of dependencies between various bundles:
+			<emphasis>type</emphasis> dependency and <emphasis>service</emphasis> dependency. 
+			<itemizedlist>
 				<listitem>
 					<para>
 						<emphasis role="bold">Type dependency</emphasis>: A bundle may depend on a
 						type exported by another bundle thus creating a type dependency. Type
 						dependencies are managed through <literal>Import-Package</literal> and
-							<literal>Export-Package</literal> directives in the OSGi manifest. This
+						<literal>Export-Package</literal> directives in the OSGi manifest. This
 						kind of dependency is similar to a JAR file using types in other JAR files
 						from the classpath. However, as we&rsquo;ve seen earlier, there are
-						significant differences. </para>
+						significant differences. 
+					</para>
 				</listitem>
 				<listitem>
 					<para>
@@ -355,26 +358,44 @@
 						communicating effectively to the same object. More specifically, any state
 						for that service will be shared between all the clients of that service.
 						This kind of arrangement is similar to the commonly seen client-server
-						interaction through mechanisms such as RMI or Web Services. </para>
+						interaction through mechanisms such as RMI or Web Services. 
+					</para>
 				</listitem>
-			</itemizedlist></para>
+			</itemizedlist>
+		</para>
 	</section>
+	<!-- ======================================================================= -->
+	<!-- ======================================================================= -->
+	<section id="regions">
+		<title>Regions</title>
+		<para> 
+			Conceptually, the @umbrella.product.name@ can be divided into two separate subsystems, called Regions. This 
+			provides a way to keep the @kernel.product.name@ separate from user applications. Read more about Regions 
+			and the two in @project.name@ in the <ulink url="../../virgo-user-guide/html/index.html">User Guide</ulink> 
+			concepts section.
+		</para>
+	</section>
+	
 	<!-- ======================================================================= -->
 	<!-- ======================================================================= -->
 	<section id="architecture-forming-bundles">
 		<title>A Guide to Forming Bundles</title>
-		<para> So what makes a good application suitable for deployment on the @tomcat.product.name@? Since
+		<para> 
+			So what makes an application suitable for deployment on the @tomcat.product.name@? Since
 			OSGi is at the heart of the @tomcat.product.name.short@, modular applications consisting of
 			bundles, which each represent distinct functionality and well-defined boundaries, can
 			take maximum advantage of the OSGi container&rsquo;s capabilities. The core ideas behind
 			forming bundles require following good software engineering practices: separation of
-			concerns, minimum coupling, and communication through clear interfaces. In this section,
+			concerns, loose coupling, and communication through clear interfaces. In this section,
 			we look at a few approaches that you may use to create modular applications for
 			@tomcat.product.name@ deployment. Please consider the following discussion as guidelines and
-			not as rules. </para>
-		<para> Bundles can be formed along horizontal slices of layering and vertical slices of
+			not as rules. 
+		</para>
+		<para> 
+			Bundles can be formed along horizontal slices of layering and vertical slices of
 			function. The objective is to enable independent development of each bundle and minimize
-			the skills required to develop each bundle.</para>
+			the skills required to develop each bundle.
+		</para>
 		<para> For example, an application could have the following bundles:
 				<emphasis>infrastructure</emphasis>, <emphasis>domain</emphasis>,
 				<emphasis>repository</emphasis>, <emphasis>service</emphasis>, and
@@ -445,7 +466,7 @@
 		<para> Within each layer, you may create bundles for each subsystem representing a vertical
 			slice of business functionality. For example, as shown in the following figure, the
 			service layer is divided into two bundles each representing separate business
-			functionalities. <mediaobject>
+			functions. <mediaobject>
 				<imageobject><imagedata fileref="images/bundle-dependencies-verticals.png"
 				/></imageobject>
 			</mediaobject></para>

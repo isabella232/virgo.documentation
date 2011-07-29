@@ -64,7 +64,7 @@
 		</para>
 	</section>
 	<section id="tooling-running">
-		<title>Running a @tomcat.product.name@ instance within Eclipse</title>
+		<title>Running a @tomcat.product.name@ Instance Within Eclipse</title>
 		<para>
 			After installing the Tools from the update site outlined in the previous section, you
 			will be able to configure an instance of the @tomcat.product.name.short@ inside Eclipse.
@@ -154,7 +154,7 @@
 			</para>
 		</section>
 		<section id="tooling-config-migrating-existing-projects">
-			<title>Migrating existing Java Projects</title>
+			<title>Migrating Existing Java Projects</title>
 			<para>
 				To migrate an existing Java Project to be used with the @tomcat.product.name.short@, the Tools
 				provide a migration action that adds the required meta data to the project.

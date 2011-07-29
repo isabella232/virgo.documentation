@@ -66,14 +66,17 @@ Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";<emp
 	<section id="common-libraries-tld">
 		<title>JSP Tag Libraries</title>
 		<para>
-			When using tag libraries within a WAR or Web Bundle, be sure to include an
-			<literal>Import-Bundle</literal> or <literal>Import-Library</literal> for the tag library
-			bundle(s). This will ensure that your module can see the TLD definition and implementing types.
-			For example, to use the Apache implementation of JSTL, add the following to your bundle&rsquo;s
-			<literal>/META-INF/MANIFEST.MF</literal>:
+			When using tag libraries within a WAR or WAB, be sure to include an <literal>Import-Bundle</literal> 
+			or <literal>Import-Library</literal> for the tag library bundle(s). This will ensure that your WAR or WAB 
+			can see the TLD definition and implementing types. For example, to use the Apache implementation of JSTL, 
+			add the following to your bundle&rsquo;s <literal>/META-INF/MANIFEST.MF</literal>:
 		</para>
 <programlisting>
 <emphasis role="bold">Import-Bundle</emphasis>: com.springsource.org.apache.taglibs.standard;version="1.1.2"
 </programlisting>
+		<para>
+			<literal>Import-Package</literal> can also be used but it is tedious to add all the imports as there are 
+			typically lots of tld definitions in a bundle providing them.
+		</para>
 	</section>
 </chapter>

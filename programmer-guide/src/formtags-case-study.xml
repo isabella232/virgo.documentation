@@ -2,7 +2,7 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="formtags-case-study">
-	<title>Case study: Migrating the Form Tags sample application</title>
+	<title>Case Study: Migrating the Form Tags Sample Application</title>
 	<titleabbrev>Migrating Form Tags</titleabbrev>
 	<para>
 		In this chapter we will walk through the steps needed to migrate the
@@ -43,7 +43,7 @@
 	<para>
 		The following image displays the directory structure you should have
 		after installing the Form Tags sample. Note however that the release tag
-		will typically resemble <literal>2.0.0.RELEASE</literal>.
+		will typically resemble <literal>3.0.0.RELEASE</literal>.
 	</para>
 	<para><imagedata fileref="images/formtags-case-study-sample-layout.png" format="PNG"/></para>
 	<para>
@@ -89,13 +89,13 @@
 		<para>
 			We begin with a standard WAR deployment.
 			<note>
-				The @tomcat.product.name@ supports the standard Java EE WAR packaging
+				The @tomcat.product.name.short@ supports the standard Java EE WAR packaging
 				and deployment format as a first-class citizen, and there are many
 				benefits to deploying a standard WAR file on the @tomcat.product.name.short@ including,
 				but not limited to: tooling support, runtime error diagnostics, FFDC
 				(first failure data capture), etc.
 				In addition, support for standard WAR deployment provides an easy on-ramp
-				for trying out the @tomcat.product.name@ with existing web applications.
+				for trying out the @tomcat.product.name.short@ with existing web applications.
 			</note>
 		</para>
 		<para>
@@ -108,7 +108,7 @@
 		</para>
 		<para><imagedata fileref="images/formtags-case-study-exploded-war.png" format="PNG"/></para>
 		<para>
-			To deploy this application, simply copy <literal>dist/formtags-war-2.0.0.*.war</literal> to
+			To deploy this application, simply copy <literal>dist/formtags-war-3.0.0.*.war</literal> to
 			the <literal>SERVER_HOME/pickup</literal> directory for hot deployment.
 		</para>
 		<para>
@@ -119,19 +119,19 @@
 	   	</note>
 <programlisting>
 [2009-07-01 14:54:45.135] fs-watcher
-	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-war-2.0.0.RELEASE.war'.
+	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-war-3.0.0.RELEASE.war'.
 [2009-07-01 14:54:45.797] fs-watcher
-	&lt;SPDE0010I&gt; Deployment of 'formtags-war-2.0.0.RELEASE.war' version '0' completed.
+	&lt;SPDE0010I&gt; Deployment of 'formtags-war-3.0.0.RELEASE.war' version '0' completed.
 [2009-07-01 14:54:45.797] Thread-20
-	&lt;SPWE0000I&gt; Starting web bundle '/formtags-war-2.0.0.RELEASE'.
+	&lt;SPWE0000I&gt; Starting web bundle '/formtags-war-3.0.0.RELEASE'.
 [2009-07-01 14:54:46.380] Thread-20
-	&lt;SPWE0001I&gt; Started web bundle '/formtags-war-2.0.0.RELEASE'.
+	&lt;SPWE0001I&gt; Started web bundle '/formtags-war-3.0.0.RELEASE'.
 </programlisting>
 		<para>
 			Navigate to <literal>http://localhost:8080/</literal> plus the web application context path,
 			which in the above case is
-			<literal>formtags-war-2.0.0.RELEASE</literal>. Thus navigating to
-			<literal>http://localhost:8080/formtags-war-2.0.0.RELEASE</literal>
+			<literal>formtags-war-3.0.0.RELEASE</literal>. Thus navigating to
+			<literal>http://localhost:8080/formtags-war-3.0.0.RELEASE</literal>
 			should render the sample application&rsquo;s welcome page, as displayed in the screen
 			shot below.
 			<tip>
@@ -201,7 +201,7 @@ Ant-Version: Apache Ant 1.7.0
 Created-By: 1.5.0_13-119 (Apple Inc.)
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.springframework.showcase.formtags-shared-libs
-<emphasis role="bold">Import-Library</emphasis>: org.springframework.spring;version="[2.5.4,3.1.0)"
+<emphasis role="bold">Import-Library</emphasis>: org.springframework.spring;version="[3.0.0,4.0.0)"
 <emphasis role="bold">Import-Bundle</emphasis>: com.springsource.org.apache.taglibs.standard;version="1
  .1.2"
 </programlisting>
@@ -218,18 +218,18 @@ Bundle-SymbolicName: org.springframework.showcase.formtags-shared-libs
 	   	</note>
 <programlisting>
 [2009-07-01 15:00:14.953] fs-watcher
-	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-shared-libs-2.0.0.RELEASE.war'.
+	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-shared-libs-3.0.0.RELEASE.war'.
 [2009-07-01 15:00:15.363] fs-watcher
 	&lt;SPDE0010I&gt; Deployment of 'org.springframework.showcase.formtags_shared_libs' version '2' completed.
 [2009-07-01 15:00:15.364] Thread-20
-	&lt;SPWE0000I&gt; Starting web bundle '/formtags-shared-libs-2.0.0.RELEASE'.
+	&lt;SPWE0000I&gt; Starting web bundle '/formtags-shared-libs-3.0.0.RELEASE'.
 [2009-07-01 15:00:15.816] Thread-20
-	&lt;SPWE0001I&gt; Started web bundle '/formtags-shared-libs-2.0.0.RELEASE'.
+	&lt;SPWE0001I&gt; Started web bundle '/formtags-shared-libs-3.0.0.RELEASE'.
 </programlisting>
 		<para>
 			Navigating to <literal>http://localhost:8080/formtags-shared-libs-BUILDTAG</literal>
 			should render the welcome page. Note that for the pre-packaged distributable,
-			the <literal>BUILDTAG</literal> should be similar to <literal>2.0.0.RELEASE</literal>;
+			the <literal>BUILDTAG</literal> should be similar to <literal>3.0.0.RELEASE</literal>;
 			whereas, for a local build the <literal>-BUILDTAG</literal> may be completely
 			omitted. Please consult the console output, web-based admin console, or log
 			to determine the exact context path under which the web application has been deployed.
@@ -270,7 +270,7 @@ Bundle-Name: FormTags Service (and implementation)
 Bundle-SymbolicName: org.springframework.showcase.formtags.service-shared-services
 <emphasis role="bold">Export-Package</emphasis>: org.springframework.showcase.formtags.service,org.spri
  ngframework.showcase.formtags.domain
-Import-Library: org.springframework.spring;version="[2.5.4,3.1.0)"
+Import-Library: org.springframework.spring;version="[3.0.0,4.0.0)"
 </programlisting>
 			</para>
 			<para>
@@ -498,13 +498,13 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 		   	</note>
 <programlisting>
 [2009-07-01 15:09:19.819] fs-watcher
-	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-shared-services-war-2.0.0.RELEASE.war'.
+    &lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-shared-services-war-3.0.0.RELEASE.war'.
 [2009-07-01 15:09:20.167] fs-watcher
-	&lt;SPDE0010I&gt; Deployment of 'org.springframework.showcase.formtags.web_shared_services' version '2' completed.
+    &lt;SPDE0010I&gt; Deployment of 'org.springframework.showcase.formtags.web_shared_services' version '3' completed.
 [2009-07-01 15:09:20.168] Thread-20
-	&lt;SPWE0000I&gt; Starting web bundle '/formtags-shared-services-war-2.0.0.RELEASE'.
+    &lt;SPWE0000I&gt; Starting web bundle '/formtags-shared-services-war-3.0.0.RELEASE'.
 [2009-07-01 15:09:20.647] Thread-20
-   &lt;SPWE0001I&gt; Started web bundle '/formtags-shared-services-war-2.0.0.RELEASE'.
+    &lt;SPWE0001I&gt; Started web bundle '/formtags-shared-services-war-3.0.0.RELEASE'.
 </programlisting>
 			Navigating to the appropriate link should render the welcome page.
 		</section>
@@ -608,7 +608,7 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 <programlisting>
 Manifest-Version: 1.0
 Application-SymbolicName: org.springframework.showcase.formtags-par
-Application-Version: 1.0.0
+Application-Version: 3.0.0
 Application-Name: FormTags Showcase Application (PAR)
 </programlisting>
 				For more information on the contents of the PAR&rsquo;s
@@ -663,13 +663,13 @@ Application-Name: FormTags Showcase Application (PAR)
 			process yourself. This will help you better understand the concepts and
 			principles at work.  In addition, it is highly recommended that you
 			familiarize yourself with the Eclipse-based
-			<emphasis>@tomcat.product.name@ Tools</emphasis> support which is discussed in
+			<emphasis>@project.name@ Tools</emphasis> support which is discussed in
 			<xref linkend="tooling" />.
 		</para>
 	</section>
 
 	<section id="formtags-case-study-as-plan">
-		<title>Form Tags as a plan</title>
+		<title>Form Tags as a Plan</title>
 		<para>
 			Plans (see <xref linkend="developing-applications-plans"/>)
 			allow us to package and deploy the Form Tags application in a more flexible way.
@@ -694,9 +694,9 @@ org.springframework.showcase.formtags.web-2.0.0.RELEASE.war
 		        http://www.eclipse.org/virgo/schema/plan
 		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd">
 
-	<artifact type="bundle" name="org.springframework.showcase.formtags.domain_par" version="[2.0,2.1)"/>
-	<artifact type="bundle" name="org.springframework.showcase.formtags.service_par" version="[2.0,2.1)"/>
-	<artifact type="bundle" name="org.springframework.showcase.formtags.web_par" version="[2.0,2.1)"/>
+	<artifact type="bundle" name="org.springframework.showcase.formtags.domain_par" version="[3.0,3.1)"/>
+	<artifact type="bundle" name="org.springframework.showcase.formtags.service_par" version="[3.0,3.1)"/>
+	<artifact type="bundle" name="org.springframework.showcase.formtags.web_par" version="[3.0,3.1)"/>
 
 </plan>]]></programlisting>
 			where we have chosen to use any of the artifacts in the version range [2.0,2.1).
