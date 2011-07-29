@@ -12,7 +12,8 @@
 		<para>You deploy artifacts to @tomcat.product.name@ using either the hot-deploy directory on the file system or by using the Admin Console.  The artifacts that you can deploy to @tomcat.product.name.short@ are:
 		</para>
 		<itemizedlist>
-		  <listitem>Bundles, including Web applications</listitem>
+		  <listitem>Bundles, including Web Application Bundles</listitem>
+		  <listitem>WARs</listitem>
 		  <listitem>PARs</listitem>
 		  <listitem>Plans</listitem>
 		  <listitem>Configuration Files</listitem>
@@ -68,7 +69,7 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 			</para>
 			<para>
 				If you use hot deployment to deploy your artifacts, be sure to copy the corresponding files into the pickup
-				directory one-by-one. Copying the files in one group, for example by using a single <literal>cp</literal> command. provides no guarantees of ordering.
+				directory one-by-one. Copying the files in one group, for example by using a single <literal>cp</literal> command, provides no guarantee of ordering.
 			</para> 
 		</section>
 		<section id="deployment-deploying-restrictions">

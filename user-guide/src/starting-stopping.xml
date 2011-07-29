@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter id="starting-stopping">
+<chapter id="starting-stopping" xreflabel="Starting and Stopping @tomcat.product.name@">
 	  <title>Starting and Stopping @tomcat.product.name@</title>
         <titleabbrev>Starting and Stopping @tomcat.product.name.short@</titleabbrev>
 	  <section>
@@ -282,9 +282,9 @@ prompt> bin\startup.bat -keystore customKeystore -keystorePassword customKeystor
 		<para>
 			Use the <literal>-configDir</literal> option to specify an alternate <literal>config</literal> directory, different from the
 			default <literal>SERVER_HOME/config</literal> directory. This option allows you to use the same @tomcat.product.name@ 
-			installation to run multiple instances of Web Server . Simply create a config directory for each
-			instance, specify unique port numbers, logging and tracing directories, and so on. and then specify that directory
-			when starting @tomcat.product.name@.
+			installation to run multiple instances of @tomcat.product.name.short@. Simply create a config directory for each
+			instance, specify unique port numbers, logging and tracing directories, and so on, and then specify that directory
+			when starting @tomcat.product.name.short@.
 		</para>
 		<para>
 			If you specify a relative path for the <literal>-configDir</literal> parameter, 

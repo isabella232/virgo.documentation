@@ -4,8 +4,8 @@
 <chapter id="admin-shell">
     <title>Equinox Console</title>
 
-    <section id="admin-shell-enable">
-        <title>Enabling Equinox Console</title>
+    <section id="admin-shell-enable" xreftext="Enabling the Equinox Console">
+        <title>Enabling the Equinox Console</title>
 
 		<para>
 			Shells are provided for both user region and kernel, although they are disabled by default and need enabling before
@@ -47,7 +47,8 @@ osgi> ]]></programlisting>
 	<section id="admin-shell-using-vsh">
 		<title>Using the Equinox Console Extension (<literal>vsh</literal>)</title>
 
-        <para>Virgo provides an extension to the Equinox console in the form of the <literal>vsh</literal> command that allows you to examine artifacts
+        <para>Virgo provides an extension to the Equinox console, <emphasis>for the user region only</emphasis>, in the form of the <literal>vsh</literal> command
+		that allows you to examine artifacts
         currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shut down
         the server. You can install, examine, and manage the lifecycle of the following artifacts:
         <itemizedlist>
@@ -56,6 +57,8 @@ osgi> ]]></programlisting>
           <listitem><para>PARs</para></listitem>
           <listitem><para>Plans</para></listitem>
         </itemizedlist>
+        </para>
+		<para>
         and can examine:
         <itemizedlist>
           <listitem><para>Exported packages</para></listitem>
@@ -186,7 +189,7 @@ osgi> ]]></programlisting>
 			        <itemizedlist>
 				  <listitem><para><emphasis role="bold">Installed</emphasis>: The bundle is installed but its dependencies have not yet been resolved.</para></listitem>
 				  <listitem><para><emphasis role="bold">Resolved</emphasis>: The bundle is resolved and you can now start it.</para></listitem>
-				  <listitem><para><emphasis role="bold">Uninstalled</emphasis>: The bundle is uninstalled and you can not use it.</para></listitem>
+				  <listitem><para><emphasis role="bold">Uninstalled</emphasis>: The bundle is uninstalled and you cannot use it.</para></listitem>
 				  <listitem><para><emphasis role="bold">Starting</emphasis>:  The bundle is in the process of starting.</para></listitem>
 				  <listitem><para><emphasis role="bold">Active</emphasis>: The bundle is running and you can now use it.</para></listitem>
 				  <listitem><para><emphasis role="bold">Stopping</emphasis>: The bundle is in the process of stopping.</para></listitem>
@@ -224,9 +227,19 @@ osgi> ]]></programlisting>
 				</entry>
                         </row>
                         <row>
-				<entry>diag <emphasis>id</emphasis></entry>
-                                <entry>Provides diagnostic information about the specified bundle.  In particular, this subcommand displays information about the imported packages that Web Server could not resolve.  Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.
-				</entry>
+							<entry>diag <emphasis>id</emphasis></entry>
+                          	<entry>
+								<para>
+									Provides diagnostic information about the specified bundle.
+									In particular, this subcommand displays information about the imported packages that Web Server could not resolve.
+									Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.
+								</para>
+								<para>
+									Note that @project.name@ does not install unresolvable bundles.
+									Instead is takes a state dump (for offline analysis using the web administration console) and fails the deployment.
+									So bundles are only likely to become unresolvable in @project.name@ after an update operation.
+								</para>
+							</entry>
                         </row>
                         <row>
 				<entry>headers <emphasis>id</emphasis></entry>
@@ -244,25 +257,33 @@ osgi> ]]></programlisting>
 
 		<programlisting>osgi> vsh bundle list
 
-Id   Name                                 Version                          State
-0    org.eclipse.osgi                     3.6.1.R36x_v20100806            ACTIVE
-1    org.eclipse.virgo.region.user        0.0.0                           ACTIVE
-2    org.eclipse.virgo.kernel.userregion  2.1.0.RELEASE                   ACTIVE
-3    org.eclipse.virgo.kernel.osgicommand 2.1.0.RELEASE                   ACTIVE
-4    org.springframework.osgi.core        1.2.1                           ACTIVE
-5  S org.springframework.osgi.extender    1.2.1                           ACTIVE
-6    org.springframework.osgi.io          1.2.1                           ACTIVE
-7    org.eclipse.virgo.kernel.agent.dm    2.1.0.RELEASE                   ACTIVE
-8  S org.eclipse.virgo.kernel.deployer.dm 2.1.0.RELEASE                   ACTIVE
-9    com.springsource.org.aopalliance     1.0.0                           ACTIVE
-10   org.eclipse.virgo.kernel.dmfragment  2.1.0.RELEASE                 RESOLVED
-11   org.springframework.aop              3.0.0.RELEASE                   ACTIVE
-12   org.springframework.asm              3.0.0.RELEASE                   ACTIVE
-13   org.springframework.beans            3.0.0.RELEASE                   ACTIVE
-14   org.springframework.context          3.0.0.RELEASE                   ACTIVE
-15   org.springframework.core             3.0.0.RELEASE                   ACTIVE
-16   org.springframework.expression       3.0.0.RELEASE                   ACTIVE
-
+Id   Name                                       Version                    State
+40   org.eclipse.virgo.kernel.userregionfactory 3.0.0.RELEASE             ACTIVE
+47   org.eclipse.equinox.cm                     1.0.300.v20101204         ACTIVE
+48   org.eclipse.virgo.kernel.userregion        3.0.0.RELEASE             ACTIVE
+49   org.eclipse.virgo.kernel.osgicommand       3.0.0.RELEASE             ACTIVE
+50   org.eclipse.osgi.services                  3.3.0.v20110110           ACTIVE
+51   com.springsource.org.apache.mina.core      2.0.2                     ACTIVE
+52   org.apache.felix.gogo.command              0.8.0.v201105062003       ACTIVE
+53   org.apache.felix.gogo.runtime              0.8.0.v201105062003       ACTIVE
+54   org.apache.felix.gogo.shell                0.8.0.v201107131313       ACTIVE
+55   org.eclipse.equinox.console.supportability 1.0.0.20110722-2          ACTIVE
+56   com.springsource.org.apache.sshd.core      0.5.0                     ACTIVE
+57   org.springframework.osgi.core              1.2.1                     ACTIVE
+58 S org.springframework.osgi.extender          1.2.1                     ACTIVE
+59   org.springframework.osgi.io                1.2.1                     ACTIVE
+60   org.eclipse.virgo.kernel.agent.dm          3.0.0.RELEASE             ACTIVE
+61 S org.eclipse.virgo.kernel.deployer.dm       3.0.0.RELEASE             ACTIVE
+62   org.eclipse.equinox.ds                     1.3.0.v20110124-0830      ACTIVE
+63   org.eclipse.equinox.util                   1.0.200.v20100503         ACTIVE
+64   com.springsource.org.aopalliance           1.0.0                     ACTIVE
+65   org.eclipse.virgo.kernel.dmfragment        3.0.0.RELEASE           RESOLVED
+66   org.springframework.aop                    3.0.5.RELEASE             ACTIVE
+67   org.springframework.asm                    3.0.5.RELEASE             ACTIVE
+68   org.springframework.beans                  3.0.5.RELEASE             ACTIVE
+69   org.springframework.context                3.0.5.RELEASE             ACTIVE
+70   org.springframework.core                   3.0.5.RELEASE             ACTIVE
+71   org.springframework.expression             3.0.5.RELEASE             ACTIVE
 osgi> </programlisting>
 
 		<para>The following example shows how to view the headers of the <literal>org.springframework.osgi.extender</literal> bundle (only the first few lines are shown):</para>
@@ -292,8 +313,8 @@ Published services:
     &lt;... remainder omitted ...&gt;
 
 Consumed services:
-     34 org.eclipse.virgo.kernel.shim.serviceability.TracingService
-        published by org.eclipse.virgo.region.user 0.0.0 [1]
+      1 org.osgi.service.packageadmin.PackageAdmin
+        published by org.eclipse.osgi 3.7.0.v20110224 [0]
     &lt;... remainder omitted ...&gt;
 
 Fragments:
@@ -331,26 +352,34 @@ osgi> </programlisting>
 				<para>The subcommand first displays the factory pid of the configuration artifact as well as the complete location of the bundle to which the configuration artifact is associated.   The subcommand then lists all the properties that make up the configuration, as well as their current value. </para> </entry>
                         </row>
                         <row>
-				<entry>start <emphasis>name [version]</emphasis></entry>
-                                <entry>Starts the specified configuration artifact and makes it visible to the internal configuration sub-system of Web Server.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed.  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
-
-				<para>Starting the configuration sets its state to <literal>Active</literal>.</para></entry>
+							<entry>start <emphasis>name [version]</emphasis></entry>
+                            <entry>
+								<para>
+									Starts the specified configuration artifact and makes it visible to the internal configuration sub-system of Web Server.
+									Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the 
+									configuration artifact installed (which @project.name@ does not currently support).
+									Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
+								</para>
+								<para>
+									Starting the configuration sets its state to <literal>Active</literal>.
+								</para>
+							</entry>
                         </row>
                         <row>
 				<entry>stop <emphasis>name [version]</emphasis></entry>
-                                <entry>Stops the specified configuration artifact and makes it invisible to the internal configuration sub-system of Web Server.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed.  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
+                                <entry>Stops the specified configuration artifact and makes it invisible to the internal configuration sub-system of Web Server.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which @project.name@ does not currently support).  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
 
 				<para>Stopping the configuration sets its state to <literal>Resolved</literal>.</para></entry>
                         </row>
                         <row>
 				<entry>refresh <emphasis>name [version]</emphasis></entry>
-                                <entry>Updates the contents of the specified configuration artifact to the internal configuration sub-system of Web Server.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed.  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
+                                <entry>Updates the contents of the specified configuration artifact to the internal configuration sub-system of Web Server.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which @project.name@ does not currently support).  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
 
 				<para>Use this subcommand if you have changed the contents of the configuration artifact, and you want to make this information known to Web Server and the associated bundle. </para></entry>
                         </row>
                         <row>
 				<entry>uninstall <emphasis>name [version]</emphasis></entry>
-                                <entry>Uninstalls the specified configuration artifact and make it completely unavailable to Web Server.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed.  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
+                                <entry>Uninstalls the specified configuration artifact and make it completely unavailable to Web Server.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which @project.name@ does not currently support).  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
 
 				<para>Stopping the configuration  removes it from Web Server's list of deployed artifacts and it will not show up when you perform a <literal>config list</literal>.</para></entry>
                         </row>
@@ -368,29 +397,31 @@ org.eclipse.virgo.kernel.userregion       0.0.0                           ACTIVE
 org.eclipse.virgo.kernel.users            0.0.0                           ACTIVE
 org.eclipse.virgo.medic                   0.0.0                           ACTIVE
 org.eclipse.virgo.repository              0.0.0                           ACTIVE
+osgi.console.ssh                          0.0.0                           ACTIVE
+osgi.console.telnet                       0.0.0                           ACTIVE
 
 osgi> </programlisting>
 
 		<para>To view the properties of a configuration artifact, and their current values, use <literal>config examine</literal>:</para>
 
-		<programlisting>osgi> vsh config examine org.eclipse.virgo.kernel
+		<programlisting>osgi> vsh config examine org.eclipse.virgo.repository
 
-Factory pid:
-Bundle Location: file:lib/kernel/org.eclipse.virgo.kernel.osgi-2.1.0.RELEASE.jar
+Factory pid:     
+Bundle Location: file:lib/kernel/org.eclipse.virgo.kernel.services-@bundle.version@.jar
 
 Properties:
-    deployer.pickupDirectory:
-        pickup
-    deployer.timeout:
-        300
-    domain:
-        org.eclipse.virgo.kernel
-    home.directory:
-        /Users/glynnormington/virgo-web-server-2.1.0.RELEASE
+    chain:
+        ext,usr
+    ext.searchPattern:
+        repository/ext/{artifact}
+    ext.type:
+        external
     service.pid:
-        org.eclipse.virgo.kernel
-    work.directory:
-        /Users/glynnormington/virgo-web-server-2.1.0.RELEASE/work
+        org.eclipse.virgo.repository
+    usr.type:
+        watched
+    usr.watchDirectory:
+        repository/usr
 osgi> </programlisting>
 
 	  </section>
@@ -503,7 +534,7 @@ osgi> </programlisting>
 				    <listitem><para>The current state of the PAR (see <link linkend="admin-shell-vsh-bundle-command">the bundle subcommand</link> for the full list of possible states).</para></listitem>
 				  <listitem><para>Whether the PAR is <emphasis>scoped</emphasis>.  Scoping specifies whether Web Server should deploy the members of the PAR in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</para></listitem>
 				  <listitem><para>Whether the PAR is <emphasis>atomic</emphasis>.  When a PAR is atomic, Web Server manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Web Server starts <emphasis>all</emphasis> the PAR artifacts. If one artifact fails to start, then Web Server stops all other artifacts in the PAR.</para></listitem>
-				  <listitem><para>The individual members, or children, of the PAR.  These could be other PARs, plans, bundles, configuration artifacts, and so on.</para></listitem>
+				  <listitem><para>The individual members, or children, of the PAR. These could be plans, bundles, configuration artifacts, and so on.</para></listitem>
 			         </itemizedlist>
 			   </entry>
                         </row>
@@ -742,9 +773,19 @@ osgi> </programlisting>
 
 		<para>The following example shows how to install a bundle called <literal>swf-booking-mvc.war</literal> located in the <literal>/home/apps</literal> directory of the computer on which the Equinox Console Extension is being run:</para>
 
-		<programlisting>:> install file://home/apps/swf-booking-mvc.war
-
+		<programlisting>osgi> vsh install file://home/apps/swf-booking-mvc.war
+...
 Artifact bundle swf-booking-mvc.war 0.0.0 installed</programlisting>
+
+		<para>
+			This command is particularly useful for installing an artifact from the @project.name@ repository, in which case use the <literal>repository:</literal> scheme:
+			<programlisting>repository:artifact-type/bundle-symbolic-name/bundle-version</programlisting>
+			For example:
+		</para>
+		<programlisting>osgi> vsh install repository:bundle/my.bundle/1.0
+... 
+Artifact bundle my.bundle 1.0.0 installed
+osgi></programlisting>
 
 		<para>The following example shows how to use the <literal>bundle list</literal> subcommand to ensure that the bundle was indeed installed to Web Server; if you had installed a different kind of artifact, for example a plan, then you would use the appropriate subcommand (such as <literal>plan list</literal>):</para>
 
@@ -796,9 +837,9 @@ osgi> </programlisting>
 
 		<para>The following example shows how to use this subcommand.</para>
 
-		<programlisting>:> shutdown
-
-Shutdown MBean called
+		<programlisting>osgi> shutdown
+osgi> ... 
+Connection closed by foreign host.
 prompt$</programlisting>
 
 	  </section>
@@ -866,7 +907,7 @@ osgi> </programlisting>
         </para>
 
         <section id="admin-shell-cl-using-command-list">
-            <title>Class Loading Commands List</title>
+            <title>Class Loading Command List</title>
             <para>The following table lists the class loading commands. The reference documentation about each command provides the full list of available options.</para>
             <table id="admin-shell-cl-commands-table" colsep="1" frame="all" rowsep="1">
                 <title>Class Loading Commands</title>
@@ -897,7 +938,7 @@ osgi> </programlisting>
     </section>
 
     <section id="admin-shell-class-loading-reference">
-        <title>Class Loading Commands Reference</title>
+        <title>Class Loading Command Reference</title>
         <para>This section contains reference information about the class loading commands
           <link linkend="admin-shell-cl-clhas">clhas</link>,
           <link linkend="admin-shell-cl-clexport">clexport</link>, and
@@ -929,7 +970,7 @@ Bundles containing [javax.servlet.Servlet]:
             <title>clexport command</title>
             <para>Use the <literal>clexport</literal> command to list the bundles that export a class or package.</para>
             <para>The command accepts as a parameter the fully qualified class name (in the form <emphasis>package.class</emphasis>).</para>
-            <para>Additional check if the provided class is actually contained in the bundle is performed. If the class is not found in a bundle, but its package is exported then a hint <literal>[class not found, package only]</literal> is displayed.</para>
+            <para>The command checks to see if the provided class is actually contained in a bundle. If the class is not found in a bundle, but its package is exported then a hint <literal>[class not found, package only]</literal> is displayed.</para>
 
             <para>The following examples show how to use this command.</para>
             <para>Use the <literal>clexport</literal> to view all bundles that contain <literal>Servlet</literal> class:</para>
@@ -950,7 +991,7 @@ Bundles exporting [javax.servlet.ServletX]:
             <para>The command accepts as a parameter either:
                 <itemizedlist>
                     <listitem><para>the fully qualified class name (in the form <emphasis>package.class</emphasis>)</para></listitem>
-                    <listitem><para>the fully qualified class name (in the form <emphasis>package.class</emphasis>) and the symbolic name or id of the bundle that has to be tested</para></listitem>
+                    <listitem><para>the fully qualified class name (in the form <emphasis>package.class</emphasis>) and the symbolic name or id of the bundle that is to be tested</para></listitem>
                 </itemizedlist>
             </para>
             <para>The command lists not only the bundle that successfully loaded the class, but also the one that actually provides the class. This is visualized with hints like <literal>[exported by 14 com.springsource.javax.servlet]</literal>.</para>
@@ -968,13 +1009,13 @@ Successfully loaded [javax.servlet.Servlet] from:
                 [exported by 14 com.springsource.javax.servlet]
   &lt;... remainder omitted ...&gt;</programlisting>
 
-            <para>If a bundle has to be tested, then its id can be used as a command parameter:</para>
+            <para>If a bundle is to be tested, then its id can be used as a command parameter:</para>
             <programlisting>osgi> clload javax.servlet.Servlet 19
 
 Successfully loaded [javax.servlet.Servlet] using class loader from:
   19    com.springsource.org.apache.commons.fileupload
                 [exported by 14 com.springsource.javax.servlet]</programlisting>
-            <para>Or the same class load test with the symbolic name of the bundle:</para>
+            <para>Or the same class load test can specify the symbolic name of the bundle:</para>
             <programlisting>osgi> clload javax.servlet.Servlet com.springsource.org.apache.commons.fileupload
 
 Successfully loaded [javax.servlet.Servlet] using class loader from:

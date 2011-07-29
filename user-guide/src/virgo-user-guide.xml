@@ -70,14 +70,14 @@
 
 		<legalnotice>
 			<para>
-				Copyright &copy; 2009, 2010 VMware Inc. and others
+				Copyright &copy; 2009, 2011 VMware Inc. and others
 			</para>
 			<para>
 				Contributors:
 				<itemizedlist>
 					<listitem>
 					<para>
-						VMware Inc. - initial contribution
+						VMware Inc. - initial contribution and subsequent updates
 					</para>
 					</listitem>
 					<listitem>
@@ -106,7 +106,6 @@
 	<xi:include href="installing.xml"/>
 	<xi:include href="installing-kernel.xml"/>
 	<xi:include href="starting-stopping.xml"/>
-	<xi:include href="kernel-user-region.xml"/>
 	<xi:include href="admin-shell.xml"/>
 	<xi:include href="admin-console.xml"/>
 	<xi:include href="repository.xml"/>

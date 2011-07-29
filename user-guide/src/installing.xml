@@ -24,7 +24,7 @@
 			<section  id="installation-zip-installing-linux">
 				<title>Linux</title>
 				<para>
-					To install the @tomcat.product.name@ on Linux, unzip the distribution package to the desired installation directory. 
+					To install @tomcat.product.name@ on Linux, unzip the distribution package to the desired installation directory. 
 					For example, to install into <literal>/opt</literal>:
 				</para>
 				<screen>prompt$ unzip virgo-web-server-@bundle.version@.zip -d /opt</screen>
@@ -55,7 +55,7 @@
 			<section id="installation-post-env-java">
 				<title>JAVA_HOME</title>
 				<para>
-					The @tomcat.product.name@ uses the <literal>JAVA_HOME</literal> environment variable to locate the <literal>java</literal>
+					@tomcat.product.name@ uses the <literal>JAVA_HOME</literal> environment variable to locate the <literal>java</literal>
 					executable. Configure this environment variable to point to the home directory of the Java 6 installation on your computer.
 				</para>
 			</section>
@@ -121,12 +121,12 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 		<section id="installation-post-env-server-win-troubleshooting">
 			<title>Microsoft Windows - Troubleshooting Security Permissions</title>
 			<para>
-				When starting the @tomcat.product.name@ on some variants of Windows you might encounter a problem with file permissions. 
+				When starting @tomcat.product.name@ on some variants of Windows you might encounter a problem with file permissions. 
 				The error looks like this.
 			</para>
 			<screen>WARNING: jmxPermissions.vbs did not update the permissions of C:\virgo\config\org.eclipse.virgo.kernel.jmxremote.access.properties. Check the file has the correct permissions.</screen>
 			<para>
-				If the @tomcat.product.name.short@ starts at this point you can skip this section and carry on. However to secure your 
+				If @tomcat.product.name.short@ starts correctly (see <xref linkend="starting-stopping"/>) you can skip this section and carry on. However to secure your 
 				installation you have to set correct permissions. To do so, go to the &lsquo;config&rsquo; directory of the installation
 				in Windows Explorer.
 			</para>
@@ -157,7 +157,7 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 			<para>
 				Once all these steps are complete you can proceed to start the @tomcat.product.name.short@.
 			</para>
-			<screen>C:\dev\virgo-web-server-2.1.0.RELEASE>bin\startup.bat
+			<screen>C:\dev\virgo-web-server-@bundle.version@>bin\startup.bat
 [2009-12-08 13:09:09.545] startup-tracker              &lt;KE0001I&gt; Kernel starting.</screen>
 		</section>
 	</section>

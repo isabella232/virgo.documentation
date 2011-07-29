@@ -207,7 +207,7 @@ but it is much simpler to use Spring DM to accomplish this. (See <xref linkend="
 
 <section>
 
-<title>Version numbers</title>
+<title>Version Numbers</title>
 
 <para>An OSGi <emphasis>version number</emphasis> consists of up to three numeric components, 
 or exactly three
@@ -230,7 +230,7 @@ and the empty string is assumed for an omitted qualifier.</para>
 
 <section>
 
-<title>Version ranges</title>
+<title>Version Ranges</title>
 
 <para>Dependencies on bundles and packages have an associated <emphasis>version range</emphasis>
 which is specified using an interval notation: a square bracket
@@ -264,7 +264,7 @@ denotes version <literal>1.2</literal> and <emphasis>all</emphasis> later versio
 </section>
 
 <section>
-<title>Versioning policies</title>
+<title>Versioning Policies</title>
 <para>A <emphasis>versioning policy</emphasis> is a way of using version numbers to indicate compatible
 and incompatible changes.
 OSGi does not mandate a particular versioning policy.
@@ -327,7 +327,7 @@ exports two packages: <literal>org.foo</literal>, at version <literal>2.9.0</lit
 <literal>org.bar</literal>, at version <literal>1.0.0</literal>.
 </para>
 
-<para>If the version attribute is omitted the version is assumed to be <literal>0</literal>.</para>
+<para>If the version attribute is omitted, the version is assumed to be <literal>0</literal>.</para>
 
 <para>Each package <emphasis>import</emphasis> has a version <emphasis>range</emphasis>.
 The package import version range may be specified on the <literal>Import-Package</literal> manifest header.
@@ -351,7 +351,7 @@ any version of this package would satisfy the import.</para>
 
 <para>Bundle manifests have a version which is <literal>1</literal> by default,
 indicating OSGi Release 3 semantics.
-@webserv@ is based on OSGi Release 4 and therefore expects bundle manifests to be
+@project.name@ is based on OSGi Release 4 and therefore expects bundle manifests to be
 at version <literal>2</literal>, indicating OSGi Release 4 semantics.
 The bundle manifest&rsquo;s version should be specified on the Bundle-ManifestVersion manifest header, exactly as follows:
 <informalexample>
@@ -418,7 +418,7 @@ the specified services to the OSGi service registry.</para>
 
 <para>When a bundle is stopped, Spring DM retracts any services it published on behalf of the bundle
 and closes the bundle&rsquo;s application contexts.
-Web Server turns off damping of a service proxy while the proxy&rsquo;s application context
+@project.name@ turns off damping of a service proxy while the proxy&rsquo;s application context
 is being closed.</para>
 
 <para>(Spring DM has been contributed to Eclipse as the <emphasis>Gemini Blueprint</emphasis> project.)</para>
@@ -439,11 +439,25 @@ The @project.name@ provisioning repository contains artifacts and metadata index
 
 <section>
 
+<title>Artifact Types</title>
+
+In addition to the standard OSGi bundle, artifact types in @project.name@ include configuration (properties file), PAR, plan, and library.
+PARs, plans, and libraries are discussed in <xref linkend="concepts.grouping"/>. 
+
+</section>
+
+<section>
+
 <title>External Repositories</title>
 
-External repositories are created by scanning a directory which contains artifacts, possibly in nested directories. The repository configuration specifies a pattern which says which files should be treated as artifacts. After the repository is created, changes to the directory do not affect the repository content. 
-
-@project.name@'s default repository configuration, in <literal>config/org.eclipse.virgo.repository.properties</literal>, specifies an external repository created from the <literal>repository/ext</literal> directory.
+<para>
+	External repositories are created by scanning a directory which contains artifacts, possibly in nested directories. The repository configuration specifies a pattern which 
+	says which files should be treated as artifacts. After the repository is created, changes to the directory do not affect the repository content. 
+</para>
+<para>
+	@project.name@'s default repository configuration, in <literal>config/org.eclipse.virgo.repository.properties</literal>, specifies an external repository created from the 
+	<literal>repository/ext</literal> directory.
+</para>
 
 </section>
 
@@ -451,12 +465,16 @@ External repositories are created by scanning a directory which contains artifac
 
 <title>Watched Repositories</title>
 
-Watched repositories are created by scanning a directory which contains artifacts but no nested directories. All files in the directory are treated as artifacts.
-The directory is re-scanned periodically and the interval between re-scans is specified in the repository configuration.
-The directory is also re-scanned prior when an artifact is deployed into @project.name@.
-Changes detected by re-scanning are reflected in the repository content. Note that changing the content of a watched repository does not cause artifacts to be deployed into @project.name@, refreshed, or undeployed. 
-
-@project.name@'s default repository configuration specifies a watched repository based on the contents of the <literal>repository/usr</literal> directory. 
+<para>
+	Watched repositories are created by scanning a directory which contains artifacts but no nested directories. All files in the directory are treated as artifacts.
+	The directory is re-scanned periodically and the interval between re-scans is specified in the repository configuration.
+	The directory is also re-scanned when an artifact is deployed into @project.name@.
+	Changes detected by re-scanning are reflected in the repository content. Note that changing the content of a watched repository does not cause artifacts to be deployed 	
+	into @project.name@, refreshed, or undeployed. 
+</para>
+<para>
+	@project.name@'s default repository configuration specifies a watched repository based on the contents of the <literal>repository/usr</literal> directory. 
+</para>
 
 </section>
 
@@ -464,11 +482,18 @@ Changes detected by re-scanning are reflected in the repository content. Note th
 
 <title>Remote Repositories</title>
 
-A remote repository refers to a repository hosted by a @project.name@ instance sometimes known as a <emphasis>repository server</emphasis>.
-The hosted repository is configured using the file <literal>config/org.eclipse.virgo.apps.repository.properties</literal> and may be either an external or a watched repository.
-
-The remote repository is accessed by a @project.name@ instance sometimes known as a <emphasis>repository client</emphasis>.
-The repository client is normally a different instance of @project.name@ to the instance hosting the repository, but it can be the same instance (which is handy for testing). The remote repository periodically downloads its index from the hosted repository. The period between downloads may be configured in the repository configuration. The remote repository also caches artifacts which have secure hashes associated with them in the hosted repository. Only bundles currently have secure hashes associated with them. The secure hash is used to determine when a cached artifact is stale and needs to be freshly downloaded.
+<para>
+	A remote repository refers to a repository hosted by a @project.name@ instance sometimes known as a <emphasis>repository server</emphasis>.
+	The hosted repository is configured using the file <literal>config/org.eclipse.virgo.apps.repository.properties</literal> and may be either an external or a watched 	
+	repository.
+</para>
+<para>
+	The remote repository is accessed by a @project.name@ instance sometimes known as a <emphasis>repository client</emphasis>.
+	The repository client is normally a different instance of @project.name@ to the instance hosting the repository, but it can be the same instance (which is handy for 	
+	testing). The remote repository periodically downloads its index from the hosted repository. The period between downloads may be configured in the repository 	
+	configuration. The remote repository also caches artifacts which have secure hashes associated with them in the hosted repository. Only bundles currently have secure 	
+	hashes associated with them. The secure hash is used to determine when a cached artifact is stale and needs to be freshly downloaded.
+</para>
 
 </section>
 
@@ -476,22 +501,24 @@ The repository client is normally a different instance of @project.name@ to the 
 
 <title>Repository Chains</title>
 
-The @project.name@ repository is configured as a <emphasis>chain</emphasis> of external, watched, and remote repositories.
-The chain is a list which is searched in the configured order.
-The effect of this search order is that an artifact with a given type, name, and version which appears in more than one repository in the chain is only accessed from the first repository in the chain in which it appears. Abstractly, the repository chain behaves as a single repository, but its content may mutate in quite a different way to the content of an individual external, watched, or remote repository.
-
-</section>
+<para>
+	The @project.name@ repository is configured as a <emphasis>chain</emphasis> of external, watched, and remote repositories.
+	The chain is a list which is searched in the configured order.
+	The effect of this search order is that an artifact with a given type, name, and version which appears in more than one repository in the chain is only accessed from the 	
+	first repository in the chain in which it appears. Abstractly, the repository chain behaves as a single repository, but its content may mutate in quite a different way to 
+	the content of an individual external, watched, or remote repository.
+</para>
 
 </section>
 
 <!--========================================================================-->
-<section id="concepts.grouping">
+<section id="concepts.grouping" xreflabel="Grouping Bundles">
 	
 <title>Grouping Bundles</title>
 
 <para>@project.name@ provides a way of grouping together a collection
-of OSGi bundles which comprise a single application.
-These bundles are placed in a JAR file with extension <quote><literal>.par</literal></quote>. This is called a PAR file.</para>
+of OSGi bundles and other artifacts which comprise a single application.
+These artifacts are placed in a JAR file with extension <quote><literal>.par</literal></quote>. This is called a PAR file.</para>
 
 <para>All the bundles in a PAR file are resolved together and so mutual dependencies are permitted.</para>
 
@@ -505,9 +532,111 @@ A <emphasis>plan</emphasis> is a file (in XML format) listing a collection of ar
 The artifacts referred to by a plan reside in the @project.name@ provisioning repository.
 </para>
 
+<para>
+	In addition to PARs and plans, which are used for deploying groups of artifacts, @project.name@ provides libraries as a way of grouping together a collection
+	of bundles that	can then be imported into an application using the @project.name@-specific <literal>Import-Library</literal> manifes header.
+</para>
+
 </section>
 
+<!--========================================================================-->
+<section id="kernel.user.region">
 
+<title>Kernel and User Region</title>
+
+	<para>Conceptually, @tomcat.product.name.short@ can be divided into two separate subsystems, one of which actually encompases the other:</para>
+		<itemizedlist>
+		  <listitem>The <emphasis>kernel</emphasis>, which is the heart of @tomcat.product.name.short@.  It makes up most of @tomcat.product.name.short@, except for the part that supports Web applications.  In other words, the kernel provides full OSGi modular support for your applications, as long as they are not Web-based. 
+			<para>See <link linkend="kernel-overview">The @kernel.product.name@</link> for additional information.</para>
+		</listitem>
+		  <listitem>The <emphasis>user region</emphasis> is the subsystem that manages user applications. It deliberately isolates the kernel from both your applications and those of the @tomcat.product.name.short@ itself, such as the Admin Console, which protects the kernel from interference by applications. 
+			<para>See <link linkend="user-region-overview">The User Region</link> for additional information.</para>
+		  </listitem>
+		</itemizedlist>
+
+		<para>When you download and install @tomcat.product.name@ you get both the kernel and web server support (configured in the user region).  You can also <ulink url="http://www.eclipse.org/virgo/download/">download and use the kernel</ulink> on its own if you do not plan on deploying Web applications or using the
+		web-based Admin Console and you'll get the kernel and a minimal user region (with no web support).</para>
+		
+		<para>The following graphic shows how the kernel and user region make up @tomcat.product.name.short@:</para>
+		<imagedata fileref="images/kernel-user-region.png" width="885px" depth="805px" />
+
+	<section id="kernel-overview">
+		<title>The @kernel.product.name@</title>
+		<para>
+		The @kernel.product.name@ encapsulates almost all of @tomcat.product.name.short@ except for the deployment of Web applications.  In sum, the kernel provides the following @tomcat.product.name.short@ features:
+		</para>
+	<itemizedlist>
+		<listitem>
+			<para>
+			Deployment of non-Web artifacts, such as OSGi bundles, PARs, plans,
+			and configuration artifacts.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			Local and hosted repositories
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			Scoping
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			Hot deployment
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			User region
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			Auto-provisioning
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			System and application tracing and dump support
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+			Spring beans and Spring DM support
+			</para>
+		</listitem>
+	</itemizedlist>
+
+		<para>See <link linkend="configuring">Configuring @tomcat.product.name.short@</link> for details about configuring the kernel to better suit your environment. </para>
+	</section>
+
+	<section id="user-region-overview">
+		<title>The User Region</title>
+		<para>
+			The user region isolates the kernel from deployed applications,
+			including both your own user applications and the user-oriented
+			@tomcat.product.name.short@ applications such as the Admin Console. This means
+			that the kernel is mostly invisible to applications and to application
+			management. This is because most of the kernel bundles are not
+			installed in the user region (apart from a few needed for region
+			management). The necessary function to support the kernel runs in the
+			OSGi framework, but the user region applications cannot see it, except
+			for the services that are normally offered.
+		</para>
+	
+		<para>This isolation has many benefits. For example, it is not necessary for the kernel and user applications to use the same version of the Spring Framework. In fact the kernel installs only those parts of the Spring Framework that it needs.  If you update the kernel, it is far less likely that you will also need to upgrade or adjust the applications to accomodate a new version of the kernel. The kernel implementation is therefore much more stable and resilient and applications are much more likely to survive kernel upgrades between releases.  </para>
+		<para>When you install @tomcat.product.name.short@, the kernel creates a single user region.
+			The kernel and the user region are configured independently of each other; see <link linkend="configuring">Configuring @tomcat.product.name.short@</link> for details. 		
+		</para>
+
+		<para>Finally, the isolation provided by the user region together with scoped applications and plans solve common dependency problems that occur when using OSGi. </para>
+	</section>
+
+</section>
+
+</section>
 
 </section>
 

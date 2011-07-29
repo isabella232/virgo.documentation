@@ -2,12 +2,12 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="serviceability">
-  <title>Serviceability</title>
+  <title>Serviceability and Diagnostics</title>
   
 <para>
-	@tomcat.product.name@ supports two kinds of logging: <emphasis>Event Logging</emphasis> and <emphasis>Trace logging</emphasis> which is usually referred
+	@project.name@ supports two kinds of logging: <emphasis>Event Logging</emphasis> and <emphasis>Trace logging</emphasis> which is usually referred
 	to simply as <emphasis>Logging</emphasis>. The difference between Event Logging and Logging is explained below, but both are configured in the 
-	<literal>serviceability.xml</literal> file in the <literal>config</literal> directory. This file takes the form of a Logback configuration, @tomcat.product.name.short@
+	<literal>serviceability.xml</literal> file in the <literal>config</literal> directory. This file takes the form of a Logback configuration, @project.name@
 	uses a Logback implementation behind the SLF4J logging interface.
 	<para>
 		For a description of the syntax and facilities provided by <literal>serviceability.xml</literal>
@@ -16,9 +16,9 @@
 </para>
 
    <section id="serviceability-info-log">
-      <title>Event logging</title>
+      <title>Event Logging</title>
       <para>
-        Event logging records important events in @tomcat.product.name@. Each event is logged to
+        Event logging records important events in @project.name@. Each event is logged to
  		an event log file and is accompanied by a code enclosed in angle brackets. 
  		An example is shown below:
 <screen>
@@ -40,10 +40,10 @@
     <section id="serviceability-info-trace">
       <title>(Trace) Logging</title>
       <para>
-	    The @tomcat.product.name@&rsquo;s (trace) logging support serves two main purposes:
+	    The @project.name@&rsquo;s (trace) logging support serves two main purposes:
 	    <itemizedlist>
 		  <listitem>
-		    It provides global trace files that capture high-volume information regarding the @tomcat.product.name@&rsquo;s internal events. 
+		    It provides global trace files that capture high-volume information regarding the @project.name@&rsquo;s internal events. 
 		    The files are intended for use by support personnel to diagnose runtime problems.  
 	      </listitem>
 	      <listitem>
@@ -55,9 +55,9 @@
 		</itemizedlist>
         </para>
         <para>
-			By default, the @tomcat.product.name.short@ trace file is called <literal>$SERVER_HOME/serviceability/logs/log.log</literal>,
+			By default, the @project.name@ trace file is called <literal>$SERVER_HOME/serviceability/logs/log.log</literal>,
 			and, again by default, the application trace files are called <literal>$SERVER_HOME/serviceability/logs/</literal><emphasis>application_name</emphasis>
-			<literal>/log.log</literal>, where <emphasis>application_name</emphasis> is automatically set by @tomcat.product.name.short@ for each application artifact 
+			<literal>/log.log</literal>, where <emphasis>application_name</emphasis> is automatically set by @project.name@ for each application artifact 
 			installed and run (it is a combination of the artifact name and the version).
         </para>
 		<para>
@@ -75,13 +75,13 @@
 	  <section id="serviceability-info-trace-app">
 		<title>Application Output</title>
 		<para>
-			@tomcat.product.name@ provides advanced support for capturing and tracing application-generated output by automatically separating trace output on a
+			@project.name@ provides advanced support for capturing and tracing application-generated output by automatically separating trace output on a
 			per-application basis and will also capture any <literal>System.out</literal> and <literal>System.err</literal> output.
 		</para>
 		<section id="per-application-trace">
 			<title>Per-application trace</title>
 			<para>
-				@tomcat.product.name@ uses SLF4J interfaces to Logback, and the root logger (by default) captures all logging output
+				@project.name@ uses SLF4J interfaces to Logback, and the root logger (by default) captures all logging output
 				and appends it to the application-specific trace files as described above.
 				To modify this, define application-specific loggers in the <literal>serviceability.xml</literal> file in the normal way.
 			</para>
@@ -128,7 +128,7 @@
       <orderedlist numeration="arabic">
         <listitem>
           <para>
-            A failure is detected in the @tomcat.product.name@ code, or
+            A failure is detected in the @project.name@ code, or
           </para>
         </listitem>
         <listitem>
@@ -139,7 +139,7 @@
       </orderedlist>
       <para>
         A service dump contains a snapshot of all the important state from
-        the running @tomcat.product.name@ instance. This snapshot is not intended
+        the running @project.name@ instance. This snapshot is not intended
         for end user consumption but is useful for service personnel.
       </para>
       <para>
