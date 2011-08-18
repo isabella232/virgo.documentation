@@ -64,4 +64,13 @@
 			When using the @jetty.product.name@ the Hosted Repository application and the Snaps modular web technology are not supported.
 		</para>
 	</section>
+	<section id="known-issues-war-transformation">
+		<title>@tomcat.product.name@ War File Transformation</title>
+		<para>
+			Some War files may fail to deploy on the @tomcat.product.name@ due to missing entries in the generated <literal>MANIFEST.MF</literal> file. 
+			There is a work-around to modify the <literal>org.eclipse.virgo.web.properties</literal> properties file located in the 
+			<literal>$SERVER_HOME/repository/ext</literal> directory. Change the <literal>WABHeaders</literal> property to have a value of <literal>defaulted</literal>.
+			See the section on <link linkend="configuring-web">configuring the web layer</link> for more information.
+		</para>
+	</section>
 </appendix>
