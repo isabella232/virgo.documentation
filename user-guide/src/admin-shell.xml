@@ -921,7 +921,7 @@ osgi> </programlisting>
                     <tbody>
                         <row>
                             <entry><link linkend="admin-shell-cl-clhas">clhas</link></entry>
-                            <entry>Lists all bundles that <emphasis role="bold">contain</emphasis> a class.</entry>
+                            <entry>Lists all bundles that <emphasis role="bold">contain</emphasis> a class or resource.</entry>
                         </row>
                         <row>
                             <entry><link linkend="admin-shell-cl-clexport">clexport</link></entry>
@@ -947,23 +947,54 @@ osgi> </programlisting>
 
         <section id="admin-shell-cl-clhas">
             <title>clhas command</title>
-            <para>Use the <literal>clhas</literal> command to list the classes contained in the bundles deployed to @tomcat.product.name.short@ and to solve class loading issues.</para>
-            <para>The command accepts as a parameter the fully qualified class name (in the form <emphasis>package.class</emphasis>).</para>
-            <para>A bundle is listed only if the class can be loaded. If the class is successfully loaded a check is made if the loading was delegated to another bundle. The command lists only the leaves in the class loading hierarchy - i.e. the bundles that actually contain the class and not the ones that delegate to another bundle via import/require mechanisms.</para>
+            <para>Use the <literal>clhas</literal> command to list the entries contained in the bundles deployed to @project.name@ and to solve class loading issues.</para>
+            <para>The command accepts as a parameter search pattern in the form <emphasis>path/resource</emphasis>. The resource part of the pattern can contain wildcards.</para>
+            <para>The output contains all bundles that have resources or classes matching the pattern. Since wildcards are allowed the matching entities are listed as well.</para>
 
             <para>The following examples show how to use this command.</para>
             <para>Use the <literal>clhas</literal> to view all bundles that contain <literal>Servlet</literal> class:</para>
+            <programlisting>osgi>clhas /javax/servlet/Servlet.class
+
+Bundles containing [/javax/servlet/Servlet.class]:
+  76    javax.servlet
+            /javax/servlet/Servlet.class</programlisting>
+
+            <para>Use the wildcard <literal>*</literal> with <literal>clhas</literal> to view all classes starting with <literal>Servlet</literal>:</para>
+            <programlisting>osgi> clhas /javax/servlet/Servlet*
+
+Bundles containing [/javax/servlet/Servlet*]:
+  76    javax.servlet
+            /javax/servlet/ServletRequestAttributeEvent.class
+            /javax/servlet/ServletRequest.class
+            &lt;... remainder omitted ...&gt;
+            /javax/servlet/Servlet.class
+            &lt;... remainder omitted ...&gt;</programlisting>
+
+            <para>The <literal>clhas</literal> command can also be used with class name instead of resource path:</para>
             <programlisting>osgi> clhas javax.servlet.Servlet
 
-Bundles containing [javax.servlet.Servlet]:
-  14    com.springsource.javax.servlet</programlisting>
+Bundles containing [javax/servlet/Servlet.class]:
+  76    javax.servlet
+            /javax/servlet/Servlet.class</programlisting>
+            <para>Please note that the command converts the class name to a path and appends <literal>class</literal> extension by default.</para>
+            <para>To search for a resource with an extension different than <literal>class</literal> you should use the resource path form:</para>
+            <programlisting>osgi> clhas /LocalStrings.properties
+
+Bundles containing [/LocalStrings.properties]:
+  96    com.springsource.org.apache.catalina
+            /org/apache/catalina/core/LocalStrings.properties
+            /org/apache/tomcat/util/http/mapper/LocalStrings.properties
+            /org/apache/catalina/loader/LocalStrings.properties
+            &lt;... remainder omitted ...&gt;</programlisting>
 
             <para>The following example shows how to identify a possible <literal>ClassCastException</literal> due to wrong packaging:</para>
-            <programlisting>osgi> clhas javax.servlet.Servlet
+            <programlisting>osgi>clhas /javax/servlet/Servlet.class
 
-Bundles containing [javax.servlet.Servlet]:
-  66    myapp
-  14    com.springsource.javax.servlet</programlisting>
+Bundles containing [/javax/servlet/Servlet.class]:
+  76    javax.servlet
+            /javax/servlet/Servlet.class
+  107   myapp
+            /WEB-INF/classes/javax/servlet/Servlet.class</programlisting>
             <para>It's obvious that the <literal>javax.servlet</literal> package should not be present in <literal>myapp</literal> application and its packaging has to be changed. This problem can often be seen in WAR or web bundles that package Servlet/JSP classes by accident.</para>
         </section>
         <section id="admin-shell-cl-clexport">
