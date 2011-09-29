@@ -270,7 +270,15 @@ bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFr
 		  </entry>
 	        </row>
 
-	      </tbody>
+              <row>
+                  <entry><literal>log.jul.consoleHandler</literal></entry>
+                  <entry>Specifies whether you want to use the <literal>ConsoleHandler</literal> of Java Util Logging. The default JVM configuration uses the handler to write logs to <literal>System.err</literal>.
+                      <para>Valid values for this property are <literal>true</literal> to enable <literal>ConsoleHandler</literal> output, or <literal>false</literal> to disable it. The default value is <literal>false</literal>.</para>
+                      <para>For more information, see <ulink url="http://download.oracle.com/javase/6/docs/technotes/guides/logging/overview.html">Java Logging Overview</ulink>.</para>
+                  </entry>
+              </row>
+
+          </tbody>
 	    </tgroup>
 	  </table>
 
@@ -281,6 +289,9 @@ bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFr
   	        <para>You configure logging for @project.name@ using the <literal>$SERVER_HOME/config/serviceability.xml</literal> file.  This file is the standard Logback <literal>logback.xml</literal> or <literal>logback-test.xml</literal> configuration file, but renamed for @project.name@. </para>
 		<para>The following listing shows the default <literal>serviceability.xml</literal> file in a freshly-installed @project.name@; see the text after the listing for a brief overview of the file:</para>
 		<programlisting language="xml"><![CDATA[<configuration>
+
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+
 	<appender name="SIFTED_LOG_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
 		<discriminator>
 			<Key>applicationName</Key>
@@ -298,7 +309,7 @@ bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFr
 					<MaxFileSize>10MB</MaxFileSize>
 				</triggeringPolicy>
 				<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-					<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
+					<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
 				</encoder>
 			</appender>
 		</sift>
@@ -315,7 +326,7 @@ bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFr
 			<MaxFileSize>10MB</MaxFileSize>
 		</triggeringPolicy>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
 		</encoder>
 	</appender>
 
@@ -361,10 +372,11 @@ bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFr
 
 	<para>The main information to get from this file is that @project.name@ writes log messages to four different locations that map to the four appenders:</para>
 	<itemizedlist>
+		<listitem><para>The <literal>contextListener</literal> propagates the changes made to the levels of logback loggers to Java Util Logging (JUL). For more information see <ulink url="http://logback.qos.ch/manual/configuration.html#LevelChangePropagator">LevelChangePropagator</ulink> documentation.</para> </listitem>
 		<listitem><para>The <literal>SIFTED_LOG_FILE</literal> appender logs both global and application-specific messages to the <literal>$SERVER_HOME/serviceability/logs/</literal><emphasis><literal>applicationName</literal></emphasis><literal>/log.log</literal> file, where <emphasis><literal>applicationName</literal></emphasis> refers to the name of the application.   The log messages for @project.name@ itself are logged to the <literal>$SERVER_HOME/serviceability/logs/virgo-server/log.log</literal> file. Because this appender creates different log files for each application, it is called a <emphasis>sifting appender</emphasis>.   </para>
 		<para>
-			The default behaviour of these trace files is that, once <literal>log.log</literal> reaches a 10Mb limit, it rolls into a series of files named	
-			<literal>log_</literal><emphasis>i</emphasis><literal>.log</literal> where <emphasis>i</emphasis> ranges from 1 to 4, and logging continues in 
+			The default behaviour of these trace files is that, once <literal>log.log</literal> reaches a 10Mb limit, it rolls into a series of files named
+			<literal>log_</literal><emphasis>i</emphasis><literal>.log</literal> where <emphasis>i</emphasis> ranges from 1 to 4, and logging continues in
 			a new <literal>log.log</literal> file. This is called its <emphasis>rolling policy</emphasis>.
 		</para>
 		<para>The <literal>&lt;Pattern&gt;</literal> element defines the format of each log message;  messages include the timestamp, the thread that generated the log message, the context-specific event code, and a stack trace of the exception, if any.  For example:</para>
@@ -388,8 +400,8 @@ bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFr
 	<section id="configuring-provisioning-repository">
 		<title>Configuring the Local Provisioning Repository</title>
 		<para>
-		    You configure the locations that @project.name@ includes in its provisioning repository 
-		    by editing the <literal>org.eclipse.virgo.repository.properties</literal> file in the <literal>$SERVER_HOME/config</literal> directory.  
+		    You configure the locations that @project.name@ includes in its provisioning repository
+		    by editing the <literal>org.eclipse.virgo.repository.properties</literal> file in the <literal>$SERVER_HOME/config</literal> directory.
 		    </para>
 		<para>When you specify a property in the file, use the format <literal>repository-name.property=value</literal>, where:
 		<itemizedlist>
@@ -399,13 +411,13 @@ bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFr
 		</itemizedlist>
 		</para>
 
-		<para>For example, <literal>ext.type=external</literal> specifies that the <literal>type</literal> property of the repository 
-		with name <literal>ext</literal> is <literal>external</literal>.  
+		<para>For example, <literal>ext.type=external</literal> specifies that the <literal>type</literal> property of the repository
+		with name <literal>ext</literal> is <literal>external</literal>.
         </para>
 		<para>
-			The <literal>chain</literal> property specifies the order in which @project.name@ searches the individual repositories 
-			when it looks for dependencies.  
-			The <literal>chain</literal> property uses the names of the individual repositories as specified in the individual repository properties; 
+			The <literal>chain</literal> property specifies the order in which @project.name@ searches the individual repositories
+			when it looks for dependencies.
+			The <literal>chain</literal> property uses the names of the individual repositories as specified in the individual repository properties;
 			for example, in the property <literal>ext.type=external</literal>, the name of the repository is <literal>ext</literal>.
 		</para>
 		<para>
@@ -1146,7 +1158,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 		<section id="configuring-user-region-consoles">
             <title>Configurating User Region Consoles</title>
             <para>The configuration of the User Region consoles is located by default in the <literal>$SERVER_HOME/repository/ext</literal> directory:</para>
-            <table id="configuring-kernel-files-table" colsep="1" frame="all" rowsep="1">
+            <table id="configuring-user-region-consoles-table" colsep="1" frame="all" rowsep="1">
                 <title>User Region Console Configuration Files </title>
                 <tgroup cols="2">
                     <thead>
