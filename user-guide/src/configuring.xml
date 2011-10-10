@@ -1259,7 +1259,9 @@ role.admin=juliet</programlisting>
 			@project.name@
 			embeds an OSGi-enhanced version of the <ulink url="http://tomcat.apache.org/">Tomcat Servlet Container</ulink>
 			in order to provide support for deploying Java EE WARs and OSGi <emphasis>Web Application Bundles</emphasis>. 
-			You configure the embedded Servlet container using the standard Apache Tomcat configuration.   The main difference is that the configuration file is called <filename>tomcat-server.xml</filename> rather than <literal>server.xml</literal>.  As with the other @project.name@ configuration files, the <literal>tomcat-server.xml</literal> file is located in the <literal>$SERVER_HOME/config</literal> directory. 
+			You configure the embedded Servlet container using the standard Apache Tomcat configuration.   The main difference is that the configuration file is called <filename>tomcat-server.xml</filename> rather than <literal>server.xml</literal>.  As with the other @project.name@ configuration files, the <literal>tomcat-server.xml</literal> file is located in the <literal>$SERVER_HOME/config</literal> directory.
+			Another difference is that not all standard Apache Tomcat configuration is supported in @tomcat.product.name@: the restrictions are described in the
+			remainder of this section.
 		</para>
 		<para>Here's an extract of the default configuration distributed with the @tomcat.product.name.short@.
 		</para>
@@ -1361,7 +1363,11 @@ role.admin=juliet</programlisting>
 		which is an association of a network name for a server (such as <literal>www.mycompany.com</literal>) with the particular 
 		server on which Catalina is running.  
 		The servlet container unpacks Web applications into a directory hierarchy if they are deployed as WAR files. 
-		</para></listitem>
+		</para>
+		<para>
+			Note that multiple <literal>&lt;Host&gt;</literal> elements are not supported in @tomcat.product.name@.
+		</para>
+		</listitem>
 
 		<listitem><para>Finally, the <literal>org.apache.catalina.valves.AccessLogValve</literal> valve creates log files 
 		in the same format as those created by standard web servers.   
