@@ -140,10 +140,11 @@ Manifest-Version: 1.0
 					<listitem>Since a PAR is scoped, its artifacts have their exported packages imported by the
 						synthetic context bundle which is used for thread context class loading. So,
 						for example, hibernate will be able to load classes of any of the exported
-						packages of the bundles in a PAR file using <code>Class.forName()</code> (or equivalent).</listitem>
+						packages of the bundles in a PAR file using the thread context class loader.</listitem>
 					<listitem>The PAR file is visible to management interfaces.</listitem>
 					<listitem>The PAR file can be undeployed and redeployed as a unit.</listitem>
 				</itemizedlist>
+				See <link linkend="developing-applications-plans-scoping">Plans and Scoping</link> for more information on scoping.
 			</para>	
 			<para>
 				A PAR includes one or more application bundles and its manifest specifies the following
@@ -413,7 +414,7 @@ Manifest-Version: 1.0
 				Additionally, a synthetic context bundle is generated for each scope. This bundle imports all the packages exported by other bundles in the scope.
 				The class loader of the synthetic context bundle is used for thread context class loading. So,
 				for example, hibernate will be able to load classes of any of the exported
-				packages of the bundles in a scope using <code>Class.forName()</code> (or equivalent).
+				packages of the bundles in a scope using the thread context class loader.
 			</para>
 			<para>
 				To ensure predictable class loading behaviour and avoid other issues associated with <emphasis>split packages</emphasis> (packages whose classes
@@ -423,6 +424,22 @@ Manifest-Version: 1.0
 				If this restriction is broken, the scoped application will fail to deploy.
 				This restriction can cause problems for <link linkend="scoping-and-substitutable-exports">substitutable exports</link>.
 			</para>
+			<para>
+				There is also a restriction when Spring DM is used in bundles in a scope.
+				See <link linkend="spring-dm-tccl-scoping-issue">Spring DM Thread Context Class Loader and Scoping Issue</link>.
+			</para>
+			<section id="developing-applications-plans-scoping-webapps">
+		  		<title>Web Applications and Scoping</title>
+				<para>
+					A Web Application Bundle (WAB) or WAR has its bundle class loader set as the TCCL, even when the WAB or WAR belongs to
+					a PAR or scoped plan.
+					To enable the TCCL to load classes of other bundles in the same scope as a WAB or WAR, use a WAB which imports the necessary packages.
+				</para>
+				<para>
+					Also a WAB or WAR has its own per-application trace, independent of the per-application trace of any PAR or scoped plan to which the
+					WAB or WAR belongs.
+				</para>
+			</section>
 		</section>
 
 	</section><!-- end plans -->
