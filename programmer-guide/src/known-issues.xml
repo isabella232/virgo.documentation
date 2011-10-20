@@ -143,19 +143,4 @@
 			See <ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=337826">bug 337826</ulink> for details.
 		</para>
 	</section>
-	<section id="spring-dm-tccl-scoping-issue">
-		<title>Spring DM Thread Context Class Loader and Scoping Issue</title>
-		<para>
-			The thread context class loader (TCCL) is set to be the class loader of the synthetic context bundle before bundles in
-			a PAR or scoped plan are started.
-			However, Spring DM overrides the TCCL with the bean class loader (which is typically the bundle class loader) before invoking bean methods.
-		</para>
-		<para>
-			A workaround is to import any packages into the bundle which contain classes that need to be loaded by thread context class loading.
-			A downside of this workaround is that it can obscure the intended dependencies in an application.
-		</para>
-		<para>
-			See <ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=360965">bug 360965</ulink> for details.
-		</para>
-	</section>	
 </chapter>

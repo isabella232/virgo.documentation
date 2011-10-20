@@ -424,10 +424,6 @@ Manifest-Version: 1.0
 				If this restriction is broken, the scoped application will fail to deploy.
 				This restriction can cause problems for <link linkend="scoping-and-substitutable-exports">substitutable exports</link>.
 			</para>
-			<para>
-				There is also a restriction when Spring DM is used in bundles in a scope.
-				See <link linkend="spring-dm-tccl-scoping-issue">Spring DM Thread Context Class Loader and Scoping Issue</link>.
-			</para>
 			<section id="developing-applications-plans-scoping-webapps">
 		  		<title>Web Applications and Scoping</title>
 				<para>
