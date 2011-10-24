@@ -57,3 +57,7 @@ See:
 
     * http://felix.apache.org/site/apache-felix-gogo.html
     * http://felix.apache.org/site/rfc-147-overview.html
+
+Examples of command help annotations:
+
+    * http://svn.apache.org/viewvc/felix/trunk/gogo/command/src/main/java/org/apache/felix/gogo/command/OBR.java?view=markup
