@@ -1,0 +1,59 @@
+Shell support
+=============
+
+SpringSource dm Server 2.0 used jline for its console support. The vsh command was added to cover
+Virgo specifics and this, combined with the sophisticated tab completion of jline, worked out
+rather well.
+
+When dm Server was contributed to form the Eclipse Virgo project, jline was one of the dependencies
+which didn't make it through the stringent Eclipse IP review. So we had to find an alternative.
+
+For the Virgo 2.0 release, we reverted to using the Equinox console and added vsh as a subcommand.
+This wasn't great as there was no tab completion or even command history.
+
+In Virgo 3.0, we integrated the Apache Felix Gogo shell from Equinox and again added vsh as a
+subcommand. There is minimal tab completion, but still not as good as that of jline. There is
+command history though.
+
+Several bugs and enhancements were not address in 3.0, so in preparing to fix some of these,
+the following notes were made. They are far from complete or definitive, but are better than nothing.
+
+vsh command
+===========
+
+The implementation of the vsh command resides in the bundle org.eclipse.virgo.kernel.osgicommand.
+
+CommandExecutor is a service published by the shell bundle which is used to execute commands
+provided by the shell bundle.
+
+OSGi command bundle
+===================
+
+This bundle provides class loading commands (clload, clhas, etc.) and registers a service of
+type org.eclipse.osgi.framework.console.CommandProvider to make these commands available to
+Equinox. The bundle also registers an mbean to provide class loading support via JMX.
+
+The bundle also obtains the CommandExecutor service from the shell bundle and uses this to
+register a corresponding CommandProvider implemented in the class OsgiKernelShellCommand.
+
+Aan implmementation of CommandProvider has methods named "_<commandName>" (e.g. _vsh) which
+take a CommandInterpreter parameter which is used to output the results of the command on
+the shell.
+
+Shell bundle
+============
+
+The shell bundle derives from the "old world" of jline and the OSGi command bundle integrates the old
+world with the new shell support. The shell bundle is not jline specific, but it was designed for
+use with jline and so it shows some bias towards jline capabilities.
+
+The shell bundle uses the quasi-framework to explore the OSGi state in the user region in
+conjunction with the Equinox region digraph which controls access to and from the user region.
+
+Gogo support
+============
+
+See:
+
+    * http://felix.apache.org/site/apache-felix-gogo.html
+    * http://felix.apache.org/site/rfc-147-overview.html
