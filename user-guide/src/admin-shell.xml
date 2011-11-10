@@ -39,8 +39,9 @@ osgi> ]]></programlisting>
 		</para>
         <para>
 			Alternatively, you can ssh to port 2502 or 2402 for user region or kernel, respectively.
-			The first time you use ssh to connect, specify the user "equinox" and password "equinox".
-			You'll then be prompted prompted to create a new user, password, and role (the "admin" role is recommended).
+			The users and passwords for ssh are configured in <literal>config/org.eclipse.virgo.kernel.users.properties</literal> as described
+			in <link linkend="configuring-authentication">Configuring Authentication</link>. The default user and password are <literal>admin</literal>
+			and <literal>springsource</literal>.
 		</para>
     </section>
 

@@ -1195,13 +1195,19 @@ deployer.pickupDirectory=pickup]]></programlisting>
 		files that you need to update if you want to change the administration
 		user, change their password, and so on.
 	</para>
-		<para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.authentication.config</literal> file configures the underlying authentication technology for @project.name@.  The short file consists of the following entry:</para>
+		<para>The <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.authentication.config</literal> file configures the underlying authentication technology for @project.name@.  The short file consists of the following entries:</para>
 
 		<programlisting>virgo-kernel {
         org.eclipse.virgo.kernel.authentication.KernelLoginModule REQUIRED;
+};
+equinox_console {
+	org.eclipse.virgo.kernel.authentication.KernelLoginModule REQUIRED;
 };</programlisting>
 
-		<para>The entry is named <literal>virgo-kernel</literal>.  This name corresponds to the <literal>&lt;Realm&gt;</literal> element in the <literal>$SERVER_HOME/config/tomcat-server.xml</literal> file that configures the JAAS authentication mechanism for the <literal>Catalina</literal> service of the <link linkend="configuring-tomcat">Tomcat servlet container</link>.  The <literal>virgo-kernel</literal> entry specifies that the JAAS LoginModule that @project.name@ uses to authenticate users is <literal>org.eclipse.virgo.kernel.authentication.KernelLoginModule</literal> and that this <literal>KernelLoginModule</literal> is required to "succeed" in order for authentication to be considered successful. The <literal>KernelLoginModule</literal> succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for @tomcat.product.name.short@ is <literal>admin/springsource</literal>. </para>
+		<para>The entry named <literal>virgo-kernel</literal> corresponds to the <literal>&lt;Realm&gt;</literal> element in the <literal>$SERVER_HOME/config/tomcat-server.xml</literal> file that configures the JAAS authentication mechanism for the <literal>Catalina</literal> service of the <link linkend="configuring-tomcat">Tomcat servlet container</link>.  The <literal>virgo-kernel</literal> entry specifies that the JAAS LoginModule that @project.name@ uses to authenticate users is <literal>org.eclipse.virgo.kernel.authentication.KernelLoginModule</literal> and that this <literal>KernelLoginModule</literal> is required to "succeed" in order for authentication to be considered successful. The <literal>KernelLoginModule</literal> succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for @tomcat.product.name.short@ is <literal>admin/springsource</literal>. </para>
+		<para>
+			The entry named <literal>equinox_console</literal> controls ssh authentication for the Virgo shell. It also uses the <literal>KernelLoginModule</literal>.
+		</para>
 
 	       <para>You configure the administration user in the <literal>org.eclipse.virgo.kernel.users.properties</literal> file.  The default file for a freshly installed @project.name@ is as follows:</para>
 
