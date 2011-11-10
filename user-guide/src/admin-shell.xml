@@ -45,12 +45,12 @@ osgi> ]]></programlisting>
     </section>
 
 	<section id="admin-shell-using-vsh">
-		<title>Using the Equinox Console Extension (<literal>vsh</literal>)</title>
+		<title>Using Virgo Shell Commands</title>
 
-        <para>Virgo provides an extension to the Equinox console, <emphasis>for the user region only</emphasis>, in the form of the <literal>vsh</literal> command
-		that allows you to examine artifacts
-        currently installed to a particular Web Server instance, manage the lifecycle of the installed artifacts, install new artifacts, and shut down
-        the server. You can install, examine, and manage the lifecycle of the following artifacts:
+        <para>Virgo provides shell commands
+		that allow you to examine artifacts
+        currently installed in a particular @kernel.product.name@ instance, manage the lifecycle of the installed artifacts, install new artifacts, and shut down
+        the @kernel.product.name@. You can install, examine, and manage the lifecycle of the following artifacts:
         <itemizedlist>
           <listitem><para>Bundles</para></listitem>
           <listitem><para>Configuration Artifacts</para></listitem>
@@ -65,37 +65,32 @@ osgi> ]]></programlisting>
           <listitem><para>Services in the OSGi service registry</para></listitem>
         </itemizedlist>
         </para>
-
-        <para>You invoke the Equinox Console Extension using the <literal>vsh</literal> command. For example:</para>
+        <para>
+			These commands are provided <emphasis>for the user region shells only</emphasis> and are grouped together in
+			the <literal>vsh</literal> <emphasis>scope</emphasis>.
+        </para>
+        <para>You invoke commands using the <literal>vsh:</literal> scope. For example:</para>
 		<programlisting><![CDATA[
-osgi> vsh help
+osgi> vsh:plan list
 
-
-    bundle   - Management and examination of bundle artifacts
-    config   - Management and examination of configuration artifacts
-    exit     - Exit the kernel shell environment
-    help     - Get help on commands
-    install  - Install (deploy) an artifact to the server
-    package  - Examination of exported packages
-    par      - Management and examination of PAR artifacts
-    plan     - Management and examination of plan artifacts
-    service  - Examination of services
-    shutdown - Shutdown Virgo Kernel
-
+Name                                           Version                            State
+org.eclipse.virgo.apps.admin.plan              2.1.0                             ACTIVE
+org.eclipse.virgo.kernel.userregion.springdm   2.1.0                             ACTIVE
+org.eclipse.virgo.web                          2.1.0                             ACTIVE
 
 osgi> ]]></programlisting>
 
 	    <section id="admin-shell-vsh-using-command-list">
-		<title>Equinox Console Extension (<literal>vsh</literal>) Subcommands</title>
+		<title>Virgo Shell Commands</title>
 
-		<para>The following table lists the Equinox Console Extension subcommands; each subcommand in turn has a variety of options that you can specify, depending on what you want to do, such as start a bundle or refresh a plan. The reference documentation about each subcommand provides the full list of available options. </para>
+		<para>The following table lists the Virgo shell commands; each command in turn has a variety of options that you can specify, depending on what you want to do, such as start a bundle or refresh a plan. The reference documentation about each command provides the full list of available options. </para>
 
         	<table id="admin-shell-vsh-commands-table" colsep="1" frame="all" rowsep="1">
-            	  <title>Equinox Console Extension Subcommands</title>
+            	  <title>Virgo Shell Commands</title>
                     <tgroup cols="2">
                       <thead>
                         <row>
-                                <entry>Subcommand </entry>
+                                <entry>Command </entry>
                                 <entry>Description</entry>
                         </row>
                       </thead>
@@ -109,7 +104,7 @@ osgi> ]]></programlisting>
                                 <entry>Manages and displays information about configuration artifacts.</entry>
                         </row>
                         <row>
-				<entry><link linkend="admin-shell-vsh-package-command">package</link></entry>
+				<entry><link linkend="admin-shell-vsh-package-command">packages</link></entry>
                                 <entry>Displays information about exported packages.</entry>
                         </row>
                         <row>
@@ -126,21 +121,12 @@ osgi> ]]></programlisting>
                         </row>
                         <row>
 				<entry><link linkend="admin-shell-vsh-install-command">install</link></entry>
-                                <entry>Installs an artifact to Web Server. </entry>
+                                <entry>Installs an artifact to @kernel.product.name@. </entry>
                         </row>
                         <row>
 				<entry><link linkend="admin-shell-vsh-shutdown-command">shutdown</link></entry>
-                                <entry>Shuts down the Web Server instance to which the Equinox Console is connected.</entry>
+                                <entry>Shuts down the @kernel.product.name@ instance to which the Equinox Console is connected.</entry>
                         </row>
-                        <row>
-				<entry><link linkend="admin-shell-vsh-help-command">help</link></entry>
-                                <entry>Displays help about the list of available subcommands, as well as more detailed help about individual subcommands.</entry>
-                        </row>
-		                <row>
-				<entry><link linkend="admin-shell-vsh-exit-command">exit</link></entry>
-		                        <entry>Returns to the Equinox console with no effect.</entry>
-		                </row>
-
 		      </tbody>
                     </tgroup>
 		</table>
@@ -149,13 +135,13 @@ osgi> ]]></programlisting>
 	</section>
 
 	<section id="admin-shell-vsh-command-reference">
-	  <title>Equinox Console Extension Subcommand Reference</title>
+	  <title>Virgo Shell Command Reference</title>
 
 	  <para>
-	  	This section contains reference information about the Equinox Console Extension subcommands
+	  	This section contains reference information about the Virgo shell commands
 		<link linkend="admin-shell-vsh-bundle-command">bundle</link>,
 		<link linkend="admin-shell-vsh-config-command">config</link>,
-		<link linkend="admin-shell-vsh-package-command">package</link>,
+		<link linkend="admin-shell-vsh-package-command">packages</link>,
 		<link linkend="admin-shell-vsh-par-command">par</link>,
 		<link linkend="admin-shell-vsh-plan-command">plan</link>,
 		<link linkend="admin-shell-vsh-service-command">service</link>,
@@ -167,13 +153,13 @@ osgi> ]]></programlisting>
 
 
 	  <section id="admin-shell-vsh-bundle-command">
-		<title>bundle Subcommand</title>
+		<title>bundle Command</title>
 
-		<para>Use the <literal>bundle</literal> subcommand to manage the lifecycle of bundles deployed to @tomcat.product.name.short@ and to gather information about deployed bundles, such as diagnostic information, header information, and so on. </para>
-		<para>The following table lists the options you can specify for this subcommand.</para>
+		<para>Use the <literal>bundle</literal> command to manage the lifecycle of bundles deployed in @kernel.product.name@ and to gather information about deployed bundles, such as diagnostic information, header information, and so on. </para>
+		<para>The following table lists the options you can specify for this command.</para>
 
         	<table id="admin-shell-vsh-bundle-command-table" colsep="1" frame="all" rowsep="1">
-            	  <title>Options of the bundle Subcommand</title>
+            	  <title>Options of the bundle Command</title>
                     <tgroup cols="2">
                       <thead>
                         <row>
@@ -184,8 +170,8 @@ osgi> ]]></programlisting>
                       <tbody>
                         <row>
 				<entry>list</entry>
-                                <entry>Displays the list of bundles that are currently installed to the current Web Server instance.  With the exception of a few kernel bundles and their services, which Web Server uses to administer the user region, none of the kernel is visible to user installed artifacts; rather, only the bundles installed in the user region are visible.
-				  <para>Each bundle is identified by an internal <literal>ID</literal> which you can then use with the other <literal>bundle</literal> subcommands that manage a particular bundle, such as <literal>start </literal><emphasis><literal>id</literal></emphasis>.   The <literal>list</literal> subcommand also displays the version of the bundle, along with its state, which is one of the following standard OSGi lifecycle states:</para>
+                                <entry>Displays the list of bundles that are currently installed in the current @kernel.product.name@ instance.  With the exception of a few kernel bundles and their services, which @kernel.product.name@ uses to administer the user region, none of the kernel is visible to user installed artifacts; rather, only the bundles installed in the user region are visible.
+				  <para>Each bundle is identified by an internal <literal>ID</literal> which you can then use with the other <literal>bundle</literal> commands that manage a particular bundle, such as <literal>start </literal><emphasis><literal>id</literal></emphasis>.   The <literal>list</literal> command also displays the version of the bundle, along with its state, which is one of the following standard OSGi lifecycle states:</para>
 			        <itemizedlist>
 				  <listitem><para><emphasis role="bold">Installed</emphasis>: The bundle is installed but its dependencies have not yet been resolved.</para></listitem>
 				  <listitem><para><emphasis role="bold">Resolved</emphasis>: The bundle is resolved and you can now start it.</para></listitem>
@@ -194,36 +180,36 @@ osgi> ]]></programlisting>
 				  <listitem><para><emphasis role="bold">Active</emphasis>: The bundle is running and you can now use it.</para></listitem>
 				  <listitem><para><emphasis role="bold">Stopping</emphasis>: The bundle is in the process of stopping.</para></listitem>
 			        </itemizedlist>
-			     <para>Use one of the other <literal>bundle</literal> subcommands to change the state of a bundle.  For example, use the <literal>bundle start </literal><emphasis><literal>id</literal></emphasis> subcommand to change the state of a bundle from <literal>Installed</literal> to <literal>Active</literal>.</para>
+			     <para>Use one of the other <literal>bundle</literal> commands to change the state of a bundle.  For example, use the <literal>bundle start </literal><emphasis><literal>id</literal></emphasis> command to change the state of a bundle from <literal>Installed</literal> to <literal>Active</literal>.</para>
 			   </entry>
                         </row>
                         <row>
 				<entry>examine <emphasis>id</emphasis></entry>
-                                <entry>Displays detailed information about the specified bundle.  Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.
-			         <para>In addition to the information provided by the <literal>bundle list</literal> subcommand (id, full name, version, and state), the <literal>examine</literal> subcommand specifies whether the bundle includes a Spring application context (or is <emphasis>Spring Powered</emphasis>) and the exact physical location of the bundle JAR file.  </para>
-				<para>The <literal>examine</literal> also provides the full list of packages that the bundle imports, as well as the bundles that in turn export these imported packages.  Finally, the subcommand displays the packages that the current bundle exports, and then in turn the list of other installed bundles that are currently importing these exported packages.  </para>
+                                <entry>Displays detailed information about the specified bundle.  Use the <literal>bundle list</literal> command to get the internal id of a particular bundle.
+			         <para>In addition to the information provided by the <literal>bundle list</literal> command (id, full name, version, and state), the <literal>examine</literal> command specifies whether the bundle includes a Spring application context (or is <emphasis>Spring Powered</emphasis>) and the exact physical location of the bundle JAR file.  </para>
+				<para>The <literal>examine</literal> also provides the full list of packages that the bundle imports, as well as the bundles that in turn export these imported packages.  Finally, the command displays the packages that the current bundle exports, and then in turn the list of other installed bundles that are currently importing these exported packages.  </para>
 			    </entry>
                         </row>
                         <row>
 				<entry>start <emphasis>id</emphasis></entry>
-                                <entry>Starts the specified bundle.  Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.
-				<para>After Web Server successfully starts the bundle, it is listed in the <literal>Active</literal> state. </para>
+                                <entry>Starts the specified bundle.  Use the <literal>bundle list</literal> command to get the internal id of a particular bundle.
+				<para>After @kernel.product.name@ successfully starts the bundle, it is listed in the <literal>Active</literal> state. </para>
 				</entry>
                         </row>
                         <row>
 				<entry>stop <emphasis>id</emphasis></entry>
-                                <entry>Stops the specified bundle.  Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.
+                                <entry>Stops the specified bundle.  Use the <literal>bundle list</literal> command to get the internal id of a particular bundle.
 				  <para>When you stop a bundle, it goes from the <literal>Active</literal> state to the <literal>Resolved</literal> state, and you must re-start it if you want to use the application that the bundle contains.</para> </entry>
                         </row>
                         <row>
 				<entry>refresh <emphasis>id</emphasis></entry>
-                                <entry>Updates the contents of the specified bundle. Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.  Use this subcommand if you have changed the contents of the bundle JAR file and you want to refresh the artifact as installed in the OSGi framework.
+                                <entry>Updates the contents of the specified bundle. Use the <literal>bundle list</literal> command to get the internal id of a particular bundle.  Use this command if you have changed the contents of the bundle JAR file and you want to refresh the artifact as installed in the OSGi framework.
 				</entry>
                         </row>
                         <row>
 				<entry>uninstall <emphasis>id</emphasis></entry>
-                                <entry>Uninstalls the specified bundle from Web Server.   Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.
-				  <para>When the uninstall process is complete, the bundle does not show up in the list of bundles displayed by the <literal>bundle list</literal> subcommand.  If you want to use the application in the bundle, you must re-install it using the <literal>install</literal> subcommand.</para>
+                                <entry>Uninstalls the specified bundle from @kernel.product.name@.   Use the <literal>bundle list</literal> command to get the internal id of a particular bundle.
+				  <para>When the uninstall process is complete, the bundle does not show up in the list of bundles displayed by the <literal>bundle list</literal> command.  If you want to use the application in the bundle, you must re-install it using the <literal>install</literal> command.</para>
 				</entry>
                         </row>
                         <row>
@@ -231,8 +217,8 @@ osgi> ]]></programlisting>
                           	<entry>
 								<para>
 									Provides diagnostic information about the specified bundle.
-									In particular, this subcommand displays information about the imported packages that Web Server could not resolve.
-									Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.
+									In particular, this command displays information about the imported packages that @kernel.product.name@ could not resolve.
+									Use the <literal>bundle list</literal> command to get the internal id of a particular bundle.
 								</para>
 								<para>
 									Note that @project.name@ does not install unresolvable bundles.
@@ -243,7 +229,7 @@ osgi> ]]></programlisting>
                         </row>
                         <row>
 				<entry>headers <emphasis>id</emphasis></entry>
-                                <entry>Displays the complete list of manifest headers of the specified bundle.  Use the <literal>bundle list</literal> subcommand to get the internal id of a particular bundle.
+                                <entry>Displays the complete list of manifest headers of the specified bundle.  Use the <literal>bundle list</literal> command to get the internal id of a particular bundle.
 				  <para>The manifest headers include: <literal>Import-Package</literal>, <literal>Export-Package</literal>, <literal>Bundle-SymbolicName</literal>, and so on.  </para>
 				</entry>
                         </row>
@@ -251,11 +237,11 @@ osgi> ]]></programlisting>
 		   </tgroup>
 		</table>
 
-		<para>The following examples show how to use this subcommand.</para>
+		<para>The following examples show how to use this command.</para>
 
-		<para>First, use the <literal>bundle list</literal> subcommand to view all the installed bundles:</para>
+		<para>First, use the <literal>bundle list</literal> command to view all the installed bundles:</para>
 
-		<programlisting>osgi> vsh bundle list
+		<programlisting>osgi> vsh:bundle list
 
 Id   Name                                       Version                    State
 40   org.eclipse.virgo.kernel.userregionfactory 3.0.0.RELEASE             ACTIVE
@@ -288,7 +274,7 @@ osgi> </programlisting>
 
 		<para>The following example shows how to view the headers of the <literal>org.springframework.osgi.extender</literal> bundle (only the first few lines are shown):</para>
 
-		<programlisting>osgi> vsh bundle examine 5
+		<programlisting>osgi> vsh:bundle examine 5
 
 Id:              5
 Name:            org.springframework.osgi.extender
@@ -324,13 +310,13 @@ osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-vsh-config-command">
-		<title>config Subcommand</title>
+		<title>config Command</title>
 
-		<para>Use the <literal>config</literal> subcommand to view and manage the configuration artifacts that have been installed to Web Server.  A <emphasis>configuration artifact</emphasis> is simply a properties file that is associated with a user application that is contained in a bundle.  Using configuration artifacts, you can manage the configuration of a user application completely separately from the bundle that contains the application. </para>
-		<para>The following table lists the options you can specify for this subcommand.</para>
+		<para>Use the <literal>config</literal> command to view and manage the configuration artifacts that have been installed in @kernel.product.name@.  A <emphasis>configuration artifact</emphasis> is simply a properties file that is associated with a user application that is contained in a bundle.  Using configuration artifacts, you can manage the configuration of a user application completely separately from the bundle that contains the application. </para>
+		<para>The following table lists the options you can specify for this command.</para>
 
         	<table id="admin-shell-vsh-config-command-table" colsep="1" frame="all" rowsep="1">
-            	  <title>Options of the config Subcommand</title>
+            	  <title>Options of the config Command</title>
                     <tgroup cols="2">
                       <thead>
                         <row>
@@ -341,24 +327,24 @@ osgi> </programlisting>
                       <tbody>
                         <row>
 				<entry>list</entry>
-                                <entry>Lists the configuration artifacts that are currently installed in Web Server.
-			          <para>The <literal>list</literal> option displays the full name of each installed configuration artifact, its version, and its current state.  Configuration artifacts have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a configuration can be in is the same as those of bundles; see <link linkend="admin-shell-bundle-command">the bundle subcommand</link> for the list of possible states. </para>
+                                <entry>Lists the configuration artifacts that are currently installed in @kernel.product.name@.
+			          <para>The <literal>list</literal> option displays the full name of each installed configuration artifact, its version, and its current state.  Configuration artifacts have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a configuration can be in is the same as those of bundles; see <link linkend="admin-shell-bundle-command">the bundle command</link> for the list of possible states. </para>
 			        </entry>
                         </row>
                         <row>
 				<entry>examine <emphasis>name [version]</emphasis></entry>
-                                <entry>Displays information about the specified configuration artifact.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed.  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
+                                <entry>Displays information about the specified configuration artifact.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed.  Use the <literal>config list</literal> command to view all configuration artifacts and versions currently installed in @kernel.product.name@.
 				<para>A configuration artifact must be active for you to examine it; if it is not currently active, use <literal>config start</literal> to start it and thus change its state to <literal>Active</literal>.</para>
-				<para>The subcommand first displays the factory pid of the configuration artifact as well as the complete location of the bundle to which the configuration artifact is associated.   The subcommand then lists all the properties that make up the configuration, as well as their current value. </para> </entry>
+				<para>The command first displays the factory pid of the configuration artifact as well as the complete location of the bundle to which the configuration artifact is associated.   The command then lists all the properties that make up the configuration, as well as their current value. </para> </entry>
                         </row>
                         <row>
 							<entry>start <emphasis>name [version]</emphasis></entry>
                             <entry>
 								<para>
-									Starts the specified configuration artifact and makes it visible to the internal configuration sub-system of Web Server.
+									Starts the specified configuration artifact and makes it visible to @kernel.product.name@.
 									Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the 
 									configuration artifact installed (which @project.name@ does not currently support).
-									Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
+									Use the <literal>config list</literal> command to view all configuration artifacts and versions currently installed in @kernel.product.name@.
 								</para>
 								<para>
 									Starting the configuration sets its state to <literal>Active</literal>.
@@ -367,28 +353,28 @@ osgi> </programlisting>
                         </row>
                         <row>
 				<entry>stop <emphasis>name [version]</emphasis></entry>
-                                <entry>Stops the specified configuration artifact and makes it invisible to the internal configuration sub-system of Web Server.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which @project.name@ does not currently support).  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
+                                <entry>Stops the specified configuration artifact and makes it invisible to @kernel.product.name@.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which @project.name@ does not currently support).  Use the <literal>config list</literal> command to view all configuration artifacts and versions currently installed in @kernel.product.name@.
 
 				<para>Stopping the configuration sets its state to <literal>Resolved</literal>.</para></entry>
                         </row>
                         <row>
 				<entry>refresh <emphasis>name [version]</emphasis></entry>
-                                <entry>Updates the contents of the specified configuration artifact to the internal configuration sub-system of Web Server.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which @project.name@ does not currently support).  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
+                                <entry>Updates the contents of the specified configuration artifact to @kernel.product.name@.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which @project.name@ does not currently support).  Use the <literal>config list</literal> command to view all configuration artifacts and versions currently installed in @kernel.product.name@.
 
-				<para>Use this subcommand if you have changed the contents of the configuration artifact, and you want to make this information known to Web Server and the associated bundle. </para></entry>
+				<para>Use this command if you have changed the contents of the configuration artifact, and you want to make this information known to @kernel.product.name@ and the associated bundle. </para></entry>
                         </row>
                         <row>
 				<entry>uninstall <emphasis>name [version]</emphasis></entry>
-                                <entry>Uninstalls the specified configuration artifact and make it completely unavailable to Web Server.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which @project.name@ does not currently support).  Use the <literal>config list</literal> subcommand to view all configuration artifacts and versions currently installed in Web Server.
+                                <entry>Uninstalls the specified configuration artifact and make it completely unavailable to @kernel.product.name@.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which @project.name@ does not currently support).  Use the <literal>config list</literal> command to view all configuration artifacts and versions currently installed in @kernel.product.name@.
 
-				<para>Stopping the configuration  removes it from Web Server's list of deployed artifacts and it will not show up when you perform a <literal>config list</literal>.</para></entry>
+				<para>Stopping the configuration  removes it from @kernel.product.name@'s list of deployed artifacts and it will not show up when you perform a <literal>config list</literal>.</para></entry>
                         </row>
 		      </tbody>
 		   </tgroup>
 		</table>
 
-		<para>The following example shows how to use this subcommand to list the installed configuration artifacts.</para>
-		<programlisting>osgi> vsh config list
+		<para>The following example shows how to use this command to list the installed configuration artifacts.</para>
+		<programlisting>osgi> vsh:config list
 
 Name                                      Version                          State
 org.eclipse.virgo.kernel                  0.0.0                           ACTIVE
@@ -404,7 +390,7 @@ osgi> </programlisting>
 
 		<para>To view the properties of a configuration artifact, and their current values, use <literal>config examine</literal>:</para>
 
-		<programlisting>osgi> vsh config examine org.eclipse.virgo.repository
+		<programlisting>osgi> vsh:config examine org.eclipse.virgo.repository
 
 Factory pid:     
 Bundle Location: file:lib/kernel/org.eclipse.virgo.kernel.services-@bundle.version@.jar
@@ -426,14 +412,14 @@ osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-vsh-package-command">
-		<title>package Subcommand</title>
+		<title>packages Command</title>
 
-		<para>Use the <literal>package</literal> subcommand to view the complete list of packages exported by all bundles installed to Web Server, as well as examine a particular exported package in more detail.</para>
+		<para>Use the <literal>packages</literal> command to view the complete list of packages exported by all bundles installed in @kernel.product.name@, as well as examine a particular exported package in more detail.</para>
 
-		<para>The following table lists the options you can specify for this subcommand.</para>
+		<para>The following table lists the options you can specify for this command.</para>
 
         	<table id="admin-shell-vsh-package-command-table" colsep="1" frame="all" rowsep="1">
-            	  <title>Options of the package Subcommand</title>
+            	  <title>Options of the packages Command</title>
                     <tgroup cols="2">
                       <thead>
                         <row>
@@ -444,12 +430,12 @@ osgi> </programlisting>
                       <tbody>
                         <row>
 				<entry>list</entry>
-                                <entry>Displays all the exported packages for all bundles in the uer region of Web Server.  In addition to the package name, the subcommand displays the version of the exported package and the <literal>id</literal> of the bundle that contains the exported package.  You can examine the bundle by using the subcommand <literal>bundle examine </literal><emphasis><literal>id</literal></emphasis>.</entry>
+                                <entry>Displays all the exported packages for all bundles in the uer region of @kernel.product.name@.  In addition to the package name, the command displays the version of the exported package and the <literal>id</literal> of the bundle that contains the exported package.  You can examine the bundle by using the command <literal>bundle examine </literal><emphasis><literal>id</literal></emphasis>.</entry>
                         </row>
                         <row>
 				<entry>examine <emphasis>name version</emphasis></entry>
-                                <entry>Displays details about the exported package.  You must specify both the name of the exported package and its version; use <literal>package list</literal> to view the exact names and version.
-				  <para>This subcommand provides the following additional information about the exported package:</para>
+                                <entry>Displays details about the exported package.  You must specify both the name of the exported package and its version; use <literal>packages list</literal> to view the exact names and version.
+				  <para>This command provides the following additional information about the exported package:</para>
 
 				  <itemizedlist>
 				    <listitem><para>The name and version of the bundle that exports the package.  This means that the package name is explicitly listed in the bundle's <literal>MANIFEST.MF</literal> file as part of the <literal>Export-Package</literal> header.</para></listitem>
@@ -464,7 +450,7 @@ osgi> </programlisting>
 		</table>
 
 		<para>The following example shows how to list all the exported packages for all bundles installed:</para>
-		<programlisting>osgi> vsh package list
+		<programlisting>osgi> vsh:packages list
 
 Name                                                        Version                    Providing Bundle
 javax.accessibility                                         0.0.0                      0
@@ -475,7 +461,7 @@ javax.activation                                            1.1.1               
 osgi> </programlisting>
 
 		<para>The following example shows how to examine a particular exported package:</para>
-		<programlisting>osgi> vsh package examine org.slf4j 1.6.1
+		<programlisting>osgi> vsh:packages examine org.slf4j 1.6.1
 
 Exporter: org.eclipse.virgo.region.user 0.0.0 [1]
 
@@ -507,13 +493,13 @@ osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-vsh-par-command">
-		<title>par Subcommand</title>
+		<title>par Command</title>
 
-		<para>Use the <literal>par</literal> subcommand to view all the PARs currently installed in Web Server, view details about a particular PAR and manage its lifecycle, such as starting, stopping, refreshing, and uninstalling it.</para>
-		<para>The following table lists the options you can specify for this subcommand.</para>
+		<para>Use the <literal>par</literal> command to view all the PARs currently installed in @kernel.product.name@, view details about a particular PAR and manage its lifecycle, such as starting, stopping, refreshing, and uninstalling it.</para>
+		<para>The following table lists the options you can specify for this command.</para>
 
         	<table id="admin-shell-vsh-par-command-table" colsep="1" frame="all" rowsep="1">
-            	  <title>Options of the par Subcommand</title>
+            	  <title>Options of the par Command</title>
                     <tgroup cols="2">
                       <thead>
                         <row>
@@ -524,46 +510,46 @@ osgi> </programlisting>
                       <tbody>
                         <row>
 				<entry>list</entry>
-                                <entry>Displays all the PARs that are currently installed in Web Server.
-			          <para>The <literal>list</literal> option displays the full name of each installed PAR, its version, and its current state.  PARs have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a PAR can be in is the same as those of bundles; see <link linkend="admin-shell-bundle-command">the bundle subcommand</link> for the list of possible states. </para></entry>
+                                <entry>Displays all the PARs that are currently installed in @kernel.product.name@.
+			          <para>The <literal>list</literal> option displays the full name of each installed PAR, its version, and its current state.  PARs have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a PAR can be in is the same as those of bundles; see <link linkend="admin-shell-bundle-command">the bundle command</link> for the list of possible states. </para></entry>
                         </row>
                         <row>
 				<entry>examine <emphasis>name version</emphasis></entry>
-                                <entry>Displays information about the specified PAR; you are required to identify the PAR with both its name and its version.  Use the <literal>par list</literal> subcommand to view all installed PAR files and their versions.  The subcommand displays the following information:
+                                <entry>Displays information about the specified PAR; you are required to identify the PAR with both its name and its version.  Use the <literal>par list</literal> command to view all installed PAR files and their versions.  The command displays the following information:
 			         <itemizedlist>
-				    <listitem><para>The current state of the PAR (see <link linkend="admin-shell-vsh-bundle-command">the bundle subcommand</link> for the full list of possible states).</para></listitem>
-				  <listitem><para>Whether the PAR is <emphasis>scoped</emphasis>.  Scoping specifies whether Web Server should deploy the members of the PAR in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</para></listitem>
-				  <listitem><para>Whether the PAR is <emphasis>atomic</emphasis>.  When a PAR is atomic, Web Server manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Web Server starts <emphasis>all</emphasis> the PAR artifacts. If one artifact fails to start, then Web Server stops all other artifacts in the PAR.</para></listitem>
+				    <listitem><para>The current state of the PAR (see <link linkend="admin-shell-vsh-bundle-command">the bundle command</link> for the full list of possible states).</para></listitem>
+				  <listitem><para>Whether the PAR is <emphasis>scoped</emphasis>.  Scoping specifies whether @kernel.product.name@ should deploy the members of the PAR in their own scope; when scoping is disabled, @kernel.product.name@ deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</para></listitem>
+				  <listitem><para>Whether the PAR is <emphasis>atomic</emphasis>.  When a PAR is atomic, @kernel.product.name@ manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then @kernel.product.name@ starts <emphasis>all</emphasis> the PAR artifacts. If one artifact fails to start, then @kernel.product.name@ stops all other artifacts in the PAR.</para></listitem>
 				  <listitem><para>The individual members, or children, of the PAR. These could be plans, bundles, configuration artifacts, and so on.</para></listitem>
 			         </itemizedlist>
 			   </entry>
                         </row>
                         <row>
 				<entry>start <emphasis>name version</emphasis></entry>
-                                <entry>Starts the specified PAR.  You must specify both the full name of the PAR as well as the version you want to start. Use the <literal>par list</literal> subcommand to get the list of PARs currently installed in Web Server.
-				<para>To start a PAR, it must have already been resolved by Web Server, or in other words, be in the <literal>Resolved</literal> state.  After Web Server successfully starts the PAR, it is listed in the <literal>Active</literal> state. </para></entry>
+                                <entry>Starts the specified PAR.  You must specify both the full name of the PAR as well as the version you want to start. Use the <literal>par list</literal> command to get the list of PARs currently installed in @kernel.product.name@.
+				<para>To start a PAR, it must have already been resolved by @kernel.product.name@, or in other words, be in the <literal>Resolved</literal> state.  After @kernel.product.name@ successfully starts the PAR, it is listed in the <literal>Active</literal> state. </para></entry>
                         </row>
                         <row>
 				<entry>stop <emphasis>name version</emphasis></entry>
-                                <entry>Stops the specified PAR.  You must specify both the full name of the PAR as well as the version you want to stop. Use the <literal>par list</literal> subcommand to get the list of PARs currently installed in Web Server.
+                                <entry>Stops the specified PAR.  You must specify both the full name of the PAR as well as the version you want to stop. Use the <literal>par list</literal> command to get the list of PARs currently installed in @kernel.product.name@.
 				  <para>When you stop a PAR, it goes from the <literal>Active</literal> state to the <literal>Resolved</literal> state, and you must re-start it if you want to use the application that the PAR contains.</para> </entry>
                         </row>
                         <row>
 				<entry>refresh <emphasis>name version</emphasis></entry>
-                                <entry>Updates the contents of the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the <literal>par list</literal> subcommand to this information.
-				<para>Use this subcommand if you have changed the contents of the PAR file and you want to refresh the artifact as installed in the OSGi framework.</para></entry>
+                                <entry>Updates the contents of the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the <literal>par list</literal> command to this information.
+				<para>Use this command if you have changed the contents of the PAR file and you want to refresh the artifact as installed in the OSGi framework.</para></entry>
                         </row>
                         <row>
 				<entry>uninstall <emphasis>name version</emphasis></entry>
-                                <entry>Uninstalls the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the <literal>par list</literal> subcommand to this information.
-				  <para>When the uninstall process is complete, the PAR will not show up in the list of PARs displayed by the <literal>par list</literal> subcommand.  If you want to use the application in the PAR, you must re-install it using the <literal>install</literal> subcommand.</para></entry>
+                                <entry>Uninstalls the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the <literal>par list</literal> command to this information.
+				  <para>When the uninstall process is complete, the PAR will not show up in the list of PARs displayed by the <literal>par list</literal> command.  If you want to use the application in the PAR, you must re-install it using the <literal>install</literal> command.</para></entry>
                         </row>
 		      </tbody>
 		   </tgroup>
 		</table>
 
-		<para>The following example shows how to list the PARs that have been installed in Web Server:</para>
-		<programlisting>osgi> vsh par list
+		<para>The following example shows how to list the PARs that have been installed in @kernel.product.name@:</para>
+		<programlisting>osgi> vsh:par list
 
 Name                                         Version                      State
 
@@ -572,7 +558,7 @@ org.eclipse.virgo.server.repository.hosted    2.1.0.RELEASE              ACTIVE
 osgi> </programlisting>
 
 		<para>The following example shows how to examine a particular PAR file:</para>
-		<programlisting>osgi> vsh par examine org.eclipse.virgo.server.repository.hosted 2.1.0.RELEASE
+		<programlisting>osgi> vsh:par examine org.eclipse.virgo.server.repository.hosted 2.1.0.RELEASE
 
 State:  ACTIVE
 Scoped: true
@@ -586,7 +572,7 @@ Children:
 osgi> </programlisting>
 
 		<para>Finally, the following example shows how to refresh an installed PAR file:</para>
-		<programlisting>osgi> vsh par refresh my.exciting.par 1.2.0
+		<programlisting>osgi> vsh:par refresh my.exciting.par 1.2.0
 
 par my.exciting.par 1.2.0 refreshed successfully
 
@@ -595,13 +581,13 @@ osgi> </programlisting>
 	  </section>
 
 	  <section id="admin-shell-vsh-plan-command">
-		<title>plan Subcommand</title>
+		<title>plan Command</title>
 
-		<para>Use the <literal>plan</literal> subcommand to view all the plans currently installed in Web Server, view details about a particular plan and manage its lifecycle, such as starting, stopping, refreshing, and uninstalling it.</para>
-		<para>The following table lists the options you can specify for this subcommand.</para>
+		<para>Use the <literal>plan</literal> command to view all the plans currently installed in @kernel.product.name@, view details about a particular plan and manage its lifecycle, such as starting, stopping, refreshing, and uninstalling it.</para>
+		<para>The following table lists the options you can specify for this command.</para>
 
         	<table id="admin-shell-vsh-plan-command-table" colsep="1" frame="all" rowsep="1">
-            	  <title>Options of the plan Subcommand</title>
+            	  <title>Options of the plan Command</title>
                     <tgroup cols="2">
                       <thead>
                         <row>
@@ -612,56 +598,57 @@ osgi> </programlisting>
                       <tbody>
                         <row>
 				<entry>list</entry>
-                                <entry>Displays all the plans that are currently installed in Web Server.
-			          <para>The <literal>list</literal> option displays the full name of each installed plan, its version, and its current state.  Plans have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a plan can be in is the same as those of bundles; see <link linkend="admin-shell-bundle-command">the bundle subcommand</link> for the list of possible states. </para></entry>
+                                <entry>Displays all the plans that are currently installed in @kernel.product.name@.
+			          <para>The <literal>list</literal> option displays the full name of each installed plan, its version, and its current state.  Plans have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a plan can be in is the same as those of bundles; see <link linkend="admin-shell-bundle-command">the bundle command</link> for the list of possible states. </para></entry>
                         </row>
                         <row>
 				<entry>examine <emphasis>name version</emphasis></entry>
-                                <entry>Displays information about the specified plan; you are required to identify the plan with both its name and its version.  Use the <literal>plan list</literal> subcommand to view all installed plans and their versions.  The subcommand displays the following information:
+                                <entry>Displays information about the specified plan; you are required to identify the plan with both its name and its version.  Use the <literal>plan list</literal> command to view all installed plans and their versions.  The command displays the following information:
 			         <itemizedlist>
-						<listitem><para>The current state of the plan (see <link linkend="admin-shell-vsh-bundle-command">the bundle subcommand</link> for the full list of possible states).</para></listitem>
-				    	<listitem><para>Whether the plan is <emphasis>scoped</emphasis>.  Scoping specifies whether Web Server should deploy the members of the plan in their own scope; when scoping is disabled, Web Server deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</para></listitem>
-				    	<listitem><para>Whether the plan is <emphasis>atomic</emphasis>.  When a plan is atomic, Web Server manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Web Server starts <emphasis>all</emphasis> the plan artifacts. If one artifact fails to start, then Web Server stops all other artifacts in the plan.</para></listitem>
+						<listitem><para>The current state of the plan (see <link linkend="admin-shell-vsh-bundle-command">the bundle command</link> for the full list of possible states).</para></listitem>
+				    	<listitem><para>Whether the plan is <emphasis>scoped</emphasis>.  Scoping specifies whether @kernel.product.name@ should deploy the members of the plan in their own scope; when scoping is disabled, @kernel.product.name@ deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</para></listitem>
+				    	<listitem><para>Whether the plan is <emphasis>atomic</emphasis>.  When a plan is atomic, @kernel.product.name@ manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then @kernel.product.name@ starts <emphasis>all</emphasis> the plan artifacts. If one artifact fails to start, then @kernel.product.name@ stops all other artifacts in the plan.</para></listitem>
 				    	<listitem><para>The individual members, or children, of the plan.  These could be other plans, PARs, bundles, configuration artifacts, and so on.</para></listitem>
 			         </itemizedlist>
 			   </entry>
                         </row>
                         <row>
 				<entry>start <emphasis>name version</emphasis></entry>
-                                <entry>Starts the specified plan.  You must specify both the full name of the plan as well as the version you want to start. Use the <literal>plan list</literal> subcommand to get the list of plans currently installed in Web Server.
-				<para>To start a plan, it must have already been resolved by Web Server, or in other words, be in the <literal>Resolved</literal> state.  After Web Server successfully starts the plan, it is listed in the <literal>Active</literal> state. </para></entry>
+                                <entry>Starts the specified plan.  You must specify both the full name of the plan as well as the version you want to start. Use the <literal>plan list</literal> command to get the list of plans currently installed in @kernel.product.name@.
+				<para>To start a plan, it must have already been resolved by @kernel.product.name@, or in other words, be in the <literal>Resolved</literal> state.  After @kernel.product.name@ successfully starts the plan, it is listed in the <literal>Active</literal> state. </para></entry>
                         </row>
                         <row>
 				<entry>stop <emphasis>name version</emphasis></entry>
-                                <entry>Stops the specified plan.  You must specify both the full name of the plan as well as the version you want to stop. Use the <literal>plan list</literal> subcommand to get the list of plans currently installed in Web Server.
+                                <entry>Stops the specified plan.  You must specify both the full name of the plan as well as the version you want to stop. Use the <literal>plan list</literal> command to get the list of plans currently installed in @kernel.product.name@.
 				  <para>When you stop a plan, it goes from the <literal>Active</literal> state to the <literal>Resolved</literal> state, and you must re-start it if you want to use the application that the plan contains.</para> </entry>
                         </row>
                         <row>
 				<entry>refresh <emphasis>name version</emphasis></entry>
-                                <entry>Updates the contents of the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the <literal>plan list</literal> subcommand to this information.
-				<para>Use this subcommand if you have changed the contents of the plan file and you want to refresh the artifact as installed in the OSGi framework.</para></entry>
+                                <entry>Updates the contents of the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the <literal>plan list</literal> command to this information.
+				<para>Use this command if you have changed the contents of the plan file and you want to refresh the artifact as installed in the OSGi framework.</para></entry>
                         </row>
                         <row>
 				<entry>uninstall <emphasis>name version</emphasis></entry>
-                                <entry>Uninstalls the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the <literal>plan list</literal> subcommand to this information.
-				  <para>When the uninstall process is complete, the plan will not show up in the list of plans displayed by the <literal>plan list</literal> subcommand.  If you want to use the application in the plan, you must re-install it using the <literal>install</literal> subcommand.</para></entry>
+                                <entry>Uninstalls the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the <literal>plan list</literal> command to this information.
+				  <para>When the uninstall process is complete, the plan will not show up in the list of plans displayed by the <literal>plan list</literal> command.  If you want to use the application in the plan, you must re-install it using the <literal>install</literal> command.</para></entry>
                         </row>
 		      </tbody>
 		   </tgroup>
 		</table>
 
-		<para>The following example shows how to list the plans that have been installed in Web Server:</para>
-		<programlisting>osgi> vsh plan list
+		<para>The following example shows how to list the plans that have been installed in @kernel.product.name@:</para>
+		<programlisting><![CDATA[
+osgi> vsh:plan list
 
 Name                                           Version                            State
 org.eclipse.virgo.apps.admin.plan              2.1.0                             ACTIVE
 org.eclipse.virgo.kernel.userregion.springdm   2.1.0                             ACTIVE
 org.eclipse.virgo.web                          2.1.0                             ACTIVE
 
-osgi> </programlisting>
+osgi> ]]></programlisting>
 
 		<para>The following example shows how to examine a particular plan:</para>
-		<programlisting>osgi> vsh plan examine org.eclipse.virgo.kernel.userregion.springdm 2.1.0
+		<programlisting>osgi> vsh:plan examine org.eclipse.virgo.kernel.userregion.springdm 2.1.0
 
 State:  ACTIVE
 Scoped: false
@@ -677,7 +664,7 @@ Children:
 osgi> </programlisting>
 
 		<para>The following example shows how to stop a currently Active plan:</para>
-		<programlisting>osgi> vsh plan stop org.eclipse.virgo.web 2.1.0
+		<programlisting>osgi> vsh:plan stop org.eclipse.virgo.web 2.1.0
 
 plan org.eclipse.virgo.web:2.1.0 stopped successfully
 
@@ -685,7 +672,7 @@ osgi> </programlisting>
 
 		<para>The following example shows how to start a plan:</para>
 
-		<programlisting>osgi> vsh plan start org.eclipse.virgo.web 2.1.0
+		<programlisting>osgi> vsh:plan start org.eclipse.virgo.web 2.1.0
 
 plan org.eclipse.virgo.web:2.1.0 started successfully
 
@@ -693,13 +680,13 @@ osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-vsh-service-command">
-		<title>service Subcommand</title>
+		<title>service Command</title>
 
-		<para>Use the <literal>service</literal> subcommand to view all the services that have been registered in the OSGi service registry of Web Server. You can also examine a specific service to discover its properties, the bundle that publishes the service, and any bundles that consume the service.</para>
-		<para>The following table lists the options you can specify for this subcommand.</para>
+		<para>Use the <literal>service</literal> command to view all the services that have been registered in the OSGi service registry of @kernel.product.name@. You can also examine a specific service to discover its properties, the bundle that publishes the service, and any bundles that consume the service.</para>
+		<para>The following table lists the options you can specify for this command.</para>
 
         	<table id="admin-shell-vsh-service-command-table" colsep="1" frame="all" rowsep="1">
-            	  <title>Options of the service Subcommand</title>
+            	  <title>Options of the service Command</title>
                     <tgroup cols="2">
                       <thead>
                         <row>
@@ -710,20 +697,20 @@ osgi> </programlisting>
                       <tbody>
                         <row>
 				<entry>list</entry>
-                                <entry>Displays the list of services that are currently registered in the OSGi service registry of Web Server.
-				  <para>Each service is identified by an internal <literal>ID</literal> which you can then use with the <literal>service examine</literal> subcommand to view the details about a particular service. The <literal>list</literal> option also displays the object class that implements the service and the internal <literal>id</literal> of the bundle that provides the service. </para></entry>
+                                <entry>Displays the list of services that are currently registered in the OSGi service registry of @kernel.product.name@.
+				  <para>Each service is identified by an internal <literal>ID</literal> which you can then use with the <literal>service examine</literal> command to view the details about a particular service. The <literal>list</literal> option also displays the object class that implements the service and the internal <literal>id</literal> of the bundle that provides the service. </para></entry>
                         </row>
                         <row>
 				<entry>examine <emphasis>id</emphasis></entry>
-                                <entry>Displays detailed information about the specified service.  Use the <literal>service list</literal> subcommand to get the internal id of a particular service.
-				<para>This subcommand displays the properties of the service, such as the object class that implements the service, the name of the bundle that publishes the service and any bundles that consume the service. </para></entry>
+                                <entry>Displays detailed information about the specified service.  Use the <literal>service list</literal> command to get the internal id of a particular service.
+				<para>This command displays the properties of the service, such as the object class that implements the service, the name of the bundle that publishes the service and any bundles that consume the service. </para></entry>
                         </row>
 		      </tbody>
 		   </tgroup>
 		</table>
 
 		<para>The following example shows how to list the services currently registered in the OSGi service registry:</para>
-		<programlisting>osgi> vsh service list
+		<programlisting>osgi> vsh:service list
 
 Id  Object Class(es)                                            Providing Bundle
 
@@ -744,7 +731,7 @@ Id  Object Class(es)                                            Providing Bundle
 osgi> </programlisting>
 
 		<para>The following example shows how to examine a particular service:</para>
-		<programlisting>osgi> vsh service examine 73
+		<programlisting>osgi> vsh:service examine 73
 
 		Properties:
 		    objectClass:
@@ -761,19 +748,19 @@ osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-vsh-install-command">
-		<title>install Subcommand</title>
+		<title>install Command</title>
 
-		<para>Use the <literal>install</literal> subcommand to deploy an artifact to Web Server.  The artifact can be a bundle, PAR, plan, or configuration artifact.</para>
+		<para>Use the <literal>install</literal> command to deploy an artifact to @kernel.product.name@.  The artifact can be a bundle, PAR, plan, or configuration artifact.</para>
 
-		<para>The <literal>install</literal> subcommand takes a single parameter: the URI of the artifact you want to deploy.  For example, to deploy a bundle on the local computer, use the <literal>file</literal> scheme:</para>
+		<para>The <literal>install</literal> command takes a single parameter: the URI of the artifact you want to deploy.  For example, to deploy a bundle on the local computer, use the <literal>file</literal> scheme:</para>
 
 		<programlisting>file://full-pathname-to-artifact</programlisting>
 
-		<para>After you execute the <literal>install</literal> subcommand, Web Server attempts to resolve the artifact's dependencies, and if it is successful, puts it in the <literal>Resolved</literal> state.  At that point, you must start the artifact to be able to actually use it. </para>
+		<para>After you execute the <literal>install</literal> command, @kernel.product.name@ attempts to resolve the artifact's dependencies, and if it is successful, puts it in the <literal>Resolved</literal> state.  At that point, you must start the artifact to be able to actually use it. </para>
 
 		<para>The following example shows how to install a bundle called <literal>swf-booking-mvc.war</literal> located in the <literal>/home/apps</literal> directory of the computer on which the Equinox Console Extension is being run:</para>
 
-		<programlisting>osgi> vsh install file://home/apps/swf-booking-mvc.war
+		<programlisting>osgi> vsh:install file://home/apps/swf-booking-mvc.war
 ...
 Artifact bundle swf-booking-mvc.war 0.0.0 installed</programlisting>
 
@@ -782,14 +769,14 @@ Artifact bundle swf-booking-mvc.war 0.0.0 installed</programlisting>
 			<programlisting>repository:artifact-type/bundle-symbolic-name/bundle-version</programlisting>
 			For example:
 		</para>
-		<programlisting>osgi> vsh install repository:bundle/my.bundle/1.0
+		<programlisting>osgi> vsh:install repository:bundle/my.bundle/1.0
 ... 
 Artifact bundle my.bundle 1.0.0 installed
 osgi></programlisting>
 
-		<para>The following example shows how to use the <literal>bundle list</literal> subcommand to ensure that the bundle was indeed installed to Web Server; if you had installed a different kind of artifact, for example a plan, then you would use the appropriate subcommand (such as <literal>plan list</literal>):</para>
+		<para>The following example shows how to use the <literal>bundle list</literal> command to ensure that the bundle was indeed installed in @kernel.product.name@; if you had installed a different kind of artifact, for example a plan, then you would use the appropriate command (such as <literal>plan list</literal>):</para>
 
-		<programlisting>osgi> vsh bundle list
+		<programlisting>osgi> vsh:bundle list
 
 Id   Name                             Version                   State
 
@@ -803,12 +790,12 @@ Id   Name                             Version                   State
 osgi> </programlisting>
 
 		<para>Note that the <literal>swf-booking-mvc.war</literal> file is in the <literal>Resolved</literal> state.   The following examples start the bundle, and then examine it to ensure that it is in the <literal>Active</literal> state:</para>
-		<programlisting>osgi> vsh bundle start 60
+		<programlisting>osgi> vsh:bundle start 60
 
 bundle swf-booking-mvc.war:0.0.0 started successfully
 
 
-osgi> vsh bundle examine 60
+osgi> vsh:bundle examine 60
 
 Id:              60
 Name:            swf-booking-mvc.war
@@ -830,75 +817,23 @@ osgi> </programlisting>
 
 	  </section>
 	  <section id="admin-shell-vsh-shutdown-command">
-		<title>shutdown Subcommand</title>
+		<title>shutdown Command</title>
 
-		<para>Use the <literal>shutdown</literal> subcommand to shut down the Web Server instance to which you are connected. When Web Server is shutdown, the shell returns you to the operating system prompt. </para>
-		<para>The <literal>shutdown</literal> subcommand does not have any options.</para>
+		<para>Use the <literal>shutdown</literal> command to shut down the @kernel.product.name@ instance to which you are connected. When @kernel.product.name@ is shut down, the shell returns you to the operating system prompt. </para>
+		<para>The <literal>shutdown</literal> command does not have any options.</para>
 
-		<para>The following example shows how to use this subcommand.</para>
+		<para>The following example shows how to use this command.</para>
 
-		<programlisting>osgi> shutdown
+		<programlisting>osgi> vsh:shutdown
 osgi> ... 
 Connection closed by foreign host.
 prompt$</programlisting>
 
 	  </section>
-	  <section id="admin-shell-vsh-help-command">
-		<title>help Subcommand</title>
-
-		<para>Use the <literal>help</literal> subcommand on its own to get a list of all available Equinox Console Extension subcommands.  If you specify a particular subcommand to the <literal>help</literal> subcommand, then you will get the list of options that you can pass to the subcommand. </para>
-
-		<para>For example:</para>
-		<programlisting>osgi> vsh help
-
-
-    bundle   - Management and examination of bundle artifacts
-    config   - Management and examination of configuration artifacts
-    exit     - Exit the kernel shell environment
-    help     - Get help on commands
-    install  - Install (deploy) an artifact to the server
-    package  - Examination of exported packages
-    par      - Management and examination of PAR artifacts
-    plan     - Management and examination of plan artifacts
-    service  - Examination of services
-    shutdown - Shutdown Virgo Kernel
-
-
-osgi> vsh help bundle
-
-bundle list                            - List all bundle artifacts that are
-                                         currently installed
-bundle examine   [ id | name version ] - Examine a bundle artifact
-bundle start     [ id | name version ] - Start a bundle artifact. Starting this
-                                         artifact starts it in the OSGi
-                                         framework.
-bundle stop      [ id | name version ] - Stop a bundle artifact. Stopping this
-                                         artifact stops it in the OSGi
-                                         framework.
-bundle refresh   [ id | name version ] - Refresh a bundle artifact. Refreshing
-                                         this artifact updates its contents in
-                                         the OSGi framework.
-bundle uninstall [ id | name version ] - Uninstall a bundle artifact
-bundle diag      [ id | name version ] - Provide diagnostics for a bundle
-                                         artifact
-bundle headers   [ id | name version ] - Show the headers for a bundle artifact
-
-osgi> </programlisting>
-
-
-	  </section>
-	  <section id="admin-shell-vsh-exit-command">
-		<title>exit Subcommand</title>
-		<para>This returns to the Equinox console and otherwise has no effect.</para>
-		<para>The <literal>exit</literal> subcommand does not have any options.</para>
-	  </section>
-
-
-	</section>
 
     <section id="admin-shell-class-loading">
         <title>Class Loading Commands</title>
-        <para>The class loading commands in @tomcat.product.name.short@ provide the ability to list all bundles that:
+        <para>The class loading commands in @kernel.product.name@ provide the ability to list all bundles that:
             <itemizedlist>
                 <listitem><para><emphasis role="bold">contain</emphasis> a class</para></listitem>
                 <listitem><para><emphasis role="bold">export</emphasis> a class</para></listitem>
@@ -936,6 +871,7 @@ osgi> </programlisting>
             </table>
         </section>
     </section>
+	</section>
 
     <section id="admin-shell-class-loading-reference">
         <title>Class Loading Command Reference</title>
@@ -947,7 +883,7 @@ osgi> </programlisting>
 
         <section id="admin-shell-cl-clhas">
             <title>clhas command</title>
-            <para>Use the <literal>clhas</literal> command to list the entries contained in the bundles deployed to @project.name@ and to solve class loading issues.</para>
+            <para>Use the <literal>clhas</literal> command to list the entries contained in the bundles deployed in @project.name@ and to solve class loading issues.</para>
             <para>The command accepts as a parameter search pattern in the form <emphasis>path/resource</emphasis>. The resource part of the pattern can contain wildcards.</para>
             <para>The output contains all bundles that have resources or classes matching the pattern. Since wildcards are allowed the matching entities are listed as well.</para>
 
