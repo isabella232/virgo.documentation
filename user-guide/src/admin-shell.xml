@@ -67,6 +67,9 @@ osgi> ]]></programlisting>
         </itemizedlist>
         </para>
         <para>
+			Virgo also provides shell commands to list all bundles that contain, export, or load a particular class.
+        </para>
+        <para>
 			These commands are provided <emphasis>for the user region shells only</emphasis> and are grouped together in
 			the <literal>vsh</literal> <emphasis>scope</emphasis>.
         </para>
@@ -99,6 +102,18 @@ osgi> ]]></programlisting>
                         <row>
 				<entry><link linkend="admin-shell-vsh-bundle-command">bundle</link></entry>
                                 <entry>Manages and displays information about bundle artifacts.</entry>
+                        </row>
+                        <row>
+                <entry><link linkend="admin-shell-cl-clhas">clhas</link></entry>
+                                <entry>Lists all bundles that <emphasis role="bold">contain</emphasis> a class or resource.</entry>
+                        </row>
+                        <row>
+                <entry><link linkend="admin-shell-cl-clexport">clexport</link></entry>
+                                <entry>Lists all bundles that <emphasis role="bold">export</emphasis> a class or package.</entry>
+                        </row>
+                        <row>
+                <entry><link linkend="admin-shell-cl-clload">clload</link></entry>
+                                <entry>Lists all bundles that can <emphasis role="bold">load</emphasis> a class.</entry>
                         </row>
                         <row>
 				<entry><link linkend="admin-shell-vsh-config-command">config</link></entry>
@@ -141,6 +156,9 @@ osgi> ]]></programlisting>
 	  <para>
 	  	This section contains reference information about the Virgo shell commands
 		<link linkend="admin-shell-vsh-bundle-command">bundle</link>,
+		<link linkend="admin-shell-cl-clhas">clhas</link>,
+        <link linkend="admin-shell-cl-clexport">clexport</link>,
+        <link linkend="admin-shell-cl-clload">clload</link>,
 		<link linkend="admin-shell-vsh-config-command">config</link>,
 		<link linkend="admin-shell-vsh-package-command">packages</link>,
 		<link linkend="admin-shell-vsh-par-command">par</link>,
@@ -580,7 +598,6 @@ par my.exciting.par 1.2.0 refreshed successfully
 osgi> </programlisting>
 
 	  </section>
-
 	  <section id="admin-shell-vsh-plan-command">
 		<title>plan Command</title>
 
@@ -831,62 +848,11 @@ Connection closed by foreign host.
 prompt$</programlisting>
 
 	  </section>
-
-    <section id="admin-shell-class-loading">
-        <title>Class Loading Commands</title>
-        <para>The class loading commands in @kernel.product.name@ provide the ability to list all bundles that:
-            <itemizedlist>
-                <listitem><para><emphasis role="bold">contain</emphasis> a class</para></listitem>
-                <listitem><para><emphasis role="bold">export</emphasis> a class</para></listitem>
-                <listitem><para>can <emphasis role="bold">load</emphasis> a class</para></listitem>
-            </itemizedlist>
-        </para>
-
-        <section id="admin-shell-cl-using-command-list">
-            <title>Class Loading Command List</title>
-            <para>The following table lists the class loading commands. The reference documentation about each command provides the full list of available options.</para>
-            <table id="admin-shell-cl-commands-table" colsep="1" frame="all" rowsep="1">
-                <title>Class Loading Commands</title>
-                <tgroup cols="2">
-                    <thead>
-                        <row>
-                            <entry>Command</entry>
-                            <entry>Description</entry>
-                        </row>
-                    </thead>
-                    <tbody>
-                        <row>
-                            <entry><link linkend="admin-shell-cl-clhas">clhas</link></entry>
-                            <entry>Lists all bundles that <emphasis role="bold">contain</emphasis> a class or resource.</entry>
-                        </row>
-                        <row>
-                            <entry><link linkend="admin-shell-cl-clexport">clexport</link></entry>
-                            <entry>Lists all bundles that <emphasis role="bold">export</emphasis> a class or package.</entry>
-                        </row>
-                        <row>
-                            <entry><link linkend="admin-shell-cl-clload">clload</link></entry>
-                            <entry>Lists all bundles that can <emphasis role="bold">load</emphasis> a class.</entry>
-                        </row>
-                    </tbody>
-                </tgroup>
-            </table>
-        </section>
-    </section>
-	</section>
-
-    <section id="admin-shell-class-loading-reference">
-        <title>Class Loading Command Reference</title>
-        <para>This section contains reference information about the class loading commands
-          <link linkend="admin-shell-cl-clhas">clhas</link>,
-          <link linkend="admin-shell-cl-clexport">clexport</link>, and
-          <link linkend="admin-shell-cl-clload">clload</link>.
-        </para>
-
-        <section id="admin-shell-cl-clhas">
+       <section id="admin-shell-cl-clhas">
             <title>clhas command</title>
             <para>Use the <literal>clhas</literal> command to list the entries contained in the bundles deployed in @project.name@ and to solve class loading issues.</para>
-            <para>The command accepts as a parameter search pattern in the form <emphasis>path/resource</emphasis>. The resource part of the pattern can contain wildcards.</para>
-            <para>The output contains all bundles that have resources or classes matching the pattern. Since wildcards are allowed the matching entities are listed as well.</para>
+            <para>The command accepts as a parameter a search pattern in the form <emphasis>path/resource</emphasis>. The resource part of the pattern can contain wildcards.</para>
+            <para>The output contains all bundles that have resources or classes matching the pattern. Since wildcards are allowed, the matching entities are listed as well.</para>
 
             <para>The following examples show how to use this command.</para>
             <para>Use the <literal>clhas</literal> to view all bundles that contain <literal>Servlet</literal> class:</para>
@@ -938,7 +904,7 @@ Bundles containing [/javax/servlet/Servlet.class]:
             <title>clexport command</title>
             <para>Use the <literal>clexport</literal> command to list the bundles that export a class or package.</para>
             <para>The command accepts as a parameter the fully qualified class name (in the form <emphasis>package.class</emphasis>).</para>
-            <para>The command checks to see if the provided class is actually contained in a bundle. If the class is not found in a bundle, but its package is exported then a hint <literal>[class not found, package only]</literal> is displayed.</para>
+            <para>The command checks to see if the provided class is actually contained in a bundle. If the class is not found in a bundle but its package is exported, then a hint <literal>[class not found, package only]</literal> is displayed.</para>
 
             <para>The following examples show how to use this command.</para>
             <para>Use the <literal>clexport</literal> to view all bundles that contain <literal>Servlet</literal> class:</para>
@@ -947,7 +913,7 @@ Bundles containing [/javax/servlet/Servlet.class]:
 Bundles exporting [javax.servlet.Servlet]:
   14    com.springsource.javax.servlet</programlisting>
 
-            <para>If a bundle exports a package but the requested class is not contained the output of the command will be similar to this:</para>
+            <para>If a bundle exports a package but does not contain the requested class, the output of the command will be similar to this:</para>
             <programlisting>osgi> clexport javax.servlet.ServletX
 
 Bundles exporting [javax.servlet.ServletX]:
@@ -956,7 +922,7 @@ Bundles exporting [javax.servlet.ServletX]:
         <section id="admin-shell-cl-clload">
             <title>clload command</title>
             <para>Use the <literal>clload</literal> command to list the bundles that can load a class or to check if a specific bundle can load a class.</para>
-            <para>The command accepts as a parameter either:
+            <para>The command accepts as parameters either:
                 <itemizedlist>
                     <listitem><para>the fully qualified class name (in the form <emphasis>package.class</emphasis>)</para></listitem>
                     <listitem><para>the fully qualified class name (in the form <emphasis>package.class</emphasis>) and the symbolic name or id of the bundle that is to be tested</para></listitem>
