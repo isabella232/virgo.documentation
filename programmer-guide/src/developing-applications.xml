@@ -113,7 +113,7 @@ Manifest-Version: 1.0
 	</section>
   
 	<section id="developing-applications-packaging">
-		<title>Creating PARs and WARs</title>
+		<title>Creating PARs and Web Applications</title>
 		<para>
 			The @tomcat.product.name@ supports two OSGi-oriented ways of packaging applications: the PAR format 
 			and application bundles (including web bundles). The @tomcat.product.name.short@ also supports three
@@ -195,6 +195,9 @@ Manifest-Version: 1.0
 				@tomcat.product.name@ supports Web Application Bundles that are compliant with the OSGi Web Applications specification. 
 				The defining property of a Bundle that makes it a Web Application Bundle is a manifest header, <literal>Web-ContextPath</literal>. 
 				This defines the context path the web application will be registered under. 
+			</para>
+			<para>
+				See <link linkend="using-spring">Using Spring and Spring DM</link> for information on using Spring or Spring DM in a Web Application Bundle.
 			</para>
 		</section>
 
@@ -544,7 +547,8 @@ password          = secret</screen>
 
 	<section id="developing-applications-configuration-artifacts-app">
 	  <title>Updating Your Application</title>
-	  <para>To update your application so that it "knows" about the configuration artifact, you update the application's Spring application context XML file, typically located in the <literal>WEB-INF</literal> or <literal>META-INF/spring</literal> directories.</para>
+	  <para>To update your application so that it "knows" about the configuration artifact, you update the application's Spring application context XML file, typically located in the <literal>WEB-INF</literal> or <literal>META-INF/spring</literal> directories (read <link linkend="using-spring">Using Spring and Spring DM</link>
+	to understand which directory to use).</para>
 
 	   <para>You use the <literal>&lt;context:property-placeholder&gt;</literal> element to specify that you want to use the @tomcat.product.name.short@ mechanism for substituting values into bean properties.  The <literal>properties-ref</literal> attribute of this element points to a <literal>&lt;osgi-compendium:cm-properties&gt;</literal> element which you use to specify the configuration artifact that contains the property values.  You set the value of the <literal>persistent-id</literal> attribute of this element equal to the name of the configuration artifact, which is the name of the properties file <emphasis>minus</emphasis> the <literal>.properties</literal> extension. </para>
 	    <para>The following sample Spring application context XMl file shows everything wired together; only relevant parts of the file are shown:</para>
@@ -606,6 +610,52 @@ password          = secret</screen>
 
 	</section> <!-- end of configuration artifacts -->
 
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+
+	<section id="using-spring">
+		<title>Using Spring and Spring DM</title>
+		<para>
+			@tomcat.product.name@ supports the use of Spring framework and Spring DM (specifically version 1.2.1) by application bundles.
+			For detailed information, please refer to the
+			<ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/">
+				Spring Framework Reference Documentation
+			</ulink>
+			and the
+			<ulink url="http://static.springframework.org/osgi/docs/current/reference/html/">
+				Spring Dynamic Modules Reference Guide
+			</ulink>.
+		</para>
+		<para>
+			Spring (and Spring DM) application context XML files should generally be placed in a bundle's <literal>META-INF/spring</literal> directory, but
+			for a web application, these files must be placed in the <literal>WEB-INF</literal> directory.
+		</para>
+		<tip>
+			<title>
+				A common mistake
+			</title>
+			<para>
+				Placing a web application's Spring application context XML files in the <literal>META-INF/spring</literal> directory produces
+				unpredictable results since	Spring DM will attempt to build an application context independently of, and asynchronously from,
+				the web application.
+			</para>
+		</tip>
+		<para>
+			To use Spring DM from a web application, the <literal>contextClass</literal> servlet parameter and the servlet context listener
+			should be configured (in <literal>WEB-INF/web.xml</literal>) like this:
+<programlisting language="xml"><![CDATA[
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+]]></programlisting>
+		</para>
+	</section> <!-- end of using Spring and Spring DM -->
+	
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 
