@@ -31,38 +31,4 @@
 		</zip>
 	</target>
 
-	<!-- Other targets -->
-	
-	<target name="publish-static" depends="publish-static.init">
-		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
-				command="mkdir /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/${bundle.version}"/>
-		<all-bundles target="publish-static"/>
-		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}" failonerror="false"
-				command="rm /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/2.0.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/${bundle.version} /opt/www/domains/springframework.org/www/htdocs/s2-dmserver/2.0.x"/>
-	</target>
-
-	<target name="publish-static.init">
-		<fail message="The 'username' property must be set">
-			<condition>
-				<not>
-					<isset property="username"/>
-				</not>
-			</condition>
-		</fail>
-		<fail message="The 'key.file' property must be set">
-			<condition>
-				<not>
-					<isset property="key.file"/>
-				</not>
-			</condition>
-		</fail>
-		<fail message="The 'passphrase' property must be set">
-			<condition>
-				<not>
-					<isset property="passphrase"/>
-				</not>
-			</condition>
-		</fail>
-	</target>
-
 </project>
