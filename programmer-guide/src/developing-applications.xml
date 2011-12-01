@@ -329,7 +329,7 @@ Manifest-Version: 1.0
 							<entry>
 								<para>
 									Specifies whether @project.name@ installs bundles from the repository to attempt to satisfy any missing dependencies in the plan.
-									Missing dependendecies prevent one or more bundles in the plan from resolving.
+									Missing dependencies prevent one or more bundles in the plan from resolving.
 									For example, a bundle which imports a package cannot resolve if the package is missing, that is, not exported by another bundle.
 								</para>
 								<para>
