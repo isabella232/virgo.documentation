@@ -4,7 +4,7 @@
 <chapter id="developing-applications">
 	<title>Developing Applications</title>
 	<para>
-		Applications that take advantage of the OSGi capabilities of the @tomcat.product.name@
+		Applications that take advantage of the OSGi capabilities of @project.name@
 		are typically comprised of multiple bundles. Each bundle may have dependencies on
 		other bundles. Furthermore, each bundle exposes only certain packages and
 		services. In this chapter, we look at how to create bundles, import and export
@@ -81,7 +81,7 @@ Manifest-Version: 1.0
 		
 		<para>
 			Note that you do not specify the bundle that will provide the imported packages.
-			The @tomcat.product.name@ will examine the available bundles and satisfy the required dependencies. 
+			@project.name@ will examine the available bundles and satisfy the required dependencies. 
 		</para>
 		<para>
 			The following <filename>osgi-context.xml</filename> file from the PetClinic sample&rsquo;s
@@ -115,12 +115,12 @@ Manifest-Version: 1.0
 	<section id="developing-applications-packaging">
 		<title>Creating PARs and Web Applications</title>
 		<para>
-			The @tomcat.product.name@ supports two OSGi-oriented ways of packaging applications: the PAR format 
+			@project.name@ supports two OSGi-oriented ways of packaging applications: the PAR format 
 			and application bundles (including web bundles). The @tomcat.product.name.short@ also supports three
 			distinct WAR deployment and packaging formats: standard Java EE WAR, Shared Libraries WAR, Shared Services WAR.
 		</para>
 		<para>
-			The @tomcat.product.name.short@ also supports plans as a way to describe an application. This method is similar to a PAR 
+			@project.name@ also supports plans as a way to describe an application. This method is similar to a PAR 
 			in that it encapsulates all the artifacts of an application as a single unit, but differs in that a plan simply 
 			lists the bundles in an XML file rather than packaging all the bundles in a single JAR file.  The use of plans 
 			offers additional benefits to using PARs; for this reason, we recommend their use.  For details, see 
@@ -141,8 +141,14 @@ Manifest-Version: 1.0
 						synthetic context bundle which is used for thread context class loading. So,
 						for example, hibernate will be able to load classes of any of the exported
 						packages of the bundles in a PAR file using the thread context class loader.</listitem>
-					<listitem>The PAR file is visible to management interfaces.</listitem>
-					<listitem>The PAR file can be undeployed and redeployed as a unit.</listitem>
+					<listitem>A PAR file is visible to management interfaces.</listitem>
+					<listitem>A PAR file can be undeployed and redeployed as a unit.</listitem>
+					<listitem>
+						A PAR file is <emphasis>atomic</emphasis> in that it ties together the lifecycle of its artifacts. If you start, stop, or uninstall 
+						one of a PAR's artifacts, @project.name@ escalates the operation to the whole PAR file.
+						So @project.name@ prevents artifacts of a PAR from being in inconsistent states.
+						For example, if one artifact should fail to start, then @project.name@ stops all artifacts in the PAR.
+					</listitem>
 				</itemizedlist>
 				See <link linkend="developing-applications-plans-scoping">Plans and Scoping</link> for more information on scoping.
 			</para>	
@@ -206,19 +212,48 @@ Manifest-Version: 1.0
 	<section id="developing-applications-plans">
 		<title>Creating Plans</title>
 		<para>
-			Plans are similar to PARs in that they encapsulate the artifacts of an application as a single unit. As a consequence, they have similar benefits; for details of the benefits common to PARs and plans, see <link linkend="developing-applications-packaging-par">PARs</link>.
+			Plans are similar to PARs in that they encapsulate the artifacts of an application as a single unit.
+			However plans are XML files that refer to their artifacts, whereas PARs are JAR files that physically contain their artifacts.
+			Plans, known as <emphasis>parent</emphasis> plans may refer to other plans, known as <emphasis>child</emphasis> plans.
 		</para>
 		<para>
-			Plans have the following additional benefits, which is why we recommend that you use plans rather than PARs when defining an application:
+			Plans share several benefits with PARs:
+			<itemizedlist>
+				<listitem>A plan has a (symbolic) name and a version.</listitem>
+				<listitem>A plan may be scoped, although this is optional.
+					See <link linkend="developing-applications-plans-scoping">Plans and Scoping</link> for more on scoping.
+				</listitem>
+				<listitem>A plan is visible to management interfaces.</listitem>
+				<listitem>A plan can be undeployed and redeployed as a unit.</listitem>
+				<listitem>A plam may be atomic, although this is optional.</listitem>
+			</itemizedlist>
 		</para>
-		<itemizedlist>
-			<listitem>@tomcat.product.name@ deploys the artifacts in the plan in the order in which they are listed in the XML file, which gives you complete control over deployment order.  With a PAR, the order of deployment of the included artifacts is not guaranteed.</listitem>
-			<listitem>Plans describe their contents by reference (using an XML file) as opposed to PARs that are JAR files that physically contain the included artifacts.   For this reason, it is easier to share content between plans as well as update individual parts of a plan without having to physically repackage (re-JAR) it.</listitem>
-			<listitem>You can enable or disable whether a plan is scoped or atomic; PARs are always scoped and atomic.</listitem>
+		<para>
+			Plans have the following additional benefits compared to PARs:
+			<itemizedlist>
+				<listitem>
+					@project.name@ deploys the artifacts in the plan in the order in which they are listed in the XML file, which gives you
+					complete control over deployment order.
+					With a PAR, the order of deployment of the included artifacts is not guaranteed.
+				</listitem>
+				<listitem>Since plans refer to their artifacts, it is easier to share content between plans as well as update individual
+					parts of a plan without having to physically repackage (re-JAR) it.
+				</listitem>
+				<listitem>
+					Plans may contain child plans, but PARs cannot contain other PARs.
+					</listitem>
+				<listitem>
+					You can make certain plans deploy faster by disabling the provisioning of bundles to satisfy missing dependencies,
+					but you cannot disable provisioning for PARs.
+				</listitem> 
+				<listitem>
+					You can specify whether a plan is scoped or unscoped and atomic or non-atomic; PARs are always scoped and atomic.
+				</listitem>
 		</itemizedlist>
+		</para>
 
 		<para>
-			Plans always get their dependencies from the @tomcat.product.name.short@ repository.  This means, for example, that if you drop one of the plan&rsquo;s dependencies in the <code>pickup</code> directory rather than adding it to the repository, the plan will fail to deploy because it will not find the dependency.
+			The artifacts of a plan are stored in @project.name@'s repository.  This means, for example, that if you drop one of the plan&rsquo;s artifacts in the <code>pickup</code> directory rather than adding it to the repository, the plan will fail to deploy because it will not find the artifact.
 		</para>
 
 		<section id="developing-applications-plans-create">
@@ -267,23 +302,51 @@ Manifest-Version: 1.0
 					<tbody>
 						<row>
 							<entry><literal>name</literal></entry>
-							<entry>Specifies the name of this plan.  @tomcat.product.name@ uses the name as one component of the unique identifier of this plan. </entry>
+							<entry>Specifies the name of this plan.  @project.name@ uses the name as one component of the unique identifier of this plan. </entry>
 							<entry>Yes.</entry>
 						</row>
 						<row>
 							<entry><literal>version</literal></entry>
-							<entry>Specifies the version of this plan.  You must use OSGi version specification syntax, such as <code>2.1.0</code>. @tomcat.product.name@ uses the version as one component of the unique identifier of this plan. </entry>
+							<entry>Specifies the version of this plan.  You must use OSGi version specification syntax, such as <code>2.1.0</code>. @project.name@ uses the version as one component of the unique identifier of this plan. </entry>
 							<entry>Yes.</entry>
 						</row>
 						<row>
 							<entry><literal>scoped</literal></entry>
-							<entry>Specifies whether @tomcat.product.name@ should install the artifacts into plan-specific scope so that only the application described by this plan has access to the artifacts. If you disable scoping, then @tomcat.product.name@ installs the artifacts into the global scope, which means they are then available for access by all other deployed artifacts.  Set the attribute to <code>true</code> to enable scoping or <code>false</code> to disable it.</entry>
+							<entry>Specifies whether @project.name@ should install the artifacts into plan-specific scope so that only the application described by this plan has access to the artifacts. If you disable scoping, then @project.name@ installs the artifacts into the global scope, which means they are then available for access by all other deployed artifacts.  Set the attribute to <code>true</code> to enable scoping or <code>false</code> to disable it.</entry>
 							<entry>Yes.</entry>
 						</row>
 						<row>
 							<entry><literal>atomic</literal></entry>
-							<entry>Specifies whether you want to tie together the lifecycle of the artifacts in this plan. Making a plan atomic means that if you install, start, stop, or uninstall a single artifact in the plan, @tomcat.product.name@ escalates the event to all artifacts in the plan. Also, in an atomic plan, @tomcat.product.name@ prevents artifacts from being in inconsistent states. For example, if one artifact should fail to start, then @tomcat.product.name@ stops all artifacts in the plan.  Set this attribute to <code>true</code> to enable atomicity or <code>false</code> to disable it. </entry>
+							<entry>Specifies whether you want to tie together the lifecycle of the artifacts in this plan.
+								Making a plan atomic means that if you start, stop, or uninstall a single artifact in the plan, @project.name@ escalates the operation to
+								the whole plan. Also @project.name@ prevents artifacts of an atomic plan from being in inconsistent states.
+								For example, if one artifact should fail to start, then @project.name@ stops all artifacts in the plan.
+								Set this attribute to <code>true</code> to enable atomicity or <code>false</code> to disable it. </entry>
 							<entry>Yes.</entry>
+						</row>
+						<row>
+							<entry><literal>provisioning</literal></entry>
+							<entry>
+								<para>
+									Specifies whether @project.name@ installs bundles from the repository to attempt to satisfy any missing dependencies in the plan.
+									Missing dependendecies prevent one or more bundles in the plan from resolving.
+									For example, a bundle which imports a package cannot resolve if the package is missing, that is, not exported by another bundle.
+								</para>
+								<para>
+									A value of <code>auto</code> instructs @project.name@ to install bundles from the repository
+									to attempt to satisfy any missing dependencies in the plan. This is known as <emphasis>auto-provisioning</emphasis>.
+								</para>
+								<para>
+									A value of <code>disabled</code> prevents @project.name@ from installing bundles from the repository to attempt to
+									satisfy any missing	dependencies in the plan.
+									This value can make the plan deploy faster, although if there are missing dependencies, deployment will fail.
+								</para>
+								<para>
+									A value of <code>inherit</code>, which is the default if no value is specified, inherits the parent plan's provisioning behaviour.
+									If the plan does not have a parent, it inherits @project.name@'s auto-provisioning behaviour. 
+								</para>
+							</entry>
+							<entry>No. If not specified, defaults to <code>inherit</code>.</entry>
 						</row>
 					</tbody>
 				</tgroup>
@@ -328,7 +391,7 @@ Manifest-Version: 1.0
 						</row>
 						<row>
 							<entry><literal>version</literal></entry>
-							<entry>Specifies the version or range of versions of this artifact that @tomcat.product.name.short@ should look up in its repositories and then install and deploy.  You must use OSGi version specification syntax, such as <code>[1.0.0, 2.0.0)</code>. </entry>
+							<entry>Specifies the version or range of versions of this artifact that @project.name@ should look up in its repositories and then install and deploy.  You must use OSGi version specification syntax, such as <code>[1.0.0, 2.0.0)</code>. </entry>
 							<entry>No.  If not specified, defaults to <code>0</code>, which in OSGi means 0 to infinity, or any version.</entry>
 						</row>
 					</tbody>
@@ -382,20 +445,20 @@ Manifest-Version: 1.0
 		<section id="developing-applications-plans-use">
 			<title>Using the Plan</title>
 			<para>
-				Because a plan is a list of artifacts, rather than a physical file that contains the artifacts, there are a few additional steps you must perform before you deploy it to @tomcat.product.name.short@.  
+				Because a plan is a list of artifacts, rather than a physical file that contains the artifacts, there are a few additional steps you must perform before you deploy it to @project.name@.  
 			</para>
 			<orderedlist>
-				<listitem><para>Copy the artifacts that make up the plan to the <code>usr</code> repository, which by default is the <code>$SERVER_HOME/repository/usr</code> directory, where <code>$SERVER_HOME</code> refers to the top-level installation directory of @tomcat.product.name.short@.  Note that you might have configured the server differently; in which case, copy the artifacts to your custom repository directory.</para></listitem>
-				<listitem><para>Restart @tomcat.product.name.short@ if the repository used is not a <emphasis>watched</emphasis> repository.</para></listitem>
+				<listitem><para>Copy the artifacts that make up the plan to the <code>usr</code> repository, which by default is the <code>$SERVER_HOME/repository/usr</code> directory, where <code>$SERVER_HOME</code> refers to the top-level installation directory of @project.name@.  Note that you might have configured the server differently; in which case, copy the artifacts to your custom repository directory.</para></listitem>
+				<listitem><para>Restart @project.name@ if the repository used is not a <emphasis>watched</emphasis> repository.</para></listitem>
 				<listitem><para>After the server has started, either use the Admin Console to deploy the plan, or manually deploy it by copying the plan&rsquo;s XML file into the <code>$SERVER_HOME/pickup</code> directory. </para>
-				<para>This results in @tomcat.product.name.short@ deploying the plan.</para></listitem>
+				<para>This results in @project.name@ deploying the plan.</para></listitem>
 				<listitem><para>To undeploy the plan, use the Admin Console, or simply delete it from the <code>$SERVER_HOME/pickup</code> directory.</para></listitem>
 			</orderedlist>
 		</section>
 
 		<section id="developing-applications-plans-scoping">
 		  <title>Plans and Scoping</title>
-		  <para>As described in previous sections, you can specify that a plan be <emphasis>scoped</emphasis>.  This means that @tomcat.product.name@ installs the artifacts that make up the plan into a plan-specific scope so that only the application described by the plan has access to the artifacts. If you disable scoping, then @tomcat.product.name@ installs the artifacts into the global scope, which means they are available for access by all other deployed artifacts. This section describes scoping in a bit more detail.  It also describes how you can change the default behavior of scoping, with respect to services, so that a service that is in a scope can be made globally available. </para>
+		  <para>As described in previous sections, you can specify that a plan be <emphasis>scoped</emphasis>.  This means that @project.name@ installs the artifacts that make up the plan into a plan-specific scope so that only the application described by the plan has access to the artifacts. If you disable scoping, then @project.name@ installs the artifacts into the global scope, which means they are available for access by all other deployed artifacts. This section describes scoping in a bit more detail.  It also describes how you can change the default behavior of scoping, with respect to services, so that a service that is in a scope can be made globally available. </para>
 
 		   <para>If a bundle in a given scope imports a package and a bundle in the same scope exports the package, then the import may only be satisfied by the bundle in the scope, and not by any bundles outside the scope, including the global scope.   Similarly, package exports from bundles in a scope are not visible to bundles in the global scope.</para>
 
@@ -461,7 +524,7 @@ Manifest-Version: 1.0
 	</para>
 
 	<para>
-		@tomcat.product.name@ provides a feature called
+		@project.name@ provides a feature called
 		<emphasis>configuration artifacts</emphasis>
 		that makes it very easy for you to manage this configuration data. A
 		configuration artifact is simply a properties file that is made
@@ -473,11 +536,11 @@ Manifest-Version: 1.0
 		application to use the properties file. You then deploy the
 		application and properties file together, typically as a
 		<link linkend="developing-applications-plans">plan</link>
-		. @tomcat.product.name@ automatically creates a configuration artifact from
+		. @project.name@ automatically creates a configuration artifact from
 		the properties file, and you can manage the lifecycle of this
 		configuration artifact in the same way you manage the lifecycle of
 		PARs, bundles, and plans, using the Admin
-		Console. Additionally, @tomcat.product.name.short@ subscribes your
+		Console. Additionally, @project.name@ subscribes your
 		application for notification of any refresh of the configuration
 		artifact and the application can then adapt accordingly, which means
 		you can easily
@@ -531,7 +594,7 @@ public class PropertiesController {
 	<section id="developing-applications-configuration-artifacts-propfile">
 	  <title>Creating the Properties File</title>
 
-	  <para>To create a properties file that in turn will become a configuration artifact when deployed to @tomcat.product.name.short@ from which a Spring bean, such as the <literal>PropertiesController</literal> bean, will get the actual property values, follow these guidelines:</para>
+	  <para>To create a properties file that in turn will become a configuration artifact when deployed to @project.name@ from which a Spring bean, such as the <literal>PropertiesController</literal> bean, will get the actual property values, follow these guidelines:</para>
 	  <itemizedlist>
 		<listitem><para>Create a text file in which each property is listed as a name/value pair, one pair per line.  Precede comments with a <literal>#</literal>.  For example:</para>
 		  <screen># Properties for the com.springsource.configuration.properties sample
@@ -550,7 +613,7 @@ password          = secret</screen>
 	  <para>To update your application so that it "knows" about the configuration artifact, you update the application's Spring application context XML file, typically located in the <literal>WEB-INF</literal> or <literal>META-INF/spring</literal> directories (read <link linkend="using-spring">Using Spring and Spring DM</link>
 	to understand which directory to use).</para>
 
-	   <para>You use the <literal>&lt;context:property-placeholder&gt;</literal> element to specify that you want to use the @tomcat.product.name.short@ mechanism for substituting values into bean properties.  The <literal>properties-ref</literal> attribute of this element points to a <literal>&lt;osgi-compendium:cm-properties&gt;</literal> element which you use to specify the configuration artifact that contains the property values.  You set the value of the <literal>persistent-id</literal> attribute of this element equal to the name of the configuration artifact, which is the name of the properties file <emphasis>minus</emphasis> the <literal>.properties</literal> extension. </para>
+	   <para>You use the <literal>&lt;context:property-placeholder&gt;</literal> element to specify that you want to use the @project.name@ mechanism for substituting values into bean properties.  The <literal>properties-ref</literal> attribute of this element points to a <literal>&lt;osgi-compendium:cm-properties&gt;</literal> element which you use to specify the configuration artifact that contains the property values.  You set the value of the <literal>persistent-id</literal> attribute of this element equal to the name of the configuration artifact, which is the name of the properties file <emphasis>minus</emphasis> the <literal>.properties</literal> extension. </para>
 	    <para>The following sample Spring application context XMl file shows everything wired together; only relevant parts of the file are shown:</para>
 
 	    <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -586,7 +649,7 @@ password          = secret</screen>
 
 	</section>
 
-	<para>The preceding example shows how the id <literal>configAdminProperites</literal> wires the <literal>&lt;context:property-placeholder&gt;</literal> and <literal>&lt;osgi-compendium:cm-properties&gt;</literal> elements together.  Based on the value of the <literal>persistent-id</literal> attribute, you must also deploy a properties file called <literal>app-properties.properties</literal> which @tomcat.product.name.short@ installs as a configuration artifact.</para>
+	<para>The preceding example shows how the id <literal>configAdminProperites</literal> wires the <literal>&lt;context:property-placeholder&gt;</literal> and <literal>&lt;osgi-compendium:cm-properties&gt;</literal> elements together.  Based on the value of the <literal>persistent-id</literal> attribute, you must also deploy a properties file called <literal>app-properties.properties</literal> which @project.name@ installs as a configuration artifact.</para>
 
 	<section id="developing-applications-configuration-artifacts-plan">
 	  <title>Adding the Configuration Artifact to a Plan</title>
@@ -616,7 +679,7 @@ password          = secret</screen>
 	<section id="using-spring">
 		<title>Using Spring and Spring DM</title>
 		<para>
-			@tomcat.product.name@ supports the use of Spring framework and Spring DM (specifically version 1.2.1) by application bundles.
+			@project.name@ supports the use of Spring framework and Spring DM (specifically version 1.2.1) by application bundles.
 			For detailed information, please refer to the
 			<ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/">
 				Spring Framework Reference Documentation
@@ -829,7 +892,7 @@ password          = secret</screen>
 		<para>
 			<imagedata fileref="images/import-package.png"/>
 		</para>			
-		<para>The @tomcat.product.name@ reduces the need for long lists of imported packages by introducing two new manifest
+		<para>@project.name@ reduces the need for long lists of imported packages by introducing two new manifest
 			headers; <code>Import-Bundle</code> and <code>Import-Library</code>. The following figure provides an
 			illustration of the simplification that these new headers offer:
 	    </para>
@@ -897,11 +960,11 @@ password          = secret</screen>
 				For example, Hibernate uses CGLIB (code generation library) at runtime to generate proxies for persistent classes.  Assume that a domain bundle in your application uses Hibernate for its persistent objects, and thus its <code>Import-Bundle</code> manifest header includes the Hibernate bundle.  Further assume that a separate Web bundle uses reflection in its data-binding code, and thus needs to reflect on the persistent classes generated by Hibernate at runtime.  The Web bundle now has an indirect dependency on the Hibernate bundle because of these dynamically generated classes, although the Web bundle does not typically care about the details of how these classes are persisted.  One way to solve this dependency problem is to explicitly add the Hibernate bundle to the <code>Import-Bundle</code> header of the Web bundle; however, this type of explicit-specified dependency breaks the modularity of the application and is not a programming best practice.
 			</para>
 			<para>
-				A better way to solve this problem is to specify that @tomcat.product.name@ itself dynamically import 
+				A better way to solve this problem is to specify that @project.name@ itself dynamically import 
 				the bundle (Hibernate in the example above) to all bundles in the application at runtime.  
 				You do this by adding the <code>import-scope:=application</code> directive to the <code>Import-Bundle</code> header 
 				of the bundle that has the direct dependency (the domain bundle in our example).  At runtime, although the Web bundle 
-				does not explicitly import the Hibernate bundle, @tomcat.product.name@ implicitly imports it and thus its classes are available 
+				does not explicitly import the Hibernate bundle, @project.name@ implicitly imports it and thus its classes are available 
 				to the Web bundle.  This mechanism allows you to declare the dependencies you need to make your application run,
 				without having to make changes to your application that might limit its flexibility. 
 			</para>
@@ -911,7 +974,7 @@ password          = secret</screen>
 	   <programlisting>
 Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";<emphasis role="bold">import-scope:=application</emphasis></programlisting>
 	    <para>
-		You can also set the <code>import-scope</code> directive to the (default) value <code>bundle</code>; in this case, the scope of the bundle is just the bundle itself and thus @tomcat.product.name@ does not perform any implicit importing into other bundles of the application.  
+		You can also set the <code>import-scope</code> directive to the (default) value <code>bundle</code>; in this case, the scope of the bundle is just the bundle itself and thus @project.name@ does not perform any implicit importing into other bundles of the application.  
 	    </para>
 	    <para>
 		Note that use of the <code>import-scope:=application</code> directive of the <code>Import-Bundle</code> header only makes sense when the bundle is part of a scoped application (PAR or plan);  if the bundle is not part of a scoped application, then this directive has no effect.
@@ -987,14 +1050,14 @@ Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";<emp
 		<section id="developing-applications-installing-dependencies">
 		    <title>Installing Dependencies</title>
 		    <para>
-			    Rather than encouraging the packaging of all an application&rsquo;s dependencies within the application itself, @tomcat.product.name@
-			    uses a local provisioning repository of bundles and libraries upon which an application can depend. When the @tomcat.product.name@
+			    Rather than encouraging the packaging of all an application&rsquo;s dependencies within the application itself, @project.name@
+			    uses a local provisioning repository of bundles and libraries upon which an application can depend. When the @project.name@
 			    encounters an application with a particular dependency, it will automatically provide, from its provisioning repository,
 			    the appropriate bundle or library.
 			</para>
 			<para>
 			    Making a dependency available for provisioning is simply a matter of copying it to the appropriate location in the
-			    @tomcat.product.name.short@&rsquo;s local provisioning repository. By default this is
+			    @project.name@&rsquo;s local provisioning repository. By default this is
 			    <literal>SERVER_HOME/repository/usr</literal>. A more detailed discussion of the provisioning
 			    repository can be found in the <ulink url="../../virgo-user-guide/html/index.html">User Guide</ulink>.
 			</para>
@@ -1012,14 +1075,14 @@ Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";<emp
        <section id="developing-applications-versioning">
         <title>Application Versioning</title>
         <para>
-	        In much the same way that individual OSGi bundles can be versioned, @tomcat.product.name@ allows applications to be versioned. How exactly you do this depends on how you have packaged the application:  
+	        In much the same way that individual OSGi bundles can be versioned, @project.name@ allows applications to be versioned. How exactly you do this depends on how you have packaged the application:  
 		<itemizedlist>
 	        	<listitem>If you package your application using a PAR, you version the application by using the <literal>Application-Version</literal> header in the <code>MANIFEST.MF</code> file of the PAR file.</listitem>
 			<listitem>If you use a plan to describe the artifacts that make up your application, you version it by using the <code>version</code> attribute of the <code>&lt;plan&gt;</code> root element of the plan&rsquo;s XML file.</listitem>
 	        	<listitem>If your application consists of a single bundle, you version it in the standard OSGi way: by using the <literal>Bundle-Version</literal> header of the <code>MANIFEST.MF</code> file of the bundle.</listitem>
 		</itemizedlist>
         </para>
-        <para>@tomcat.product.name@ uses an application&rsquo;s version to prevent clashes when multiple versions of the same application are deployed at
+        <para>@project.name@ uses an application&rsquo;s version to prevent clashes when multiple versions of the same application are deployed at
 	        the same time. For example, the application trace support described in <xref linkend="developing-applications-application-trace"/>,
 	        includes the application&rsquo;s name and version in the file path. This ensures that each version of the same application has its
 	        own trace or logging file.
