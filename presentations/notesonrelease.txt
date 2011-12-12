@@ -1,0 +1,78 @@
+Notes on Release process
+
+Example: releasing a new version of greenpages
+
+
+Code Release
+============
+
+	1	Get stable code base in git (git co master/pull/fetch/submodule/etc)
+	2	Clean all extraneous files and directories
+			git clean -fdx
+	3	create a new branch (any name - eventually to tag at the release level)
+			git co -b release
+	4	modify the build.properties file on that branch
+			m build.properties
+		modify the properties:
+			version=2.1.0      (this may already be set to what you want to release)
+			release.type=release
+		add the property:
+			build.stamp=RELEASE
+		(latter over-rides the usual generated qualifier)
+		save/commit changes
+	5	build the stuff (cd build-greenpages)
+			ant clean package publish -propertyfile ~/rippling/s3.properties
+		or	ant clean test package publish -propertyfile ~/rippling/s3.properties
+		(option is for publishing rights -- same as used by ripplor/releaselor)
+		This is where the code sees the light of day (publish).
+	6	Tag the git branch (locally)
+			git tag 2.1.0.RELEASE
+	7	Get back to master level
+			git co master
+	8	Update build.properties for subsequent builds at master (cd ..):
+			m build.properties
+		modify the property:
+			version=2.2.0
+		DO NOT ADD build.stamp
+		DO NOT MODIFY release.type (which is not release here)
+		save/commit changes
+	9	Push the changes (all branches)
+			git push origin
+	10	Push all tags:
+			git push origin --tags
+	-------------------
+
+Wiki/Community page download point
+
+	1	Goto wiki dmserver home page; and thence to Web Page Sources for the file:
+			springsource.org/dmserver
+		This is the source for the external download page on springsource.org/dmserver (surprise).
+		It is downloaded from the wiki page by clicking on the link.
+	2	Edit this file (it is in markdown).
+		The section for samples can be located and the version numbers updated for the sample we are shipping:
+		(all else should be the same).
+			
+### 2.x Samples
+* [GreenPages Sample Application 2.1.0][4.1] ([sha1][4.2])
+* [Petclinic Sample Application 2.0.0][4.3] ([sha1][4.4])
+* [Formtags Sample Application 2.0.0][4.5] ([sha1][4.6])
+
+[4.1]:	http://dist.springframework.org/release/DMSS/greenpages-2.1.0.RELEASE.zip
+[4.2]:	http://dist.springframework.org/release/DMSS/greenpages-2.1.0.RELEASE.zip.sha1
+[4.3]:	http://dist.springframework.org/release/DMSS/petclinic-2.0.0.RELEASE.zip
+[4.4]:	http://dist.springframework.org/release/DMSS/petclinic-2.0.0.RELEASE.zip.sha1
+[4.5]:	http://dist.springframework.org/release/DMSS/formtags-2.0.0.RELEASE.zip
+[4.6]:	http://dist.springframework.org/release/DMSS/formtags-2.0.0.RELEASE.zip.sha1
+
+
+		(We modified the text of the link and the version stamp on the two entries - zip and zip.sha1.)
+
+	3	Save the file, and replace the wiki file attachment.
+	4	Update the community page (convert to html in mate -- but DO NOT SAVE).
+		login to springsource.org and SHOULD give update rights for the page.
+	-----------------------
+
+
+Notes: Ben to arrange update rights on the springsource.org/dmserver page?
+
+

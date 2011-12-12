@@ -1,0 +1,160 @@
+Tuesday 30 November
+
+Set objectives of F2F:
+	Discuss work items
+	Agree roadmap for 2011
+	Discuss how we will work together
+	Prepare new committers
+
+Discussed use cases:
+	application development with IDE and associated Virgo runtime
+	server platform with clustering and "sandbox" support for potentially misbehaving applications
+	embedded as a thin layer in other products
+	kernel with custom extensions, not necessarily including web support
+	migration of existing WAR files etc: ORM should just work, when split into bundles should continue
+	to work
+
+High level requirements:
+	an application working in development must continue to work in production, e.g. wiring should be
+	predictable
+	clear rules for what constitutes an application comprising multiple bundles
+
+Kernel discussion:
+	Migration of user region from nested framework to framework hooks
+		Migration to Equinox 3.7 complete
+		Prototyping necessary to see how well the user region functions with framework hooks
+		May need to feed back issues into OSGi spec work, so needs to be high priority
+		
+	File system layout
+		Several benefits to adopting standard Eclipse/p2 layout
+		Issues: clustering/sharing, cold start, tooling, additional folders (work, serviceability, ...)
+		
+	Startup order
+		There is no waiting for configuration so it is not possible to loosen up the current startup order
+		This is supported in Spring DM v2 which can be used when Virgo rebases on Blueprint instead of
+		Spring DM 1.2.1.
+		Namespace support also implies an ordering.
+	
+	Declarative services:
+		Should be supported "out of the box" by Virgo
+		There may be benefits for Virgo exploiting DS for its own service wiring, at least for the kernel
+		- prototyping necessary
+	
+	Deployer extensibility:
+		Today this requires adding a fragment to the deployer bundle
+		Requirement to extend the deployer using public APIs only
+		Proposal to introduce a descriptor/facade which would clarify the extension contract
+		
+Build & release discussion:
+	There is now no dependence on publishing to Amazon S3 and this can be ripped out fairly easily
+	This will enable new committers to ripple and release without needing SpringSource S3 keys
+	Requirement to do developer/local ripples without publishing built artifacts
+	Requirement to produce a p2 repository from the build
+	Maven repo can now be published to build.eclipse.org
+	Discussion about Tycho and difficulty of managing manifests outside the IDE
+	
+Repository & p2 discussion:
+	Overview of existing Virgo artifact repository
+	Overview of p2
+	Staged approach discussed:
+		Use p2 for initial provisioning of Virgo - may pre-req file system layout change
+		Add p2 to the Virgo repository chain - needs e.g. p2 touchpoint for plans, PARs, etc.
+		Drive deployment/update via p2
+		Drive deployment via kernel and keep p2 profile and bundles.info updated
+
+========================================================================================================		
+Wednesday 1 December
+
+Reviewed minutes from Tuesday and completed p2 discussion.
+
+Discussion of Virgo's advantages and disadvantages relative to Aries, Glassfish, & JBoss.
+
+Discussion of development and production modes. Important that any such mode is emphasised in
+the admin console. In production, SAP disable JSP compilation, disable pickup/dropins, disable JMX,
+ensure console can only be accessed from localhost. In development, SAP increase detail in HTTP
+access logs. General discussion of the need for making persistent configuration changes from the
+admin console. There was a consensus that a mode is desirable with a default of "development".
+
+Discussion of "precompiling" dependencies and deploying preferred/mandatory wirings with an application.
+
+Discussion of state of play of Jetty support and snaps. Snaps could be improved so that a snap specifies
+its host web context path instead of bundle symbolic name and bundle version. Discussion of a snaps
+subproject. Glyn will look into the overhead of creating a snap subproject.
+
+Discussion of Tomcat and Gemini Web. There is a need for Gemini Web documentation. Tomcat 7 is
+expected to ship by 1Q11, so Virgo can migrate to Tomcat 7 for the next release.
+
+Discussion of enterprise features and the desirability or not of Virgo supporting the Java EE 6
+web profile. Consensus that web profile support would be a good thing. There is a need for
+representative system tests for JPA etc. usage to ensure these scenarios continue to work.
+
+Discussion of roadmap - see the presentations from SpringSource and SAP.
+
+General discussion of the responsibilities of committers in terms of community support, coding,
+and testing. Florian ran through the "RAP House Rules" new committers presentation.
+
+Discussion of admin console and shell support. Likely that Apache gogo will be supported in Equinox.
+Desirability of command history, tab completion of commands and parameters (names *and* values),
+and ssh support was discussed.
+
+The meeting finished a little early as we were well ahead of schedule.
+
+=======================================================================================================
+Thursday 2 December
+
+Florian led an exercise where we installed Jetty, Equinox, or Virgo. The objective of the Eclipse RT
+Packaging (RTP) project is to simplify the initial experience of installing RT projects. Discussion of
+mixing and matching features prior to download. RTP is not currently envisaged as containing much code,
+so there was some discussion of whether this was realistic. Krassi agreed to talk to the RTP committers
+about requirements and to offer assistance if appropriate.
+
+Committers elections are underway for Violeta (also proposed for Gemini Web committer), Borislav, Hristo,
+and Dmitry. Florian is interested too and needs to increase his track record of contributions before we can
+propose him.
+
+Shared skype contacts to ensure good communications between committers.
+
+Discussed Virgo tooling and OSGi Enterprise Tooling and in particular whether it will be possible to use
+the OSGi Enterprise Tooling out of the box with Virgo or whether this would show some kind of vendor bias.
+
+Overview of web admin console and brief discussion of dojo and Spring MVC usage.
+
+Discussion of shells, what we get for free in Equinox 3.7, and the likelihood of Apache gogo becoming
+available, with pro's and con's TBD.
+
+We revisited the roadmap discussion. No changes were needed as we are pretty much aligned in what needs
+to happen. There is a need to make Virgo startup much faster. SAP are interested in analysing this and
+Glyn is happy to help process the findings and consider trade-offs relative to function.
+
+Brainstorming of Virgo futures and committer working methods - see the mindmaps on the wiki.
+
+Dmitry point out this article on git branching http://nvie.com/posts/a-successful-git-branching-model/.
+We discussed branching approaches, but for now we will continue branching off
+master for features and merging back into master rather than collecting on a separate development
+branch.
+
+The afternoon covered how to make a code change and ripple it up, although the ripple failed with a
+hang in the web layer which appears to be an intermitted problem possibly related to machine settings
+such as VM heap/permgen. Glyn gave a brief tour round the kernel and explained the high level design
+of the deployer. Dmitry proposed a refactoring to loosen coupling in the deployer which he will prototype.
+
+We then broke into separate groups to do code reviews, discuss p2 interaction with the deployer, and look
+at publishing p2 artefacts from Virgo build.
+
+Finally, we agreed that we should reconvene before June but we would see how the next few weeks go before
+deciding on a precise date, although SAP are happy to host in Sofia.
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
