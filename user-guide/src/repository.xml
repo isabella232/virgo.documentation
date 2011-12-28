@@ -7,6 +7,9 @@
 			<title>Overview of the Provisioning Repository</title>
 			<para>
 				This section describes the provisioning repository feature of @project.name@, the reasons for using it, and how to configure it.
+				<note>
+			 		This section is not applicable to @nano.product.name@. The provisioning mechanism used there is p2.
+				</note>
 			</para>
 			<para>
 				In most use cases, your application has a dependency on one or more separate artifacts; these artifacts might include OSGi bundles, configuration artifacts, third-party libraries, PARs or plans.  A typical example is a Spring application that depends on a third-party library such as Spring Framework or Hibernate. 

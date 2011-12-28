@@ -10,6 +10,14 @@
 	      To start @tomcat.product.name@ run the <literal>startup.sh</literal> (Linux) or <literal>startup.bat</literal> (Windows) script.  
 	      For both platforms, the script is located in the <literal>SERVER_HOME/bin</literal> directory.
 	    </para>
+	    <note>
+	      This chapter applies to @nano.product.name@ too. Note that since @nano.product.name.short@ 
+	      has a single region you can ignore the console output from the user region and focus on the instructions.
+	      A successful startup of @nano.product.name.short@ is as simple as that:
+	      <screen>[2011-12-28 11:41:31.528] startup-tracker              &lt;KE0001I&gt; Kernel starting. 
+[2011-12-28 11:41:31.602] startup-tracker              &lt;KE0002I&gt; Kernel started. 
+	      </screen>
+	    </note>
 	    <section>
 	      <title>Linux</title>
 	      <para>
@@ -387,6 +395,20 @@ prompt$ bin/startup.sh -clean -noStart</screen>
 prompt> bin\startup.bat -clean -noStart</screen>
 		    </section>
 		  </section>
+		<section id="equinox-launcher">
+		    <title>Using Equinox Launcher</title>
+		    <para>
+				Since version 3.5 @project.name@ uses the standard Equinox Launcher as it's default launcher.
+				As a result in addition to all the launcher options described so far users can also pass arguments specific to the Equinox launcher.
+				<important>The Equinox Launcher arguments must be placed at the end of the startup call. Here's an example
+				<screen>./startup.sh "virgo-args" "equinox-launcher-args"
+./startup.sh -clean -console 2222</screen>
+				</important>
+		    </para>
+		    <para>
+				A full list of the accepted Equinox Launcher arguments is available <ulink url="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fmisc%2Fruntime-options.html">at help.eclipse.org</ulink>.
+			</para>
+		</section>
 	
 </chapter>
 

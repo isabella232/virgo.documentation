@@ -14,7 +14,9 @@
 	    <listitem><para><link linkend="admin-console-view-dumps">View details of dump files</link> that Web Server might have generated after encountering a problem.  This feature is particularly valuable if Web Server fails to install a new artifact due to resolution failures; the OSGi state inspector can help you discover the exact artifact causing the resolution failure.</para></listitem>
 		<listitem><para><link linkend="admin-console-view-osgi-state">View an overview and details of the OSGi State</link> of Web Server, or in other words, a list of all bundles currently installed in Web Server and their state.  You can then drill down into the details of each bundle, such as its symbolic name, packages it imports and exports, services it provides and consumes, and so on.  You can also view the bundles that were deployed when an exception that generated a dump occurred.</para></listitem>
 	</itemizedlist>
-
+	<note>
+		 This section is not applicable to @nano.product.name@.
+	</note>
 	<section id="admin-console-login">
 		<title>Invoking the Admin Console</title>
 		<para>

@@ -92,7 +92,7 @@
 					</listitem>
 					<listitem>
 					<para>
-						Borislav Kapukaranov, SAP AG - Configuring framework extensions and fragments on system bundle
+						Borislav Kapukaranov, SAP AG - Configuring framework extensions and fragments on system bundle; Added @nano.product.name@ references and tips
 					</para>
 					</listitem>
 				</itemizedlist>
@@ -103,8 +103,10 @@
 	<toc />
 	<xi:include href="introduction.xml"/>
 	<xi:include href="concepts.xml"/>	
+	<xi:include href="using-the-p2-director.xml"/>	
 	<xi:include href="installing.xml"/>
 	<xi:include href="installing-kernel.xml"/>
+	<xi:include href="installing-nano.xml"/>
 	<xi:include href="starting-stopping.xml"/>
 	<xi:include href="admin-shell.xml"/>
 	<xi:include href="admin-console.xml"/>

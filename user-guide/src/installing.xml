@@ -9,6 +9,10 @@
 			The @tomcat.product.name@, or @tomcat.product.name.short@ for short, requires Java SE 6 or later to be installed. Java is available from
 			<ulink url="http://www.java.com/">http://www.java.com/</ulink> and elsewhere.
 		</para>
+		<para>
+			In case you are installing via a p2 director you'll need to get it. The easiest way is to download Eclipse from <ulink url="http://www.eclipse.org/downloads/">here</ulink>. 
+			It has built-in p2 director and other p2 applications. 
+		</para>
 	</section>
 	<section id="installation-zip">
 		<title>Installing from the ZIP Download</title>
@@ -45,6 +49,27 @@
 					your chosen drive.
 				</para>
 			</section>
+		</section>
+	</section>
+	
+	<section id="installation-updatesite">
+		<title>Installing from an update site</title>
+		<section>
+			<title>The repository location</title>
+			<para>
+				Virgo has a single p2 repository that contains all Virgo distrbutions. The repository for version @bundle.version@ can be found <ulink url="@p2repo@">here</ulink>. 
+				There is a repository for each released version.
+			</para>
+		</section>
+		<section>
+			<title>Using the p2 director</title>
+			<para>
+				As shown in <xref linkend="using-director"/> you can easily install @tomcat.product.name.short@ in a desired destination.
+				The only director argument that needs to be adjusted is <emphasis>-installIU</emphasis>.
+			</para>
+			<para>
+				For @tomcat.product.name.short@ the right value is <emphasis>tomcat-server.product</emphasis>.
+			</para>
 		</section>
 	</section>
 	
