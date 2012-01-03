@@ -18,7 +18,11 @@
 		<listitem><para><link linkend="configuring-web">Configuring the web integration layer</link></para></listitem>
 		<listitem><para><link linkend="configuring-jetty">Configuring the embedded Jetty servlet container</link></para></listitem>
 	</itemizedlist> 
-	
+	<note>
+		<title>Why is there both a config and a configuration directory?</title>
+		<para>The <emphasis>config</emphasis> directory has always contained @project.name@ configuration files. When @nano.product.name@ and its support for p2 provisioning was introduced in @project.name@ 3.5.0, a <emphasis>configuration</emphasis> directory was added (see bug 324991 for details). The directory name <emphasis>configuration</emphasis> in the installation's root is used by default in p2.</para>
+		<para>This chapter makes it clear which configuration goes in each directory.</para>
+	</note>
 	<note>Sections 4-6 and 8-9 does not apply for @nano.product.name@.</note>
 	
 	<section id="configuring-osgi-framework" >
