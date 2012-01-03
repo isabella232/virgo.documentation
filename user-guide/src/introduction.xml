@@ -31,12 +31,12 @@
 		<title>A Note for @nano.product.name@ Users</title>
 		<para>
 			@nano.product.name@ is a bit different than @kernel.product.name.short@ and @tomcat.product.name.short@. 
-			It is the smallest Virgo offering and takes performance to it's limits, almost instantly booting up.
+			It is the smallest Virgo offering and takes performance to its limits, almost instantly booting up.
 			@nano.product.name@ users will find a number of sections in this guide useful but sections that refer to
 			<emphasis>plans, PARs and configuration deployment, regions, application scoping and libraries support</emphasis> 
 			are NOT relevant for @nano.product.name@ or @nano.product.name.short@ and should be ignored.
-			This Virgo distribution relies on p2 for it's provisioning, therefore is bound to p2 concepts such as <emphasis>p2 features and update sites</emphasis>.
-			Note also that @nano.product.name@ includes Gemini.Web as it's default web container implementation and uses it's default configuration.
+			This Virgo distribution relies on p2 for its provisioning, therefore is bound to p2 concepts such as <emphasis>p2 features and update sites</emphasis>.
+			Note also that @nano.product.name@ includes Gemini.Web as its default web container implementation and uses its default configuration.
 		</para>
     </section>
 	

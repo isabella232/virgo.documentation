@@ -398,7 +398,7 @@ prompt> bin\startup.bat -clean -noStart</screen>
 		<section id="equinox-launcher">
 		    <title>Using Equinox Launcher</title>
 		    <para>
-				Since version 3.5 @project.name@ uses the standard Equinox Launcher as it's default launcher.
+				Since version 3.5 @project.name@ uses the standard Equinox Launcher as its default launcher.
 				As a result in addition to all the launcher options described so far users can also pass arguments specific to the Equinox launcher.
 				<important>The Equinox Launcher arguments must be placed at the end of the startup call. Here's an example
 				<screen>./startup.sh "virgo-args" "equinox-launcher-args"
