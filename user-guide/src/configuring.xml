@@ -72,8 +72,8 @@
 			</para>
 			<para>
 				<emphasis role="bold">WARNING:</emphasis> We strongly recommend that you update only the
-				<literal>org.eclipse.virgo.suppress.heap.dumps</literal> property; updating the other properties could cause @project.name@
-				to fail. These properties are documented for your information only.
+				properties below; updating other properties could cause @project.name@
+				to fail.
 			</para>
 		
 			<table id="configuring-framework-properties-table" colsep="1" frame="all" rowsep="1">
@@ -86,6 +86,13 @@
 						</row>
 			  		</thead>
 			  		<tbody>
+						<row>
+							<entry><literal>org.eclipse.virgo.kernel.startup.wait.limit</literal></entry>
+							<entry>
+								Specifies the amount of time, in seconds, after which various operations time out out while trying to start the kernel.
+								The default value is 180.
+							</entry>
+						</row>
 						<row>
 							<entry><literal>org.eclipse.virgo.suppress.heap.dumps</literal></entry>
 							<entry>
@@ -950,7 +957,9 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 								<literal>.kernel.startup.wait.limit</literal>
 							</entry>
                             <entry>
-								Specifies the amount of time, in seconds, after which @project.name@ times out while trying to start the kernel.
+								Specifies the amount of time, in seconds, after which various operations time out out while trying to start the kernel.
+								See <link linkend="configuring-framework-properties">Configuring OSGi Framework Properties</link> for the recommended way
+								to configure this parameter.
 							</entry>
 							<entry><literal>180</literal>
 							</entry>
