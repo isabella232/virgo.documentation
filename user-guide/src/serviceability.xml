@@ -117,6 +117,54 @@
 		  Be aware that all applications&rsquo; output streams will be caught by these loggers, and that a sifting appender might be useful to separate them.
 		  </para>
 		</section>
+		<section id="janino">
+	      <title>Janino</title>
+		  <para>
+			Janino can be used to define trace filters as Java expressions. This adds a significant overhead to tracing, so should be used with care. 
+          </para>
+          <para>
+			For example, the addition of the following filter element to the sifting appender in <literal>serviceability.xml</literal>
+			suppresses per-application trace output that is not associated with a particular application and is normally written to
+			<literal>serviceability/logs/virgo-kernel/log.log</literal>.
+			<programlisting language="xml"><![CDATA[<appender name="SIFTED_LOG_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+        <Key>applicationName</Key>
+        <DefaultValue>virgo-kernel</DefaultValue>
+    </discriminator>
+    <sift>
+        <appender name="${applicationName}_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+                <evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+                    <expression>
+                        (mdc == null) || (mdc.get("applicationName") == null)
+                    </expression>
+                </evaluator>
+                <OnMismatch>NEUTRAL</OnMismatch>
+                <OnMatch>DENY</OnMatch>
+            </filter>
+            <file>serviceability/logs/${applicationName}/log.log</file>
+            ...
+        </appender>
+    </sift>
+</appender>]]></programlisting> 
+	      </para>
+	      <para>
+			To enable Janino in @project.name@, place the Janino and commons compiler JARs, converted to OSGi bundles, in <literal>plugins</literal>.
+			For example these bundles are available at v2.6.1 from the SpringSource Enterprise Bundle Repository.
+			Then add the following lines to
+			<literal>configuration/org.eclipse.equinox.simpleconfigurator/bundles.info</literal>
+			(as described in <link linkend="configuring-framework-bundles">Configuring OSGi Framework Bundles</link>):
+			<programlisting><![CDATA[com.springsource.org.codehaus.janino,2.6.1,plugins/com.springsource.org.codehaus.janino-2.6.1.jar,4,false
+com.springsource.org.codehaus.commons.compiler,2.6.1,plugins/com.springsource.org.codehaus.commons.compiler-2.6.1.jar,4,false]]></programlisting> 
+		  </para>
+		  <important>
+			Current versions of Logback, including 0.9.28 to 1.0, do not set Janino's "parent" class loader correctly.
+			This bug is covered by the Logback issue <ulink url="http://jira.qos.ch/browse/LBCORE-244">LBCORE-244</ulink>.
+			With such versions, it is necessary to attach a fragment bundle to Janino. Place the fragment bundle in <literal>plugins</literal> and list it in 
+			<literal>configuration/org.eclipse.equinox.simpleconfigurator/bundles.info</literal>.
+			The fragment's contents are described in <ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=333920#c15">bug 333920</ulink>.
+		  </important>
+		</section>
 	  </section>
     </section>
     <section id="serviceability-info-dump">
