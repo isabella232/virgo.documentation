@@ -57,7 +57,7 @@
 					<row>
 						<entry><literal>java6-server.profile</literal></entry>
 						<entry>Configures the <link linkend="configuring-framework-profile">OSGi framework profile</link>.</entry>
-						<entry>$SERVER_HOME/lib</entry>
+						<entry>$SERVER_HOME/configuration</entry>
 					</row>
 		  		</tbody>
 			</tgroup>
@@ -105,7 +105,7 @@
 							<entry><literal>osgi.java.profile</literal></entry>
 							<entry>
 								Specifies the profile to use using a <literal>file:</literal> URI with default value
-								<literal>file:lib/java6-server.profile</literal>.
+								<literal>file:configuration/java6-server.profile</literal>.
 							</entry>
 						</row>
 			  		</tbody>
@@ -137,7 +137,7 @@ toStart? - true or false value indicating whether a bundle should be started or 
 		<title>Configuring OSGi Framework Profile</title>
 	    
 			<para>
-				You specify the framework profile in the <literal>$SERVER_HOME/lib/java6-server.profile</literal> file. The
+				You specify the framework profile in the <literal>$SERVER_HOME/configuration/java6-server.profile</literal> file. The
 				properties most relevant to users are described in the following table.
 			</para>
 			<para>

@@ -406,7 +406,7 @@ prompt> bin\startup.bat -clean -noStart</screen>
 				</important>
 		    </para>
 		    <para>
-				A full list of the accepted Equinox Launcher arguments is available <ulink url="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fmisc%2Fruntime-options.html">at help.eclipse.org</ulink>.
+				A full list of the accepted Equinox Launcher arguments is available at <ulink url="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fmisc%2Fruntime-options.html">help.eclipse.org</ulink>.
 			</para>
 		</section>
 	
