@@ -225,7 +225,7 @@ Manifest-Version: 1.0
 				</listitem>
 				<listitem>A plan is visible to management interfaces.</listitem>
 				<listitem>A plan can be undeployed and redeployed as a unit.</listitem>
-				<listitem>A plam may be atomic, although this is optional.</listitem>
+				<listitem>A plan may be atomic, although this is optional.</listitem>
 			</itemizedlist>
 		</para>
 		<para>
