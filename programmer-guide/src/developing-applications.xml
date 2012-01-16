@@ -253,7 +253,10 @@ Manifest-Version: 1.0
 		</para>
 
 		<para>
-			The artifacts of a plan are stored in @project.name@'s repository.  This means, for example, that if you drop one of the plan&rsquo;s artifacts in the <code>pickup</code> directory rather than adding it to the repository, the plan will fail to deploy because it will not find the artifact.
+			The artifacts of a plan are usually stored in @project.name@'s repository.  This means, for example, that if you drop one of the plan&rsquo;s artifacts in the <code>pickup</code> directory rather than adding it to the repository, the plan will fail to deploy because it will not find the artifact.
+		</para>
+		<para>
+			The artifacts of a plan may also be stored outside @project.name@'s repository, somewhere else on the file system and referenced from the plan using URLs.
 		</para>
 
 		<section id="developing-applications-plans-create">
@@ -393,6 +396,14 @@ Manifest-Version: 1.0
 							<entry><literal>version</literal></entry>
 							<entry>Specifies the version or range of versions of this artifact that @project.name@ should look up in its repositories and then install and deploy.  You must use OSGi version specification syntax, such as <code>[1.0.0, 2.0.0)</code>. </entry>
 							<entry>No.  If not specified, defaults to <code>0</code>, which in OSGi means 0 to infinity, or any version.</entry>
+						</row>
+						<row>
+							<entry><literal>url</literal></entry>
+							<entry>
+								Specifies an optional URL string beginning with <code>file:</code> that refers to the artifact on the file system.
+								This attribute is normally omitted so that the artifact is searched for in @project.name@'s repository.
+							</entry>
+							<entry>No.  If not specified, @project.name@ searches for the artifact in its repository.</entry>
 						</row>
 					</tbody>
 				</tgroup>
