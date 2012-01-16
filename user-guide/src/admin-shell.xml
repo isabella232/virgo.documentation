@@ -13,10 +13,9 @@
 		</para>
 		<para>
 			The user region shell ports may be reconfigured by editing the file 		
-			<literal>osgi.console.telnet.properties</literal> or <literal>osgi.console.ssh.properties</literal> in the <literal>repository/ext</literal> directory, and
-			then restarting Virgo.
-			The kernel shell ports may be reconfigured by editing the file <literal>osgi.console.telnet.properties</literal> or
-			<literal>osgi.console.ssh.properties</literal> in the <literal>config</literal> directory, and then restarting Virgo.
+			<literal>osgi.console.properties</literal> in the <literal>repository/ext</literal> directory, and
+			then restarting Virgo. The telnet properties in the file are prefixed with <emphasis>.telnet</emphasis>, and the ssh properties are prefixed with <emphasis>.ssh</emphasis>.
+			The kernel shell ports may be reconfigured by editing the file <literal>osgi.console.properties</literal> in the <literal>config</literal> directory, and then restarting Virgo.
         </para>
         <para>
 			To enable any of these shell ports, change the <literal>enabled</literal> setting from <literal>false</literal> to <literal>true</literal>
