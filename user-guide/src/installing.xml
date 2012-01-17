@@ -149,10 +149,10 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 				When starting @tomcat.product.name@ on some variants of Windows you might encounter a problem with file permissions. 
 				The error looks like this.
 			</para>
-			<screen>WARNING: jmxPermissions.vbs did not update the permissions of C:\virgo\config\org.eclipse.virgo.kernel.jmxremote.access.properties. Check the file has the correct permissions.</screen>
+			<screen>WARNING: jmxPermissions.vbs did not update the permissions of C:\virgo\configuration\org.eclipse.virgo.kernel.jmxremote.access.properties. Check the file has the correct permissions.</screen>
 			<para>
 				If @tomcat.product.name.short@ starts correctly (see <xref linkend="starting-stopping"/>) you can skip this section and carry on. However to secure your 
-				installation you have to set correct permissions. To do so, go to the &lsquo;config&rsquo; directory of the installation
+				installation you have to set correct permissions. To do so, go to the &lsquo;configuration&rsquo; directory of the installation
 				in Windows Explorer.
 			</para>
 			<para>

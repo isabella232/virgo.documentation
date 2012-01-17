@@ -41,7 +41,7 @@
 	<section id="alternate-serviceability-work">
 		<title>Alternate <literal>serviceability</literal> and <literal>work</literal> Directories</title>
 		<para>
-			Although an alternate <literal>config</literal> directory may be specified on startup, there is no way to specify
+			Although an alternate <literal>configuration</literal> directory may be specified on startup, there is no way to specify
 			alternate <literal>serviceability</literal> or <literal>work</literal> directories. This is covered by
 			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=307737">bug 307737</ulink> which also describes a workaround.
 		</para>

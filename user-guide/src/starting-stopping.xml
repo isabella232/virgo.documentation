@@ -185,7 +185,7 @@ prompt$ bin/startup.sh -jmxport 9090</screen>
 					<imagedata fileref="images/jmx-remote-attach-jmxport.png"/>
 				</para>
 
-		                <para>To start the JMX remote access with a custom username and password, update the <literal>$SERVER_HOME/config/org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the custom username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart @tomcat.product.name.short@ for the changes to take effect.</para>
+		                <para>To start the JMX remote access with a custom username and password, update the <literal>$SERVER_HOME/configuration/org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the custom username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart @tomcat.product.name.short@ for the changes to take effect.</para>
 	 <para>For example, if you want change the JMX remote access username to <literal>zebedee</literal> with password <literal>florence</literal>, change the file as follows: 
 		</para>
        		<programlisting>##################
@@ -204,7 +204,7 @@ role.admin=zebedee</programlisting>
 				</para>
 				<para>
 					To start the JMX remote access using a custom SSL certificate, edit the file located at
-					<literal>$SERVER_HOME/config/keystore</literal>. If you wish to use a different keystore,
+					<literal>$SERVER_HOME/configuration/keystore</literal>. If you wish to use a different keystore,
 					pass this filename in as the value for the <literal>-keystore</literal> argument and the keystore
 					password in as the value for the <literal>-keystorePassword</literal> argument:
 				</para>
@@ -254,7 +254,7 @@ prompt> bin\startup.bat -jmxport 9090</screen>
 				<para>
 					<imagedata fileref="images/jmx-remote-attach-jmxport.png"/>
 				</para>
-		                <para>To start the JMX remote access with a custom username and password, update the <literal>%SERVER_HOME%\config\org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the custom username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart @tomcat.product.name.short@ for the changes to take effect.</para>
+		                <para>To start the JMX remote access with a custom username and password, update the <literal>%SERVER_HOME%\configuration\org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the custom username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart @tomcat.product.name.short@ for the changes to take effect.</para>
 	 <para>For example, if you want change the JMX remote access username to <literal>zebedee</literal> with password <literal>florence</literal>, change the file as follows: 
 		</para>
        		<programlisting>##################
@@ -273,7 +273,7 @@ role.admin=zebedee</programlisting>
 				</para>
 				<para>
 					To start the JMX remote access using a custom SSL certificate, edit the file located at
-					<literal>%SERVER_HOME%\config\keystore</literal>. If you wish to use a different
+					<literal>%SERVER_HOME%\configuration\keystore</literal>. If you wish to use a different
 					keystore, pass this filename in as the value for the <literal>-keystore</literal> argument and the
 					keystore password in as the value for the <literal>-keystorePassword</literal> argument:
 				</para>
@@ -288,9 +288,9 @@ prompt> bin\startup.bat -keystore customKeystore -keystorePassword customKeystor
 	<section id="starting-stopping-configuration-directory">
 		<title>Starting with a Custom Configuration Directory</title>
 		<para>
-			Use the <literal>-configDir</literal> option to specify an alternate <literal>config</literal> directory, different from the
-			default <literal>SERVER_HOME/config</literal> directory. This option allows you to use the same @tomcat.product.name@ 
-			installation to run multiple instances of @tomcat.product.name.short@. Simply create a config directory for each
+			Use the <literal>-configDir</literal> option to specify an alternate <literal>configuration</literal> directory, different from the
+			default <literal>SERVER_HOME/configuration</literal> directory. This option allows you to use the same @tomcat.product.name@ 
+			installation to run multiple instances of @tomcat.product.name.short@. Simply create a configuration directory for each
 			instance, specify unique port numbers, logging and tracing directories, and so on, and then specify that directory
 			when starting @tomcat.product.name.short@.
 		</para>
@@ -301,19 +301,19 @@ prompt> bin\startup.bat -keystore customKeystore -keystorePassword customKeystor
 		</para>
 		<para>
 			See <link linkend="alternate-serviceability-work">Alternate <literal>serviceability</literal> and <literal>work</literal>
-			Directories</link> for a known issue related to specifying an alternate <literal>config</literal> directory.
+			Directories</link> for a known issue related to specifying an alternate <literal>configuration</literal> directory.
 		</para>
 		<section>
 			<title>Linux</title>
-			To start @tomcat.product.name@ using a config directory of <literal>/config/node1</literal>:
+			To start @tomcat.product.name@ using a configuration directory of <literal>/configuration/node1</literal>:
 			<screen>prompt$ cd $SERVER_HOME
-prompt$ bin/startup.sh -configDir /config/node1</screen>
+prompt$ bin/startup.sh -configDir /configuration/node1</screen>
 		</section>
 		<section>
 			<title>Windows</title>
-			To start @tomcat.product.name@ using a config directory of <literal>c:\config\node1</literal>:
+			To start @tomcat.product.name@ using a configuration directory of <literal>c:\configuration\node1</literal>:
 			<screen>prompt> cd %SERVER_HOME%
-prompt> bin\startup.bat -configDir c:\config\node1</screen>
+prompt> bin\startup.bat -configDir c:\configuration\node1</screen>
 		</section>
 	</section>
 	  <section>
