@@ -458,7 +458,7 @@ PARs, plans, and libraries are discussed in <xref linkend="concepts.grouping"/>.
 	says which files should be treated as artifacts. After the repository is created, changes to the directory do not affect the repository content. 
 </para>
 <para>
-	@project.name@'s default repository configuration, in <literal>config/org.eclipse.virgo.repository.properties</literal>, specifies an external repository created from the 
+	@project.name@'s default repository configuration, in <literal>configuration/org.eclipse.virgo.repository.properties</literal>, specifies an external repository created from the 
 	<literal>repository/ext</literal> directory.
 </para>
 
@@ -487,7 +487,7 @@ PARs, plans, and libraries are discussed in <xref linkend="concepts.grouping"/>.
 
 <para>
 	A remote repository refers to a repository hosted by a @project.name@ instance sometimes known as a <emphasis>repository server</emphasis>.
-	The hosted repository is configured using the file <literal>config/org.eclipse.virgo.apps.repository.properties</literal> and may be either an external or a watched 	
+	The hosted repository is configured using the file <literal>configuration/org.eclipse.virgo.apps.repository.properties</literal> and may be either an external or a watched 	
 	repository.
 </para>
 <para>

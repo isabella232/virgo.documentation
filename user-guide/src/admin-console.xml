@@ -53,7 +53,7 @@ Password: springsource</screen>
 	    <section id="admin-console-auth">
 		<title>Changing the Admin User</title>
 		<para>
-			To change the ID and password for the Admin Console, update the <literal>SERVER_HOME/config/org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the administration username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart Web Server for the changes to take effect.</para>
+			To change the ID and password for the Admin Console, update the <literal>SERVER_HOME/configuration/org.eclipse.virgo.kernel.users.properties</literal> file.  First specify the administration username by changing the value of the <literal>role.admin</literal> property.  Then set the password of this new user by adding a new property called <literal>user.<emphasis>username</emphasis></literal>, where <literal><emphasis>username</emphasis></literal> refers to the actual name of the user.  Finally, restart Web Server for the changes to take effect.</para>
 	 <para>For example, if you want change the administration username to <literal>juliet</literal> with password <literal>capulet</literal>, change the file as follows: 
 		</para>
        		<programlisting>##################
