@@ -256,7 +256,7 @@ Manifest-Version: 1.0
 			The artifacts of a plan are usually stored in @project.name@'s repository.  This means, for example, that if you drop one of the plan&rsquo;s artifacts in the <code>pickup</code> directory rather than adding it to the repository, the plan will fail to deploy because it will not find the artifact.
 		</para>
 		<para>
-			The artifacts of a plan may also be stored outside @project.name@'s repository, somewhere else on the file system and referenced from the plan using URLs.
+			The artifacts of a plan may also be stored outside @project.name@'s repository, somewhere else on the file system and referenced from the plan using URIs.
 		</para>
 
 		<section id="developing-applications-plans-create">
@@ -283,7 +283,7 @@ Manifest-Version: 1.0
 </plan>]]></programlisting>
 			<para>
 				In the preceding example, the name of the plan is <code>multi-artifact.plan</code> and its version is <code>1.0.0</code>.  
-				The plan is both scoped and atomic.    The plan contains two artifacts: one is a bundle called <code>com.springsource.exciting.app</code> and the other is a configuration file called <code>app-properties</code>.  
+				The plan is both scoped and atomic. The plan contains two artifacts: one is a bundle called <code>com.springsource.exciting.app</code> and the other is a configuration file called <code>app-properties</code>.  
 			</para>
 			<para>
 				The following table describes the attributes of the <code>&lt;plan&gt;</code> element.
@@ -355,7 +355,9 @@ Manifest-Version: 1.0
 				</tgroup>
 			</table>
 			<para>
-				The following table describes the attributes of the <code>&lt;artifact&gt;</code> element.
+				The following table describes the attributes of the <code>&lt;artifact&gt;</code> element. Note that you must either specify <literal>type</literal>, <literal>name</literal>, and (optionally) <literal>version</literal>,
+				in which case @project.name@'s repository is searched for the artifact, or <literal>uri</literal> in which case the artifact is obtained directly from the file system.
+				If you specify <literal>uri</literal>, you must not specify <literal>type</literal>, <literal>name</literal>, or <literal>version</literal>.
 			</para>
 			<table id="developing-applications-plans-create-artifact-attributes" colsep="1" frame="all" rowsep="1">
 				<title>Attributes of the &lt;artifact&gt; Element</title>
@@ -382,28 +384,32 @@ Manifest-Version: 1.0
 		</itemizedlist>
 		</entry>
 
-							<entry>Yes.</entry>
+							<entry>Yes, unless <literal>uri</literal> is specified in which case <literal>type</literal> must not be specified and is automatically determined from the artifact.</entry>
 						</row>
 						<row>
 							<entry><literal>name</literal></entry>
 							<entry>Specifies the name of the artifact. 
-
-		<para>See <link linkend="artifact-names">Artifact Names</link> for guidelines for determining the name of an artifact.</para>
+								<para>See <link linkend="artifact-names">Artifact Names</link> for guidelines for determining the name of an artifact.</para>
 							</entry>
-							<entry>Yes.</entry>
+							<entry>Yes, unless <literal>uri</literal> is specified in which case <literal>name</literal> must not be specified and is automatically determined from the artifact.</entry>
 						</row>
 						<row>
 							<entry><literal>version</literal></entry>
-							<entry>Specifies the version or range of versions of this artifact that @project.name@ should look up in its repositories and then install and deploy.  You must use OSGi version specification syntax, such as <code>[1.0.0, 2.0.0)</code>. </entry>
-							<entry>No.  If not specified, defaults to <code>0</code>, which in OSGi means 0 to infinity, or any version.</entry>
+							<entry>Specifies the range of versions of this artifact that @project.name@ should look up in its repositories and then install and deploy.
+								You must use OSGi version specification syntax, such as <code>[1.0.0, 2.0.0)</code>.
+								Note that a single version number represents the range from that version number upwards.
+								For example, <code>1.3</code> represents the range of versions greater than or equal to <code>1.3</code>.
+							</entry>
+							<entry>No. If <literal>uri</literal> is specified, <literal>version</literal> must not be specified.
+							If neither <literal>uri</literal> nor <literal>version</literal> are specified, <literal>version</literal> defaults to <code>0</code>, which in OSGi means 0 to infinity, or any version.</entry>
 						</row>
 						<row>
-							<entry><literal>url</literal></entry>
+							<entry><literal>uri</literal></entry>
 							<entry>
-								Specifies an optional URL string beginning with <code>file:</code> that refers to the artifact on the file system.
+								Specifies an optional, absolute URI string beginning with <code>file:</code> that refers to the artifact on the file system.
 								This attribute is normally omitted so that the artifact is searched for in @project.name@'s repository.
 							</entry>
-							<entry>No.  If not specified, @project.name@ searches for the artifact in its repository.</entry>
+							<entry>No. If not specified, @project.name@ searches for the artifact in its repository.</entry>
 						</row>
 					</tbody>
 				</tgroup>
