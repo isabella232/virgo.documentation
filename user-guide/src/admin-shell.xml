@@ -46,6 +46,13 @@ osgi> ]]></programlisting>
 		<note>
 			Currently the @nano.product.name@ Equinox Console is enabled by default. Telnet is accesible on <emphasis>2401</emphasis> and SSH on <emphasis>2402</emphasis>. In future these will be configurable.
 		</note>
+		
+		<para>
+		  <note>
+		    If you use the <literal>shutdown</literal> shell command to stop Virgo Tomcat Server, the shutdown messages appear in the shell terminal instead of in the terminal in which Virgo runs. This is due to the
+        mechanisms which the shell implementation uses to redirect standard output.
+      </note> 
+		</para>
     </section>
 
 	<section id="admin-shell-using-vsh">

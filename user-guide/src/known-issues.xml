@@ -64,4 +64,11 @@
 			When using the @jetty.product.name@ the Hosted Repository application and the Snaps modular web technology are not supported.
 		</para>
 	</section>
+	<section id="known-issues-shutdown-logs-shell">
+	  <title>Shutdown Log Messages in Telnet Shell</title>
+	  <para>
+	    When you use the <literal>shutdown</literal> shell command to stop Virgo Tomcat Server, the shutdown log messages appear in the shell terminal instead of in the terminal in which Virgo runs. 
+      See <link linkend="admin-shell-enable">Enabling Equinox Console</link> for more information. This is covered also by <ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=351533">bug 351533</ulink>.
+	  </para>
+	</section>
 </appendix>
