@@ -257,6 +257,8 @@ Manifest-Version: 1.0
 		</para>
 		<para>
 			The artifacts of a plan may also be stored outside @project.name@'s repository, somewhere else on the file system and referenced from the plan using URIs.
+			Such artifacts must be available on the file system when the plan is deployed and when @project.name@ restarts while the plan is deployed.
+			If you delete any of these artifacts, deployment of the plan may fail, either when it is initially deployed or when @project.name@ restarts.
 		</para>
 
 		<section id="developing-applications-plans-create">
@@ -407,6 +409,8 @@ Manifest-Version: 1.0
 							<entry><literal>uri</literal></entry>
 							<entry>
 								Specifies an optional, absolute URI string beginning with <code>file:</code> that refers to the artifact on the file system.
+								Such an artifact must be available on the file system when the plan is deployed and when @project.name@ restarts while the plan is deployed.
+								If you delete such an artifact, deployment of the plan may fail, either when it is initially deployed or when @project.name@ restarts.
 								This attribute is normally omitted so that the artifact is searched for in @project.name@'s repository.
 							</entry>
 							<entry>No. If not specified, @project.name@ searches for the artifact in its repository.</entry>
