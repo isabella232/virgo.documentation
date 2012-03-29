@@ -190,7 +190,7 @@ then publish this instance (as an instance of the interface <literal>SomeInterfa
 mentioned above.</para>
 
 <para>OSGi provides an <glossterm>API</glossterm> which can be used to publish and find services,
-but it is much simpler to use Spring DM to accomplish this. (See <xref linkend="concepts.springdm"/>.)</para>
+but it is much simpler to use Spring DM or Blueprint to accomplish this. (See <xref linkend="concepts.springdm"/>.)</para>
 
 </section>
 
@@ -387,11 +387,10 @@ This is not an OSGi definition but part of the
 <!--========================================================================-->
 <section id="concepts.springdm" xreflabel="Spring DM concepts">
 	
-<title>Spring DM Concepts</title>
+<title>Spring DM and Blueprint Concepts</title>
 
 <para>Spring DM is a project which enables <emphasis>services</emphasis> to be published and consumed
-using descriptions written in XML.
-@project.name@ has Spring DM built-in.</para>
+using descriptions written in XML.</para>
 
 <para>The XML descriptions reside in files with extension <literal>.xml</literal> in the
 bundle&rsquo;s <literal>META-INF/spring</literal> sub-directory.</para>
@@ -421,7 +420,14 @@ and closes the bundle&rsquo;s application contexts.
 @project.name@ turns off damping of a service proxy while the proxy&rsquo;s application context
 is being closed.</para>
 
-<para>(Spring DM has been contributed to Eclipse as the <emphasis>Gemini Blueprint</emphasis> project.)</para>
+<para>Spring DM was contributed to Eclipse as the <emphasis>Gemini Blueprint</emphasis> project.
+@project.name@ has Gemini Blueprint built-in.</para>
+
+<para>Gemini Blueprint supports both Spring DM and Blueprint programming models.
+Blueprint, known formally as the "OSGi Blueprint Container", provides some of the basic facilities of Spring DM,
+including all those just mentioned, but in an OSGi standard form.
+See <xref linkend="furtherreading"/> for the Blueprint specification.
+</para>
 
 </section>
 
