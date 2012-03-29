@@ -698,17 +698,9 @@ password          = secret</screen>
 <!-- ======================================================================= -->
 
 	<section id="using-spring">
-		<title>Using Spring and Spring DM</title>
+		<title>Using Spring, Spring DM, and Blueprint</title>
 		<para>
-			@project.name@ supports the use of Spring framework and Spring DM (specifically version 1.2.1) by application bundles.
-			For detailed information, please refer to the
-			<ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/">
-				Spring Framework Reference Documentation
-			</ulink>
-			and the
-			<ulink url="http://static.springframework.org/osgi/docs/current/reference/html/">
-				Spring Dynamic Modules Reference Guide
-			</ulink>.
+			@project.name@ supports the use of Spring framework and Spring DM (as supported by Gemini Blueprint) by application bundles.
 		</para>
 		<para>
 			Spring (and Spring DM) application context XML files should generally be placed in a bundle's <literal>META-INF/spring</literal> directory, but
@@ -737,6 +729,12 @@ password          = secret</screen>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 ]]></programlisting>
+		</para>
+		<para>
+			@project.name@ has Gemini Blueprint built-in and thereby supports the OSGi Blueprint standard in addition to Spring DM.
+		</para>
+		<para>
+			For detailed information on Spring Framework, Spring DM, and Blueprint, please see <xref linkend="prerequisites-references"/>.
 		</para>
 	</section> <!-- end of using Spring and Spring DM -->
 	
