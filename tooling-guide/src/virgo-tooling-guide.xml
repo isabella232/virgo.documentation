@@ -3,8 +3,8 @@
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book xmlns:xi="http://www.w3.org/2001/XInclude">
 	<bookinfo>
-		<title>@project.name@ Programmer Guide</title>
-		<titleabbrev>Programmer Guide</titleabbrev>
+		<title>@project.name@ IDE Guide</title>
+		<titleabbrev>IDE Guide</titleabbrev>
 		<productname>@project.name@</productname>
 		<releaseinfo>@bundle.version@</releaseinfo>
 
@@ -54,20 +54,20 @@
 				<firstname>Christopher</firstname>
 				<surname>Frost</surname>
 			</author>
+			<author>
+				<firstname>Miles</firstname>
+				<surname>Parker</surname>
+			</author>
+			<author>
+				<firstname>Leo</firstname>
+				<surname>Dos Santos</surname>
+			</author>
 		</authorgroup>
 
-		<legalnotice><para>Copyright &copy; 2011 VMware Inc.</para></legalnotice>
+		<legalnotice><para>Copyright &copy; 2012 VMware Inc.</para></legalnotice>
 	</bookinfo>
 
 	<toc />
-	<xi:include href="preface.xml"/>
-	<xi:include href="prerequisites.xml"/>
-	<xi:include href="introduction.xml"/>
-	<xi:include href="architecture.xml"/>
-	<xi:include href="developing-applications.xml"/>
-	<xi:include href="migrating-to-osgi.xml"/>
-	<xi:include href="formtags-case-study.xml"/>
-	<xi:include href="common-libraries.xml"/>
-	<xi:include href="known-issues.xml"/>
+	<xi:include href="tooling.xml"/>
 
 </book>
