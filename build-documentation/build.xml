@@ -2,9 +2,9 @@
 <project name="build-documentation" default="doc-html">
 
 	<path id="bundles">
-		<pathelement location="${basedir}/../tooling-guide"/>
 		<pathelement location="${basedir}/../user-guide"/>
 		<pathelement location="${basedir}/../programmer-guide"/>
+		<pathelement location="${basedir}/../tooling-guide"/> -->
 	</path>
 
 	<property file="${basedir}/../build.properties"/>
@@ -15,10 +15,6 @@
 
 	<target name="doc">
 		<all-bundles target="doc"/>
-	</target>
-
-	<target name="eclipsehelp">
-		<all-bundles target="eclipsehelp"/>
 	</target>
 	
 	<target name="doc-html">
