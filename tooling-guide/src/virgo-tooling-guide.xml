@@ -3,7 +3,7 @@
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book xmlns:xi="http://www.w3.org/2001/XInclude">
 	<bookinfo>
-		<title>@project.name@ Tools Guide</title>
+		<title>@project.name@ Eclipse Tools Guide</title>
 		<titleabbrev>Tools Guide</titleabbrev>
 		<productname>@project.name@</productname>
 		<releaseinfo>@bundle.version@</releaseinfo>
@@ -68,6 +68,12 @@
 	</bookinfo>
 
 	<toc />
-	<xi:include href="tooling.xml"/>
-
+	<xi:include href="introduction.xml"/>
+	<xi:include href="installation.xml"/>
+	<xi:include href="running.xml"/>
+	<xi:include href="repository-editor.xml"/>
+	<xi:include href="config.xml"/>
+	<xi:include href="developing.xml"/>
+	<xi:include href="pars.xml"/>
+	<xi:include href="deploying.xml"/>
 </book>

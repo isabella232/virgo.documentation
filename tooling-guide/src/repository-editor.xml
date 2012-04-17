@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="repository-editor">
+	<title>Bundle and Library Provisioning</title>
+	<para>
+		After successful configuration of an instance of the @tomcat.product.name@
+		in Eclipse you can use
+		the Repository Browser to very easily install bundles and libraries from
+		the remote
+		SpringSource Enterprise Bundle Repository.
+	</para>
+	<para>
+		To open the Repository Browser double-click a @tomcat.product.name@
+		instance in the Servers
+		view and select the "Repository" tab in the server editor. Please note
+		that opening of the
+		Editor may take a few seconds as the contents of the local repository needs
+		to be indexed
+		before opening.
+	</para>
+	<para>
+		<imagedata fileref="images/tooling-repository-browser.png"
+			format="PNG" />
+	</para>
+	<para>
+		The left section of the Repository Browser allows the user to run
+		searches against the
+		@ebr@ and displays matching results. The search can
+		take parts of bundle symbolic names, class or package names and allows
+		wildcards such as
+		&lsquo;?&rsquo; and &lsquo;*&rsquo;. By selecting the checkbox left to a matching
+		bundle and/or library and clicking
+		the "Download" button it is very easy to install new bundles in the
+		@tomcat.product.name@. For your
+		convenience JARs containing the bundle source code can be automatically
+		downloaded as well.
+	</para>
+	<para>
+		Clicking the "Download" button will trigger an Eclipse background job that
+		will download
+		the selected repository artifacts and -- if desired -- the source JARs
+		one after another.
+	</para>
+	<para>
+		The section on the right displays the currently installed bundles and
+		libraries. Bundles
+		with available sources are visually marked. You can very easily download
+		missing source
+		JARs by using the "Install Sources" button.
+	</para>
+</chapter>

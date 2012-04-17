@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="running">
+	<title>Running a @tomcat.product.name@ Instance Within Eclipse</title>
+	<para>
+		After installing the Tools from the update site outlined in the previous
+		section, you
+		will be able to configure an instance of the @tomcat.product.name.short@
+		inside Eclipse.
+	</para>
+	<para>
+		To do so bring up the WTP Servers view (i.e.,
+		<menuchoice>
+			<guimenu>Window</guimenu>
+			<guisubmenu>Show View</guisubmenu>
+			<guimenuitem>Other</guimenuitem>
+			<guimenuitem>Server</guimenuitem>
+			<guimenuitem>Servers</guimenuitem>
+		</menuchoice>
+		).
+		You can now right-click in the view and select "
+		<menuchoice>
+			<guimenu>New</guimenu>
+			<guimenuitem>Server</guimenuitem>
+		</menuchoice>
+		".
+		This will bring up a "New Server" dialog. Select "@tomcat.product.name@
+		v2.1 Server"
+		in the "Virgo" category and click "
+		<guibutton>Next</guibutton>
+		".
+	</para>
+	<para>
+		<imagedata fileref="images/tooling-new-server.png" format="PNG" />
+	</para>
+	<para>
+		Within the "New Server Wizard" point to the installation directory of the
+		@tomcat.product.name@
+		and finish the wizard. After finishing the wizard you should see a
+		@tomcat.product.name@
+		entry in the Servers view.
+	</para>
+	<para>
+		To start, stop, and debug the created @tomcat.product.name@ instance use
+		the toolbar or the context
+		menu actions of the Servers view.
+	</para>
+	<para>
+		<imagedata fileref="images/tooling-start-server.png" format="PNG" />
+	</para>
+</chapter>

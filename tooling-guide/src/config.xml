@@ -1,0 +1,27 @@
+<?xml version='1.0'?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="installation">
+	<section></section>
+  <title>Installation</title>
+  <para>Currently the Tools support Eclipse 3.6 (Helios) and above with 
+  the corresponding version of WTP. Eclipse 3.7 (Indigo) is 
+  recommended. The <ulink url="http://www.eclipse.org/downloads/">
+  Eclipse IDE for Java EE Developers</ulink> is recommended for most 
+  users.</para>
+  <para>
+    The Virgo Tools, from one of the following update sites depending 
+    on your version of Eclipse. Releases are, in general, more stable 
+    than milestones whereas nightly builds are not for the faint of 
+    heart.
+    <itemizedlist>
+      <listitem>
+        <para><literal>
+        http://download.eclipse.org/virgo/milestone/tooling</literal></para>
+      </listitem>
+      <listitem>
+        <para><literal>
+        http://download.eclipse.org/virgo/snapshot/tooling</literal></para>
+      </listitem>
+    </itemizedlist>
+  </para>
+</chapter>
