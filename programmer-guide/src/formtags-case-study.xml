@@ -6,9 +6,13 @@
 	<titleabbrev>Migrating Form Tags</titleabbrev>
 	<para>
 		In this chapter we will walk through the steps needed to migrate the
-		Form Tags sample application from a standard Java EE WAR to a fully OSGi
-		compliant <emphasis>Shared Services WAR</emphasis> within a PAR.
-		The migration involves four packaging and deployment formats:
+		Form Tags sample application from a standard Java EE WAR to a fully
+		OSGi
+		compliant
+		<emphasis>Shared Services WAR</emphasis>
+		within a PAR.
+		The migration involves four packaging and deployment
+		formats:
 		<orderedlist>
 			<listitem>
 				<para>
@@ -34,52 +38,89 @@
 	</para>
 	<para>
 		Each of these migration steps will produce a web application
-		that can be deployed and run on the @tomcat.product.name.short@.
+		that
+		can be deployed and run on the @tomcat.product.name.short@.
 	</para>
 	<para>
-		After summarising the process, an example <literal>plan</literal> is shown which is another way of 
+		After summarising the process, an example
+		<literal>plan</literal>
+		is shown which is another way of
 		packaging and deploying the application.
 	</para>
 	<para>
 		The following image displays the directory structure you should have
-		after installing the Form Tags sample. Note however that the release tag
-		will typically resemble <literal>3.0.0.RELEASE</literal>.
+		after installing the Form Tags sample. Note however that the release
+		tag
+		will typically resemble
+		<literal>3.0.0.RELEASE</literal>
+		.
 	</para>
-	<para><imagedata fileref="images/formtags-case-study-sample-layout.png" format="PNG"/></para>
 	<para>
-		The <literal>dist</literal> directory contains the distributables,
-		and the <literal>projects</literal> directory contains the source code
+		<imagedata fileref="images/formtags-case-study-sample-layout.png"
+			format="PNG" />
+	</para>
+	<para>
+		The
+		<literal>dist</literal>
+		directory contains the distributables,
+		and the
+		<literal>projects</literal>
+		directory contains the source code
 		and build scripts.
 	</para>
 	<para>
-		For simplicity, this chapter will focus on the distributables—which are built using Virgo-Build
-		rather than on configuring a project in an IDE.
+		For simplicity, this chapter will focus on the distributables—which
+		are built using Virgo-Build
+		rather than on configuring a project in an
+		IDE.
 		<tip>
-			Pre-packaged distributables are made available in the <literal>dist</literal> directory;
-			however, if you would like to modify the samples or build them from scratch, you may
+			Pre-packaged distributables are made available in the
+			<literal>dist</literal>
+			directory;
+			however, if you would like to modify the samples or build
+			them from scratch, you may
 			do so using Virgo-Build. Take a look at
-			 the <literal>README.TXT</literal> file in each of the folders under
-			 the <literal>projects</literal> directory in the
-			 Form Tags sample for instructions.
+			the
+			<literal>README.TXT</literal>
+			file in each of the folders under
+			the
+			<literal>projects</literal>
+			directory in the
+			Form Tags sample for instructions.
 		</tip>
 	</para>
 	<section id="formtags-case-study-introduction">
 		<title>Overview of the Form Tags Sample Application</title>
 		<para>
-			The sample that we will be using is the Form Tags show case sample
-			which was provided with Spring 2.0. The Form Tags application has
-			been removed from the official Spring 2.5.x distributions; however,
-			since it is relatively simple but still contains enough ingredients
-			to demonstrate the various considerations required during a migration,
+			The sample that we will be using is the Form Tags show case
+			sample
+			which was provided with Spring 2.0. The Form Tags application
+			has
+			been removed from the official Spring 2.5.x distributions;
+			however,
+			since it is relatively simple but still contains enough
+			ingredients
+			to demonstrate the various considerations required during
+			a migration,
 			we have chosen to use it for these examples.
 		</para>
 		<para>
 			The purpose of the Form Tags show case sample was to demonstrate how
-			the Spring specific <literal>form:</literal> tags, released
-			in Spring 2.0, make view development with JSPs and tag libraries easier.
-			The Form Tags application consists of a single <literal>UserService</literal> which returns a list
-			of <literal>Users</literal>. Furthermore, the application demonstrates how to list, view,
-			and edit <literal>Users</literal> in a simple Spring MVC based web application using JSP
+			the Spring specific
+			<literal>form:</literal>
+			tags, released
+			in Spring 2.0, make view development with JSPs and tag
+			libraries easier.
+			The Form Tags application consists of a single
+			<literal>UserService</literal>
+			which returns a list
+			of
+			<literal>Users</literal>
+			. Furthermore, the application demonstrates how to list, view,
+			and
+			edit
+			<literal>Users</literal>
+			in a simple Spring MVC based web application using JSP
 			and JSTL.
 		</para>
 	</section>
@@ -89,35 +130,54 @@
 		<para>
 			We begin with a standard WAR deployment.
 			<note>
-				The @tomcat.product.name.short@ supports the standard Java EE WAR packaging
-				and deployment format as a first-class citizen, and there are many
-				benefits to deploying a standard WAR file on the @tomcat.product.name.short@ including,
-				but not limited to: tooling support, runtime error diagnostics, FFDC
-				(first failure data capture), etc.
-				In addition, support for standard WAR deployment provides an easy on-ramp
-				for trying out the @tomcat.product.name.short@ with existing web applications.
+				The @tomcat.product.name.short@ supports the standard Java EE WAR
+				packaging
+				and deployment format as a first-class citizen, and there
+				are many
+				benefits to deploying a standard WAR file on the
+				@tomcat.product.name.short@ including,
+				but not limited to: tooling
+				support, runtime error diagnostics, FFDC
+				(first failure data
+				capture), etc.
+				In addition, support for standard WAR deployment
+				provides an easy on-ramp
+				for trying out the
+				@tomcat.product.name.short@ with existing web applications.
 			</note>
 		</para>
 		<para>
 			The following screen shot displays the directory structure of the
 			Form Tags application using the standard WAR format. As you can see,
 			there is no deviation from the standard structure and layout, and as
-			you would expect, all of the web application&rsquo;s third-party dependencies
-			(for example: Spring, Commons Logging) are packaged as JARs in
-			<literal>WEB-INF/lib</literal>.
-		</para>
-		<para><imagedata fileref="images/formtags-case-study-exploded-war.png" format="PNG"/></para>
-		<para>
-			To deploy this application, simply copy <literal>dist/formtags-war-3.0.0.*.war</literal> to
-			the <literal>SERVER_HOME/pickup</literal> directory for hot deployment.
+			you would expect, all of the web application&rsquo;s third-party
+			dependencies
+			(for example: Spring, Commons Logging) are packaged as
+			JARs in
+			<literal>WEB-INF/lib</literal>
+			.
 		</para>
 		<para>
-			You should then see the @tomcat.product.name.short@ produce console output similar to the following:
+			<imagedata fileref="images/formtags-case-study-exploded-war.png"
+				format="PNG" />
+		</para>
+		<para>
+			To deploy this application, simply copy
+			<literal>dist/formtags-war-3.0.0.*.war</literal>
+			to
+			the
+			<literal>SERVER_HOME/pickup</literal>
+			directory for hot deployment.
+		</para>
+		<para>
+			You should then see the @tomcat.product.name.short@ produce
+			console output similar to the following:
 		</para>
 		<note>
-			<para>The console output has been reformatted to fit this document.</para>
-	   	</note>
-<programlisting>
+			<para>The console output has been reformatted to fit this document.
+			</para>
+		</note>
+		<programlisting>
 [2009-07-01 14:54:45.135] fs-watcher
 	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-war-3.0.0.RELEASE.war'.
 [2009-07-01 14:54:45.797] fs-watcher
@@ -128,74 +188,119 @@
 	&lt;SPWE0001I&gt; Started web bundle '/formtags-war-3.0.0.RELEASE'.
 </programlisting>
 		<para>
-			Navigate to <literal>http://localhost:8080/</literal> plus the web application context path,
+			Navigate to
+			<literal>http://localhost:8080/</literal>
+			plus the web application context path,
 			which in the above case is
-			<literal>formtags-war-3.0.0.RELEASE</literal>. Thus navigating to
+			<literal>formtags-war-3.0.0.RELEASE</literal>
+			. Thus navigating to
 			<literal>http://localhost:8080/formtags-war-3.0.0.RELEASE</literal>
-			should render the sample application&rsquo;s welcome page, as displayed in the screen
+			should render the sample application&rsquo;s welcome page, as
+			displayed in the screen
 			shot below.
 			<tip>
 				For WARs, the default web context path is the name of the WAR file
-				without the <literal>.war</literal> extension. You can optionally
-				specify a context path using the <literal>Web-ContextPath</literal> bundle
-				manifest header, which will be described in further detail later.
+				without the
+				<literal>.war</literal>
+				extension. You can optionally
+				specify a context path using the
+				<literal>Web-ContextPath</literal>
+				bundle
+				manifest header, which will be described in further detail
+				later.
 			</tip>
 		</para>
 		<para>
-			<imagedata fileref="images/formtags-case-study-war-webpage.png" format="PNG" />
+			<imagedata fileref="images/formtags-case-study-war-webpage.png"
+				format="PNG" />
 		</para>
 	</section>
 
 	<section id="formtags-case-study-war-shared-libs">
 		<title>Form Tags Shared Libraries WAR</title>
 		<para>
-			As mentioned above, a standard WAR file typically packages of all its required
-			dependencies in <literal>WEB-INF/lib</literal>. The servlet container will
-			then add all of the JARs in <literal>WEB-INF/lib</literal> to the application&rsquo;s
+			As mentioned above, a standard WAR file typically packages of all its
+			required
+			dependencies in
+			<literal>WEB-INF/lib</literal>
+			. The servlet container will
+			then add all of the JARs in
+			<literal>WEB-INF/lib</literal>
+			to the application&rsquo;s
 			classpath.
 		</para>
 		<para>
 			The first step of the migration towards benefiting from an OSGi
-			container is to retrieve the dependencies from the @tomcat.product.name.short@&rsquo;s bundle
-			repository at runtime.  This can significantly reduce the time it takes to build
-			and deploy the application.  It also enables the enforcement of policies
-			regarding the use of third-party libraries.
+			container is to retrieve the dependencies from the
+			@tomcat.product.name.short@&rsquo;s bundle
+			repository at runtime. This
+			can significantly reduce the time it takes to build
+			and deploy the
+			application. It also enables the enforcement of policies
+			regarding the
+			use of third-party libraries.
 		</para>
 		<para>
 			The way in which dependencies are declared in an OSGi environment is
-			via manifest headers in a bundle&rsquo;s <literal>/META-INF/MANIFEST.MF</literal>.
-			As mentioned in <xref linkend="developing-applications"/>, there are
-			three ways of expressing dependencies: <literal>Import-Package</literal>,
-			<literal>Import-Bundle</literal> and <literal>Import-Library</literal>.
+			via manifest headers in a bundle&rsquo;s
+			<literal>/META-INF/MANIFEST.MF</literal>
+			.
+			As mentioned in
+			<xref linkend="developing-applications" />
+			, there are
+			three ways of expressing dependencies:
+			<literal>Import-Package</literal>
+			,
+			<literal>Import-Bundle</literal>
+			and
+			<literal>Import-Library</literal>
+			.
 		</para>
 		<para>
 			The Form Tags application uses JSTL standard tag libraries.
-			Thus, you need to choose a JSTL provider, for example the
-			Apache implementation which comes with the @tomcat.product.name.short@. To use the
-			Apache implementation of JSTL, you need to express your dependency
-			as outlined in the following manifest listing.
-			Because it is a single bundle, <literal>Import-Bundle</literal> is
+			Thus, you
+			need to choose a JSTL provider, for example the
+			Apache implementation
+			which comes with the @tomcat.product.name.short@. To use the
+			Apache
+			implementation of JSTL, you need to express your dependency
+			as
+			outlined in the following manifest listing.
+			Because it is a single
+			bundle,
+			<literal>Import-Bundle</literal>
+			is
 			the simplest and therefore preferred manifest header to use.
 		</para>
 		<para>
 			The Form Tags application requires commons-logging and Spring.
-			It would be very painful to have to list all the Spring packages one by one.
+			It
+			would be very painful to have to list all the Spring packages one by
+			one.
 			Equally, considering the number of bundles that make up the
 			Spring framework, it would be verbose to list each bundle. Therefore
-			<literal>Import-Library</literal> is the preferred approach
-			for expressing the dependency on the Spring framework.
+			<literal>Import-Library</literal>
+			is the preferred approach
+			for expressing the dependency on the Spring
+			framework.
 		</para>
 		<tip>
 			<para>
 				How do you determine the name of a library definition provided
-				by the @tomcat.product.name@?
-				Use the <ulink url="http://www.springsource.com/repository">@ebr@</ulink>.
+				by the
+				@tomcat.product.name@?
+				Use the
+				<ulink url="http://www.springsource.com/repository">@ebr@</ulink>
+				.
 			</para>
 		</tip>
 		<para>
-			Examine the <literal>/META-INF/MANIFEST.MF</literal> in
-			<literal>/dist/formtags-shared-libs-*.war</literal>:
-<programlisting>
+			Examine the
+			<literal>/META-INF/MANIFEST.MF</literal>
+			in
+			<literal>/dist/formtags-shared-libs-*.war</literal>
+			:
+			<programlisting>
 Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.7.0
 Created-By: 1.5.0_13-119 (Apple Inc.)
@@ -205,18 +310,25 @@ Bundle-SymbolicName: org.springframework.showcase.formtags-shared-libs
 <emphasis role="bold">Import-Bundle</emphasis>: com.springsource.org.apache.taglibs.standard;version="1
  .1.2"
 </programlisting>
-		You can see the <literal>Import-Library</literal> and <literal>Import-Bundle</literal>
-		directives that instruct the @tomcat.product.name.short@ to add the appropriate package imports to the bundle
-		classpath used by this WAR file.
+			You can see the
+			<literal>Import-Library</literal>
+			and
+			<literal>Import-Bundle</literal>
+			directives that instruct the @tomcat.product.name.short@ to add the
+			appropriate package imports to the bundle
+			classpath used by this WAR file.
 		</para>
 		<para>
-			Deploying the shared libraries WAR onto the @tomcat.product.name.short@ should result
-			in console output similar to the following:
+			Deploying the shared libraries WAR onto the
+			@tomcat.product.name.short@ should result
+			in console output similar to
+			the following:
 		</para>
 		<note>
-			<para>The console output has been reformatted to fit this document.</para>
-	   	</note>
-<programlisting>
+			<para>The console output has been reformatted to fit this document.
+			</para>
+		</note>
+		<programlisting>
 [2009-07-01 15:00:14.953] fs-watcher
 	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-shared-libs-3.0.0.RELEASE.war'.
 [2009-07-01 15:00:15.363] fs-watcher
@@ -227,41 +339,72 @@ Bundle-SymbolicName: org.springframework.showcase.formtags-shared-libs
 	&lt;SPWE0001I&gt; Started web bundle '/formtags-shared-libs-3.0.0.RELEASE'.
 </programlisting>
 		<para>
-			Navigating to <literal>http://localhost:8080/formtags-shared-libs-BUILDTAG</literal>
-			should render the welcome page. Note that for the pre-packaged distributable,
-			the <literal>BUILDTAG</literal> should be similar to <literal>3.0.0.RELEASE</literal>;
-			whereas, for a local build the <literal>-BUILDTAG</literal> may be completely
-			omitted. Please consult the console output, web-based admin console, or log
-			to determine the exact context path under which the web application has been deployed.
+			Navigating to
+			<literal>http://localhost:8080/formtags-shared-libs-BUILDTAG
+			</literal>
+			should render the welcome page. Note that for the pre-packaged
+			distributable,
+			the
+			<literal>BUILDTAG</literal>
+			should be similar to
+			<literal>3.0.0.RELEASE</literal>
+			;
+			whereas, for a local build the
+			<literal>-BUILDTAG</literal>
+			may be completely
+			omitted. Please consult the console output,
+			web-based admin console, or log
+			to determine the exact context path
+			under which the web application has been deployed.
 		</para>
 	</section>
 
 	<section id="formtags-case-study-war-shared-services">
 		<title>Form Tags Shared Services WAR</title>
 		<para>
-			The next step in the migration is to deploy the services as a separate
+			The next step in the migration is to deploy the services as a
+			separate
 			OSGi bundle which the WAR then references.
-			The Form Tags sample has a single service <literal>UserManager</literal>.
+			The Form Tags
+			sample has a single service
+			<literal>UserManager</literal>
+			.
 		</para>
 		<para>
-			This scenario has two separate deployables, the <literal>service</literal> bundle and the WAR file.
-			The following image shows the two separate source trees:
+			This scenario has two separate deployables, the
+			<literal>service</literal>
+			bundle and the WAR file.
+			The following image shows the two separate
+			source trees:
 		</para>
 		<para>
-			<imagedata fileref="images/formtags-case-study-shared-services-eclipse.png" format="PNG"/>
-			<note>Note that the WAR does not contain the <literal>.domain</literal> or
-			<literal>.service</literal> packages as these will be imported from the separate service bundle.
+			<imagedata fileref="images/formtags-case-study-shared-services-eclipse.png"
+				format="PNG" />
+			<note>
+				Note that the WAR does not contain the
+				<literal>.domain</literal>
+				or
+				<literal>.service</literal>
+				packages as these will be imported from the separate service bundle.
 			</note>
 		</para>
 		<section id="formtags-case-study-war-shared-services-service">
 			<title>The Service Bundle</title>
 			<para>
-				The responsibility of the first bundle (<literal>formtags-shared-services-service</literal>)
-				is to provide the API of the formtags service.  This includes both the
-				domain and the service API.  In the same way that imports are defined
-				in the <literal>/META-INF/MANIFEST.MF</literal>, so are exports.
-				The following is the <literal>/META-INF/MANIFEST.MF</literal> listing from the service bundle.
-<programlisting>
+				The responsibility of the first bundle (
+				<literal>formtags-shared-services-service</literal>
+				)
+				is to provide the API of the formtags service. This includes both
+				the
+				domain and the service API. In the same way that imports are
+				defined
+				in the
+				<literal>/META-INF/MANIFEST.MF</literal>
+				, so are exports.
+				The following is the
+				<literal>/META-INF/MANIFEST.MF</literal>
+				listing from the service bundle.
+				<programlisting>
 Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.7.0
 Created-By: 1.5.0_13-119 (Apple Inc.)
@@ -275,49 +418,88 @@ Import-Library: org.springframework.spring;version="[3.0.0,4.0.0)"
 			</para>
 			<para>
 				The symbolic name of this bundle is
-				<literal>org.springframework.showcase.formtags.service-shared-services</literal>.
+				<literal>org.springframework.showcase.formtags.service-shared-services
+				</literal>
+				.
 				Note that the name of the bundle typically describes the package
 				that the bundle primarily exports.
-				If you take a look at the <literal>repository/bundles/ext</literal> in the @tomcat.product.name.short@
-				directory, you&rsquo;ll see that names are almost always indicative of the contents of the bundle.
+				If you take a look at the
+				<literal>repository/bundles/ext</literal>
+				in the @tomcat.product.name.short@
+				directory, you&rsquo;ll see that
+				names are almost always indicative of the contents of the bundle.
 				For this example, however, we have also appended
-				&quot;<literal>-shared-services</literal>&quot;
-				in order to avoid possible clashes with other bundle symbolic names.
-				You will see later that the PAR also contains a service bundle.
+				&quot;
+				<literal>-shared-services</literal>
+				&quot;
+				in order to avoid possible clashes with other bundle symbolic
+				names.
+				You will see later that the PAR also contains a service
+				bundle.
 				<note>
-					In OSGi, the combination of <literal>Bundle-SymbolicName</literal>
-					and <literal>Bundle-Version</literal> is used to uniquely identify
-					a bundle within the OSGi container. Furthermore, when you deploy
-					a bundle to the @tomcat.product.name@, for example via the <literal>pickup</literal>
-					directory, a bundle&rsquo;s filename is also used to uniquely identify it for
-					the purpose of supporting <emphasis>hot deployment</emphasis> via
+					In OSGi, the combination of
+					<literal>Bundle-SymbolicName</literal>
+					and
+					<literal>Bundle-Version</literal>
+					is used to uniquely identify
+					a bundle within the OSGi container.
+					Furthermore, when you deploy
+					a bundle to the @tomcat.product.name@,
+					for example via the
+					<literal>pickup</literal>
+					directory, a bundle&rsquo;s filename is also used to uniquely
+					identify it for
+					the purpose of supporting
+					<emphasis>hot deployment</emphasis>
+					via
 					the file system.
 				</note>
 			</para>
 			<para>
 				As well as exporting types (i.e. the domain classes and service
 				API), the service bundle also publishes an implementation of the
-				<literal>UserManager</literal>.  The actual implementation is
-				<literal>StubUserManager</literal>; however, that should remain an
-				implementation detail of this bundle.
+				<literal>UserManager</literal>
+				. The actual implementation is
+				<literal>StubUserManager</literal>
+				; however, that should remain an
+				implementation detail of this
+				bundle.
 			</para>
 			<para>
 				The fact that this bundle publishes a service is not captured in
-				the <literal>/META-INF/MANIFEST.MF</literal>, as it is a Spring-DM concept.
-				The following image is of <literal>src/main/resources/spring</literal>.
+				the
+				<literal>/META-INF/MANIFEST.MF</literal>
+				, as it is a Spring-DM concept.
+				The following image is of
+				<literal>src/main/resources/spring</literal>
+				.
 			</para>
-			<para><imagedata fileref="images/formtags-case-study-shared-services-service-resources.png"  format="PNG"/></para>
 			<para>
-				 As you can see there are two Spring configuration files: <literal>module-context.xml</literal> and
-				<literal>osgi-context.xml</literal>.
+				<imagedata
+					fileref="images/formtags-case-study-shared-services-service-resources.png"
+					format="PNG" />
+			</para>
+			<para>
+				As you can see there are two Spring configuration files:
+				<literal>module-context.xml</literal>
+				and
+				<literal>osgi-context.xml</literal>
+				.
 				<tip>
-					These names are abitrary; however, they follow an informal convention:
-					<literal>module-context.xml</literal> typically bootstraps the Spring context
-					(usually delegating to smaller fine grained context files inside another directory), whilst
-					<literal>osgi-context.xml</literal> contains all the OSGi service exports and references.
+					These names are abitrary; however, they follow an informal
+					convention:
+					<literal>module-context.xml</literal>
+					typically bootstraps the Spring context
+					(usually delegating to
+					smaller fine grained context files inside another directory),
+					whilst
+					<literal>osgi-context.xml</literal>
+					contains all the OSGi service exports and references.
 				</tip>
-				The following is a listing of <literal>module-context.xml</literal>.
-<programlisting language="xml">
+				The following is a listing of
+				<literal>module-context.xml</literal>
+				.
+				<programlisting language="xml">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 
 &lt;beans xmlns="http://www.springframework.org/schema/beans"
@@ -329,11 +511,14 @@ Import-Library: org.springframework.spring;version="[3.0.0,4.0.0)"
 	&lt;bean id="userManager"
 		class="org.springframework.showcase.formtags.service.internal.StubUserManager"/&gt;
 
-&lt;/beans&gt;
-</programlisting>
-				As you can see, this simply defines a bean called <literal>userManager</literal>.
-				The following is a listing of <literal>osgi-context.xml</literal>.
-<programlisting language="xml">
+&lt;/beans&gt; </programlisting>
+				As you can see, this simply defines a bean called
+				<literal>userManager</literal>
+				.
+				The following is a listing of
+				<literal>osgi-context.xml</literal>
+				.
+				<programlisting language="xml">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beans:beans
 	xmlns="http://www.springframework.org/schema/osgi"
@@ -347,23 +532,33 @@ Import-Library: org.springframework.spring;version="[3.0.0,4.0.0)"
 	&lt;service ref="userManager"
 		interface="org.springframework.showcase.formtags.service.UserManager"/&gt;
 
-&lt;/beans:beans&gt;
-</programlisting>
-				This single bean definition exports the <literal>userManager</literal>
-				defined in <literal>module-context.xml</literal> to the
+&lt;/beans:beans&gt; </programlisting>
+				This single bean definition exports the
+				<literal>userManager</literal>
+				defined in
+				<literal>module-context.xml</literal>
+				to the
 				OSGi service registry and makes it available under the public
-				<literal>org.springframework.showcase.formtags.service.UserManager</literal> API.
+				<literal>org.springframework.showcase.formtags.service.UserManager
+				</literal>
+				API.
 			</para>
 			<para>
-				The service bundle should now be ready to deploy on the @tomcat.product.name.short@.
-				So copy <literal>/dist/formtags-shared-services-services*</literal>
-				to the <literal>SERVER_HOME/pickup</literal> directory.
-				Output similar to the following should appear in the @tomcat.product.name.short@&rsquo;s console:
+				The service bundle should now be ready to deploy on the
+				@tomcat.product.name.short@.
+				So copy
+				<literal>/dist/formtags-shared-services-services*</literal>
+				to the
+				<literal>SERVER_HOME/pickup</literal>
+				directory.
+				Output similar to the following should appear in the
+				@tomcat.product.name.short@&rsquo;s console:
 			</para>
 			<note>
-				<para>The console output has been reformatted to fit this document.</para>
-		   	</note>
-<programlisting>
+				<para>The console output has been reformatted to fit this document.
+				</para>
+			</note>
+			<programlisting>
 [2009-07-01 15:05:03.511] fs-watcher
 	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-shared-services-service-2.0.0.RELEASE.jar'.
 [2009-07-01 15:05:03.688] fs-watcher
@@ -374,12 +569,19 @@ Import-Library: org.springframework.spring;version="[3.0.0,4.0.0)"
 			<title>Accessing the Service and Types from the WAR</title>
 			<para>
 				The WAR file now needs to access the types and service exported
-				by the service bundle. The following listing is the WAR&rsquo;s
-				<literal>/META-INF/MANIFEST.MF</literal> which imports the types
-				exported by the service bundle. The <literal>Import-Bundle</literal>
-				statement has also been extended to import <literal>org.springframework.osgi.core</literal>,
-				which is necessary in order to load an OSGi-enabled <literal>WebApplicationContext</literal>.
-<programlisting>
+				by
+				the service bundle. The following listing is the WAR&rsquo;s
+				<literal>/META-INF/MANIFEST.MF</literal>
+				which imports the types
+				exported by the service bundle. The
+				<literal>Import-Bundle</literal>
+				statement has also been extended to import
+				<literal>org.springframework.osgi.core</literal>
+				,
+				which is necessary in order to load an OSGi-enabled
+				<literal>WebApplicationContext</literal>
+				.
+				<programlisting>
 Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.7.0
 Created-By: 1.5.0_13-119 (Apple Inc.)
@@ -395,32 +597,71 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 			</para>
 			<para>
 				In addition to importing the exported types of the service bundle,
-				the WAR must also obtain a reference to the <literal>UserManager</literal>
-				published by the service bundle. The following image shows the directory
+				the WAR must also obtain a reference to the
+				<literal>UserManager</literal>
+				published by the service bundle. The following image shows the
+				directory
 				structure of the Shared Services WAR.
 			</para>
-			<para><imagedata fileref="images/formtags-case-study-shared-services-war-resources.png" format="PNG"/></para>
 			<para>
-				As you can see in the above image, the Form Tags Shared Services WAR&rsquo;s
-				<literal>/WEB-INF/web.xml</literal> directory contains a standard <literal>web.xml</literal>
-				deployment descriptor, <literal>applicationContext.xml</literal> which defines the configuration
-				for the <emphasis>root</emphasis> <literal>WebApplicationContext</literal>, and
-				<literal>formtags-servlet.xml</literal> which defines the configuration specific to the
-				configured <emphasis>formtags</emphasis> <literal>DispatcherServlet</literal>.
+				<imagedata
+					fileref="images/formtags-case-study-shared-services-war-resources.png"
+					format="PNG" />
 			</para>
 			<para>
-				As is typical for Spring MVC based web applications, you configure a <literal>ContextLoaderListener</literal>
-				in <literal>web.xml</literal> to load your root <literal>WebApplicationContext</literal>; however, to enable your
-				<literal>WebApplicationContext</literal> to be able to reference services from the OSGi Service Registry,
-				you must explicitly set the <literal>contextClass</literal> Servlet context parameter to the fully qualified
-				class name of a <literal>ConfigurableWebApplicationContext</literal> which is OSGi-enabled. When deploying
-				Shared Services WARs to the @tomcat.product.name@, you should use
-				<literal>org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext</literal>. This will
-				then enable the use of Spring-DM&rsquo;s <literal>&lt;reference ... /&gt;</literal> within your root
-				<literal>WebApplicationContext</literal> (i.e., in <literal>applicationContext.xml</literal>).
-				The following listing is an excerpt from <literal>/WEB-INF/web.xml</literal>.
+				As you can see in the above image, the Form Tags Shared Services
+				WAR&rsquo;s
+				<literal>/WEB-INF/web.xml</literal>
+				directory contains a standard
+				<literal>web.xml</literal>
+				deployment descriptor,
+				<literal>applicationContext.xml</literal>
+				which defines the configuration
+				for the
+				<emphasis>root</emphasis>
+				<literal>WebApplicationContext</literal>
+				, and
+				<literal>formtags-servlet.xml</literal>
+				which defines the configuration specific to the
+				configured
+				<emphasis>formtags</emphasis>
+				<literal>DispatcherServlet</literal>
+				.
 			</para>
-<programlisting language="xml"><![CDATA[
+			<para>
+				As is typical for Spring MVC based web applications, you configure a
+				<literal>ContextLoaderListener</literal>
+				in
+				<literal>web.xml</literal>
+				to load your root
+				<literal>WebApplicationContext</literal>
+				; however, to enable your
+				<literal>WebApplicationContext</literal>
+				to be able to reference services from the OSGi Service Registry,
+				you
+				must explicitly set the
+				<literal>contextClass</literal>
+				Servlet context parameter to the fully qualified
+				class name of a
+				<literal>ConfigurableWebApplicationContext</literal>
+				which is OSGi-enabled. When deploying
+				Shared Services WARs to the
+				@tomcat.product.name@, you should use
+				<literal>org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext
+				</literal>.
+				This will
+				then enable the use of Spring-DM&rsquo;s
+				<literal>&lt;reference ... /&gt;</literal>
+				within your root
+				<literal>WebApplicationContext</literal>
+				(i.e., in
+				<literal>applicationContext.xml</literal>
+				).
+				The following listing is an excerpt from
+				<literal>/WEB-INF/web.xml</literal>
+				.
+			</para>
+			<programlisting language="xml"><![CDATA[
 	<context-param>
 		<param-name>contextClass</param-name>
 		<param-value>org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext</param-value>
@@ -431,20 +672,38 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 	</listener>
 ]]></programlisting>
 			<para>
-				The Form Tags Shared Services WAR contains a <literal>/WEB-INF/applicationContext.xml</literal>
-				file which is the default configuration location used to create the <emphasis>root</emphasis>
-				<literal>WebApplicationContext</literal> for Spring MVC&rsquo;s <literal>ContextLoaderListener</literal>.
+				The Form Tags Shared Services WAR contains a
+				<literal>/WEB-INF/applicationContext.xml</literal>
+				file which is the default configuration location used to create the
+				<emphasis>root</emphasis>
+				<literal>WebApplicationContext</literal>
+				for Spring MVC&rsquo;s
+				<literal>ContextLoaderListener</literal>
+				.
 				<note>
 					As already mentioned, in the OSGi world, bundle configuration
-					takes place in the root <literal>/META-INF/</literal> directory.
+					takes
+					place in the root
+					<literal>/META-INF/</literal>
+					directory.
 					Typically Spring-DM powered configuration files will live
-					there as well (e.g., in <literal>/META-INF/spring/*.xml</literal>).
-					In a WAR, however, the root <literal>WebApplicationContext</literal>
-					loaded by <literal>ContextLoaderListener</literal> and the <literal>DispatcherServlet&rsquo;s</literal>
-					application context typically live in <literal>/WEB-INF/</literal>.
+					there as well (e.g., in
+					<literal>/META-INF/spring/*.xml</literal>
+					).
+					In a WAR, however, the root
+					<literal>WebApplicationContext</literal>
+					loaded by
+					<literal>ContextLoaderListener</literal>
+					and the
+					<literal>DispatcherServlet&rsquo;s</literal>
+					application context typically live in
+					<literal>/WEB-INF/</literal>
+					.
 				</note>
-				The following is the listing of the WAR&rsquo;s <literal>/WEB-INF/applicationContext.xml</literal>.
-<programlisting language="xml">
+				The following is the listing of the WAR&rsquo;s
+				<literal>/WEB-INF/applicationContext.xml</literal>
+				.
+				<programlisting language="xml">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beans:beans
    xmlns="http://www.springframework.org/schema/osgi"
@@ -458,45 +717,61 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 	&lt;reference id="userManager"
 		interface="org.springframework.showcase.formtags.service.UserManager"/&gt;
 
-&lt;/beans:beans&gt;
-</programlisting>
+&lt;/beans:beans&gt; </programlisting>
 				The single bean declaration is retrieving a service that implements
-				the <literal>org.springframework.showcase.formtags.service.UserManager</literal>
+				the
+				<literal>org.springframework.showcase.formtags.service.UserManager
+				</literal>
 				API from the OSGi Service Registry.
 				<tip>
 					You might have been expecting a reference to the service bundle,
-					but that isn&rsquo;t how OSGi works.  OSGi provides a service
+					but that isn&rsquo;t how OSGi works. OSGi provides a service
 					registry, and this bean definition is accessing a service in that
 					registry that meets the specified restriction (i.e. implements
-					the specified interface).  This leads to a very loosely coupled
-					programming model: the WAR really doesn&rsquo;t care where the implementation
+					the
+					specified interface). This leads to a very loosely coupled
+					programming model: the WAR really doesn&rsquo;t care where the
+					implementation
 					comes from.
 				</tip>
 				<tip>
 					What happens if there is no service at runtime?
-					What if there are multiple services that match the criteria?
-					Spring-DM provides a lot of configuration options, including
-					whether or not the reference is <emphasis>mandatory</emphasis>,
+					What if there are
+					multiple services that match the criteria?
+					Spring-DM provides a lot
+					of configuration options, including
+					whether or not the reference is
+					<emphasis>mandatory</emphasis>
+					,
 					how long to wait for a service reference, etc. Please consult the
 					<ulink url="http://www.springframework.org/osgi/">Spring Dynamic Modules for OSGi</ulink>
 					home page for further information.
 				</tip>
 				<para>
-					One of the benefits of programming to interfaces is that you are
-					decoupled from the actual implementation; Spring-DM provides a proxy.  This
-					has enormous benefits including the ability to dynamically refresh individual bundles without
-					cascading that refresh to unrelated bundles.
+					One of the benefits of programming to interfaces is that you
+					are
+					decoupled from the actual implementation; Spring-DM provides a
+					proxy. This
+					has enormous benefits including the ability to
+					dynamically refresh individual bundles without
+					cascading that
+					refresh to unrelated bundles.
 				</para>
 			</para>
 			<para>
-				To deploy the WAR, copy <literal>/dist/formtags-shared-services-war*</literal>
-				to the <literal>SERVER_HOME/pickup</literal> directory.
-				You should then see console output similar to the following:
+				To deploy the WAR, copy
+				<literal>/dist/formtags-shared-services-war*</literal>
+				to the
+				<literal>SERVER_HOME/pickup</literal>
+				directory.
+				You should then see console output similar to the
+				following:
 			</para>
 			<note>
-				<para>The console output has been reformatted to fit this document.</para>
-		   	</note>
-<programlisting>
+				<para>The console output has been reformatted to fit this document.
+				</para>
+			</note>
+			<programlisting>
 [2009-07-01 15:09:19.819] fs-watcher
     &lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-shared-services-war-3.0.0.RELEASE.war'.
 [2009-07-01 15:09:20.167] fs-watcher
@@ -514,30 +789,44 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 		<title>Form Tags PAR</title>
 		<para>
 			The final step in the migration is that of a full blown
-			OSGi application with web support. The @tomcat.product.name@ introduces a
+			OSGi
+			application with web support. The @tomcat.product.name@ introduces a
 			new packaging and deployment format: the PAR.
 
-			A PAR is a standard JAR with a &quot;<literal>.par</literal>&quot;
+			A PAR is a standard JAR
+			with a &quot;
+			<literal>.par</literal>
+			&quot;
 			file extension which contains all of the modules of your
 			application (e.g., service, domain, and infrastructure bundles
-			as well as a WAR for web applications) in a single deployment unit.
-			Moreover, a PAR defines both a physical and logical application boundary.
+			as well
+			as a WAR for web applications) in a single deployment unit.
+			Moreover,
+			a PAR defines both a physical and logical application boundary.
 		</para>
 		<para>
 			The PAR sample is comprised of four directories, as shown below.
 		</para>
-		<para><imagedata fileref="images/formtags-case-study-par-sample.png"  format="PNG"/></para>
 		<para>
-			The <literal>formtags-par</literal> directory is a build project that
-			understands how to create the PAR from its constituent bundles.
+			<imagedata fileref="images/formtags-case-study-par-sample.png"
+				format="PNG" />
+		</para>
+		<para>
+			The
+			<literal>formtags-par</literal>
+			directory is a build project that
+			understands how to create the PAR
+			from its constituent bundles.
 		</para>
 		<section id="formtags-case-study-par-granularity">
 			<title>Granularity of the PAR</title>
 			<para>
 				Achieving the appropriate level of granularity for your OSGi
-				application is more of an art than a science.  It helps to look
-				at the different requirements:
-				<table id="formtags-case-study-par-granularity-drivers-table" colsep="1" frame="all" rowsep="1">
+				application is more of an art than a science. It helps to look
+				at the
+				different requirements:
+				<table id="formtags-case-study-par-granularity-drivers-table"
+					colsep="1" frame="all" rowsep="1">
 					<title>Granularity drivers</title>
 					<tgroup cols="2">
 						<colspec colwidth="2*" />
@@ -553,78 +842,114 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 								<entry>Domain/Technical Layering</entry>
 								<entry>
 									Applications can be split either by domain (i.e.,
-									by use case or <emphasis>vertically</emphasis>) or
-									by their technical layers (i.e., <emphasis>horizontally</emphasis>).
+									by use case or
+									<emphasis>vertically</emphasis>
+									) or
+									by their technical layers (i.e.,
+									<emphasis>horizontally</emphasis>
+									).
 									Since the Form Tags application essentially has only
-									a single use case, the bundles are split by technical layering
-									(i.e., domain, service, and web).
+									a single
+									use case, the bundles are split by technical layering
+									(i.e.,
+									domain, service, and web).
 								</entry>
 							</row>
 							<row>
 								<entry>Refreshability</entry>
 								<entry>
-									A major benefit of OSGi is that of refreshability: if one bundle
+									A major benefit of OSGi is that of refreshability: if one
+									bundle
 									is changed, only bundles that have a dependency upon
-									the exported types need to be refreshed.  This has a high impact
-									on development time costs as well as production
-									costs.  However, this can lead to lots of smaller, fine grained
-									bundles.  An example of this granularity would be to
-									separate out the service API and implementation into two different
-									bundles.  This means that a change in the implementation
-									wouldn&rsquo;t require any other bundles to be refreshed.
+									the
+									exported types need to be refreshed. This has a high impact
+									on
+									development time costs as well as production
+									costs. However,
+									this can lead to lots of smaller, fine grained
+									bundles. An
+									example of this granularity would be to
+									separate out the service
+									API and implementation into two different
+									bundles. This means
+									that a change in the implementation
+									wouldn&rsquo;t require any
+									other bundles to be refreshed.
 								</entry>
 							</row>
 						</tbody>
 					</tgroup>
 				</table>
-			Ultimately the right level of granularity will depend upon your particular application and team.
+				Ultimately the right level of granularity will depend upon your
+				particular application and team.
 			</para>
 		</section>
 		<section id="formtags-case-study-par-domain-and-service">
 			<title>Domain and Service Bundles</title>
 			<para>
-				The service bundle is identical (except for the <literal>Bundle-SymbolicName</literal>) to that
+				The service bundle is identical (except for the
+				<literal>Bundle-SymbolicName</literal>
+				) to that
 				in the shared-services variation of the sample.
-				The PAR has also separated out the domain classes into their own bundle.
-				When layering by technical considerations, it is again
-				somewhat of an unofficial convention to have a
-				<literal>.domain</literal> bundle.
+				The PAR has
+				also separated out the domain classes into their own bundle.
+				When
+				layering by technical considerations, it is again
+				somewhat of an
+				unofficial convention to have a
+				<literal>.domain</literal>
+				bundle.
 			</para>
 		</section>
 		<section id="formtags-case-study-par-par">
 			<title>Constructing the PAR</title>
 			<para>
 				Finally we need to construct the PAR itself.
-				The following are the contents of the exploded PAR.
+				The following are
+				the contents of the exploded PAR.
 			</para>
-			<para><imagedata fileref="images/formtags-case-study-par-exploded.png" format="PNG"/></para>
 			<para>
-				You can see that the PAR itself doesn&rsquo;t contain any resources or
-				Java classes: it simply packages together a related set of bundles
+				<imagedata fileref="images/formtags-case-study-par-exploded.png"
+					format="PNG" />
+			</para>
+			<para>
+				You can see that the PAR itself doesn&rsquo;t contain any
+				resources or
+				Java classes: it simply packages together a related set
+				of bundles
 				as a single, logical unit.
 			</para>
 			<para>
-				The PAR does however, contain its own <literal>/META-INF/MANIFEST.MF</literal>.
-<programlisting>
+				The PAR does however, contain its own
+				<literal>/META-INF/MANIFEST.MF</literal>
+				.
+				<programlisting>
 Manifest-Version: 1.0
 Application-SymbolicName: org.springframework.showcase.formtags-par
 Application-Version: 3.0.0
 Application-Name: FormTags Showcase Application (PAR)
 </programlisting>
 				For more information on the contents of the PAR&rsquo;s
-				<literal>/META-INF/MANIFEST.MF</literal>, please consult
-				<xref linkend="developing-applications"/>.
+				<literal>/META-INF/MANIFEST.MF</literal>
+				, please consult
+				<xref linkend="developing-applications" />
+				.
 			</para>
 			<para>
-				You can now deploy the PAR on the @tomcat.product.name.short@, for example by copying
-				<literal>/dist/formtags-par*.par</literal> to the @tomcat.product.name.short@&rsquo;s
-				<literal>pickup</literal> directory.
-				You should then see console output similar to the following:
+				You can now deploy the PAR on the @tomcat.product.name.short@, for
+				example by copying
+				<literal>/dist/formtags-par*.par</literal>
+				to the @tomcat.product.name.short@&rsquo;s
+				<literal>pickup</literal>
+				directory.
+				You should then see console output similar to the
+				following:
 			</para>
 			<note>
-				<para>The console output has been reformatted to fit this document.</para>
-		   	</note>
-<programlisting>
+				<para>The console output has been reformatted to fit this document.
+				</para>
+			</note>
+			<programlisting>
 [2009-07-01 15:13:43.306] fs-watcher
 	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-par-2.0.0.RELEASE.par'.
 [2009-07-01 15:13:44.060] fs-watcher
@@ -635,11 +960,16 @@ Application-Name: FormTags Showcase Application (PAR)
 	&lt;SPWE0001I&gt; Started web bundle '/formtags-par'.
 </programlisting>
 			<para>
-				Navigate to <ulink url="http://localhost:8080/formtags-par" /> to see the welcome page.
+				Navigate to
+				<ulink url="http://localhost:8080/formtags-par" />
+				to see the welcome page.
 			</para>
 			<tip>
-				Note that the web application&rsquo;s context path is explicitly defined via the
-				<literal>Web-ContextPath</literal> manifest header in <literal>/META-INF/MANIFEST.MF</literal> 
+				Note that the web application&rsquo;s context path is explicitly
+				defined via the
+				<literal>Web-ContextPath</literal>
+				manifest header in
+				<literal>/META-INF/MANIFEST.MF</literal>
 				of the Web application bundle within the PAR.
 			</tip>
 		</section>
@@ -647,46 +977,63 @@ Application-Name: FormTags Showcase Application (PAR)
 	<section id="formtags-case-study-summary">
 		<title>Summary of the Form Tags Migration</title>
 		<para>
-			The @tomcat.product.name@ provides out-of-the-box support for deploying
+			The @tomcat.product.name@ provides out-of-the-box support for
+			deploying
 			standard Java EE WAR files. In addition support for
-			<emphasis>Shared Libraries</emphasis> and <emphasis>Shared Services</emphasis>
+			<emphasis>Shared Libraries</emphasis>
+			and
+			<emphasis>Shared Services</emphasis>
 			WAR formats provides a logical migration path away from standard,
-			monolithic WARs toward OSGi-enable Web applications. The PAR packaging
-			and deployment format enables truly fine-grained, loosely-coupled, and
-			efficient application development. In general, the migration steps
-			presented in this chapter are fairly straightforward, but developers
-			should set aside time for some up-front design of the bundles themselves.
+			monolithic WARs toward OSGi-enable Web applications. The PAR
+			packaging
+			and deployment format enables truly fine-grained,
+			loosely-coupled, and
+			efficient application development. In general,
+			the migration steps
+			presented in this chapter are fairly
+			straightforward, but developers
+			should set aside time for some
+			up-front design of the bundles themselves.
 		</para>
 		<para>
 			It is recommended that you take another sample application or
 			indeed your own small application and go through this migration
-			process yourself. This will help you better understand the concepts and
-			principles at work.  In addition, it is highly recommended that you
-			familiarize yourself with the Eclipse-based
-			<emphasis>@project.name@ Tools</emphasis> support which is discussed in
-			<xref linkend="tooling" />.
+			process yourself. This will help you better understand the concepts
+			and
+			principles at work. In addition, it is highly recommended that you
+			familiarize yourself with the extensive Eclipse IDE support provided
+			by the Virgo Tools. See the Virgo Tools Guide for more on that.
 		</para>
 	</section>
 
 	<section id="formtags-case-study-as-plan">
 		<title>Form Tags as a Plan</title>
 		<para>
-			Plans (see <xref linkend="developing-applications-plans"/>)
-			allow us to package and deploy the Form Tags application in a more flexible way.
-			Instead of packaging all the bundles of the application into a single PAR file, each bundle can be placed in the repository
-			and referred to in a <emphasis>plan</emphasis>.
+			Plans (see
+			<xref linkend="developing-applications-plans" />
+			)
+			allow us to package and deploy the Form Tags application in a more
+			flexible way.
+			Instead of packaging all the bundles of the application
+			into a single PAR file, each bundle can be placed in the repository
+			and referred to in a
+			<emphasis>plan</emphasis>
+			.
 		</para>
 		<para>
- 			The bundles to be placed in a repository in the chain (for example, <literal>repository/usr</literal>) are:
-<programlisting>org.springframework.showcase.formtags.domain-2.0.0.RELEASE.jar
+			The bundles to be placed in a repository in the chain (for example,
+			<literal>repository/usr</literal>
+			) are:
+			<programlisting>org.springframework.showcase.formtags.domain-2.0.0.RELEASE.jar
 org.springframework.showcase.formtags.service-2.0.0.RELEASE.jar
 org.springframework.showcase.formtags.web-2.0.0.RELEASE.war
 </programlisting>
 			which are just those files which were part of the PAR.
 		</para>
 		<para>
-			Here is the contents of a suitable plan file for the Form Tags example:
-<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+			Here is the contents of a suitable plan file for the Form Tags
+			example:
+			<programlisting language="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <plan name="formtags.plan" version="2.0.0" scoped="true" atomic="true"
         xmlns="http://www.eclipse.org/virgo/schema/plan"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -699,14 +1046,23 @@ org.springframework.showcase.formtags.web-2.0.0.RELEASE.war
 	<artifact type="bundle" name="org.springframework.showcase.formtags.web_par" version="[3.0,3.1)"/>
 
 </plan>]]></programlisting>
-			where we have chosen to use any of the artifacts in the version range [2.0,2.1).
-			This plan (as a file called, for example, <literal>formtags.plan</literal>)
+			where we have chosen to use any of the artifacts in the version range
+			[2.0,2.1).
+			This plan (as a file called, for example,
+			<literal>formtags.plan</literal>
+			)
 			can be deployed in any of the normal ways (for example, dropped in
-			the <literal>pickup</literal> directory).
+			the
+			<literal>pickup</literal>
+			directory).
 		</para>
 		<para>
-			When the plan is deployed, the artifacts it references are installed from the repository and deployed in the order given in the plan file.
-			Because this plan is scoped and atomic, the collection is given an application scope and is started and stopped as a single unit.
+			When the plan is deployed, the artifacts it references are
+			installed from the repository and deployed in the order given in the
+			plan file.
+			Because this plan is scoped and atomic, the collection is
+			given an application scope and is started and stopped as a single
+			unit.
 		</para>
 	</section>
 

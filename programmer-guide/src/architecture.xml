@@ -228,7 +228,7 @@
 				familiar with Java EE, it is worth noting that a PAR can be considered a replacement
 				for an EAR (Enterprise Archive) within the context of an OSGi container. As an added
 				bonus, modules within a PAR can be refreshed independently and on-the-fly, for
-				example via the @tomcat.product.name@ Tool Suite (see <xref linkend="tooling"/>). </para>
+				example via the Virgo Eclipse IDE Tooling (see the Virgo Tools Guide). </para>
 			<para> Many of the benefits of the PAR format are due to the underlying OSGi
 				infrastructure, including: <itemizedlist>
 					<listitem>
