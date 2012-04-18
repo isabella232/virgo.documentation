@@ -1,0 +1,254 @@
+
+= Features  =
+
+The Virgo Tooling/IDE concept concerns the whole Virgo tooling (that was available inside SpringSource Tool Suite) being put in a separate project. The tooling supports the following: 
+
+*Bundle projects 
+*Par projects 
+*Plan files/projects 
+*Web Bundles 
+*Deployment to a Virgo Server in the server view.
+
+= Installation  =
+
+==Eclipse==
+
+Prerequisites, either: 
+
+*Eclipse Helios SR2, or 
+*Eclipse Indigo
+
+Eclipse JEE Indigo recommended.
+
+==Update Sites==
+
+We recommend that you install the snapshot until the latest milestone is up.
+
+===Milestone===
+
+*Add SpringSource Tool Suite 2.7 update site to available update sites: http://dist.springsource.com/release/TOOLS/update/2.7.1.RELEASE/e3.6 (At the moment the Virgo IDE has a dependency on the Spring IDE. We are working on removing this dependency. Until we get there, you need Spring IDE installed or available at one of the update sites.) 
+*Go to &quot;Install New Software&quot; and put the Virgo IDE milestone update site into the dialog: http://download.eclipse.org/virgo/milestone/IDE. 
+*Select the &quot;Core / Virgo IDE&quot; feature and install 
+*Done
+
+===Snapshot===
+
+#Select ''Help&gt;Install New Software..''
+#Enter Virgo update site: http://download.eclipse.org/virgo/snapshot/tooling
+#Select &quot;Virgo Tools&quot; feature and click install.
+
+= Known Issues =
+
+== Current Milestone ==
+
+This section lists important issues with the current Milestone release, e.g. M2.
+
+=== Version Compatibility ===
+
+The milestone does not work well with the current milestone of the runtime environment (&quot;3.1.0&quot; / 3.5.0). Please target the 3.0.2 Release Virgo Runtime or use the current snapshot build.
+
+== Current Snapshot ==
+
+This section lists important changes from the prior release to the current snapshot.
+
+=== Version Compatibility ===
+
+The snapshot should now be supporting all versions. Please raise a bug if you have any issues.
+
+= Notes  =
+
+== Web Application Bundles  ==
+
+To create a web application bundle choose to create a normal bundle project, but on the Bundle Content panel select the additional property entitled &quot;Web Application Bundle&quot;. On the Bundle Properties panel enter a suitable context path for the application as the Web-ContextPath. 
+
+== Bundlor  ==
+
+Bundlor is not used by default, you must create you own template file and then turn on incremental manifest generation. 
+
+== PDE/Equinox Bundles not supported yet  ==
+
+Deploying PDE/Equinox Bundles to Virgo Web Server are not yet supported yet, although exporting the bundles (as Eclipse Plug-in JARs) and manually deploying to Virgo Web Server works. Please show your support on [https://bugs.eclipse.org/bugs/show_bug.cgi?id=329198 Bugzilla #329198].
+
+= Migration  =
+
+== Fron Pre M2 to M3 ==
+
+=== Server Versions ===
+
+The good news: We have done away with the need for managing multiple server versions. This also means that we won't have to support multiple WebTools Server Runtimes and Servers which will make adding new servers and variants much easier. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453 for more details.
+
+The bad news: Any Server Runtimes that you already created for Virgo Server 3.5 will not work. But since Virgo Tooling didn't work with Virgo Server 3.5 *anyway*, this is sort of a moot issue.
+
+What to do: If you have an existing (i.e., created using Virgo IDE installed before 10 March 2012) Virgo Server 3.5 Runtime defined, just delete it and replace it with a new Virgo Runtime in ''Preferences:Server:Runtime Environments''. You'll see that the correct version is discovered automatically. Then, open any Servers that uses the old runtime and select the new one from the Runtime Environment popup menu.
+
+== From Spring Source and Virgo 2.x Tooling ==
+
+Moving from the old tooling to the new requires some changes to your existing projects, these are documented here. 
+
+The Bundlor .settings file has a new name (''com.springsource.server.ide.bundlor.core.prefs'' -&amp;gt; ''org.eclipse.virgo.ide.bundlor.core.prefs'') and the property keys in it have new names as well. Currently these just need to be changed manually (replace ''com.springsource.server'' by ''org.eclipse.virgo'') '''or use the project properties pane to create new settings and delete the old one.''' (recommended)
+
+The Bundle Dependencies classpath entry has a new name (''com.springsource.server.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER'' -&amp;gt; ''org.eclipse.virgo.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER''). This can be changed manually (in the .classpath file) or in the Java Build Path section of the project properties. 
+
+The attributes used to mark folders as test folders have been renamed (''com.springsource.server.ide.jdt.core.test.classpathentry'' -&amp;gt; ''org.eclipse.virgo.ide.jdt.core.test.classpathentry''). This can be changed manually (in the .classpath file). 
+
+The PAR and Bundle nature have been renamed (''com.springsource.server.ide.facet.core.bundlenature'' -&amp;gt; ''org.eclipse.virgo.ide.facet.core.bundlenature'' and (''com.springsource.server.ide.facet.core.parnature'' -&amp;gt; ''org.eclipse.virgo.ide.facet.core.parnature'')). This can be changed manually (in the .project file). 
+
+The format and name of a PAR project changed. Rename ''.settings/com.springsource.server.ide.runtime.core.par.xml'' to ''.settings/org.eclipse.virgo.ide.runtime.core.par.xml''. Inside the file rename occurences of ''com.springsource.server'' to ''org.eclipse.virgo''. 
+
+'''Snapshot build change:''' We've made a change in our tooling that will require modifying the org.eclipse.virgo.ide.runtime.core.par.xml file so that it points to the correct par.ecore URI. Rename ''xmlns:com.springsource.server.ide.par=&quot;http:///com/springsource/server/ide/par.ecore&quot;'' to ''&quot;xmlns:org.eclipse.virgo.ide.par=&quot;http://eclipse.org/virgo/par.ecore&quot;''
+
+Inside the WST settings file (''.settings/org.eclipse.wst.common.project.facet.core.xml'') rename occurences of ''com.springsource.server.bundle'' to ''org.eclipse.virgo.server.bundle'' and occurences of ''com.springsource.server.par'' to ''org.eclipse.virgo.server.par''. 
+
+Most/all of the conversion should be done by the following script (it has only see marginal testing, use at your own risk): 
+&lt;pre&gt;#!/bin/sh
+# NOTE1: Run this at your own risk&amp;nbsp;:)
+# NOTE2: I should quote more dots in sed expressions but I'm lazy.
+# TODO: Delete old com.springsource files after conversion
+if [&amp;nbsp;! -d &quot;$1&quot; ]; then 
+        echo &quot;Please point me at an eclipse project&quot;&amp;nbsp;; 
+        exit 1
+fi
+
+# Bundlor settings
+f=&quot;$1/.settings/com.springsource.server.ide.bundlor.core.prefs&quot;
+[ -f &quot;$f&quot; ] &amp;amp;&amp;amp;  (
+        echo &quot;$1: Converting bundlor preferences&quot;
+        sed -e 's/com\.springsource\.server/org.eclipse.virgo/g' &quot;$f&quot; &amp;gt; &quot;$(echo $f | sed -e s/com.springsource.server/org.eclipse.virgo/)&quot;
+)
+
+# convert PAR
+f=&quot;$1/.settings/com.springsource.server.ide.runtime.core.par.xml&quot;
+[ -f &quot;$f&quot; ] &amp;amp;&amp;amp;  (
+        echo &quot;$1: Converting PAR project dependencies&quot;
+        sed -e 's/com\.springsource\.server/org.eclipse.virgo/g' &quot;$f&quot; &amp;gt; &quot;$(echo $f | sed -e s/com.springsource.server/org.eclipse.virgo/)&quot;
+)
+
+# Fix classpaths        
+f=&quot;$1/.classpath&quot;
+[ -f &quot;$f&quot; ] &amp;amp;&amp;amp; (
+        echo &quot;$1: Converting classpath containers and entries&quot;
+        sed -i \
+                -e 's/com.springsource.server.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER/org.eclipse.virgo.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER/g' \
+                -e 's/com.springsource.server.ide.jdt.core.test.classpathentry/org.eclipse.virgo.ide.jdt.core.test.classpathentry/g' \
+                &quot;$f&quot;
+)
+        
+# Fix natures..
+f=&quot;$1/.project&quot;
+[ -f &quot;$f&quot; ] &amp;amp;&amp;amp; (
+        echo &quot;$1: Converting project natures&quot;
+        sed -i \
+                -e 's/com.springsource.server.ide.facet.core.bundlenature/org.eclipse.virgo.ide.facet.core.bundlenature/g' \
+                -e 's/com.springsource.server.ide.facet.core.parnature/org.eclipse.virgo.ide.facet.core.parnature/g' \
+                &quot;$f&quot;
+)
+
+# Fix the wst file, could also replace runtime name here
+f=&quot;$1/.settings/org.eclipse.wst.common.project.facet.core.xml&quot;
+[ -f &quot;$f&quot; ] &amp;amp;&amp;amp; (
+        echo &quot;$1: Converting org.eclipse.wst.common.project.facet.core.xml&quot;
+        sed -i \
+                -e 's/com.springsource.server.bundle/org.eclipse.virgo.server.bundle/g'  \
+                -e 's/com.springsource.server.par/org.eclipse.virgo.server.par/g'  \
+                &quot;$f&quot;
+)
+
+
+&lt;/pre&gt;
+
+= Maven plugin  =
+
+To support the development of OSGi bundles for Eclipse Virgo with Maven a Maven plugin is available. This plugin is able to start/stop a local Eclipse Virgo instance. Moreover it is possible to deploy/undeploy/refresh bundles via Maven. 
+
+== Build  ==
+
+In order to use the plugin one has to download the source code from [https://github.com/frieder/virgo-maven-plugin Github]&amp;nbsp;and build the binary manually. This can be easily done by executing the following Maven command in the root folder of the plugin where the pom.xml file is located. 
+&lt;pre&gt;mvn clean install&lt;/pre&gt; 
+Moreover to generate the documentation just execute the following Maven command (or take the one provided in the repository on Github). 
+&lt;pre&gt;mvn clean&amp;nbsp;plugin:xdoc javadoc:javadoc jxr:jxr site
+&lt;/pre&gt; 
+== Goals  ==
+
+The plugin provides a set of Maven goals that allow different actions. 
+
+{| width=&quot;800&quot; border=&quot;1&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;
+|-
+| '''Goal''' 
+| '''Description'''
+|-
+| &lt;code&gt;virgo:start&lt;/code&gt; 
+| Starts a Virgo instance by executing the provided startup script. &lt;br&gt; 
+*''This goal has only been tested on Windows. Feedback for Unix/Mac is appreciated.'' 
+*''When executing this goal from within Eclipse (at least on Windows) a console view keeps running even though the build itself has succeeded. Once the opened window has been closed (shutting down the server will not be sufficient) the console view will finish as well.'' 
+*''Currently no starting arguments are provided. Once people start asking for this feature it will be added.''
+
+|-
+| &lt;code&gt;virgo:shutdown&lt;/code&gt; 
+| Stops a running Virgo instance.
+|-
+| &lt;code&gt;virgo:immediateShutdown&lt;/code&gt; 
+| Stops a running Virgo instance immediately.
+|-
+| &lt;code&gt;virgo:deploy&lt;/code&gt; 
+| Deploys an OSGi bundle to a running Virgo instance.
+|-
+| &lt;code&gt;virgo:undeploy&lt;/code&gt; 
+| Undeploys an OSGi bundle from a running Virgo instance.
+|-
+| &lt;code&gt;virgo:refresh&lt;/code&gt; 
+| Refreshs an already installed module on a running Virgo instance.
+|-
+| &lt;code&gt;virgo:bundleRefresh&lt;/code&gt; 
+| Refreshs an already installed OSGi bundle on a running Virgo instance.
+|}
+
+== Simple example POM  ==
+
+Once the plugin has been build and installed in the local Maven repository it can be used within a Maven project. Following is a simple example of a pom file that uses the Maven plugin.&amp;nbsp; 
+&lt;pre&gt;&amp;lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&amp;gt;
+	&amp;lt;modelVersion&amp;gt;4.0.0&amp;lt;/modelVersion&amp;gt;
+	&amp;lt;groupId&amp;gt;org.example.osgi&amp;lt;/groupId&amp;gt;
+	&amp;lt;artifactId&amp;gt;test-bundle&amp;lt;/artifactId&amp;gt;
+	&amp;lt;version&amp;gt;0.0.1-SNAPSHOT&amp;lt;/version&amp;gt;
+	&amp;lt;packaging&amp;gt;bundle&amp;lt;/packaging&amp;gt;
+	&amp;lt;name&amp;gt;OSGi Test Bundle&amp;lt;/name&amp;gt;	
+	&amp;lt;properties&amp;gt;
+		&amp;lt;project.build.sourceEncoding&amp;gt;UTF-8&amp;lt;/project.build.sourceEncoding&amp;gt;
+	&amp;lt;/properties&amp;gt;
+	&amp;lt;build&amp;gt;
+		&amp;lt;plugins&amp;gt;
+			&amp;lt;plugin&amp;gt;
+				&amp;lt;groupId&amp;gt;org.apache.felix&amp;lt;/groupId&amp;gt;
+				&amp;lt;artifactId&amp;gt;maven-bundle-plugin&amp;lt;/artifactId&amp;gt;
+				&amp;lt;version&amp;gt;2.3.6&amp;lt;/version&amp;gt;
+				&amp;lt;extensions&amp;gt;true&amp;lt;/extensions&amp;gt;
+				&amp;lt;configuration&amp;gt;
+					&amp;lt;instructions&amp;gt;
+						&amp;lt;Bundle-SymbolicName&amp;gt;${project.groupId}.${project.artifactId}&amp;lt;/Bundle-SymbolicName&amp;gt;
+						&amp;lt;Bundle-Name&amp;gt;${project.name}&amp;lt;/Bundle-Name&amp;gt;
+						&amp;lt;Bundle-Version&amp;gt;${project.version}&amp;lt;/Bundle-Version&amp;gt;
+					&amp;lt;/instructions&amp;gt;
+				&amp;lt;/configuration&amp;gt;
+			&amp;lt;/plugin&amp;gt;
+			&amp;lt;plugin&amp;gt;
+				&amp;lt;groupId&amp;gt;net.flybyte.virgo&amp;lt;/groupId&amp;gt;
+				&amp;lt;artifactId&amp;gt;virgo-maven-plugin&amp;lt;/artifactId&amp;gt;
+				&amp;lt;version&amp;gt;1.0.0&amp;lt;/version&amp;gt;
+				&amp;lt;configuration&amp;gt;
+					&amp;lt;virgoRoot&amp;gt;C:/Java/virgo-tomcat-server-3.0.2.RELEASE&amp;lt;/virgoRoot&amp;gt;
+				&amp;lt;/configuration&amp;gt;
+			&amp;lt;/plugin&amp;gt;
+		&amp;lt;/plugins&amp;gt;
+	&amp;lt;/build&amp;gt;
+&amp;lt;/project&amp;gt;
+&lt;/pre&gt; 
+More examples can be found in the documentation. Following are some exemplary Maven commands.
+&lt;pre&gt;mvn virgo:start &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;lt;-- will start a Virgo instance
+mvn clean package virgo:deploy &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;lt;-- will create an artifact and deploy it to Virgo&lt;/pre&gt; 
+
+= Importing Virgo Projects into Eclipse =
+
+See [http://wiki.eclipse.org/Virgo/Committers#Eclipse_Setup Eclipse Setup] under the Committers tab.
+
+[[Category:Virgo]] [[Category:EclipseRT]]</rev></revisions></page></pages></query></api>
