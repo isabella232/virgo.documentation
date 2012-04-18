@@ -1,0 +1,27 @@
+=What's New=
+
+==1.0.0 M3==
+
+We've made extensive changes throughout Virgo, focusing on quality and migration, but with a few new features as well.
+
+==Improved Server Support==
+
+Virgo now supports almost all versions and types of Virgo installs, including older versions of Virgo and Tomcat, Jetty and Kernel installations. Best of all, you can now define servers using a single Server Runtime and the tooling will automatically discover the appropriate server configurations. You can even change server installations and versions for server runtimes without having to maintain any server setttings.
+
+[[images:whats-new-M3-server]]
+
+==Documentation and Help==
+
+The complete virgo documentation set -- including the Tooling, Programmer and User's Guide as well as the Wiki pages -- is now included as Eclipse Help.
+
+[[images:whats-new-M3-help]]
+
+==Installation Process==
+
+Virgo Tools can now be installed from a single update site location.
+
+==Quality==
+
+*Extensive bug fixes and re-factorings.
+*All Remaining Spring Dependencies have been removed.
+*Updated to meet Eclipse branding, packaging build and testing standards.

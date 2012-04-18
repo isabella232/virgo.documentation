@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="wiki-build-tools" default="collect-docbook">
+
+	<property name="eclipse.wiki.url-fragment"
+		value="http://wiki.eclipse.org/api.php?action=query&amp;prop=revisions&amp;rvprop=content&amp;format=xml&amp;titles=" />
+	<property name="eclipse.wiki.url" value="http://wiki.eclipse.org"/>
+	
+	<property name="wiki.page" value="" />
+	<property name="wiki.title" value="${wiki.title}" />
+	<property name="wiki.url" value="${eclipse.wiki.url-fragment}${wiki.page}" />
+
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="wiki.dir" value="${basedir}/wiki" />
+	<property name="wiki.dir" value="${basedir}/wiki" />
+	<property name="xml.target.dir" value="${basedir}/wikixml" />
+	<!--Cannot reference other properties, for reuse in other projects -->
+	<property name="lib.dir" value="../wiki-guide/lib" />
+
+	<fileset id="wiki.files" dir="${wiki.dir}">
+		<include name="**/*.mediawiki" />
+	</fileset>
+	<fileset id="wiki.file" dir="${wiki.dir}">
+		<include name="${wiki.title}.mediawiki" />
+	</fileset>
+	<fileset id="xml.wiki.files" dir="${wiki.dir}">
+		<include name="**/*.xml" />
+	</fileset>
+	<fileset id="xml.wiki.file" dir="${wiki.dir}">
+		<include name="**/${wiki.title}.xml" />
+	</fileset>
+	<fileset id="xml.target.files" dir="${xml.target.dir}">
+		<include name="**/*.xml" />
+	</fileset>
+
+	<filterset id="docbook.filters">
+		<filter token="bundle.version" value="${bundle.version}" />
+		<filtersfile file="${basedir}/filters.properties" />
+	</filterset>
+
+	<property file="${basedir}/../build.properties" />
+	<property file="${basedir}/../build.versions" />
+
+	<macrodef name="collect-wiki-docbook">
+		<attribute name="wiki.page" />
+		<attribute name="wiki.title" default="@{wiki.page}" />
+		<sequential>
+			<echo>Collecting @{wiki.page} as @{wiki.title}</echo>
+			<antcall target="collect-wiki-docbook">
+				<param name="wiki.page" value="@{wiki.page}" />
+				<param name="wiki.title" value="@{wiki.title}" />
+				<param name="wiki.url" value="${eclipse.wiki.url-fragment}@{wiki.page}" />
+			</antcall>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="collect-eclipse">
+		<attribute name="wiki.page" />
+		<attribute name="wiki.title" default="@{wiki.page}" />
+		<sequential>
+			<echo>Collecting @{wiki.page} as @{wiki.title}</echo>
+			<antcall target="collect-eclipse-help">
+				<param name="wiki.page" value="@{wiki.page}" />
+				<param name="wiki.title" value="@{wiki.title}" />
+			</antcall>
+		</sequential>
+	</macrodef>
+
+	<path id="wikitext.tasks.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="org.eclipse.mylyn.wikitext.*core*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef classpathref="wikitext.tasks.classpath"
+		resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties" />
+	<taskdef classpathref="wikitext.tasks.classpath"
+		resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
+
+	<target name="init-project">
+		<delete file="${wiki.dir}/${wiki.title}.mediawiki" />
+		<delete file="${xml.target.dir}/${wiki.title}.xml" />
+
+		<mkdir dir="${src.dir}" />
+		<mkdir dir="${wiki.dir}" />
+		<mkdir dir="${xml.target.dir}" />
+	</target>
+
+	<target name="clean-project">
+		<delete dir="${xml.target.dir}" />
+		<delete dir="${wiki.dir}" />
+		<delete dir="${src.dir}" />
+	</target>
+
+	<target name="convert-wiki-to-docbook">
+		<wikitext-to-docbook markupLanguage="MediaWiki">
+			<fileset refid="wiki.file" />
+		</wikitext-to-docbook>
+	</target>
+
+	<target name="collect-wiki-remote" depends="init-project">
+		<echo>Collecting ${wiki.page} as ${wiki.title} (url: ${wiki.url}
+		</echo>
+		<delete file="${wiki.dir}/${wiki.title}.mediawiki" />
+		<get src="${wiki.url}" dest="${wiki.dir}/${wiki.title}.mediawiki" />
+		<replaceregexp match="\A.*\n" replace="">
+			<fileset refid="wiki.file" />
+		</replaceregexp>
+		<replaceregexp match="\t" replace="">
+			<fileset refid="wiki.file" />
+		</replaceregexp>
+		<replaceregexp match="\[\[Category:.*\]\]" replace="">
+			<fileset refid="wiki.file" />
+		</replaceregexp>
+		<replaceregexp match="\{\{\w*\}\}" replace="">
+			<fileset refid="wiki.file" />
+		</replaceregexp>
+	</target>
+
+	<target name="copy-docbook" depends="init-project">
+		<move todir="${xml.target.dir}">
+			<fileset refid="xml.wiki.file" />
+		</move>
+	</target>
+
+	<target name="clean-wiki-remote" depends="convert-wiki-to-docbook">
+		<replaceregexp match="&lt;book&gt;" replace="">
+			<fileset refid="xml.wiki.file" />
+		</replaceregexp>
+		<replaceregexp match="&lt;title&gt;.*&lt;/title&gt;"
+			replace="">
+			<fileset refid="xml.wiki.file" />
+		</replaceregexp>
+		<replaceregexp match="&lt;/book&gt;" replace="">
+			<fileset refid="xml.wiki.file" />
+		</replaceregexp>
+	</target>
+
+	<macrodef name="demote-n">
+		<attribute name="n" />
+		<sequential>
+			<replaceregexp byline="true" match="\A(={@{n}})([^=]*)={@{n}}$"
+				replace="\1=\2\1=">
+				<fileset refid="wiki.file" />
+			</replaceregexp>
+		</sequential>
+	</macrodef>
+
+	<target name="wikitext-demote" depends="clean-wiki-remote">
+		<echo>${wiki.title}</echo>
+		<demote-n n="6" />
+		<demote-n n="5" />
+		<demote-n n="4" />
+		<demote-n n="3" />
+		<demote-n n="2" />
+		<demote-n n="1" />
+		<replaceregexp match="\A" replace="= ${wiki.title} =">
+			<fileset refid="wiki.file" />
+		</replaceregexp>
+	</target>
+
+	<target name="init">
+		<mkdir dir="tmp" />
+	</target>
+
+	<target name="collect-eclipse-help" depends="init"
+		description="Generate Eclipse help content for the Virgo user guide">
+<echo>${wiki.page}  ${wiki.title}</echo>
+		<mediawiki-to-eclipse-help wikiBaseUrl="${eclipse.wiki.url}"
+			validate="true" failonvalidationerror="true" prependImagePrefix="images"
+			formatoutput="true" defaultAbsoluteLinkTarget="doc_external" dest="${basedir}"
+			title="${wiki.title}" generateUnifiedToc="false">
+			<path name="${wiki.page}" title="${wiki.title}"
+				generateToc="true" />
+			<stylesheet url="book.css" />
+			<pageAppendum>
+
+				= Updating This Document =
+
+				This document is maintained in a collaborative wiki. If you wish to
+				update or modify this document please visit
+				{url}
+			</pageAppendum>
+		</mediawiki-to-eclipse-help>
+	</target>
+	
+	<target name="collect-wiki-docbook"
+		depends="collect-wiki-remote, convert-wiki-to-docbook, copy-docbook" />
+</project>

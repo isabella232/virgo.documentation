@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="virgo-wiki-crowd-docs" default="collect-virgo-all">
+
+	<import file="build-wiki.xml"/>
+	
+	<target name="collect-virgo-docbook">
+<!--Manually Maintained		<collect-wiki-docbook wiki.page="Virgo" wiki.title="Introduction"/> -->
+		<collect-wiki-docbook wiki.page="Virgo/Tooling" wiki.title="Tooling"/>
+		<delete  file="../tooling-guide/src/installation.xml"/>
+		<copy  file="wikixml/Tooling.xml" tofile="../tooling-guide/src/wiki.xml"/>
+		<replaceregexp byline="true" file="../tooling-guide/src/wiki.xml" match="chapter" replace="section"/>
+		<replaceregexp byline="true" file="../tooling-guide/src/wiki.xml" match="book" replace="chapter"/>
+		<replaceregexp byline="true" file="../tooling-guide/src/wiki.xml" match="&lt;title&gt;Tooling&lt;/title&gt;" replace="&lt;title&gt;Installation and Release Notes&lt;/title&gt;"/>
+	</target>
+	
+	<target name="collect-virgo-eclipse">
+<!--Manually Maintained		<collect-remote-wiki wiki.page="Virgo" wiki.title="Introduction"/> -->
+		<delete dir="Virgo"/>
+		<collect-eclipse wiki.page="Virgo/FAQ" wiki.title="FAQ"/>
+		<collect-eclipse wiki.page="Virgo/Concepts" wiki.title="Concepts"/>
+		<collect-eclipse wiki.page="Virgo/Source" wiki.title="Source"/>
+		<collect-eclipse wiki.page="Virgo/Build" wiki.title="Build"/>
+		<collect-eclipse wiki.page="Virgo/Test" wiki.title="Test"/>
+		<collect-eclipse wiki.page="Virgo/Tooling" wiki.title="Tooling"/>
+		<collect-eclipse wiki.page="Virgo/Future" wiki.title="Future"/>
+		<collect-eclipse wiki.page="Virgo/Community" wiki.title="Community"/>
+		<collect-eclipse wiki.page="Virgo/Committers" wiki.title="Committers"/>
+	</target>
+
+	<target name="collect-virgo-all" depends="collect-virgo-docbook, collect-virgo-eclipse">
+	</target>
+</project>
