@@ -13,10 +13,9 @@
 		</para>
 		<para>
 			The user region shell ports may be reconfigured by editing the file 		
-			<literal>osgi.console.telnet.properties</literal> or <literal>osgi.console.ssh.properties</literal> in the <literal>repository/ext</literal> directory, and
-			then restarting Virgo.
-			The kernel shell ports may be reconfigured by editing the file <literal>osgi.console.telnet.properties</literal> or
-			<literal>osgi.console.ssh.properties</literal> in the <literal>config</literal> directory, and then restarting Virgo.
+			<literal>osgi.console.properties</literal> in the <literal>repository/ext</literal> directory, and
+			then restarting Virgo. The telnet properties in the file are prefixed with <emphasis>telnet.</emphasis>, and the ssh properties are prefixed with <emphasis>ssh.</emphasis>.
+			The kernel shell ports may be reconfigured by editing the file <literal>osgi.console.properties</literal> in the <literal>configuration</literal> directory, and then restarting Virgo.
         </para>
         <para>
 			To enable any of these shell ports, change the <literal>enabled</literal> setting from <literal>false</literal> to <literal>true</literal>
@@ -39,15 +38,28 @@ osgi> ]]></programlisting>
 		</para>
         <para>
 			Alternatively, you can ssh to port 2502 or 2402 for user region or kernel, respectively.
-			The users and passwords for ssh are configured in <literal>config/org.eclipse.virgo.kernel.users.properties</literal> as described
+			The users and passwords for ssh are configured in <literal>configuration/org.eclipse.virgo.kernel.users.properties</literal> as described
 			in <link linkend="configuring-authentication">Configuring Authentication</link>. The default user and password are <literal>admin</literal>
 			and <literal>springsource</literal>.
+		</para>
+		
+		<note>
+			Currently the @nano.product.name@ Equinox Console is enabled by default. Telnet is accesible on <emphasis>2401</emphasis> and SSH on <emphasis>2402</emphasis>. In future these will be configurable.
+		</note>
+		
+		<para>
+		  <note>
+		    If you use the <literal>shutdown</literal> shell command to stop Virgo Tomcat Server, the shutdown messages appear in the shell terminal instead of in the terminal in which Virgo runs. This is due to the
+        mechanisms which the shell implementation uses to redirect standard output.
+      </note> 
 		</para>
     </section>
 
 	<section id="admin-shell-using-vsh">
 		<title>Using Virgo Shell Commands</title>
-
+		<note>
+			 This section is not applicable to @nano.product.name@.
+		</note>
         <para>Virgo provides shell commands
 		that allow you to examine artifacts
         currently installed in a particular @kernel.product.name@ instance, manage the lifecycle of the installed artifacts, install new artifacts, and shut down
@@ -412,7 +424,7 @@ osgi> </programlisting>
 		<programlisting>osgi> vsh:config examine org.eclipse.virgo.repository
 
 Factory pid:     
-Bundle Location: file:lib/kernel/org.eclipse.virgo.kernel.services-@bundle.version@.jar
+Bundle Location: file:plugins/org.eclipse.virgo.kernel.services-@bundle.version@.jar
 
 Properties:
     chain:
@@ -958,5 +970,151 @@ Successfully loaded [javax.servlet.Servlet] using class loader from:
         </section>
 
 
+    </section>
+    <section id="p2-commands">
+    <title>Using the p2 for extending your @project.name@ installation</title>
+    <section>
+    <title>Extending with the p2 director</title>
+    	<para>
+    		You can provision new features on top of your @project.name@ installation using the p2 director. It can be used both for initial provisioning and extending an existing installtion.
+    	</para>
+    	<para>For extending an existing installation you can use these director arguments:
+    	<screen>-repository http://download.eclipse.org/rt/ecf/3.5.3/site.p2
+-installIU org.eclipse.ecf.remoteservice.feature.feature.group
+-destination &lt;your @project.name@ installation folder&gt;</screen></para>
+	    <para>This installs the <emphasis role="bold">latest</emphasis> version of the specified p2 feature in your @project.name@ installation's p2 profile.</para>
+    </section>
+    <section>
+    <title>Extending via the p2 shell commands</title>
+    	<para>Another way to achieve the same results is to use the p2 commands. The commands are available only in @nano.product.name.short@ as it includes p2 by default. 
+    	<note>For the other distributions only the director is supported and the operation only extends their kernel region.</note>
+    	</para>
+    	<para>Here's a list of the most commonly used p2 commands:</para>
+    	<table id="p2-common-commands-table" colsep="1" frame="all" rowsep="1">
+		    <title>p2 Common Shell Commands</title>
+				<tgroup cols="2">
+			   		<thead>
+						<row>
+							<entry>Command</entry>
+							<entry>Help</entry>
+						</row>
+			  		</thead>
+			  		<tbody>
+			  			<row>
+							<entry><literal>provaddrepo &lt;repository URI&gt;</literal></entry>
+							<entry>
+								Add specified URI as metadata and artifact repository. Note that if you pass a wrong URL you'll get an error saying:
+								<literal>Repository not modifiable: http://wrongURL</literal>. The default behavior of this command is to create an empty repository at the
+								specified location if there isn't any. That won't work for remote locations so keep in mind that if you see this you probably passed a wrong URL.
+							</entry>
+						</row>
+						<row>
+							<entry><literal>provdelrepo &lt;repository URI&gt;</literal></entry>
+							<entry>
+								Remove specified metadata and artifact repository.
+							</entry>
+						</row>
+						<row>
+							<entry><literal>provinstall &lt;InstallableUnit&gt; &lt;version&gt; &lt;profileid&gt;</literal></entry>
+							<entry>
+								Install an IU to the profileid.  If no profileid is given, installs into default profile.
+							</entry>
+						</row>
+						<row>
+							<entry><literal>provremove &lt;InstallableUnit&gt; &lt;version&gt; &lt;profileid&gt;</literal></entry>
+							<entry>
+								Uninstall an IU from the profileid.  If no profileid is given, uninstalls form default profile.
+							</entry>
+						</row>
+						<row>
+							<entry><literal>provlg [&lt;repository URI&gt; &lt;iu id | *&gt; &lt;version range | *&gt;]</literal></entry>
+							<entry>
+								Lists all IUs with group capabilities in the given repo or in all repos if URI is omitted.
+							</entry>
+						</row>
+						<row>
+							<entry><literal>provliu [&lt;repository URI | *&gt; &lt;iu id | *&gt; &lt;version range | *&gt;]</literal></entry>
+							<entry>
+								Lists the IUs that match the pattern in the given repo.  * matches all.
+							</entry>
+						</row>
+						<row>
+							<entry><literal>confapply</literal></entry>
+							<entry>
+								This is a Simple Configurator command, not a p2 one. However it is relevant because it applies dynamically, at runtime, the installed p2 features.
+								What the command does is to apply to the running OSGi framework the current content in the bundles.info file. When using the provinstall command it takes care of updateing the bundles.info file.
+							</entry>
+						</row>
+			  		</tbody>
+				</tgroup>
+		  	</table>
+		  	<para>Here's an example showing how to install the ECF remote services but with the p2 commands this time:</para>
+		  	<screen>osgi&gt; provaddrepo http://download.eclipse.org/rt/ecf/3.5.3/site.p2
+
+osgi&gt; provlg
+
+org.eclipse.ecf.core.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.core.featurepatch.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.core.featurepatch.source.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.core.source.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.datashare.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.datashare.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.dnssd.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.dnssd.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.jmdns.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.jmdns.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.slp.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.slp.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.zookeeper.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.zookeeper.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.examples.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.examples.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.feature.feature.group 2.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.source.feature.feature.group 2.0.0.v20111109-2142
+org.eclipse.ecf.osgi.services.feature.feature.group 2.0.1.v20111109-2142
+org.eclipse.ecf.osgi.services.source.feature.feature.group 2.0.1.v20111109-2142
+org.eclipse.ecf.remoteservice.examples.feature.feature.group 1.1.0.v20111109-2142
+org.eclipse.ecf.remoteservice.examples.source.feature.feature.group 1.1.0.v20111109-2142
+org.eclipse.ecf.remoteservice.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rest.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rest.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rosgi.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rosgi.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.sdk.feature.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.remoteservice.sdk.source.feature.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.remoteservice.soap.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.soap.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.server.generic.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.server.generic.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.xmpp.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.xmpp.source.feature.feature.group 1.0.0.v20111109-2142
+
+osgi&gt; provinstall org.eclipse.ecf.remoteservice.feature.feature.group 1.0.0.v20111109-2142
+Installation complete for org.eclipse.ecf.remoteservice.feature.feature.group 1.0.0.v20111109-2142
+
+osgi&gt; confapply
+
+osgi&gt; ss
+
+"Framework is launched."
+
+
+id	State       Bundle
+0	ACTIVE      org.eclipse.osgi_3.7.1.R37x_v20110808-1106
+....
+92	RESOLVED    org.springframework.osgi.io_1.2.1
+93	RESOLVED    org.eclipse.ecf.console_1.0.0.v20111109-2142
+94	RESOLVED    org.eclipse.ecf.discovery_4.0.0.v20111109-2142
+95	RESOLVED    org.eclipse.ecf.provider_4.2.100.v20111109-2142
+96	RESOLVED    org.eclipse.ecf.provider.discovery_2.1.200.v20111109-2142
+97	RESOLVED    org.eclipse.ecf.provider.remoteservice_4.0.0.v20111109-2142
+98	RESOLVED    org.eclipse.ecf.remoteservice_6.0.200.v20111109-2142
+99	RESOLVED    org.eclipse.ecf.sharedobject_2.2.100.v20111109-2142
+100	RESOLVED    org.eclipse.equinox.concurrent_1.0.200.v20110502</screen>
+		<para>You can see that after applying the changes with <emphasis>confapply</emphasis> the remote services bundles and their dependencies are installed in @nano.product.name.short@.</para>
+    </section>   
     </section>
 </chapter>

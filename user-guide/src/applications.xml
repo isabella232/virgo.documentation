@@ -72,6 +72,22 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 				directory one-by-one. Copying the files in one group, for example by using a single <literal>cp</literal> command, provides no guarantee of ordering.
 			</para> 
 		</section>
+		<section id="deployment-deploying-shared">
+			<title>Deploying Shared Artifacts</title>
+			<para>
+				Artifacts may be shared by plans.
+				Sharing occurs when a plan is deployed which references an artifact that was previously deployed or is a child artifact
+				of a plan that was previously deployed.
+				Sharing also occurs when an artifact is deployed which is already a child of a deployed plan, but in this case the shared
+				artifact may <emphasis>not</emphasis> appear as a top-level artifact, for example, in the Admin Console, in the shell,
+				and in JMX.
+			</para>
+			<para>
+				Sharing is taken into account when artifacts are stopped.
+				A shared artifact is stopped only when all the artifacts referencing the shared artifact have been stopped
+				and, if the shared artifact was deployed in its own right, the artifact itself has been stopped.
+			</para>
+		</section>
 		<section id="deployment-deploying-restrictions">
 			<title>Restrictions</title>
 			<para>
@@ -117,6 +133,14 @@ prompt$ rm helloWorld.war</programlisting>
 				<literal>org.eclipse.virgo.server.admin-2.1.0.RELEASE.plan</literal>.
 			</para>
 			<para>See <link linkend="admin-console-manage-artifacts">Viewing and Managing the Lifecycle of Deployed Artifacts</link> for details about uninstalling (undeploying) an artifact using the Admin Console.  The high-level steps are to highlight the artifact in the artifact tree then click <literal>Uninstall</literal>. </para>
+		</section>
+		<section id="deployment-undeploying-shared">
+			<title>Undeploying Shared Artifacts</title>
+			<para>
+				Sharing is taken into account when artifacts are undeployed.
+				A shared artifact is undeployed only when all the artifacts referencing the shared artifact have been undeployed
+				and, if the shared artifact was deployed in its own right, the artifact itself has been undeployed.
+			</para>
 		</section>
 	</section>
 

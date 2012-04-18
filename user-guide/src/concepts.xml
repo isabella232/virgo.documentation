@@ -15,7 +15,7 @@
 <title>Modular Runtimes and Applications</title>
 	
 <para>
-	@tomcat.product.name@, @jetty.product.name@, and @kernel.product.name@ are Java runtimes each composed of
+	@tomcat.product.name@, @jetty.product.name@, @kernel.product.name@ and @nano.product.name@ are Java runtimes each composed of
 	a collection of modules and supporting applications which are also composed of a
 	collection of modules.
 	Modules can be shared between applications and multiple versions of modules
@@ -190,7 +190,7 @@ then publish this instance (as an instance of the interface <literal>SomeInterfa
 mentioned above.</para>
 
 <para>OSGi provides an <glossterm>API</glossterm> which can be used to publish and find services,
-but it is much simpler to use Spring DM to accomplish this. (See <xref linkend="concepts.springdm"/>.)</para>
+but it is much simpler to use Spring DM or Blueprint to accomplish this. (See <xref linkend="concepts.springdm"/>.)</para>
 
 </section>
 
@@ -387,11 +387,10 @@ This is not an OSGi definition but part of the
 <!--========================================================================-->
 <section id="concepts.springdm" xreflabel="Spring DM concepts">
 	
-<title>Spring DM Concepts</title>
+<title>Spring DM and Blueprint Concepts</title>
 
 <para>Spring DM is a project which enables <emphasis>services</emphasis> to be published and consumed
-using descriptions written in XML.
-@project.name@ has Spring DM built-in.</para>
+using descriptions written in XML.</para>
 
 <para>The XML descriptions reside in files with extension <literal>.xml</literal> in the
 bundle&rsquo;s <literal>META-INF/spring</literal> sub-directory.</para>
@@ -421,7 +420,14 @@ and closes the bundle&rsquo;s application contexts.
 @project.name@ turns off damping of a service proxy while the proxy&rsquo;s application context
 is being closed.</para>
 
-<para>(Spring DM has been contributed to Eclipse as the <emphasis>Gemini Blueprint</emphasis> project.)</para>
+<para>Spring DM was contributed to Eclipse as the <emphasis>Gemini Blueprint</emphasis> project.
+@project.name@ has Gemini Blueprint built-in.</para>
+
+<para>Gemini Blueprint supports both Spring DM and Blueprint programming models.
+Blueprint, known formally as the "OSGi Blueprint Container", provides some of the basic facilities of Spring DM,
+including all those just mentioned, but in an OSGi standard form.
+See <xref linkend="furtherreading"/> for the Blueprint specification.
+</para>
 
 </section>
 
@@ -429,6 +435,9 @@ is being closed.</para>
 <section id="concepts.virgo">
 	
 <title>@project.name@ Concepts</title>
+<note>
+This section is not relevant for @nano.product.name@.
+</note>
 
 <!--========================================================================-->
 <section id="concepts.repositories">
@@ -455,7 +464,7 @@ PARs, plans, and libraries are discussed in <xref linkend="concepts.grouping"/>.
 	says which files should be treated as artifacts. After the repository is created, changes to the directory do not affect the repository content. 
 </para>
 <para>
-	@project.name@'s default repository configuration, in <literal>config/org.eclipse.virgo.repository.properties</literal>, specifies an external repository created from the 
+	@project.name@'s default repository configuration, in <literal>configuration/org.eclipse.virgo.repository.properties</literal>, specifies an external repository created from the 
 	<literal>repository/ext</literal> directory.
 </para>
 
@@ -484,7 +493,7 @@ PARs, plans, and libraries are discussed in <xref linkend="concepts.grouping"/>.
 
 <para>
 	A remote repository refers to a repository hosted by a @project.name@ instance sometimes known as a <emphasis>repository server</emphasis>.
-	The hosted repository is configured using the file <literal>config/org.eclipse.virgo.apps.repository.properties</literal> and may be either an external or a watched 	
+	The hosted repository is configured using the file <literal>configuration/org.eclipse.virgo.apps.repository.properties</literal> and may be either an external or a watched 	
 	repository.
 </para>
 <para>
@@ -638,6 +647,28 @@ The artifacts referred to by a plan reside in the @project.name@ provisioning re
 
 </section>
 
+</section>
+
+<!--========================================================================-->
+<section id="concepts.p2">
+<title>p2 Concepts</title>
+<para>
+	At EclipseCon 2011 there was a great introductory presentation on p2. It gives a nice overview of the whole provisioning system.
+	You can find it recorded <ulink url="http://fosslc.org/drupal/content/gentle-introduction-p2">here(video).</ulink> 
+</para>
+<para>
+	<ulink url="http://bkapukaranov.wordpress.com/2011/07/12/rt-meets-p2/">This blog post</ulink> 
+	provides some background on why p2 was created as well as a brief overview of what p2 repositories 
+	are and how this relates to a runtime.
+</para>
+<para>
+	This <ulink url="http://www.slideshare.net/PascalRapicault/understanding-and-extending-p2-for-fun-and-profit">presentation(slides only)</ulink> 
+	sheds light on more advanced p2 features and turns our attention to its extension points. 
+</para>
+<para>
+	Finally, the <ulink url="http://wiki.eclipse.org/Equinox/p2">p2 wiki</ulink> 
+	also provides both getting started guides as well as information on more advanced features. 
+</para>
 </section>
 
 </chapter>

@@ -23,6 +23,14 @@
 			Spring Dynamic Modules Reference Guide
 		</ulink>
 	</para>
+	
+	<para>
+		<ulink url="http://www.osgi.org/Specifications/HomePage">
+			Blueprint Container Specification
+		</ulink>
+		 (in the OSGi 4.2 and 5.0 Enterprise Specifications)
+	</para>
+
 	<para>
 		<ulink url="http://logback.qos.ch/manual">
 			The Logback Manual

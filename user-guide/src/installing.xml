@@ -9,6 +9,10 @@
 			The @tomcat.product.name@, or @tomcat.product.name.short@ for short, requires Java SE 6 or later to be installed. Java is available from
 			<ulink url="http://www.java.com/">http://www.java.com/</ulink> and elsewhere.
 		</para>
+		<para>
+			In case you are installing via a p2 director you'll need to get it. The easiest way is to download Eclipse from <ulink url="http://www.eclipse.org/downloads/">here</ulink>. 
+			It has built-in p2 director and other p2 applications. 
+		</para>
 	</section>
 	<section id="installation-zip">
 		<title>Installing from the ZIP Download</title>
@@ -45,6 +49,27 @@
 					your chosen drive.
 				</para>
 			</section>
+		</section>
+	</section>
+	
+	<section id="installation-updatesite">
+		<title>Installing from an update site</title>
+		<section>
+			<title>The repository location</title>
+			<para>
+				Virgo has a single p2 repository that contains all Virgo distrbutions. The repository for version @bundle.version@ can be found <ulink url="@p2repo@">here</ulink>. 
+				There is a repository for each released version.
+			</para>
+		</section>
+		<section>
+			<title>Using the p2 director</title>
+			<para>
+				As shown in <xref linkend="using-director"/> you can easily install @tomcat.product.name.short@ in a desired destination.
+				The only director argument that needs to be adjusted is <emphasis>-installIU</emphasis>.
+			</para>
+			<para>
+				For @tomcat.product.name.short@ the right value is <emphasis>tomcat-server.product</emphasis>.
+			</para>
 		</section>
 	</section>
 	
@@ -124,10 +149,10 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 				When starting @tomcat.product.name@ on some variants of Windows you might encounter a problem with file permissions. 
 				The error looks like this.
 			</para>
-			<screen>WARNING: jmxPermissions.vbs did not update the permissions of C:\virgo\config\org.eclipse.virgo.kernel.jmxremote.access.properties. Check the file has the correct permissions.</screen>
+			<screen>WARNING: jmxPermissions.vbs did not update the permissions of C:\virgo\configuration\org.eclipse.virgo.kernel.jmxremote.access.properties. Check the file has the correct permissions.</screen>
 			<para>
 				If @tomcat.product.name.short@ starts correctly (see <xref linkend="starting-stopping"/>) you can skip this section and carry on. However to secure your 
-				installation you have to set correct permissions. To do so, go to the &lsquo;config&rsquo; directory of the installation
+				installation you have to set correct permissions. To do so, go to the &lsquo;configuration&rsquo; directory of the installation
 				in Windows Explorer.
 			</para>
 			<para>

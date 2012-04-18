@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="using-the-p2-director">
+	<title>Using the p2 director</title>
+	<section id="prereqs">
+		<title>Prerequisites</title>
+		<para>
+			The @tomcat.product.name@, or @tomcat.product.name.short@ for short, requires Java SE 6 or later to be installed. Java is available from
+			<ulink url="http://www.java.com/">http://www.java.com/</ulink> and elsewhere.
+		</para>
+		<para>
+			Since you're going to use the p2 director you'll need to get it. The easiest way is to download Eclipse from <ulink url="http://www.eclipse.org/downloads/">here</ulink>. 
+			It has built-in p2 director and other p2 applications. 
+		</para>
+		<important>
+			<title>Setting the Target Platform</title>
+		</important>
+		<para>Before using the director make sure you have a proper target platform set. Otherwise you may not see the director application. Here's how to do that:</para>
+		<para>Go to Eclipse's Preferences->Plug-in Development->Target Platform. Below is shown how the view looks like when a default target platform is set.</para>
+		<para>	 
+			<imagedata fileref="images/target-platform-view.png"/>
+		</para>
+		<para>If for some reason you don't have any target platform set or it's not the default one you must set the default target platform from the image above.</para>
+		<para>If the default target platform is missing then add a new one via the <emphasis>Add...</emphasis> button and select the <emphasis>Default</emphasis> radio button as shown below:</para>
+		<para>	 
+			<imagedata fileref="images/default-target-create.png"/>
+		</para>
+		<para>You can now click <emphasis>Next</emphasis> and then <emphasis>Finish</emphasis>.</para>
+	</section>
+	<section id="using-director">
+		<title>Installing with the p2 director from Eclipse</title>
+			<para>
+				This section covers briefly using the p2 director for installing.
+				A helpful page is the p2 director's <ulink url="http://help.eclipse.org/indigo/index.jsp?topic=/org.eclipse.platform.doc.isv/guide/p2_director.html">documentation at help.eclipse.org</ulink>. 
+				There you can find more information on the different supported arguments.
+			</para>
+			<para>
+				Here's how to use the GUI version of the director built-in Eclipse.
+			</para>
+			<para>
+				1. Go to the <emphasis>Run</emphasis> context menu and select <emphasis>Run Configurations</emphasis>
+			</para>
+			<para>
+				2. Create a new one and choose the director application as shown below, then switch to the <emphasis>Arguments</emphasis> tab
+			</para>
+			<important>In the image below the "Location:" text box's value is managed by your IDE, don't type anything in there.</important>
+			<para>	 
+				<imagedata fileref="images/run_configuration.png"/>
+			</para>
+			<para>
+				In the <emphasis>Program Arguments</emphasis> section append the director arguments. Here's an example I used:
+				<screen>-repository @p2repo@
+-installIU nano.product
+-tag InitialState
+-destination <emphasis role="bold">/Users/&lt;youruser&gt;/install/virgo</emphasis>
+-profile VirgoProfile
+-roaming
+-p2.os ${target.os}
+-p2.ws ${target.ws}
+-p2.arch ${target.arch}
+				</screen>
+				<important>
+					<para>The <emphasis>-repository</emphasis> argument accepts any valid p2 repository.</para>
+					<para>The <emphasis>-destination</emphasis> argument accepts any valid absolute location. It defines the location where your Virgo installation will be provisioned. 
+					If the directory does not exist, it will be created by the director.</para>
+				</important>
+				These arguments produce a @nano.product.name@ installation. For the <emphasis>p2.*</emphasis> arguments use the same properties from the example above. Eclipse will substitute them later with real values. 
+			</para>
+			<para>
+				The passed value for <emphasis>-installIU</emphasis> determines which Virgo product is going to be installed. Here's a list of all Virgo product install IUs:
+				<para><emphasis>nano.product</emphasis> - @nano.product.name@</para>
+				<para><emphasis>nano-full.product</emphasis> - @nano.product.name@ Full (@nano.product.name.short@ + p2 + GW)</para>
+				<para><emphasis>kernel.product</emphasis> - @kernel.product.name@</para>
+				<para><emphasis>tomcat-server.product</emphasis> - @tomcat.product.name@</para>
+				<para><emphasis>jetty-server.product</emphasis> - @jetty.product.name@</para>
+			</para>
+			<para>	 
+				<imagedata fileref="images/director_args.png"/>
+			</para>
+			<para>
+				3. Finally, run the created configuration. You should see the following output in Eclipse's Console
+			</para>
+			<para>	 
+				<imagedata fileref="images/director_result.png"/>
+			</para>
+	</section>
+</chapter>

@@ -225,7 +225,7 @@ Manifest-Version: 1.0
 				</listitem>
 				<listitem>A plan is visible to management interfaces.</listitem>
 				<listitem>A plan can be undeployed and redeployed as a unit.</listitem>
-				<listitem>A plam may be atomic, although this is optional.</listitem>
+				<listitem>A plan may be atomic, although this is optional.</listitem>
 			</itemizedlist>
 		</para>
 		<para>
@@ -253,7 +253,12 @@ Manifest-Version: 1.0
 		</para>
 
 		<para>
-			The artifacts of a plan are stored in @project.name@'s repository.  This means, for example, that if you drop one of the plan&rsquo;s artifacts in the <code>pickup</code> directory rather than adding it to the repository, the plan will fail to deploy because it will not find the artifact.
+			The artifacts of a plan are usually stored in @project.name@'s repository.  This means, for example, that if you drop one of the plan&rsquo;s artifacts in the <code>pickup</code> directory rather than adding it to the repository, the plan will fail to deploy because it will not find the artifact.
+		</para>
+		<para>
+			The artifacts of a plan may also be stored outside @project.name@'s repository, somewhere else on the file system and referenced from the plan using URIs.
+			Such artifacts must be available on the file system when the plan is deployed and when @project.name@ restarts while the plan is deployed.
+			If you delete any of these artifacts, deployment of the plan may fail, either when it is initially deployed or when @project.name@ restarts.
 		</para>
 
 		<section id="developing-applications-plans-create">
@@ -280,7 +285,7 @@ Manifest-Version: 1.0
 </plan>]]></programlisting>
 			<para>
 				In the preceding example, the name of the plan is <code>multi-artifact.plan</code> and its version is <code>1.0.0</code>.  
-				The plan is both scoped and atomic.    The plan contains two artifacts: one is a bundle called <code>com.springsource.exciting.app</code> and the other is a configuration file called <code>app-properties</code>.  
+				The plan is both scoped and atomic. The plan contains two artifacts: one is a bundle called <code>com.springsource.exciting.app</code> and the other is a configuration file called <code>app-properties</code>.  
 			</para>
 			<para>
 				The following table describes the attributes of the <code>&lt;plan&gt;</code> element.
@@ -352,7 +357,9 @@ Manifest-Version: 1.0
 				</tgroup>
 			</table>
 			<para>
-				The following table describes the attributes of the <code>&lt;artifact&gt;</code> element.
+				The following table describes the attributes of the <code>&lt;artifact&gt;</code> element. Note that you must either specify <literal>type</literal>, <literal>name</literal>, and (optionally) <literal>version</literal>,
+				in which case @project.name@'s repository is searched for the artifact, or <literal>uri</literal> in which case the artifact is obtained directly from the file system.
+				If you specify <literal>uri</literal>, you must not specify <literal>type</literal>, <literal>name</literal>, or <literal>version</literal>.
 			</para>
 			<table id="developing-applications-plans-create-artifact-attributes" colsep="1" frame="all" rowsep="1">
 				<title>Attributes of the &lt;artifact&gt; Element</title>
@@ -379,20 +386,34 @@ Manifest-Version: 1.0
 		</itemizedlist>
 		</entry>
 
-							<entry>Yes.</entry>
+							<entry>Yes, unless <literal>uri</literal> is specified in which case <literal>type</literal> must not be specified and is automatically determined from the artifact.</entry>
 						</row>
 						<row>
 							<entry><literal>name</literal></entry>
 							<entry>Specifies the name of the artifact. 
-
-		<para>See <link linkend="artifact-names">Artifact Names</link> for guidelines for determining the name of an artifact.</para>
+								<para>See <link linkend="artifact-names">Artifact Names</link> for guidelines for determining the name of an artifact.</para>
 							</entry>
-							<entry>Yes.</entry>
+							<entry>Yes, unless <literal>uri</literal> is specified in which case <literal>name</literal> must not be specified and is automatically determined from the artifact.</entry>
 						</row>
 						<row>
 							<entry><literal>version</literal></entry>
-							<entry>Specifies the version or range of versions of this artifact that @project.name@ should look up in its repositories and then install and deploy.  You must use OSGi version specification syntax, such as <code>[1.0.0, 2.0.0)</code>. </entry>
-							<entry>No.  If not specified, defaults to <code>0</code>, which in OSGi means 0 to infinity, or any version.</entry>
+							<entry>Specifies the range of versions of this artifact that @project.name@ should look up in its repositories and then install and deploy.
+								You must use OSGi version specification syntax, such as <code>[1.0.0, 2.0.0)</code>.
+								Note that a single version number represents the range from that version number upwards.
+								For example, <code>1.3</code> represents the range of versions greater than or equal to <code>1.3</code>.
+							</entry>
+							<entry>No. If <literal>uri</literal> is specified, <literal>version</literal> must not be specified.
+							If neither <literal>uri</literal> nor <literal>version</literal> are specified, <literal>version</literal> defaults to <code>0</code>, which in OSGi means 0 to infinity, or any version.</entry>
+						</row>
+						<row>
+							<entry><literal>uri</literal></entry>
+							<entry>
+								Specifies an optional, absolute URI string beginning with <code>file:</code> that refers to the artifact on the file system.
+								Such an artifact must be available on the file system when the plan is deployed and when @project.name@ restarts while the plan is deployed.
+								If you delete such an artifact, deployment of the plan may fail, either when it is initially deployed or when @project.name@ restarts.
+								This attribute is normally omitted so that the artifact is searched for in @project.name@'s repository.
+							</entry>
+							<entry>No. If not specified, @project.name@ searches for the artifact in its repository.</entry>
 						</row>
 					</tbody>
 				</tgroup>
@@ -677,17 +698,9 @@ password          = secret</screen>
 <!-- ======================================================================= -->
 
 	<section id="using-spring">
-		<title>Using Spring and Spring DM</title>
+		<title>Using Spring, Spring DM, and Blueprint</title>
 		<para>
-			@project.name@ supports the use of Spring framework and Spring DM (specifically version 1.2.1) by application bundles.
-			For detailed information, please refer to the
-			<ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/">
-				Spring Framework Reference Documentation
-			</ulink>
-			and the
-			<ulink url="http://static.springframework.org/osgi/docs/current/reference/html/">
-				Spring Dynamic Modules Reference Guide
-			</ulink>.
+			@project.name@ supports the use of Spring framework and Spring DM (as supported by Gemini Blueprint) by application bundles.
 		</para>
 		<para>
 			Spring (and Spring DM) application context XML files should generally be placed in a bundle's <literal>META-INF/spring</literal> directory, but
@@ -716,6 +729,12 @@ password          = secret</screen>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 ]]></programlisting>
+		</para>
+		<para>
+			@project.name@ has Gemini Blueprint built-in and thereby supports the OSGi Blueprint standard in addition to Spring DM.
+		</para>
+		<para>
+			For detailed information on Spring Framework, Spring DM, and Blueprint, please see <xref linkend="prerequisites-references"/>.
 		</para>
 	</section> <!-- end of using Spring and Spring DM -->
 	

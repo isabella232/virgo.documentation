@@ -31,4 +31,13 @@
 			@kernel.product.name@ programmers who should simply ignore the web-related sections.
 		</para>
 	</simplesect>
+	<simplesect>
+		<title>A Note to @nano.product.name@ Programmers</title>
+		<para>
+			This guide is written primarily for @tomcat.product.name@ programmers. Although a base version of @nano.product.name@, without the new provisioning
+			system, is used to build the @tomcat.product.name@, much of this guide does not apply to @nano.product.name@. The @nano.product.name.short@ lacks regions support but has much
+			improved runtime footprint and startup time and also provides support for p2 provisioning. The @nano.product.name@ features are covered better in the 
+			<ulink url="../../virgo-user-guide/html/index.html">User Guide</ulink>.
+		</para>
+	</simplesect>
 </preface>
