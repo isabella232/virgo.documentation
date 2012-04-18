@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="wiki-build-tools" default="collect-docbook">
+<project name="wiki-build-tools">
 
 	<property name="eclipse.wiki.url-fragment"
 		value="http://wiki.eclipse.org/api.php?action=query&amp;prop=revisions&amp;rvprop=content&amp;format=xml&amp;titles=" />

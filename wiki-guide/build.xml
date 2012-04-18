@@ -16,6 +16,7 @@
 	<target name="collect-virgo-eclipse">
 <!--Manually Maintained		<collect-remote-wiki wiki.page="Virgo" wiki.title="Introduction"/> -->
 		<delete dir="Virgo"/>
+		<collect-eclipse wiki.page="Virgo" wiki.title="Virgo"/>
 		<collect-eclipse wiki.page="Virgo/FAQ" wiki.title="FAQ"/>
 		<collect-eclipse wiki.page="Virgo/Concepts" wiki.title="Concepts"/>
 		<collect-eclipse wiki.page="Virgo/Source" wiki.title="Source"/>

@@ -40,6 +40,7 @@
 		<topic href="Virgo/Build/Virgo-Tooling-Builds.html#Hudson_Builds_2" label="Hudson Builds"></topic>
 		<topic href="Virgo/Build/Virgo-Tooling-Builds.html#Building_in_Eclipse" label="Building in Eclipse"></topic>
 		<topic href="Virgo/Build/Virgo-Tooling-Builds.html#Building_Documentation" label="Building Documentation">
+			<topic href="Virgo/Build/Virgo-Tooling-Builds.html#Updating_Wiki_Text_Documentation" label="Updating Wiki Text Documentation"></topic>
 			<topic href="Virgo/Build/Virgo-Tooling-Builds.html#Editing_Media_Wiki_Documents" label="Editing Media Wiki Documents"></topic>
 		</topic>
 	</topic>

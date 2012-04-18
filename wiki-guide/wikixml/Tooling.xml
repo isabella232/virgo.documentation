@@ -24,9 +24,9 @@
 	</chapter>
 	<chapter id="Installation">
 		<title>Installation</title>
-		<section id="Eclipse">
-			<title>Eclipse</title>
-			<para>Prerequisites, either: </para>
+		<section id="Install_Eclipse">
+			<title>Install Eclipse</title>
+			<para>If you're not installing into an existing Eclipse, you'll need one. </para>
 			<itemizedlist>
 				<listitem>
 					<para>Eclipse Helios SR2, or </para>
@@ -37,66 +37,69 @@
 			</itemizedlist>
 			<para>Eclipse JEE Indigo recommended.</para>
 		</section>
+		<section id="Install_Virgo">
+			<title>Install Virgo</title>
+			<orderedlist>
+				<listitem>
+					<para>Select 
+						<emphasis role="italic">Help&gt;Install New Software..</emphasis>
+					</para>
+				</listitem>
+				<listitem>
+					<para>Enter one of the Virgo update sites below.</para>
+				</listitem>
+				<listitem>
+					<para>Select &quot;Virgo Tools&quot; feature and click install.</para>
+				</listitem>
+			</orderedlist>
+		</section>
 		<section id="Update_Sites">
 			<title>Update Sites</title>
-			<para>We recommend that you install the snapshot until the latest milestone is up.</para>
-			<section id="Milestone">
-				<title>Milestone</title>
-				<itemizedlist>
-					<listitem>
-						<para>Add SpringSource Tool Suite 2.7 update site to available update sites: 
-							<ulink url="http://dist.springsource.com/release/TOOLS/update/2.7.1.RELEASE/e3.6">http://dist.springsource.com/release/TOOLS/update/2.7.1.RELEASE/e3.6</ulink> (At the moment the Virgo IDE has a dependency on the Spring IDE. We are working on removing this dependency. Until we get there, you need Spring IDE installed or available at one of the update sites.) 
-						</para>
-					</listitem>
-					<listitem>
-						<para>Go to &quot;Install New Software&quot; and put the Virgo IDE milestone update site into the dialog: 
-							<ulink url="http://download.eclipse.org/virgo/milestone/IDE">http://download.eclipse.org/virgo/milestone/IDE</ulink>. 
-						</para>
-					</listitem>
-					<listitem>
-						<para>Select the &quot;Core / Virgo IDE&quot; feature and install </para>
-					</listitem>
-					<listitem>
-						<para>Done</para>
-					</listitem>
-				</itemizedlist>
-			</section>
-			<section id="Snapshot">
-				<title>Snapshot</title>
-				<orderedlist>
-					<listitem>
-						<para>Select 
-							<emphasis role="italic">Help&gt;Install New Software..</emphasis>
-						</para>
-					</listitem>
-					<listitem>
-						<para>Enter Virgo update site: 
-							<ulink url="http://download.eclipse.org/virgo/snapshot/tooling">http://download.eclipse.org/virgo/snapshot/tooling</ulink>
-						</para>
-					</listitem>
-					<listitem>
-						<para>Select &quot;Virgo Tools&quot; feature and click install.</para>
-					</listitem>
-				</orderedlist>
-			</section>
+			<variablelist>
+				<varlistentry>
+					<term>Milestone: &lt;code&gt;
+						<ulink url="http://download.eclipse.org/virgo/milestone/tooling&amp;lt;/code&amp;gt">http://download.eclipse.org/virgo/milestone/tooling&amp;lt;/code&amp;gt</ulink>;
+					</term>
+				</varlistentry>
+				<varlistentry>
+					<term>Snapshot: &lt;code&gt;
+						<ulink url="http://download.eclipse.org/virgo/snapshot/tooling&amp;lt;/code&amp;gt">http://download.eclipse.org/virgo/snapshot/tooling&amp;lt;/code&amp;gt</ulink>;
+					</term>
+				</varlistentry>
+			</variablelist>
 		</section>
 	</chapter>
 	<chapter id="Known_Issues">
 		<title>Known Issues</title>
-		<section id="Current_Milestone">
-			<title>Current Milestone</title>
-			<para>This section lists important issues with the current Milestone release, e.g. M2.</para>
+		<section id="Milestone_M3_.28Current.29">
+			<title>Milestone M3 (Current)</title>
+			<para>Significant bugs still exist. Please see these release train bugs for a current list, and please report any other issues you discover:</para>
+			<itemizedlist>
+				<listitem>
+					<para>368783: Server management UI bug train 
+						<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368783">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368783</ulink>
+					</para>
+				</listitem>
+				<listitem>
+					<para>368785: Server runtime support bug train 
+						<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368785">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368785</ulink>
+					</para>
+				</listitem>
+				<listitem>
+					<para>368782: Plugin packaging issues bug train 
+						<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368782">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368782</ulink>
+					</para>
+				</listitem>
+			</itemizedlist>
+			<para>You can see all open bugs 
+				<ulink url="https://bugs.eclipse.org/bugs/buglist.cgi?list_id=1289794;query_format=advanced;bug_status=NEW;bug_status=ASSIGNED;bug_status=REOPENED;component=tooling;product=Virgo">here</ulink>.
+			</para>
+		</section>
+		<section id="Milestone_M2">
+			<title>Milestone M2</title>
 			<section id="Version_Compatibility">
 				<title>Version Compatibility</title>
-				<para>The milestone does not work well with the current milestone of the runtime environment (&quot;3.1.0&quot; / 3.5.0). Please target the 3.0.2 Release Virgo Runtime or use the current snapshot build.</para>
-			</section>
-		</section>
-		<section id="Current_Snapshot">
-			<title>Current Snapshot</title>
-			<para>This section lists important changes from the prior release to the current snapshot.</para>
-			<section id="Version_Compatibility_2">
-				<title>Version Compatibility</title>
-				<para>The snapshot should now be supporting all versions. Please raise a bug if you have any issues.</para>
+				<para>The milestone does not work well with the current milestone of the runtime environment (&quot;3.1.0&quot; / 3.5.0). Please target the 3.0.2 Release Virgo Runtime or use the current milestone.</para>
 			</section>
 		</section>
 	</chapter>

@@ -1,43 +1,27 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<toc topic="Virgo/Committers/Committers.html" label="Committers">
-	<anchor id="before-reference" />
+<toc topic="Virgo/Virgo.html" label="Virgo Wiki">
 	<topic label="Concepts">
 		<link toc="Virgo-Concepts-toc.xml" />
-		<anchor id="additions-reference" />
 	</topic>
 	<topic label="Frequently Asked Questions">
 		<link toc="Virgo-FAQ-toc.xml" />
-		<anchor id="additions-faq" />
 	</topic>
 	<topic label="Source">
 		<link toc="Virgo-Source-toc.xml" />
-		<anchor id="additions-faq" />
 	</topic>
 	<topic label="Build">
 		<link toc="Virgo-Build-toc.xml" />
-		<anchor id="additions-faq" />
 	</topic>
 	<topic label="Test">
 		<link toc="Virgo-Test-toc.xml" />
-		<anchor id="additions-faq" />
-	</topic>
-	<topic label="Tooling">
-		<link toc="Virgo-Tooling-toc.xml" />
-		<anchor id="additions-faq" />
 	</topic>
 	<topic label="Future">
 		<link toc="Virgo-FAQ-toc.xml" />
-		<anchor id="additions-faq" />
 	</topic>
 	<topic label="Community">
 		<link toc="Virgo-Community-toc.xml" />
-		<anchor id="additions-faq" />
 	</topic>
 	<topic label="Committers">
 		<link toc="Virgo-Committers-toc.xml" />
-		<anchor id="additions-faq" />
 	</topic>
-	<anchor id="after-reference" />
-	<anchor id="additions" />
-	<topic href="doc/notices.html" label="Legal" />
 </toc>

@@ -11,49 +11,43 @@ The Virgo Tooling/IDE concept concerns the whole Virgo tooling (that was availab
 
 = Installation  =
 
-==Eclipse==
+==Install Eclipse==
 
-Prerequisites, either: 
+If you're not installing into an existing Eclipse, you'll need one. 
 
 *Eclipse Helios SR2, or 
 *Eclipse Indigo
 
 Eclipse JEE Indigo recommended.
 
-==Update Sites==
-
-We recommend that you install the snapshot until the latest milestone is up.
-
-===Milestone===
-
-*Add SpringSource Tool Suite 2.7 update site to available update sites: http://dist.springsource.com/release/TOOLS/update/2.7.1.RELEASE/e3.6 (At the moment the Virgo IDE has a dependency on the Spring IDE. We are working on removing this dependency. Until we get there, you need Spring IDE installed or available at one of the update sites.) 
-*Go to &quot;Install New Software&quot; and put the Virgo IDE milestone update site into the dialog: http://download.eclipse.org/virgo/milestone/IDE. 
-*Select the &quot;Core / Virgo IDE&quot; feature and install 
-*Done
-
-===Snapshot===
+==Install Virgo==
 
 #Select ''Help&gt;Install New Software..''
-#Enter Virgo update site: http://download.eclipse.org/virgo/snapshot/tooling
+#Enter one of the Virgo update sites below.
 #Select &quot;Virgo Tools&quot; feature and click install.
+
+==Update Sites==
+
+;Milestone: &lt;code&gt;http://download.eclipse.org/virgo/milestone/tooling&lt;/code&gt;
+;Snapshot: &lt;code&gt;http://download.eclipse.org/virgo/snapshot/tooling&lt;/code&gt;
 
 = Known Issues =
 
-== Current Milestone ==
+== Milestone M3 (Current) ==
 
-This section lists important issues with the current Milestone release, e.g. M2.
+Significant bugs still exist. Please see these release train bugs for a current list, and please report any other issues you discover:
+
+*368783: Server management UI bug train https://bugs.eclipse.org/bugs/show_bug.cgi?id=368783
+*368785: Server runtime support bug train https://bugs.eclipse.org/bugs/show_bug.cgi?id=368785
+*368782: Plugin packaging issues bug train https://bugs.eclipse.org/bugs/show_bug.cgi?id=368782
+
+You can see all open bugs [https://bugs.eclipse.org/bugs/buglist.cgi?list_id=1289794;query_format=advanced;bug_status=NEW;bug_status=ASSIGNED;bug_status=REOPENED;component=tooling;product=Virgo here].
+
+== Milestone M2 ==
 
 === Version Compatibility ===
 
-The milestone does not work well with the current milestone of the runtime environment (&quot;3.1.0&quot; / 3.5.0). Please target the 3.0.2 Release Virgo Runtime or use the current snapshot build.
-
-== Current Snapshot ==
-
-This section lists important changes from the prior release to the current snapshot.
-
-=== Version Compatibility ===
-
-The snapshot should now be supporting all versions. Please raise a bug if you have any issues.
+The milestone does not work well with the current milestone of the runtime environment (&quot;3.1.0&quot; / 3.5.0). Please target the 3.0.2 Release Virgo Runtime or use the current milestone.
 
 = Notes  =
 

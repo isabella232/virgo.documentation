@@ -2,18 +2,14 @@
 <toc topic="Virgo/Tooling/Tooling.html" label="Tooling">
 	<topic href="Virgo/Tooling/Tooling.html" label="Features"></topic>
 	<topic href="Virgo/Tooling/Installation.html" label="Installation">
-		<topic href="Virgo/Tooling/Installation.html#Eclipse" label="Eclipse"></topic>
-		<topic href="Virgo/Tooling/Installation.html#Update_Sites" label="Update Sites">
-			<topic href="Virgo/Tooling/Installation.html#Milestone" label="Milestone"></topic>
-			<topic href="Virgo/Tooling/Installation.html#Snapshot" label="Snapshot"></topic>
-		</topic>
+		<topic href="Virgo/Tooling/Installation.html#Install_Eclipse" label="Install Eclipse"></topic>
+		<topic href="Virgo/Tooling/Installation.html#Install_Virgo" label="Install Virgo"></topic>
+		<topic href="Virgo/Tooling/Installation.html#Update_Sites" label="Update Sites"></topic>
 	</topic>
 	<topic href="Virgo/Tooling/Known-Issues.html" label="Known Issues">
-		<topic href="Virgo/Tooling/Known-Issues.html#Current_Milestone" label="Current Milestone">
+		<topic href="Virgo/Tooling/Known-Issues.html#Milestone_M3_.28Current.29" label="Milestone M3 (Current)"></topic>
+		<topic href="Virgo/Tooling/Known-Issues.html#Milestone_M2" label="Milestone M2">
 			<topic href="Virgo/Tooling/Known-Issues.html#Version_Compatibility" label="Version Compatibility"></topic>
-		</topic>
-		<topic href="Virgo/Tooling/Known-Issues.html#Current_Snapshot" label="Current Snapshot">
-			<topic href="Virgo/Tooling/Known-Issues.html#Version_Compatibility_2" label="Version Compatibility"></topic>
 		</topic>
 	</topic>
 	<topic href="Virgo/Tooling/Notes.html" label="Notes">
