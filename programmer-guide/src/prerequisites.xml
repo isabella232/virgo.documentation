@@ -19,6 +19,7 @@
 		</para>
 		<itemizedlist>
 			<listitem><ulink url="../../virgo-user-guide/html/index.html">@project.name@ User Guide</ulink></listitem>
+			<listitem><ulink url="../../virgo-tooling-guide/html/index.html">@project.name@ Tooling Guide</ulink></listitem>
 			<listitem><ulink url="http://static.springframework.org/osgi/docs/current/reference/html/">Spring Dynamic Modules Reference</ulink></listitem>
 			<listitem><ulink url="http://www.osgi.org/Specifications/HomePage">Blueprint Container Specification</ulink>
 			(in the OSGi 4.2 and 5.0 Enterprise Specifications)</listitem>
