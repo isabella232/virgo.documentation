@@ -1,0 +1,42 @@
+<?xml version='1.0' ?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+
+	<chapter id="What.27s_New">
+		<title>What's New</title>
+		<section id="1.0.0_M3">
+			<title>1.0.0 M3</title>
+			<para>We've made extensive changes throughout Virgo, focusing on quality and migration, but with a few new features as well.</para>
+		</section>
+		<section id="Improved_Server_Support">
+			<title>Improved Server Support</title>
+			<para>Virgo now supports almost all versions and types of Virgo installs, including older versions of Virgo and Tomcat, Jetty and Kernel installations. Best of all, you can now define servers using a single Server Runtime and the tooling will automatically discover the appropriate server configurations. You can even change server installations and versions for server runtimes without having to maintain any server setttings.</para>
+			<para>
+				<ulink url="/wiki/images:whats-new-M3-server">images:whats-new-M3-server</ulink>
+			</para>
+		</section>
+		<section id="Documentation_and_Help">
+			<title>Documentation and Help</title>
+			<para>The complete virgo documentation set -- including the Tooling, Programmer and User's Guide as well as the Wiki pages -- is now included as Eclipse Help.</para>
+			<para>
+				<ulink url="/wiki/images:whats-new-M3-help">images:whats-new-M3-help</ulink>
+			</para>
+		</section>
+		<section id="Installation_Process">
+			<title>Installation Process</title>
+			<para>Virgo Tools can now be installed from a single update site location.</para>
+		</section>
+		<section id="Quality">
+			<title>Quality</title>
+			<itemizedlist>
+				<listitem>
+					<para>Extensive bug fixes and re-factorings.</para>
+				</listitem>
+				<listitem>
+					<para>All Remaining Spring Dependencies have been removed.</para>
+				</listitem>
+				<listitem>
+					<para>Updated to meet Eclipse branding, packaging build and testing standards.</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+	</chapter>
