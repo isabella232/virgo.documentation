@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="wiki-build-tools">
 
-	<property name="eclipse.wiki.url-fragment"
-		value="http://wiki.eclipse.org/api.php?action=query&amp;prop=revisions&amp;rvprop=content&amp;format=xml&amp;titles=" />
-	<property name="eclipse.wiki.url" value="http://wiki.eclipse.org"/>
-	
+	<property name="eclipse.wiki.url-fragment" value="http://wiki.eclipse.org/api.php?action=query&amp;prop=revisions&amp;rvprop=content&amp;format=xml&amp;titles=" />
+	<property name="eclipse.wiki.url" value="http://wiki.eclipse.org" />
+
 	<property name="wiki.page" value="" />
 	<property name="wiki.title" value="${wiki.title}" />
 	<property name="wiki.url" value="${eclipse.wiki.url-fragment}${wiki.page}" />
@@ -71,10 +70,8 @@
 		</fileset>
 	</path>
 
-	<taskdef classpathref="wikitext.tasks.classpath"
-		resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties" />
-	<taskdef classpathref="wikitext.tasks.classpath"
-		resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
+	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties" />
+	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
 
 	<target name="init-project">
 		<delete file="${wiki.dir}/${wiki.title}.mediawiki" />
@@ -126,8 +123,7 @@
 		<replaceregexp match="&lt;book&gt;" replace="">
 			<fileset refid="xml.wiki.file" />
 		</replaceregexp>
-		<replaceregexp match="&lt;title&gt;.*&lt;/title&gt;"
-			replace="">
+		<replaceregexp match="&lt;title&gt;.*&lt;/title&gt;" replace="">
 			<fileset refid="xml.wiki.file" />
 		</replaceregexp>
 		<replaceregexp match="&lt;/book&gt;" replace="">
@@ -138,8 +134,7 @@
 	<macrodef name="demote-n">
 		<attribute name="n" />
 		<sequential>
-			<replaceregexp byline="true" match="\A(={@{n}})([^=]*)={@{n}}$"
-				replace="\1=\2\1=">
+			<replaceregexp byline="true" match="\A(={@{n}})([^=]*)={@{n}}$" replace="\1=\2\1=">
 				<fileset refid="wiki.file" />
 			</replaceregexp>
 		</sequential>
@@ -162,27 +157,21 @@
 		<mkdir dir="tmp" />
 	</target>
 
-	<target name="collect-eclipse-help" depends="init"
-		description="Generate Eclipse help content for the Virgo user guide">
-<echo>${wiki.page}  ${wiki.title}</echo>
-		<mediawiki-to-eclipse-help wikiBaseUrl="${eclipse.wiki.url}"
-			validate="true" failonvalidationerror="true" prependImagePrefix="images"
-			formatoutput="true" defaultAbsoluteLinkTarget="doc_external" dest="${basedir}"
-			title="${wiki.title}" generateUnifiedToc="false">
-			<path name="${wiki.page}" title="${wiki.title}"
-				generateToc="true" />
+	<target name="collect-eclipse-help" depends="init" description="Generate Eclipse help content for the Virgo user guide">
+		<echo>${wiki.page}  ${wiki.title}</echo>
+		<mediawiki-to-eclipse-help wikiBaseUrl="${eclipse.wiki.url}" helpPrefix="wiki" validate="true" failonvalidationerror="true" prependImagePrefix="images" formatoutput="true" defaultAbsoluteLinkTarget="doc_external" dest="${basedir}" title="${wiki.title}" generateUnifiedToc="false">
+			<path name="${wiki.page}" title="${wiki.title}" generateToc="true" />
+			<markupLanguageConfiguration escapingHtmlAndXml="true"/>
 			<stylesheet url="book.css" />
 			<pageAppendum>
 
 				= Updating This Document =
 
 				This document is maintained in a collaborative wiki. If you wish to
-				update or modify this document please visit
-				{url}
+				update or modify this document please visit http://wiki.eclipse.org/${wiki.page}
 			</pageAppendum>
 		</mediawiki-to-eclipse-help>
 	</target>
-	
-	<target name="collect-wiki-docbook"
-		depends="collect-wiki-remote, convert-wiki-to-docbook, copy-docbook" />
+
+	<target name="collect-wiki-docbook" depends="collect-wiki-remote, convert-wiki-to-docbook, copy-docbook" />
 </project>

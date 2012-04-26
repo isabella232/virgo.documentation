@@ -55,6 +55,9 @@
 		</section>
 		<section id="Update_Sites">
 			<title>Update Sites</title>
+			<para>
+				<emphasis role="bold">Note, M3 is not quite here yet, so as of the moment you should use the snapshot build, not the milestone. As soon as M3 is formally released, this will change.</emphasis>
+			</para>
 			<variablelist>
 				<varlistentry>
 					<term>Milestone: &lt;code&gt;
@@ -73,6 +76,10 @@
 		<title>Known Issues</title>
 		<section id="Milestone_M3_.28Current.29">
 			<title>Milestone M3 (Current)</title>
+			<para>
+				<emphasis role="bold">The Virgo tools currently do not support Eclipse 3.6 (Helios) and derived Spring Source products.</emphasis> Please see: 
+				<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236">https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236</ulink>.
+			</para>
 			<para>Significant bugs still exist. Please see these release train bugs for a current list, and please report any other issues you discover:</para>
 			<itemizedlist>
 				<listitem>
@@ -122,8 +129,8 @@
 	</chapter>
 	<chapter id="Migration">
 		<title>Migration</title>
-		<section id="Fron_Pre_M2_to_M3">
-			<title>Fron Pre M2 to M3</title>
+		<section id="From_Pre_M2_to_M3">
+			<title>From Pre M2 to M3</title>
 			<section id="Server_Versions">
 				<title>Server Versions</title>
 				<para>The good news: We have done away with the need for managing multiple server versions. This also means that we won't have to support multiple WebTools Server Runtimes and Servers which will make adding new servers and variants much easier. See 

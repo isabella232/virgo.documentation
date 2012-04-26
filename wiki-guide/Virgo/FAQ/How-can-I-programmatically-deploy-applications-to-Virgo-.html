@@ -35,7 +35,7 @@
 			<a href="/version">/version</a>" will refer to an artifact in a provisioning repository. The square brackets indicate that the trailing "/version" is optional, in which case Virgo uses the highest version available, and are not part of the URL. In the case of a bundle, "type" is "bundle" and "name" is the bundle symbolic name (and if "version" is specified, it is the bundle version). 
 		</p>
 		<p>Note that you 
-			<i>can</i> also install bundles using <tt>BundleContext.installBundle</tt> and they will be installed in the same region as the bundle whose bundle context was used to perform the install. However, bundles installed in this way will 
+			<i>can</i> also install bundles using &lt;tt&gt;BundleContext.installBundle&lt;/tt&gt; and they will be installed in the same region as the bundle whose bundle context was used to perform the install. However, bundles installed in this way will 
 			<i>not</i> pass through the Virgo deployment pipeline and will 
 			<i>not</i> be subject to the transformations normally applied to bundles as they are deployed in Virgo.
 		</p><hr/>

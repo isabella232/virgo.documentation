@@ -35,7 +35,7 @@
 			<a href="http://wiki.eclipse.org/Virgo/Tooling" target="doc_external">Virgo IDE tooling</a> and AJDT (the current update site may be found on 
 			<a href="http://www.eclipse.org/ajdt/downloads/" target="doc_external">http://www.eclipse.org/ajdt/downloads/</a>).
 		</p>
-		<p><span style="color:#ff0000">Don't forget to install AJDT as this is needed so that Eclipse produces the same compiled classes as the Ant build!</span></p>
+		<p>&lt;span style="color:#ff0000"&gt;Don't forget to install AJDT as this is needed so that Eclipse produces the same compiled classes as the Ant build!&lt;/span&gt;</p>
 		<p>At the time of writing, some ant targets occasionally fail because they cannot load classes from jsch-0.1.42.jar. A workaround on Mac OS X is to copy this JAR from virgo-build's /lib/ivy directory to /opt/local/share/java/apache-ant/lib.</p>
 		<p>On Mac OS X, increase the default number of concurrently open files by adding this to .profile:</p>
 		<pre>       ulimit -n 10000
@@ -52,7 +52,7 @@
 			<li>Generate SSH key by calling ssh-keygen without a passphrase</li>
 			<li>Upload your public SSH key to build.eclipse.org
 				<ul>
-					<li>login with user <code>virgoBuild</code></li>
+					<li>login with user &lt;code&gt;virgoBuild&lt;/code&gt;</li>
 					<li>follow the steps described 
 						<a href="http://wiki.eclipse.org/Git#Setting_up_ssh_keys" title="Git#Setting_up_ssh_keys" target="doc_external">here</a>
 					</li>
@@ -76,7 +76,7 @@
 </pre>
 		<h2 id="Notes_for_Ubuntu_10.04">Notes for Ubuntu 10.04</h2>
 		<h3 id="JDK">JDK</h3>
-		<p>I have found that the <code>sun-java6-jdk</code> package is not installable directly from a fresh install of this level of Ubuntu (I'm running this in a virtual machine). (I set <code>JAVA_HOME</code> to be <code>/usr/lib/jvm/java-6-sun</code> which is a symbolic link, and this doesn't need updating after the install below.)</p>
+		<p>I have found that the &lt;code&gt;sun-java6-jdk&lt;/code&gt; package is not installable directly from a fresh install of this level of Ubuntu (I'm running this in a virtual machine). (I set &lt;code&gt;JAVA_HOME&lt;/code&gt; to be &lt;code&gt;/usr/lib/jvm/java-6-sun&lt;/code&gt; which is a symbolic link, and this doesn't need updating after the install below.)</p>
 		<p>To get the jdk to be installed I issued the following commands (which you might find useful):</p>
 		<pre>   sudo add-apt-repository "deb http:''//''archive.canonical.com''/'' lucid partner"
 </pre>
@@ -86,7 +86,7 @@
 		<p>(to reset the package-manager indexes)</p>
 		<pre>   sudo apt-get install --fix-missing sun-java6-jdk
 </pre>
-		<p>The <code>--fix-missing</code> option is necessary since other packages are required.</p>
+		<p>The &lt;code&gt;--fix-missing&lt;/code&gt; option is necessary since other packages are required.</p>
 		<h3 id="jsch_library">jsch library</h3>
 		<p>The JCraft's 
 			<a href="http://www.jcraft.com/jsch/" target="doc_external">jsch library</a> needed for SSH/SCP support in ANT may need to be installed, e.g.: 
@@ -96,7 +96,7 @@
 		<p>Check in ANT if its available: </p>
 		<pre>   ant -diagnostics
 </pre>
-		<p>If the output says under "Tasks availability" <code>sshexec&nbsp;: Missing dependency com.jcraft.jsch.Logger</code>, then you'll need to provide this library to ANT. On Linux you can do this by creating a symlink: </p>
+		<p>If the output says under "Tasks availability" &lt;code&gt;sshexec&nbsp;: Missing dependency com.jcraft.jsch.Logger&lt;/code&gt;, then you'll need to provide this library to ANT. On Linux you can do this by creating a symlink: </p>
 		<pre>   sudo ln -s /usr/share/java/jsch-0.1.42.jar /usr/share/ant/lib/jsch-0.1.42.jar
 </pre>
 		<p>or on Mac OS, place (a link to) the JAR in ~/.ant/lib:</p>

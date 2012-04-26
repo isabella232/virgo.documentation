@@ -30,7 +30,7 @@
 			</tr>
 		</table><hr/>
 		<h1 id="How_can_I_get_a_graphical_application_to_work_in_Virgo.3F">How can I get a graphical application to work in Virgo?</h1>
-		<p>To get GUI apps to work in Virgo, you have to edit <tt>lib/java6-server.profile</tt> in order to add some packages to the <tt>org.osgi.framework.bootdelegation</tt> property.</p>
+		<p>To get GUI apps to work in Virgo, you have to edit &lt;tt&gt;lib/java6-server.profile&lt;/tt&gt; in order to add some packages to the &lt;tt&gt;org.osgi.framework.bootdelegation&lt;/tt&gt; property.</p>
 		<p>On Mac, you need to add some Apple packages:</p>
 		<pre>org.osgi.framework.bootdelegation = \
  org.eclipse.virgo.osgi.extensions.*,\
@@ -45,7 +45,7 @@
  apple.*,\
  com.apple.*&lt;/span&gt;
 </pre>
-		<p>On Windows, you just need to add <tt>com.sun.*</tt> as <tt>sun.*</tt> is already in the list.</p>
+		<p>On Windows, you just need to add &lt;tt&gt;com.sun.*&lt;/tt&gt; as &lt;tt&gt;sun.*&lt;/tt&gt; is already in the list.</p>
 		<pre>org.osgi.framework.bootdelegation = \
  org.eclipse.virgo.osgi.extensions.*,\
  org.eclipse.virgo.osgi.launcher.*,\

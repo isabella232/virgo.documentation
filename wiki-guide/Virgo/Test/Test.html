@@ -36,7 +36,7 @@
 		<h1 id="Testing">Testing</h1>
 		<p>Virgo has a strong emphasis on testing. Unit tests check the behaviour of individual classes or small groups of classes. Integration tests check the behaviour of groups of Virgo bundles running together in Equinox. System verification tests (SVTs), including some simple performance tests, check the behaviour of packaging builds of the kernel and web server from a user's perspective. </p>
 		<p>
-			<a href="http://www.junit.org/" target="doc_external">JUnit</a> is used for all these types of tests. Each testcase is structured as a class with class name ending in <tt>Tests</tt>. Tests typically reside in the <tt>src/test/java</tt> folder of a project. 
+			<a href="http://www.junit.org/" target="doc_external">JUnit</a> is used for all these types of tests. Each testcase is structured as a class with class name ending in &lt;tt&gt;Tests&lt;/tt&gt;. Tests typically reside in the &lt;tt&gt;src/test/java&lt;/tt&gt; folder of a project. 
 		</p>
 		<p>If you need a thorough introduction to Test Driven Development, we recommend "
 			<a href="http://www.growing-object-oriented-software.com/" target="doc_external">Growing Object-Oriented Software Guided by Tests</a>". This book makes the important point that unless test code is as clean as the code under test, the tests will inevitably end up slowing down the whole project. Good test coverage enables changes to be made with confidence, so test code should be refactored and kept clean just like the code under test. 
@@ -61,8 +61,8 @@
 			<a href="Virgo-Test-Framework.html#Virgo_Test_Framework">Virgo test framework</a>, described below.
 		</p>
 		<h2 id="Automated_Testing">Automated Testing</h2>
-		<p>Test dependencies are either checked in to <tt>src/test/resources</tt> or are downloaded into an Ivy repository when the tests are built. </p>
-		<p>The unit and integration tests of a Virgo git repository can be run by changing into the <tt>build-xxx</tt> directory and issuing: </p>
+		<p>Test dependencies are either checked in to &lt;tt&gt;src/test/resources&lt;/tt&gt; or are downloaded into an Ivy repository when the tests are built. </p>
+		<p>The unit and integration tests of a Virgo git repository can be run by changing into the &lt;tt&gt;build-xxx&lt;/tt&gt; directory and issuing: </p>
 		<pre>ant clean clean-integration test
 </pre>
 		<p> 
@@ -70,7 +70,7 @@
 		<pre>ant -Dci.build=true clean clean-integration test
 </pre>
 		<p> 
-			and, since this will always report "build successful", remember to open <tt>target/test-results/index.html</tt> at the end to see which tests passed and which failed. </p>
+			and, since this will always report "build successful", remember to open &lt;tt&gt;target/test-results/index.html&lt;/tt&gt; at the end to see which tests passed and which failed. </p>
 		<h3 id="Running_a_Subset_of_the_Tests">Running a Subset of the Tests</h3>
 		<p>To run the tests in a particular project, change directory to the project directory and then issue:</p>
 		<pre>ant test
@@ -87,13 +87,13 @@
 </pre>
 		<p>This is due to a limitation of the Windows FS - it is not supporting filepaths longer than 260 characters. 
 			In order to solve that issue it is recommended to either always execute the tests with ''-Dci.build=true'' option or move your kernel repository closer to the root and shorten its folder name.
-			Here's an example. Instead of: <pre> C:\myDir\org.eclipse.virgo.kernel\&lt;repo_content&gt; </pre> use <pre> C:\o.e.v.k\&lt;repo_content&gt; </pre>
+			Here's an example. Instead of: &lt;pre&gt; C:\myDir\org.eclipse.virgo.kernel\&lt;repo_content&gt; &lt;/pre&gt; use &lt;pre&gt; C:\o.e.v.k\&lt;repo_content&gt; &lt;/pre&gt;
 			That way the tests will pass and you won't have to include ''-Dci.build=true''.</p>
 		<h2 id="System_Verification_Tests">System Verification Tests</h2>
 		<p>SVTs are present in the Virgo Kernel System Verification Tests and the Virgo System Verification Tests repositories. Building these repositories runs the tests.</p>
 		<h3 id="Manual_Steps_for_Virgo_System_Verification_Tests">Manual Steps for Virgo System Verification Tests</h3>
 		<p>The Virgo System Verification Tests repository requires a certain amount of manual hand-holding.</p>
-		<p>You need to copy a packaged Tomcat server zip file into <tt>build-svt/target/artifacts/</tt> and then run the following ant target: </p>
+		<p>You need to copy a packaged Tomcat server zip file into &lt;tt&gt;build-svt/target/artifacts/&lt;/tt&gt; and then run the following ant target: </p>
 		<pre>ant test-svt
 </pre>
 		<p>At the (successful or unsuccessful) end, some processes are typically left running: the Virgo web server ("Launcher") and/or a database ("Server"). This is convenient if you want to run some specific SVT test in Eclipse but not if you want to do other work, such as run the tests again, in which case you must kill these processes, e.g.:</p>
@@ -106,7 +106,7 @@ $ kill -9 29925 29908
 		<h2 id="Performance_Tests">Performance Tests</h2>
 		<p>A small number of SVTs in the Virgo Performance Tests git repository check that the performance of Virgo does not worsen. These tests are very approximate since it is impossible to enforce precise performance goals when tests are run in a general CI server which may be subject to fluctuation in its load and performance. </p>
 		<h2 id="Ignoring_Tests">Ignoring Tests</h2>
-		<p>Ignoring a failing test is always a last resort. If this is required, then a bug must be raised and the failing test method or, in rare situations, the whole test class should be annotated using the <tt>org.junit.Ignore</tt> annotation: </p>
+		<p>Ignoring a failing test is always a last resort. If this is required, then a bug must be raised and the failing test method or, in rare situations, the whole test class should be annotated using the &lt;tt&gt;org.junit.Ignore&lt;/tt&gt; annotation: </p>
 		<pre>@Ignore("bug &amp;lt;bugzilla number&amp;gt;: &amp;lt;reason for ignoring the test&amp;gt;")
 </pre>
 		<p> 

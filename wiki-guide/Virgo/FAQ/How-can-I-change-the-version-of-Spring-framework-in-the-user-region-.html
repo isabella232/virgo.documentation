@@ -31,7 +31,7 @@
 		</table><hr/>
 		<h1 id="How_can_I_change_the_version_of_Spring_framework_in_the_user_region.3F">How can I change the version of Spring framework in the user region?</h1>
 		<p>You can upgrade or downgrade the version of Spring framework in the user region provided the new version satisfies the version range required by Virgo. Virgo 3.0.x can use 3.0.x versions of Spring framework. To use Spring framework 3.1.x requires Virgo 3.5.0 or later.</p>
-		<p>To upgrade or downgrade, delete the Spring framework bundles and <tt>.libd</tt> file in <tt>repository/ext</tt> and then add the corresponding bundles and <tt>.libd</tt> file for the replacement version of Spring framework. The Spring framework bundles are listed in the <tt>.libd</tt> file if you are uncertain about which they are. Then re-start Virgo with the <tt>-clean</tt> switch and the user region should now run with the replacement version of Spring framework.</p>
+		<p>To upgrade or downgrade, delete the Spring framework bundles and &lt;tt&gt;.libd&lt;/tt&gt; file in &lt;tt&gt;repository/ext&lt;/tt&gt; and then add the corresponding bundles and &lt;tt&gt;.libd&lt;/tt&gt; file for the replacement version of Spring framework. The Spring framework bundles are listed in the &lt;tt&gt;.libd&lt;/tt&gt; file if you are uncertain about which they are. Then re-start Virgo with the &lt;tt&gt;-clean&lt;/tt&gt; switch and the user region should now run with the replacement version of Spring framework.</p>
 		<p>Here's an example of upgrading Spring framework on a UNIX system:</p>
 		<pre>cd repository/ext/
 rm org.springframework.*-3.0.5.RELEASE.*

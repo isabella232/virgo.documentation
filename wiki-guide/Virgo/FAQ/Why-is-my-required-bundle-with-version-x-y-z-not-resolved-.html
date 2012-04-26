@@ -33,21 +33,21 @@
 		<p>To specify a version in a Require-Bundle header an (OSGi standard) attribute 
 			<b>bundle-version</b> is needed.
 		</p>
-		<p><code>
+		<p>&lt;code&gt;
 			Require-Bundle: bar;bundle-version="
 			<a href="x.y.z,x.y.z">x.y.z,x.y.z</a>"
-</code>
+			&lt;/code&gt;
 		</p>
 		<p>The attribute is spelled 
 			<b>bundle-version=</b> rather than 
 			<b>version=</b> as used with Import-Package. A misspelled attribute can show the following error:
 		</p>
-		<p><code></p>
+		<p>&lt;code&gt;</p>
 		<pre>   Resolver report:
        A Require-Bundle could not be resolved. Caused by missing constraint in bundle &lt;foo_1.0.0&gt;
             constraint: &lt;Require-Bundle: bar; bundle-version="0.0.0"&gt;
 </pre>
-		<p></code></p>
+		<p>&lt;/code&gt;</p>
 		<p>If a required bundle cannot be resolved check the spelling of the attribute as well as the location of the required bundle.</p><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>

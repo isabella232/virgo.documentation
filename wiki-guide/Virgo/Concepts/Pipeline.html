@@ -37,14 +37,14 @@
 		<p>
 			<img width="500" align="middle" border="0" src="images/Virgo_Pipeline_Stages.png"/> 
 		</p>
-		<p>The pipeline, and each pipeline stage, accepts a tree of install artifacts as input and outputs a possibly modified tree. The deployment pipeline is constructed by the <tt>Plumber</tt> class.</p>
+		<p>The pipeline, and each pipeline stage, accepts a tree of install artifacts as input and outputs a possibly modified tree. The deployment pipeline is constructed by the &lt;tt&gt;Plumber&lt;/tt&gt; class.</p>
 		<h2 id="Transformers">Transformers</h2>
-		<p>Many of the interesting modifications to the tree are performed by the transform stage which uses the whiteboard pattern to drive all services of a Transformer type in order of service ranking. A number of standard Transformer services are defined in the Spring context file <tt>deployer-context.xml</tt> in the kernel's deployer bundle. Some interesting examples of standard Transformers are: </p>
+		<p>Many of the interesting modifications to the tree are performed by the transform stage which uses the whiteboard pattern to drive all services of a Transformer type in order of service ranking. A number of standard Transformer services are defined in the Spring context file &lt;tt&gt;deployer-context.xml&lt;/tt&gt; in the kernel's deployer bundle. Some interesting examples of standard Transformers are: </p>
 		<ul>
-			<li><tt>PlanResolver</tt> which takes as input a tree consisting of a single plan node and adds a subtree representing the content of the plan, including any nested plans and their subtrees, </li>
-			<li><tt>ScopingTransformer</tt> which rewrites the metadata of a subtree rooted in a scoped plan and gathers service scoping information for the subtree, </li>
-			<li><tt>SyntheticContextBundleCreatingTransformer</tt> which adds a synthetic context bundle as a child node of a scoped plan, and </li>
-			<li><tt>ImportExpandingTransformer</tt> which converts Virgo-specific headers such as <tt>import-bundle</tt> into standard OSGi <tt>import-package</tt> statements.</li>
+			<li>&lt;tt&gt;PlanResolver&lt;/tt&gt; which takes as input a tree consisting of a single plan node and adds a subtree representing the content of the plan, including any nested plans and their subtrees, </li>
+			<li>&lt;tt&gt;ScopingTransformer&lt;/tt&gt; which rewrites the metadata of a subtree rooted in a scoped plan and gathers service scoping information for the subtree, </li>
+			<li>&lt;tt&gt;SyntheticContextBundleCreatingTransformer&lt;/tt&gt; which adds a synthetic context bundle as a child node of a scoped plan, and </li>
+			<li>&lt;tt&gt;ImportExpandingTransformer&lt;/tt&gt; which converts Virgo-specific headers such as &lt;tt&gt;import-bundle&lt;/tt&gt; into standard OSGi &lt;tt&gt;import-package&lt;/tt&gt; statements.</li>
 		</ul>
 		<h2 id="Quasi_Framework">Quasi Framework</h2>
 		<p>The 

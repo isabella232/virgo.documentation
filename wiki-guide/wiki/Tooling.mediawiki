@@ -28,12 +28,16 @@ Eclipse JEE Indigo recommended.
 
 ==Update Sites==
 
+'''Note, M3 is not quite here yet, so as of the moment you should use the snapshot build, not the milestone. As soon as M3 is formally released, this will change.'''
+
 ;Milestone: &lt;code&gt;http://download.eclipse.org/virgo/milestone/tooling&lt;/code&gt;
 ;Snapshot: &lt;code&gt;http://download.eclipse.org/virgo/snapshot/tooling&lt;/code&gt;
 
 = Known Issues =
 
 == Milestone M3 (Current) ==
+
+'''The Virgo tools currently do not support Eclipse 3.6 (Helios) and derived Spring Source products.''' Please see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236.
 
 Significant bugs still exist. Please see these release train bugs for a current list, and please report any other issues you discover:
 
@@ -65,7 +69,7 @@ Deploying PDE/Equinox Bundles to Virgo Web Server are not yet supported yet, alt
 
 = Migration  =
 
-== Fron Pre M2 to M3 ==
+== From Pre M2 to M3 ==
 
 === Server Versions ===
 
