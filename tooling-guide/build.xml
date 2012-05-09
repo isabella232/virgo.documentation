@@ -9,5 +9,4 @@
 		<filter token="bundle.version" value="${bundle.version}"/>
 		<filtersfile file="${basedir}/filters.properties"/>
 	</filterset>
-
 </project>

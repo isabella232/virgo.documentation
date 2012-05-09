@@ -28,14 +28,17 @@ Eclipse JEE Indigo recommended.
 
 ==Update Sites==
 
-'''Note, M3 is not quite here yet, so as of the moment you should use the snapshot build, not the milestone. As soon as M3 is formally released, this will change.'''
+'''Note, M4 is not quite here yet, so as of the moment you should use the snapshot build, not the milestone. As soon as M3 is formally released, this will change.'''
 
 ;Milestone: &lt;code&gt;http://download.eclipse.org/virgo/milestone/tooling&lt;/code&gt;
 ;Snapshot: &lt;code&gt;http://download.eclipse.org/virgo/snapshot/tooling&lt;/code&gt;
 
+
+Many users will also want to install the M2E release at: &lt;code&gt;http://download.eclipse.org/technology/m2e/releases&lt;/code&gt;. (e.g. in order to run the greenpages examples.)
+
 = Known Issues =
 
-== Milestone M3 (Current) ==
+== M4 Candidate (Current Snapshot) ==
 
 '''The Virgo tools currently do not support Eclipse 3.6 (Helios) and derived Spring Source products.''' Please see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236.
 
@@ -46,6 +49,10 @@ Significant bugs still exist. Please see these release train bugs for a current 
 *368782: Plugin packaging issues bug train https://bugs.eclipse.org/bugs/show_bug.cgi?id=368782
 
 You can see all open bugs [https://bugs.eclipse.org/bugs/buglist.cgi?list_id=1289794;query_format=advanced;bug_status=NEW;bug_status=ASSIGNED;bug_status=REOPENED;component=tooling;product=Virgo here].
+
+== M3 ==
+
+There wasn't one. :) We're moving to M4 to more closely align with Virgo Runtime releases.
 
 == Milestone M2 ==
 

@@ -1,26 +1,60 @@
-=What's New=
+==What's New==
 
-==1.0.0 M3==
+==1.0.0 M4==
 
 We've made extensive changes throughout Virgo, focusing on quality and migration, but with a few new features as well.
 
-==Improved Server Support==
+===Improved Server Support===
 
 Virgo now supports almost all versions and types of Virgo installs, including older versions of Virgo and Tomcat, Jetty and Kernel installations. Best of all, you can now define servers using a single Server Runtime and the tooling will automatically discover the appropriate server configurations. You can even change server installations and versions for server runtimes without having to maintain any server setttings.
 
-[[images:whats-new-M3-server]]
+[[Image:images/whats-new-M4-server.png|800px]]
 
-==Documentation and Help==
+===UI===
+
+We've provided a number of new features aimed at improving the user experience. We've been giving more transparency and leverage into what's actually happening on the server. Right now, interactions with the server involve frequent shifts back and forth between the Eclipse IDE, the native file system and the command line. Our ultimate goal is to have tools powerful and complete enough that you can work with the server without ever having to move out of Eclipse.
+
+====Virgo Perspective====
+
+You can now get your own perspective on Virgo. We've organized it to support runtime exploration but it should be usable for general development as well. Please give us feedback on the overall setup; we'll incorporate the feedback in future releases.
+
+[[Image:images/whats-new-M4-perspective.png|800px]]
+
+====Views====
+
+When we talked to current users of the Spring Source / Virgo tools, one of the things we discovered is that there were a lot of features that they wanted to have us implement that actually already existed, but in many cases were buried somewhere -- in many cases on a page in the server editor. So we're providing some of the information and tools that are provided in the WTP-based Server Editor as stand-alone views and enriching it. The idea is provide better insight into what's happening on the server side. Some of these features involve significant changes to how server resources are treated and we'd appreciate your feedback on how well they work for your usage scenarios. We'll use these changes as a basis for further enhancements.
+
+=====Outline View=====
+
+As a first take at helping users find what they're looking for, we provided an outline view that gives quick access to server artifacts.
+
+[[Image:images/whats-new-M4-outline-view.png|800px]]
+
+=====Artifacts View=====
+
+A new view supports transparent access to runtime artifacts. Currently, you can view bundle jars and libraries, but we'd like to support plans, pars, properties and other artifact types as well. But the real news is what we've built behind this -- Virgo runtimes are now exposed as Eclipse projects, giving you full access to the contents of jars, including classes. You can even use JDT tools like the Type view on Server side jar contents.
+
+[[Image:images/whats-new-M4-artifacts-view.png|800px]]
+
+All of the new views are supported through the Eclipse Common Navigator Framework (CNF), which means that the views are highly configurable, and we've provided buttons to allow you to easily toggle on and off artifact types and present the artifacts in a tree or list view so that you can see all installed jars in one place.
+
+=====Servers View=====
+
+And because the views are all supported through CNF, you can easily customize them. For example, currently you can access all of the bundle information from the server view -- but we'll probably disable that by default in the release. In any case, you can set it up anyway you want by adding or removing the content provider. Again please let us know if you think of a way that we can improve the user experience for you.
+
+[[Image:images/whats-new-M4-servers-view.png]]
+
+===Documentation and Help===
 
 The complete virgo documentation set -- including the Tooling, Programmer and User's Guide as well as the Wiki pages -- is now included as Eclipse Help.
 
-[[images:whats-new-M3-help]]
+[[Image:images/whats-new-M4-help.png|800px]]
 
-==Installation Process==
+===Installation Process===
 
 Virgo Tools can now be installed from a single update site location.
 
-==Quality==
+===Quality===
 
 *Extensive bug fixes and re-factorings.
 *All Remaining Spring Dependencies have been removed.

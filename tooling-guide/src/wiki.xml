@@ -55,6 +55,9 @@
 		</section>
 		<section id="Update_Sites">
 			<title>Update Sites</title>
+			<para>
+				<emphasis role="bold">Note, M4 is not quite here yet, so as of the moment you should use the snapshot build, not the milestone. As soon as M3 is formally released, this will change.</emphasis>
+			</para>
 			<variablelist>
 				<varlistentry>
 					<term>Milestone: &lt;code&gt;
@@ -67,12 +70,19 @@
 					</term>
 				</varlistentry>
 			</variablelist>
+			<para>Many users will also want to install the M2E release at: &lt;code&gt;
+				<ulink url="http://download.eclipse.org/technology/m2e/releases&amp;lt;/code&amp;gt">http://download.eclipse.org/technology/m2e/releases&amp;lt;/code&amp;gt</ulink>;. (e.g. in order to run the greenpages examples.)
+			</para>
 		</section>
 	</section>
 	<section id="Known_Issues">
 		<title>Known Issues</title>
-		<section id="Milestone_M3_.28Current.29">
-			<title>Milestone M3 (Current)</title>
+		<section id="M4_Candidate_.28Current_Snapshot.29">
+			<title>M4 Candidate (Current Snapshot)</title>
+			<para>
+				<emphasis role="bold">The Virgo tools currently do not support Eclipse 3.6 (Helios) and derived Spring Source products.</emphasis> Please see: 
+				<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236">https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236</ulink>.
+			</para>
 			<para>Significant bugs still exist. Please see these release train bugs for a current list, and please report any other issues you discover:</para>
 			<itemizedlist>
 				<listitem>
@@ -94,6 +104,10 @@
 			<para>You can see all open bugs 
 				<ulink url="https://bugs.eclipse.org/bugs/buglist.cgi?list_id=1289794;query_format=advanced;bug_status=NEW;bug_status=ASSIGNED;bug_status=REOPENED;component=tooling;product=Virgo">here</ulink>.
 			</para>
+		</section>
+		<section id="M3">
+			<title>M3</title>
+			<para>There wasn't one. :) We're moving to M4 to more closely align with Virgo Runtime releases.</para>
 		</section>
 		<section id="Milestone_M2">
 			<title>Milestone M2</title>
@@ -122,8 +136,8 @@
 	</section>
 	<section id="Migration">
 		<title>Migration</title>
-		<section id="Fron_Pre_M2_to_M3">
-			<title>Fron Pre M2 to M3</title>
+		<section id="From_Pre_M2_to_M3">
+			<title>From Pre M2 to M3</title>
 			<section id="Server_Versions">
 				<title>Server Versions</title>
 				<para>The good news: We have done away with the need for managing multiple server versions. This also means that we won't have to support multiple WebTools Server Runtimes and Servers which will make adding new servers and variants much easier. See 
