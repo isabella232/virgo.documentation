@@ -1,0 +1,39 @@
+Q: What sets Virgo apart from traditional Java server runtimes?
+
+A: Firstly, its modular design and its support for modular applications, both using OSGi as a module system.
+
+Secondly, its separation of kernel and servers which are simply collections of bundles deployed to the kernel. It's a prime example of the "stackless stack", a term introduced by James Governor (http://www.redmonk.com/jgovernor/2008/02/05/osgi-and-the-rise-of-the-stackless-stack-just-in-time/).
+
+Oh, and its available free of charge under the Eclipse Public License, although many users take open source for granted these days.
+
+Q: If you were asked to make a list of Virgo’s top five features – what would you include?
+
+A: The separate kernel. The "slices" framework for modular web applications. The small footprint, especially with the new "nano" kernel in Virgo 3.5. Application development and administration tools. Advanced diagnostics.
+
+Q: In the Virgo Whitepaper from March 2012, it says that Virgo could be considered “the ideal OSGi server runtime”. Can you specify what is meant by “ideal”?
+
+A: I'd say it provides a more "rounded" experience than the typical OSGi runtime for application developers and administrators, especially those who are new to OSGi. A large part of this is the tooling which lets you develop applications and inspect and manage the runtime state. Then there's the diagnostics, which are essential when things go wrong or you make mistakes. Virgo provides several types of diagnostic dump, event logging intended for administrators, trace logging intended for debugging, and sophisticated OSGi resolution failure analysis.
+ 
+Q: Virgo was started in 2007 as the SpringSource Application Platform. Back then it had three main goals: to provide a better OSGi platform, to simplify migration of Java EE applications to OSGi, and to be modular and extensible. How have the project and its goals evolved since?
+
+A: Back in the early days, the main deliverable was a web server based on embedded Tomcat with some general services underpinning the web server. Since then, the kernel has evolved into a completely separate runtime upon which multiple types of server have been built. Virgo ships Tomcat and Jetty variants and users have built custom servers.
+
+In some regards the goals of the project have never changed, they have always been to provide the best possible OSGi runtime. But the SpringSource project taught us that the application development experience still wasn't simple enough and so SpringSource started recommending the likes of Tomcat and tc Server for the development of regular web applications, positioning OSGi for use where there are exacting modularity requirements. To improve the application development experience, we decided to start the Virgo project at Eclipse so other vendors could collaborate with us, especially on the tooling front. This has paid off with the introduction of OSGi standard tooling in the Libra project and the latest Virgo tooling extending Libra to provide Virgo runtime specific features. There's probably still some way to go, but the tooling has taken major steps forward in the last six months.
+ 
+Q: Given its origin as a SpringSource Platform, what role does Spring technology play in Virgo?
+
+Spring dependency injection is used in implementing Virgo's internals. Spring is integrated into Virgo and available for both web and non-web bundles. The Blueprint implementation integrated into Virgo is built on Spring.
+
+However, the fact that there are many more Virgo committers outside SpringSource than inside has led to less dependency on Spring. The new "nano" kernel does not depend on Spring and uses OSGi Declarative Services for its own dependency management. The Eclipse based tooling is now independent of its roots in the Spring IDE tooling. I think we've got the best of both worlds now: there's good support for Spring for the large number of programmers who are familiar with Spring, but there's also a good story for programmers who prefer to use OSGi standard technologies, such as Blueprint and Declarative Services.
+ 
+A: What new features will be included in Virgo 3.5?
+
+We've factored out a subset of the kernel known as "nano" which has a smaller footprint and much faster startup time than the kernel. We've changed Virgo to look much more like a normal Equinox application (Equinox is the Eclipse implementation of the OSGi framework) and Virgo can now be provisioned using the p2 provisioning component from Eclipse.
+
+As I mentioned earlier, there have been major improvements to the tooling, including support for the kernel, auto-detection of the type of Virgo runtime, a new Virgo perspective, new and improved server-related views, Virgo runtime and tooling documentation integrated into Eclipse help, and the ability to install the tooling from a single update site.
+
+There are also lots of smaller features and improvements including integrated support for the OSGi Blueprint standard and generalisation of the install artefact tree to a Directed Acyclic Graph (consistent with the OSGi Subsystems standard which Virgo helped to shape).
+
+Q: Virgo, Gemini Web runtime and Virgo tooling have had and will continue to have simultaneous releases of their own: Fern, Emerald, Cornflower, Maya, and Bondi. Is the Virgo project on the way to building up its own ecosystem?
+
+A: We'd like to think so, although there are still some missing pieces such as a community-based OSGi bundle repository (something we're hoping to introduce in collaboration with others). The tooling and runtime certainly provide a well integrated development environment for OSGi applications, but we see Virgo as a central part of the broader Eclipse ecosystem: it enables OSGi application development to enter the runtime space rather than just being a way of extending the Eclipse IDE. 
