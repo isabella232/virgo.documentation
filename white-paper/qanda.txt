@@ -8,7 +8,7 @@ Oh, and its available free of charge under the Eclipse Public License, although 
 
 Q: If you were asked to make a list of Virgo’s top five features – what would you include?
 
-A: The separate kernel. The "slices" framework for modular web applications. The small footprint, especially with the new "nano" kernel in Virgo 3.5. Application development and administration tools. Advanced diagnostics.
+A: The separate kernel. The "snaps" framework for modular web applications. The small footprint, especially with the new "nano" kernel in Virgo 3.5. Application development and administration tools. Advanced diagnostics.
 
 Q: In the Virgo Whitepaper from March 2012, it says that Virgo could be considered “the ideal OSGi server runtime”. Can you specify what is meant by “ideal”?
 
@@ -18,7 +18,7 @@ Q: Virgo was started in 2007 as the SpringSource Application Platform. Back then
 
 A: Back in the early days, the main deliverable was a web server based on embedded Tomcat with some general services underpinning the web server. Since then, the kernel has evolved into a completely separate runtime upon which multiple types of server have been built. Virgo ships Tomcat and Jetty variants and users have built custom servers.
 
-In some regards the goals of the project have never changed, they have always been to provide the best possible OSGi runtime. But the SpringSource project taught us that the application development experience still wasn't simple enough and so SpringSource started recommending the likes of Tomcat and tc Server for the development of regular web applications, positioning OSGi for use where there are exacting modularity requirements. To improve the application development experience, we decided to start the Virgo project at Eclipse so other vendors could collaborate with us, especially on the tooling front. This has paid off with the introduction of OSGi standard tooling in the Libra project and the latest Virgo tooling extending Libra to provide Virgo runtime specific features. There's probably still some way to go, but the tooling has taken major steps forward in the last six months.
+In some regards the goals of the project have never changed, they have always been to provide the best possible OSGi runtime. But the SpringSource project taught us that the application development experience still wasn't simple enough and so SpringSource started recommending the likes of Tomcat and tc Server for the development of regular web applications, positioning OSGi for use where there are exacting modularity requirements. To improve the application development experience, we decided to start the Virgo project at Eclipse so other vendors could collaborate with us, especially on the tooling front. This approach looks promising since the introduction of the Libra project, seeded in part from Virgo, as a project for OSGi standard tooling. The latest Virgo tooling extends Libra to provide Virgo runtime specific features. There's probably still some way to go, but the tooling has taken major steps forward in the last six months.
  
 Q: Given its origin as a SpringSource Platform, what role does Spring technology play in Virgo?
 
