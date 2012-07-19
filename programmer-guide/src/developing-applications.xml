@@ -887,6 +887,11 @@ password          = secret</screen>
 			have changed your WABs to match the new behaviour.
 		</para>
 		
+		<para>
+			@tomcat.product.name.short@ supports ROOT.war as a default web application. The <literal>Web-ContextPath</literal>
+			of the deployed ROOT.war is set to the default web context path - <literal>/</literal>. 
+		</para>
+		
 		<tip>
 			<title>System Bundle Package Exports</title>
 			<para>
