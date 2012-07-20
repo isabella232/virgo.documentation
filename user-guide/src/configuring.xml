@@ -1017,7 +1017,10 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
         <section id="configuring-deployment">
         <title>Configuring Deployment</title>
 
-        <para>You can configure two properties of deployment: the pickup directory into which you copy applications for hot-deployment and the deployment timeout.  </para>
+        <para>
+			You can configure various properties of deployment: the pickup directory into which you copy applications for hot-deployment, the deployment timeout,
+			and whether or not bundles are unpacked during deployment.
+		</para>
         <para>To change any of these properties, edit the <literal>deployer.XXX</literal> properties of the <literal>$SERVER_HOME/configuration/org.eclipse.virgo.kernel.properties</literal> file.  The following table describes these properties.  </para>
         <table id="configuring-deployment-table" colsep="1" frame="all" rowsep="1">
                   <title>Deployment Configuration Properties</title>
@@ -1058,6 +1061,26 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 					</entry>
 					<entry>
 						  <literal>300</literal>  
+					</entry>
+                </row>
+                <row>
+                    <entry>
+						<literal>deployer.unpackBundles</literal>
+					</entry>
+                    <entry>
+						Determines whether or not bundles (with file extension <literal>.jar</literal> or <literal>.war</literal>) are unpacked
+						during deployment. The value must be either <literal>true</literal> or <literal>false</literal>.
+						<para>
+							If you want to deploy bundles packed, specify <literal>false</literal>.
+							This option can help alleviate a known issue with <link linkend="long-work-paths">long work directory paths under Windows</link>.
+						</para>
+						<para>
+							Note that web applications may behave differently depending on whether they are deployed packed or unpacked.
+							Certain servlet API methods return <literal>null</literal> when a web application is deployed packed.
+						</para>
+					</entry>
+					<entry>
+						  <literal>true</literal>  
 					</entry>
                 </row>
                 </tbody>

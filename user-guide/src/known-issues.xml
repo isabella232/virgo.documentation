@@ -58,6 +58,16 @@
 			See <link linkend="cleaning-without-starting">Cleaning @tomcat.product.name@ without Starting it</link> for more information.
 		</para>
 	</section>
+	<section id="long-work-paths">
+		<title>Long Work Directory Paths under Windows</title>
+		<para>
+			Problems can arise under Windows when long paths are created in the <literal>work</literal> directory as artefacts are deployed.
+	 	</para>
+		<para>
+			You can shorten some of these paths by preventing bundles from being unpacked during deployment.
+			See <link linkend="configuring-deployment">Configuring Deployment</link> for more information.
+		</para>
+	</section>	
 	<section id="known-issues-jetty-restrictions">
 		<title>@jetty.product.name@ Restrictions</title>
 		<para>
