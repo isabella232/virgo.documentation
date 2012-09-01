@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
-		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book xmlns:xi="http://www.w3.org/2001/XInclude">
 	<bookinfo>
 		<title>@project.name@ Tools Guide</title>
 		<titleabbrev>Tools Guide</titleabbrev>
 		<productname>@project.name@</productname>
 		<releaseinfo>@bundle.version@</releaseinfo>
-
 		<mediaobject>
 			<imageobject role="fo">
 				<imagedata align="center" fileref="images/virgo-logo-small.png" format="PNG" />
@@ -16,7 +14,6 @@
 				<imagedata align="right" fileref="images/virgo-logo-small.png" format="PNG" />
 			</imageobject>
 		</mediaobject>
-
 		<authorgroup>
 			<author>
 				<firstname>Ramnivas</firstname>
@@ -63,17 +60,19 @@
 				<surname>Dos Santos</surname>
 			</author>
 		</authorgroup>
-
-		<legalnotice><para>Copyright &copy; 2012 VMware Inc.</para></legalnotice>
+		<legalnotice>
+			<para>Copyright &copy; 2012 VMware Inc.</para>
+		</legalnotice>
 	</bookinfo>
 
 	<toc />
-	<xi:include href="introduction.xml"/>
-	<xi:include href="whatsnew.xml"/>
-	<xi:include href="running.xml"/>
-	<xi:include href="repository-editor.xml"/>
-	<xi:include href="developing.xml"/>
-	<xi:include href="pars.xml"/>
-	<xi:include href="deploying.xml"/>
-	<xi:include href="wiki.xml"/>
+	<xi:include href="introduction.xml" />
+	<xi:include href="whatsnew.xml" />
+	<xi:include href="running.xml" />
+	<xi:include href="perspective-views.xml" />
+	<xi:include href="server-editor.xml" />
+	<xi:include href="developing.xml" />
+	<xi:include href="pars.xml" />
+	<xi:include href="deploying.xml" />
+	<xi:include href="wiki.xml" />
 </book>

@@ -1,45 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="deploying">
 	<title>Deploying Applications</title>
-	<para>
-		Currently the Tools support direct deployment of WTP Dynamic Web Projects, OSGi
-		bundle and PAR projects to the @tomcat.product.name.short@ from
-		directly within Eclipse.
+	<para>Currently the Tools support direct deployment of WTP Dynamic Web Projects, OSGi bundle and PAR projects to the
+		@umbrella.product.name.short@ from directly within Eclipse.
+	</para>
+	<para>To deploy an application to the @umbrella.product.name@ just bring up the context menu on the configured
+		@umbrella.product.name.short@ runtime in the Servers view and choose "Add or Remove Projects...". In the dialog, select
+		the desired project and add it to the list of "Configured projects".
 	</para>
 	<para>
-		To deploy an application to the @tomcat.product.name@ just bring up the
-		context menu on the configured
-		@tomcat.product.name.short@ runtime in the Servers view and choose "Add or Remove Projects...".
-		In the
-		dialog, select the desired project and add it to the list of "Configured
-		projects".
-	</para>
-	<para>
-		<imagedata fileref="images/tooling-deployed-application.png"
-			format="PNG" />
+		<imagedata fileref="images/tooling-deployed-application.png" format="PNG" />
 	</para>
 	<note>
-		<para>
-			Deploying and undeploying an application from the @tomcat.product.name.short@
-			certainly works
-			while the @tomcat.product.name@ is running, but you can also add or remove
-			projects if the
-			@tomcat.product.name.short@ is not running.
-		</para>
+		<para> Deploying and undeploying an application from the @umbrella.product.name.short@ certainly works while the
+			@umbrella.product.name@ is running, but you can also add or remove projects if the @umbrella.product.name.short@ is not
+			running. </para>
 	</note>
-	<para>
-		Once an application is deployed on the @tomcat.product.name@ the tooling
-		support will automatically
-		pick up any change to source files -- for example, Java and XML context
-		files -- and refresh the
-		deployed application on the @tomcat.product.name.short@.
+	<para>Once an application is deployed on the @umbrella.product.name@ the tooling support will automatically pick up any
+		change to source files -- for example, Java and XML context files -- and refresh the deployed application on the
+		@umbrella.product.name.short@.
 	</para>
-	<para>
-		The wait time between a change and the actual refresh can be configured
-		in the configuration editor of the runtime. To bring up that editor,
-		double-click on the configured @tomcat.product.name@ instance in the
-		Servers view.
+	<para>The wait time between a change and the actual refresh can be configured in the configuration editor of the
+		runtime. To bring up that editor, double-click on the configured @umbrella.product.name@ instance in the Servers view.
 	</para>
 </chapter>

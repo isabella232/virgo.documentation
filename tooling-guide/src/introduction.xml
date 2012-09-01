@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="introduction">
 	<title>Tooling</title>
-	<para>
-		Virgo Tools support the Virgo runtime with tools for managing servers, server runtimes, and bundles. 
-		The IDE tools build on top of the Eclipse Web Tools Project (WTP) and collaborate with other Eclipse technologies such as
-		the Eclipse Libra project.
+	<para>Virgo Tools support the Virgo runtime with tools for managing servers, server runtimes, and bundles. The IDE
+		tools build on top of the Eclipse Web Tools Project (WTP) and collaborate with other Eclipse technologies such as the
+		Eclipse Libra project.
 	</para>
-	<para>
-		Among other things, the Virgo Tools support the creation of new OSGi bundle and PAR projects within Eclipse, and the
-		conversion of existing projects into OSGi bundle projects. Projects can then be deployed and debugged on a running
-		@tomcat.product.name.short@ from within Eclipse.
-	</para>	
+	<para>Among other things, the Virgo Tools support the creation of new OSGi bundle and PAR projects within Eclipse, and
+		the conversion of existing projects into OSGi bundle projects. Projects can then be deployed and debugged on a running
+		@umbrella.product.name.short@ from within Eclipse.
+	</para>
 </chapter>

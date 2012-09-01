@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="server-perspective-views">
+	<title>Server Perspective and Views</title>
+	<section id="server-perspective">
+		<title>Virgo Perspective</title>
+		<para>
+			The Virgo perspective provides an environment customized to support configuring and running @umbrella.product.name@
+			instances, including views for working with @umbrella.product.name.short@s. To switch to the Virgo Perspective from
+			your current perspective, select
+			<menuchoice>
+				<guimenu>Window</guimenu>
+				<guisubmenu>Show Perspective</guisubmenu>
+				<guimenuitem>Other...</guimenuitem>
+			</menuchoice>
+			And select "Virgo".
+		</para>
+		<para>
+			<imagedata fileref="images/virgo-perspective.png" format="PNG" />
+		</para>
+	</section>
+	<section id="views">
+		<title>Views</title>
+		<para>
+			You can explore the contents of installed servers using the Virgo Server Views. These views are designed to help you
+			get to resources on the server without having to switch to the native file system, and integrate those resources with
+			other Eclipse IDE tools. (You can also use the Virgo views from within other perspectives, of course. Select
+			<menuchoice>
+				<guimenu>Window</guimenu>
+				<guisubmenu>Show View</guisubmenu>
+				<guimenuitem>Other...</guimenuitem>
+			</menuchoice>
+			and then open the "Virgo" folder to display them.)
+		</para>
+		<section id="views-respository">
+			<title>Repository View</title>
+			<para>The Virgo Repository view allows you to work directly with the contents of installed bundles and libraries on
+				@product.instance@s.
+			</para>
+			<para>
+				<imagedata fileref="images/views-repository.png" format="PNG" />
+			</para>
+			<para>To view resources, select a repository in the Servers View. You can customize what and how they are displayed
+				using the view toolbar buttons.
+			</para>
+			<para>You can select multiple respositories as well, allowing you to easily navigate and compare resources on
+				multiple servers. You can double-click on items, open them, and even explore class hierchies and other Eclipse
+				features by right clicking on the repository resources.
+			</para>
+			<para>
+				<emphasis>Hint:</emphasis>
+				In the example below we have selected the Flat Layout and can see that javax.ejb library is present in one
+				@umbrella.product.name.short@, but not the other.
+			</para>
+			<para>
+				<imagedata fileref="images/views-repository-example.png" format="PNG" />
+			</para>
+		</section>
+		<section id="views-properties">
+			<title>Properties View</title>
+			<para>The Virgo Properties view allows you to inspect the properties of @product.instance@s. Rather then digging
+				through files on the server instance to find the parameters you need to adjust, simply select the server(s) you want
+				to find parameters for, and a list of properties files will be displayed in the editor. To open a file in the
+				appropriate Eclipse editor, just double-click on it. Or open a tree node and double-click on a specific property and
+				the property value will be highlighted for editing.
+			</para>
+			<para>
+				<imagedata fileref="images/views-properties-tree.png" format="PNG" />
+			</para>
+			<para>
+				<emphasis>Hint:</emphasis>
+				Not sure where a given property is even located? You can easily see all properties within a given
+				@umbrella.product.name.short@
+				across all properties files, sorted by name. Click the "List" button in the view
+				toolbar. You can even see properties across runtime instances by selecting multiple servers in the Server View.
+			</para>
+			<para>
+				<imagedata fileref="images/views-properties-list.png" format="PNG" />
+			</para>
+		</section>
+		<section id="views-logs">
+			<title>Logs View</title>
+			<para>The Virgo Logs view supports easy access to runtime log files. As with the other views, just select the
+				@product.instance@(s) you are interested in. Then double-click to open the relevant log file.
+			</para>
+			<para>
+				<imagedata fileref="images/views-logs.png" format="PNG" />
+			</para>
+		</section>
+		<section id="views-console">
+			<title>Console View</title>
+			<para>The Console view is the same view that is used in the Java and other perspectives. It displays the console
+				activity for the last server instance you launched, assuming that you haven't launched another console hosted
+				process in the mean-time. (This view is not connected to the Server View -- if you want to examine consoles for
+				differnt running servers, click the "Down Triangle" icon in the view toolbar and select the appropriate console.)
+			</para>
+			<para>
+				<imagedata fileref="images/views-logs.png" format="PNG" />
+			</para>
+		</section>
+	</section>
+	<section id="views-projects">
+		<title>Virgo Server Projects</title>
+		<para>To support all of the view features, projects are created within your workspace. These are managed automatically
+			and shouldn't be modified, deleted or renamed. But you can explore these artifacts directly from the project and
+			package explorers and with other Eclipse tools.
+		</para>
+		<para>
+			<emphasis>Hint:</emphasis>
+			For example, you can find out what classes are available on Virgo Servers using the Type and Resource search
+			dialogs. Just select
+			<menuchoice>
+				<guimenu>Navigate</guimenu>
+				<guisubmenuitem>Open Type...</guisubmenuitem>
+			</menuchoice>
+			and enter a search pattern.
+		</para>
+		<para>
+			<imagedata fileref="images/views-open-type-dialog.png" format="PNG" />
+		</para>
+	</section>
+</chapter>

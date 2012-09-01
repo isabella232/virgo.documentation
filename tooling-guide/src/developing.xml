@@ -1,147 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="developing">
 	<title>Developing OSGi Bundles</title>
-	<para>
-		The Tools provide functionality that makes developing OSGi bundles,
-		especially the editing of MANIFEST.MF files, easier.
+	<para>The Tools provide functionality that makes developing OSGi bundles, especially the editing of MANIFEST.MF files,
+		easier.
 	</para>
 	<section id="tooling-developing-resolving-bundle-dependencies">
 		<title>Resolving Bundle Dependencies</title>
 		<para>
-			While working with OSGi bundles, one of the most interesting and
-			challenging aspects is defining
-			the package, bundle, and library imports in the manifest and then
-			keeping this in sync
-			with your compile classpath either in Ant and Maven or Eclipse. In most
-			cases you would typically
-			be required to manually set up the Eclipse classpath. Ultimately, the
-			Eclipse compile
-			classpath is still different from the bundle runtime classpath, as normally an
-			entire
-			JAR file is being made available on the Eclipse classpath but not
-			necessarily at runtime
-			due to the explicit visibility rules defined in
+			While working with OSGi bundles, one of the most interesting and challenging aspects is defining the package, bundle,
+			and library imports in the manifest and then keeping this in sync with your compile classpath either in Ant and Maven
+			or Eclipse. In most cases you would typically be required to manually set up the Eclipse classpath. Ultimately, the
+			Eclipse compile classpath is still different from the bundle runtime classpath, as normally an entire JAR file is
+			being made available on the Eclipse classpath but not necessarily at runtime due to the explicit visibility rules
+			defined in
 			<code>Import-Package</code>
 			headers.
 		</para>
 		<para>
-			The Tools address this problem by providing an Eclipse classpath
-			container that
-			uses an @tomcat.product.name@-specific dependency resolution mechanism.
-			This classpath
-			container makes resolved dependencies available on the project&rsquo;s
-			classpath but allows
-			only access to those package that are imported explicitly (e.g., via
+			The Tools address this problem by providing an Eclipse classpath container that uses an
+			@umbrella.product.name@-specific dependency resolution mechanism. This classpath container makes resolved
+			dependencies available on the project&rsquo;s classpath but allows only access to those package that are imported
+			explicitly (e.g., via
 			<code>Import-Package</code>
-			)
-			or implicitly by using
+			) or implicitly by using
 			<code>Import-Library</code>
 			or
 			<code>Import-Bundle</code>
 			.
 		</para>
-		<para>
-			To use the automatic dependency resolution, an OSGi bundle or PAR
-			project needs to be
-			targeted to a configured @tomcat.product.name@ instance. This can be done
-			from the project&rsquo;s
-			preferences by selecting the runtime on the "Targeted Runtimes" preference page.
-		</para>
+		<para> To use the automatic dependency resolution, an OSGi bundle or PAR project needs to be targeted to a configured
+			@umbrella.product.name@ instance. This can be done from the project&rsquo;s preferences by selecting the runtime on
+			the "Targeted Runtimes" preference page. </para>
 		<para>
 			<note>
-				In most scenarios it is sufficient to target the PAR project to a
-				runtime. The nested
-				bundles will then automatically inherit this setting.
+				In most scenarios it is sufficient to target the PAR project to a runtime. The nested bundles will then
+				automatically inherit this setting.
 			</note>
 		</para>
 		<para>
 			<imagedata fileref="images/tooling-classpath.png" format="PNG" />
 		</para>
-		<para>
-			After targeting the project or PAR you will see a "Bundle Dependencies"
-			classpath
-			container in your Java project. It is now safe to remove any manually
-			configured classpath
-			entries.
-		</para>
-		<para>
-			The classpath container will automatically attach Java source code to
-			the classpath
-			entries by looking for source JARs next to the binary JARs in the
-			@tomcat.product.name@&rsquo;s
-			repository. You can also manually override the source code attachment by using
-			the
-			properties dialog on a single JAR entry. This manual attachment will always
-			override
-			the convention-based attachment.
-		</para>
+		<para> After targeting the project or PAR you will see a "Bundle Dependencies" classpath container in your Java
+			project. It is now safe to remove any manually configured classpath entries. </para>
+		<para> The classpath container will automatically attach Java source code to the classpath entries by looking for
+			source JARs next to the binary JARs in the @umbrella.product.name@&rsquo;s repository. You can also manually override
+			the source code attachment by using the properties dialog on a single JAR entry. This manual attachment will always
+			override the convention-based attachment. </para>
 	</section>
 	<section id="tooling-developing-editing-manifest-mf">
 		<title>Editing the Manifest</title>
 		<para>
-			The Tools provide a Bundle Manifest Editor that assists the developer
-			to create and
-			edit MANIFEST.MF files. The editor understands the @tomcat.product.name@
-			specific headers
-			like
+			The Tools provide a Bundle Manifest Editor that assists the developer to create and edit MANIFEST.MF files. The
+			editor understands the @umbrella.product.name@ specific headers like
 			<code>Import-Library</code>
 			and
 			<code>Import-Bundle</code>
-			and provides content
-			assist features while editing source code. Furthermore a Eclipse Form-based
-			UI is also
+			and provides content assist features while editing source code. Furthermore a Eclipse Form-based UI is also
 			available.
 		</para>
-		<para>
-			To open the Bundle Manifest Editor right click a MANIFEST.MF file and
-			select "Bundle
-			Manifest Editor" from the "Open With" menu.
-		</para>
+		<para> To open the Bundle Manifest Editor right click a MANIFEST.MF file and select "Bundle Manifest Editor" from the
+			"Open With" menu. </para>
 		<para>
 			<note>
-				Please note that the @tomcat.product.name@ specific manifest headers
-				appear in green color
-				to distinguish them from those headers defined in the OSGi
-				specification. This also
-				makes navigating much easier.
+				Please note that the @umbrella.product.name@ specific manifest headers appear in green color to distinguish them
+				from those headers defined in the OSGi specification. This also makes navigating much easier.
 			</note>
 		</para>
 		<para>
-			<imagedata fileref="images/tooling-manifest-source-editor.png"
-				format="PNG" />
+			<imagedata fileref="images/tooling-manifest-source-editor.png" format="PNG" />
 		</para>
-		<para>
-			The content assist proposals in the source tab as well as in the
-			UI-based tabs are
-			resolved from the bundle and library repository of an installed and
-			configured
-			@tomcat.product.name@. Therefore it is important to target the project or PAR to a specific
-			@tomcat.product.name.short@ instance to indicate to the tooling which
-			bundle repository to use.
-		</para>
+		<para> The content assist proposals in the source tab as well as in the UI-based tabs are resolved from the bundle and
+			library repository of an installed and configured @umbrella.product.name@. Therefore it is important to target the
+			project or PAR to a specific @product.instance@ to indicate to the tooling which bundle repository
+			to use. </para>
 		<para>
 			<note>
-				If a OSGi bundle project is not targeted to a
-				@tomcat.product.name.short@ instance, either
-				directory or indirectly via a PAR project&rsquo;s targetting, the manifest
-				editor will not
-				be able to provide content assist for importing packages, bundles, and
-				libraries.
+				If a OSGi bundle project is not targeted to a @product.instance@, either directory or indirectly
+				via a PAR project&rsquo;s targetting, the manifest editor will not be able to provide content assist for importing
+				packages, bundles, and libraries.
 			</note>
 		</para>
 		<para>
-			<imagedata fileref="images/tooling-manifest-form-ui-editor.png"
-				format="PNG" />
+			<imagedata fileref="images/tooling-manifest-form-ui-editor.png" format="PNG" />
 		</para>
-		<para>
-			The Dependencies tab of the Bundle Manifest Editor enables the user to
-			easily download
-			and install bundles and libraries from the @ebr@
-			by using the "Download..." buttons next to the "Import Bundle" and
-			"Import Library"
-			sections.
-		</para>
+		<para> The Dependencies tab of the Bundle Manifest Editor enables the user to easily download and install bundles and
+			libraries from the @ebr@ by using the "Download..." buttons next to the "Import Bundle" and "Import Library"
+			sections. </para>
 	</section>
 </chapter>

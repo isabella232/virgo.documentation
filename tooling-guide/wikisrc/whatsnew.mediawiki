@@ -1,5 +1,40 @@
 ==What's New==
 
+==1.0.0 Release==
+
+===UI===
+
+We've added more views and other tools for working with Virgo Runtime instances. See the expanded Tooling Guide for more information on these new features.
+
+====Views====
+
+In addition to the new Repository View, we've added:
+
+=====Properties View=====
+
+The properties view allows you to directly access all of those Virgo Runtime properties that are buried away in one file or another.
+
+[[Image:images/views-properties-list.png|800px]]
+
+
+=====Logs View=====
+
+The logs view gives you direct access to all of the relevant Virgo logs, no matter where they are located.
+
+[[Image:images/views-properties-list.png|800px]]
+
+====Virgo Server Projects====
+
+To support those new features, Virgo Tooling now maintains a project for each configured Runtime. Because these are Eclipse projects you can use all of the powerful Eclipse IDE tools to explore artifacts installed on the servers. (You shouldn't try to modify these projects directly though.) For example, you can use the JDT Type Hierarchy and Open Type tools.
+
+[[Image:images/views-open-type-dialog.png|800px]]
+
+===Quality===
+
+*We've addressed a number of significant bugs for the final release.
+*Clarified UI.
+*Improved documentation.
+
 ==1.0.0 M4==
 
 We've made extensive changes throughout Virgo, focusing on quality and migration, but with a few new features as well.

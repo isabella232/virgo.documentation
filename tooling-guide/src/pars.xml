@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="pars">
 	<title>Developing PARs</title>
-	<para>
-		In @project.name@, applications consisting of multiple bundles can be
-		packaged as a PAR.
+	<para>In @project.name@, applications consisting of multiple bundles can be packaged as a PAR.
 	</para>
 
 	<para>
@@ -26,76 +23,60 @@
 		:
 		<mediaobject>
 			<imageobject role="fo">
-				<imagedata fileref="images/new-par-project.png" format="PNG"
-					align="center" width="9cm" />
+				<imagedata fileref="images/new-par-project.png" format="PNG" align="center" width="9cm" />
 			</imageobject>
 			<imageobject role="html">
-				<imagedata fileref="images/new-par-project.png" format="PNG"
-					align="center" />
+				<imagedata fileref="images/new-par-project.png" format="PNG" align="center" />
 			</imageobject>
 		</mediaobject>
 	</para>
 	<para>
 		In the New PAR Project dialog, ensure the
 		<emphasis>Use default location</emphasis>
-		option is unchecked,
-		enter a suitable name for the project, set the location to a suitable
-		directory,
-		and press
+		option is unchecked, enter a suitable name for the project, set the location to a suitable directory, and press
 		<emphasis>Next</emphasis>
 		. For example, the Greenpages sample PAR project would look like this:
 		<mediaobject>
 			<imageobject role="fo">
-				<imagedata fileref="images/create-par-project.png" format="PNG"
-					align="center" width="9cm" />
+				<imagedata fileref="images/create-par-project.png" format="PNG" align="center" width="9cm" />
 			</imageobject>
 			<imageobject role="html">
-				<imagedata fileref="images/create-par-project.png" format="PNG"
-					align="center" />
+				<imagedata fileref="images/create-par-project.png" format="PNG" align="center" />
 			</imageobject>
 		</mediaobject>
 	</para>
 	<para>
-		In the next dialog, some of the PAR properties are pre-populated.
-		Set the Application Name and the Version as appropriate, then
-		ensure that the
+		In the next dialog, some of the PAR properties are pre-populated. Set the Application Name and the Version as
+		appropriate, then ensure that the
 		<emphasis>Target Runtime</emphasis>
 		is set to
 		<emphasis>Virgo Web Server (Runtime) ...</emphasis>
 		and press
 		<emphasis>Next</emphasis>
-		.
-		For example:
+		. For example:
 		<mediaobject>
 			<imageobject role="fo">
-				<imagedata fileref="images/par-content.png" format="PNG"
-					align="center" width="10cm" />
+				<imagedata fileref="images/par-content.png" format="PNG" align="center" width="10cm" />
 			</imageobject>
 			<imageobject role="html">
-				<imagedata fileref="images/par-content.png" format="PNG"
-					align="center" />
+				<imagedata fileref="images/par-content.png" format="PNG" align="center" />
 			</imageobject>
 		</mediaobject>
 	</para>
 	<para>
-		In the next dialog, select the bundles so that they are contained in
-		the PAR and press
+		In the next dialog, select the bundles so that they are contained in the PAR and press
 		<emphasis>Finish</emphasis>
-		.
-		For example:
+		. For example:
 		<mediaobject>
 			<imageobject role="fo">
-				<imagedata fileref="images/bundle-references.png" format="PNG"
-					align="center" width="9cm" />
+				<imagedata fileref="images/bundle-references.png" format="PNG" align="center" width="9cm" />
 			</imageobject>
 			<imageobject role="html">
-				<imagedata fileref="images/bundle-references.png" format="PNG"
-					align="center" />
+				<imagedata fileref="images/bundle-references.png" format="PNG" align="center" />
 			</imageobject>
 		</mediaobject>
 	</para>
 
-	<para>
-		The PAR project is then created.
+	<para>The PAR project is then created.
 	</para>
 </chapter>

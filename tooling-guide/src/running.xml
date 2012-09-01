@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="running">
-	<title>Running a @tomcat.product.name@ Instance Within Eclipse</title>
-	<para>
-		After installing the Tools from the update site outlined in the previous
-		section, you
-		will be able to configure an instance of the @tomcat.product.name.short@
-		inside Eclipse.
+	<title>Running a @umbrella.product.name@</title>
+	<para>After installing the Tools from the update site outlined in the previous section, you will be able to configure
+		an instance of the @umbrella.product.name.short@ inside Eclipse.
 	</para>
 	<para>
 		To do so bring up the WTP Servers view (i.e.,
@@ -18,33 +14,32 @@
 			<guimenuitem>Server</guimenuitem>
 			<guimenuitem>Servers</guimenuitem>
 		</menuchoice>
-		).
-		You can now right-click in the view and select "
+		). You can now right-click in the view and select "
 		<menuchoice>
 			<guimenu>New</guimenu>
 			<guimenuitem>Server</guimenuitem>
 		</menuchoice>
-		".
-		This will bring up a "New Server" dialog. Select "@tomcat.product.name@
-		v2.1 Server"
-		in the "Virgo" category and click "
+		". This will bring up a "New Server" dialog. Select @umbrella.product.name.short@ in the "@runtime.category@" category
+		and click "
 		<guibutton>Next</guibutton>
 		".
 	</para>
 	<para>
 		<imagedata fileref="images/tooling-new-server.png" format="PNG" />
 	</para>
-	<para>
-		Within the "New Server Wizard" point to the installation directory of the
-		@tomcat.product.name@
-		and finish the wizard. After finishing the wizard you should see a
-		@tomcat.product.name@
-		entry in the Servers view.
+	<para>Within the "New Server Wizard" point to the installation directory of the @umbrella.product.name.short@ and
+		finish the wizard. (The tools will automatically detect the type of server install, so you can point to a
+		@tomcat.product.name@, @jetty.product.name@, @kernel.product.name@ or any other supported
+		@umbrella.product.name.short@.)
 	</para>
 	<para>
-		To start, stop, and debug the created @tomcat.product.name@ instance use
-		the toolbar or the context
-		menu actions of the Servers view.
+		<imagedata fileref="images/tooling-new-server-2.png" format="PNG" />
+	</para>
+	<para>After finishing the wizard you should see a @umbrella.product.name.short@ for the relevant server type in the
+		Servers view.
+	</para>
+	<para>To start, stop, and debug the created @product.instance@ use the toolbar or the context menu
+		actions of the Servers view.
 	</para>
 	<para>
 		<imagedata fileref="images/tooling-start-server.png" format="PNG" />

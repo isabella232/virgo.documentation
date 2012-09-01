@@ -1,103 +1,205 @@
 <?xml version='1.0' ?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-	<chapter id="What.27s_New">
-		<section>
-			<title>What's New</title>
-		</section>
-		<section id="1.0.0_M4">
-			<title>1.0.0 M4</title>
-			<para>We've made extensive changes throughout Virgo, focusing on quality and migration, but with a few new features as well.</para>
-			<section id="Improved_Server_Support">
-				<title>Improved Server Support</title>
-				<para>Virgo now supports almost all versions and types of Virgo installs, including older versions of Virgo and Tomcat, Jetty and Kernel installations. Best of all, you can now define servers using a single Server Runtime and the tooling will automatically discover the appropriate server configurations. You can even change server installations and versions for server runtimes without having to maintain any server setttings.</para>
-				<para>
-					<mediaobject>
-						<imageobject>
-							<imagedata fileref="images/whats-new-M4-server.png"/>
-						</imageobject>
-					</mediaobject>
-				</para>
-			</section>
-			<section id="UI">
-				<title>UI</title>
-				<para>We've provided a number of new features aimed at improving the user experience. We've been giving more transparency and leverage into what's actually happening on the server. Right now, interactions with the server involve frequent shifts back and forth between the Eclipse IDE, the native file system and the command line. Our ultimate goal is to have tools powerful and complete enough that you can work with the server without ever having to move out of Eclipse.</para>
-				<section id="Virgo_Perspective">
-					<title>Virgo Perspective</title>
-					<para>You can now get your own perspective on Virgo. We've organized it to support runtime exploration but it should be usable for general development as well. Please give us feedback on the overall setup; we'll incorporate the feedback in future releases.</para>
+<chapter id="What.27s_New">
+	<title>What's New</title>
+	<section id="1.0.0_Release">
+		<title>1.0.0 Release</title>
+		<section id="UI">
+			<title>UI</title>
+			<para>We've added more views and other tools for working with Virgo Runtime instances. See the expanded Tooling
+				Guide for more information on these new features.
+			</para>
+			<section id="Views">
+				<title>Views</title>
+				<para>In addition to the new Repository View, we've added:</para>
+				<section id="Properties_View">
+					<title>Properties View</title>
+					<para>The properties view allows you to directly access all of those Virgo Runtime properties that are buried away
+						in one file or another.
+					</para>
 					<para>
 						<mediaobject>
 							<imageobject>
-								<imagedata fileref="images/whats-new-M4-perspective.png"/>
+								<imagedata fileref="images/views-properties-list.png" />
 							</imageobject>
 						</mediaobject>
 					</para>
 				</section>
-				<section id="Views">
-					<title>Views</title>
-					<para>When we talked to current users of the Spring Source / Virgo tools, one of the things we discovered is that there were a lot of features that they wanted to have us implement that actually already existed, but in many cases were buried somewhere -- in many cases on a page in the server editor. So we're providing some of the information and tools that are provided in the WTP-based Server Editor as stand-alone views and enriching it. The idea is provide better insight into what's happening on the server side. Some of these features involve significant changes to how server resources are treated and we'd appreciate your feedback on how well they work for your usage scenarios. We'll use these changes as a basis for further enhancements.</para>
-					<section id="Outline_View">
-						<title>Outline View</title>
-						<para>As a first take at helping users find what they're looking for, we provided an outline view that gives quick access to server artifacts.</para>
-						<para>
-							<mediaobject>
-								<imageobject>
-									<imagedata fileref="images/whats-new-M4-outline-view.png"/>
-								</imageobject>
-							</mediaobject>
-						</para>
-					</section>
-					<section id="Artifacts_View">
-						<title>Artifacts View</title>
-						<para>A new view supports transparent access to runtime artifacts. Currently, you can view bundle jars and libraries, but we'd like to support plans, pars, properties and other artifact types as well. But the real news is what we've built behind this -- Virgo runtimes are now exposed as Eclipse projects, giving you full access to the contents of jars, including classes. You can even use JDT tools like the Type view on Server side jar contents.</para>
-						<para>
-							<mediaobject>
-								<imageobject>
-									<imagedata fileref="images/whats-new-M4-artifacts-view.png"/>
-								</imageobject>
-							</mediaobject>
-						</para>
-						<para>All of the new views are supported through the Eclipse Common Navigator Framework (CNF), which means that the views are highly configurable, and we've provided buttons to allow you to easily toggle on and off artifact types and present the artifacts in a tree or list view so that you can see all installed jars in one place.</para>
-					</section>
-					<section id="Servers_View">
-						<title>Servers View</title>
-						<para>And because the views are all supported through CNF, you can easily customize them. For example, currently you can access all of the bundle information from the server view -- but we'll probably disable that by default in the release. In any case, you can set it up anyway you want by adding or removing the content provider. Again please let us know if you think of a way that we can improve the user experience for you.</para>
-						<para>
-							<mediaobject>
-								<imageobject>
-									<imagedata fileref="images/whats-new-M4-servers-view.png"/>
-								</imageobject>
-							</mediaobject>
-						</para>
-					</section>
+				<section id="Logs_View">
+					<title>Logs View</title>
+					<para>The logs view gives you direct access to all of the relevant Virgo logs, no matter where they are located.
+					</para>
+					<para>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/views-properties-list.png" />
+							</imageobject>
+						</mediaobject>
+					</para>
 				</section>
 			</section>
-			<section id="Documentation_and_Help">
-				<title>Documentation and Help</title>
-				<para>The complete virgo documentation set -- including the Tooling, Programmer and User's Guide as well as the Wiki pages -- is now included as Eclipse Help.</para>
+			<section id="Virgo_Server_Projects">
+				<title>Virgo Server Projects</title>
+				<para>To support those new features, Virgo Tooling now maintains a project for each configured Runtime. Because
+					these are Eclipse projects you can use all of the powerful Eclipse IDE tools to explore artifacts installed on the
+					servers. (You shouldn't try to modify these projects directly though.) For example, you can use the JDT Type
+					Hierarchy and Open Type tools.
+				</para>
 				<para>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/whats-new-M4-help.png"/>
+							<imagedata fileref="images/views-open-type-dialog.png" />
 						</imageobject>
 					</mediaobject>
 				</para>
 			</section>
-			<section id="Installation_Process">
-				<title>Installation Process</title>
-				<para>Virgo Tools can now be installed from a single update site location.</para>
+		</section>
+		<section id="Quality">
+			<title>Quality</title>
+			<itemizedlist>
+				<listitem>
+					<para>We've addressed a number of significant bugs for the final release.</para>
+				</listitem>
+				<listitem>
+					<para>Clarified UI.</para>
+				</listitem>
+				<listitem>
+					<para>Improved documentation.</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+	</section>
+	<section id="1.0.0_M4">
+		<title>1.0.0 M4</title>
+		<para>We've made extensive changes throughout Virgo, focusing on quality and migration, but with a few new features
+			as well.
+		</para>
+		<section id="Improved_Server_Support">
+			<title>Improved Server Support</title>
+			<para>Virgo now supports almost all versions and types of Virgo installs, including older versions of Virgo and
+				Tomcat, Jetty and Kernel installations. Best of all, you can now define servers using a single Server Runtime and
+				the tooling will automatically discover the appropriate server configurations. You can even change server
+				installations and versions for server runtimes without having to maintain any server setttings.
+			</para>
+			<para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/whats-new-M4-server.png" />
+					</imageobject>
+				</mediaobject>
+			</para>
+		</section>
+		<section id="UI_2">
+			<title>UI</title>
+			<para>We've provided a number of new features aimed at improving the user experience. We've been giving more
+				transparency and leverage into what's actually happening on the server. Right now, interactions with the server
+				involve frequent shifts back and forth between the Eclipse IDE, the native file system and the command line. Our
+				ultimate goal is to have tools powerful and complete enough that you can work with the server without ever having
+				to move out of Eclipse.
+			</para>
+			<section id="Virgo_Perspective">
+				<title>Virgo Perspective</title>
+				<para>You can now get your own perspective on Virgo. We've organized it to support runtime exploration but it
+					should be usable for general development as well. Please give us feedback on the overall setup; we'll incorporate
+					the feedback in future releases.
+				</para>
+				<para>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/whats-new-M4-perspective.png" />
+						</imageobject>
+					</mediaobject>
+				</para>
 			</section>
-			<section id="Quality">
-				<title>Quality</title>
-				<itemizedlist>
-					<listitem>
-						<para>Extensive bug fixes and re-factorings.</para>
-					</listitem>
-					<listitem>
-						<para>All Remaining Spring Dependencies have been removed.</para>
-					</listitem>
-					<listitem>
-						<para>Updated to meet Eclipse branding, packaging build and testing standards.</para>
-					</listitem>
-				</itemizedlist>
+			<section id="Views_2">
+				<title>Views</title>
+				<para>When we talked to current users of the Spring Source / Virgo tools, one of the things we discovered is that
+					there were a lot of features that they wanted to have us implement that actually already existed, but in many
+					cases were buried somewhere -- in many cases on a page in the server editor. So we're providing some of the
+					information and tools that are provided in the WTP-based Server Editor as stand-alone views and enriching it. The
+					idea is provide better insight into what's happening on the server side. Some of these features involve
+					significant changes to how server resources are treated and we'd appreciate your feedback on how well they work
+					for your usage scenarios. We'll use these changes as a basis for further enhancements.
+				</para>
+				<section id="Outline_View">
+					<title>Outline View</title>
+					<para>As a first take at helping users find what they're looking for, we provided an outline view that gives quick
+						access to server artifacts.
+					</para>
+					<para>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/whats-new-M4-outline-view.png" />
+							</imageobject>
+						</mediaobject>
+					</para>
+				</section>
+				<section id="Artifacts_View">
+					<title>Artifacts View</title>
+					<para>A new view supports transparent access to runtime artifacts. Currently, you can view bundle jars and
+						libraries, but we'd like to support plans, pars, properties and other artifact types as well. But the real news
+						is what we've built behind this -- Virgo runtimes are now exposed as Eclipse projects, giving you full access to
+						the contents of jars, including classes. You can even use JDT tools like the Type view on Server side jar
+						contents.
+					</para>
+					<para>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/whats-new-M4-artifacts-view.png" />
+							</imageobject>
+						</mediaobject>
+					</para>
+					<para>All of the new views are supported through the Eclipse Common Navigator Framework (CNF), which means that
+						the views are highly configurable, and we've provided buttons to allow you to easily toggle on and off artifact
+						types and present the artifacts in a tree or list view so that you can see all installed jars in one place.
+					</para>
+				</section>
+				<section id="Servers_View">
+					<title>Servers View</title>
+					<para>And because the views are all supported through CNF, you can easily customize them. For example, currently
+						you can access all of the bundle information from the server view -- but we'll probably disable that by default
+						in the release. In any case, you can set it up anyway you want by adding or removing the content provider. Again
+						please let us know if you think of a way that we can improve the user experience for you.
+					</para>
+					<para>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/whats-new-M4-servers-view.png" />
+							</imageobject>
+						</mediaobject>
+					</para>
+				</section>
 			</section>
 		</section>
-	</chapter>
+		<section id="Documentation_and_Help">
+			<title>Documentation and Help</title>
+			<para>The complete virgo documentation set -- including the Tooling, Programmer and User's Guide as well as the Wiki
+				pages -- is now included as Eclipse Help.
+			</para>
+			<para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/whats-new-M4-help.png" />
+					</imageobject>
+				</mediaobject>
+			</para>
+		</section>
+		<section id="Installation_Process">
+			<title>Installation Process</title>
+			<para>Virgo Tools can now be installed from a single update site location.</para>
+		</section>
+		<section id="Quality_2">
+			<title>Quality</title>
+			<itemizedlist>
+				<listitem>
+					<para>Extensive bug fixes and re-factorings.</para>
+				</listitem>
+				<listitem>
+					<para>All Remaining Spring Dependencies have been removed.</para>
+				</listitem>
+				<listitem>
+					<para>Updated to meet Eclipse branding, packaging build and testing standards.</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+	</section>
+</chapter>
