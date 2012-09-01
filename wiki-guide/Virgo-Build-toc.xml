@@ -21,12 +21,16 @@
 			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Example" label="Example"></topic>
 		</topic>
 		<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Configuring_p2_Publishing_for_Individual_Repositories" label="Configuring p2 Publishing for Individual Repositories"></topic>
-		<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Updating_Dependencies" label="Updating Dependencies"></topic>
+		<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Updating_Dependencies" label="Updating Dependencies">
+			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Updating_Eclipse_dependencies" label="Updating Eclipse dependencies"></topic>
+		</topic>
 		<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Rippling" label="Rippling">
 			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#When_should_Ripplor_be_used.3F" label="When should Ripplor be used?"></topic>
 			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Usage" label="Usage"></topic>
 			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Repository_Map" label="Repository Map"></topic>
-			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Broken_Build" label="Broken Build"></topic>
+			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Broken_Build" label="Broken Build">
+				<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#How_to_rebuild_a_broken_rippled_repository" label="How to rebuild a broken rippled repository"></topic>
+			</topic>
 			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Re-Building" label="Re-Building">
 				<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Restart_from_lowest" label="Restart from lowest"></topic>
 				<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Safe.2FLucky_points" label="Safe/Lucky points"></topic>

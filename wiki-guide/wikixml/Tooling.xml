@@ -29,10 +29,10 @@
 			<para>If you're not installing into an existing Eclipse, you'll need one. </para>
 			<itemizedlist>
 				<listitem>
-					<para>Eclipse Helios SR2, or </para>
+					<para>Eclipse Indigo 3.7.x or Indigo based suite such as SpringSource Tool Suite 2.9.x</para>
 				</listitem>
 				<listitem>
-					<para>Eclipse Indigo</para>
+					<para>Eclipse Juno 3.8/4.2</para>
 				</listitem>
 			</itemizedlist>
 			<para>Eclipse JEE Indigo recommended.</para>
@@ -52,98 +52,95 @@
 					<para>Select &quot;Virgo Tools&quot; feature and click install.</para>
 				</listitem>
 			</orderedlist>
+			<para>&lt;span style=&quot;color:#FF0000&quot;&gt;&lt;b&gt;Note:&lt;/b&gt; Select &lt;i&gt;only&lt;/i&gt; Virgo Tooling. This is a composite site, and the other features are &lt;i&gt;not&lt;/i&gt; designed to work within the Eclipse IDE.&lt;/span&gt;</para>
 		</section>
 		<section id="Update_Sites">
 			<title>Update Sites</title>
-			<para>
-				<emphasis role="bold">Note, M4 is not quite here yet, so as of the moment you should use the snapshot build, not the milestone. As soon as M3 is formally released, this will change.</emphasis>
-			</para>
 			<variablelist>
 				<varlistentry>
 					<term>Milestone: &lt;code&gt;
-						<ulink url="http://download.eclipse.org/virgo/milestone/tooling&amp;lt;/code&amp;gt">http://download.eclipse.org/virgo/milestone/tooling&amp;lt;/code&amp;gt</ulink>;
+						<ulink url="http://download.eclipse.org/virgo/milestone/tooling&amp;lt;/code&amp;gt">http://download.eclipse.org/virgo/milestone/tooling&amp;lt;/code&amp;gt</ulink>; (Recommended)
 					</term>
 				</varlistentry>
 				<varlistentry>
 					<term>Snapshot: &lt;code&gt;
-						<ulink url="http://download.eclipse.org/virgo/snapshot/tooling&amp;lt;/code&amp;gt">http://download.eclipse.org/virgo/snapshot/tooling&amp;lt;/code&amp;gt</ulink>;
+						<ulink url="http://download.eclipse.org/virgo/snapshot/tooling&amp;lt;/code&amp;gt">http://download.eclipse.org/virgo/snapshot/tooling&amp;lt;/code&amp;gt</ulink>; (Bleeding Edge)
 					</term>
 				</varlistentry>
 			</variablelist>
 			<para>Many users will also want to install the M2E release at: &lt;code&gt;
-				<ulink url="http://download.eclipse.org/technology/m2e/releases&amp;lt;/code&amp;gt">http://download.eclipse.org/technology/m2e/releases&amp;lt;/code&amp;gt</ulink>;. (e.g. in order to run the greenpages examples.)
+				<ulink url="http://download.eclipse.org/technology/m2e/releases&amp;lt;/code&amp;gt">http://download.eclipse.org/technology/m2e/releases&amp;lt;/code&amp;gt</ulink>;. (You'll need this to run the greenpages examples.)
 			</para>
 		</section>
 	</chapter>
 	<chapter id="Known_Issues">
 		<title>Known Issues</title>
-		<section id="M4_Candidate_.28Current_Snapshot.29">
-			<title>M4 Candidate (Current Snapshot)</title>
-			<para>
-				<emphasis role="bold">The Virgo tools currently do not support Eclipse 3.6 (Helios) and derived Spring Source products.</emphasis> Please see: 
-				<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236">https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236</ulink>.
-			</para>
-			<para>Significant bugs still exist. Please see these release train bugs for a current list, and please report any other issues you discover:</para>
-			<itemizedlist>
-				<listitem>
-					<para>368783: Server management UI bug train 
-						<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368783">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368783</ulink>
-					</para>
-				</listitem>
-				<listitem>
-					<para>368785: Server runtime support bug train 
-						<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368785">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368785</ulink>
-					</para>
-				</listitem>
-				<listitem>
-					<para>368782: Plugin packaging issues bug train 
-						<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368782">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368782</ulink>
-					</para>
-				</listitem>
-			</itemizedlist>
-			<para>You can see all open bugs 
-				<ulink url="https://bugs.eclipse.org/bugs/buglist.cgi?list_id=1289794;query_format=advanced;bug_status=NEW;bug_status=ASSIGNED;bug_status=REOPENED;component=tooling;product=Virgo">here</ulink>.
-			</para>
-		</section>
-		<section id="M3">
-			<title>M3</title>
-			<para>There wasn't one. :) We're moving to M4 to more closely align with Virgo Runtime releases.</para>
-		</section>
-		<section id="Milestone_M2">
-			<title>Milestone M2</title>
-			<section id="Version_Compatibility">
-				<title>Version Compatibility</title>
-				<para>The milestone does not work well with the current milestone of the runtime environment (&quot;3.1.0&quot; / 3.5.0). Please target the 3.0.2 Release Virgo Runtime or use the current milestone.</para>
-			</section>
-		</section>
-	</chapter>
-	<chapter id="Notes">
-		<title>Notes</title>
-		<section id="Web_Application_Bundles">
-			<title>Web Application Bundles</title>
-			<para>To create a web application bundle choose to create a normal bundle project, but on the Bundle Content panel select the additional property entitled &quot;Web Application Bundle&quot;. On the Bundle Properties panel enter a suitable context path for the application as the Web-ContextPath. </para>
-		</section>
-		<section id="Bundlor">
-			<title>Bundlor</title>
-			<para>Bundlor is not used by default, you must create you own template file and then turn on incremental manifest generation. </para>
-		</section>
-		<section id="PDE.2FEquinox_Bundles_not_supported_yet">
-			<title>PDE/Equinox Bundles not supported yet</title>
-			<para>Deploying PDE/Equinox Bundles to Virgo Web Server are not yet supported yet, although exporting the bundles (as Eclipse Plug-in JARs) and manually deploying to Virgo Web Server works. Please show your support on 
-				<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=329198">Bugzilla #329198</ulink>.
-			</para>
-		</section>
+		<itemizedlist>
+			<listitem>
+				<para>The Virgo tools currently do not support Eclipse 3.6 (Helios) and derived Spring Source products. 
+					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236">https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236</ulink>.
+				</para>
+			</listitem>
+			<listitem>
+				<para>An exception occurs when you click on an item in the Bundle Overview. This is a Libra issue that will be fixed when the next Libra build occurs. 
+					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=377582">https://bugs.eclipse.org/bugs/show_bug.cgi?id=377582</ulink>.
+				</para>
+			</listitem>
+			<listitem>
+				<para>Manifest generation does not seem to be working properly. 
+					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379233">https://bugs.eclipse.org/bugs/show_bug.cgi?id=379233</ulink>
+				</para>
+			</listitem>
+			<listitem>
+				<para>The greenpages sample does not work. We're not yet sure if this is a tooling or runtime issue. 
+					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368781">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368781</ulink> 
+				</para>
+			</listitem>
+			<listitem>
+				<para>If you have existing Virgo server defined you will see nasty exceptions. Just follow the instructions 
+					<link linkend="Server_Versions">below</link> 
+					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379282">https://bugs.eclipse.org/bugs/show_bug.cgi?id=379282</ulink>
+				</para>
+			</listitem>
+			<listitem>
+				<para>Other significant bugs still exist. Please see these release train bugs for a current list, and please report any other issues you discover:</para>
+				<itemizedlist>
+					<listitem>
+						<para>368783: Server management UI bug train 
+							<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368783">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368783</ulink>
+						</para>
+					</listitem>
+					<listitem>
+						<para>368785: Server runtime support bug train 
+							<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368785">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368785</ulink>
+						</para>
+					</listitem>
+					<listitem>
+						<para>368782: Plugin packaging issues bug train 
+							<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368782">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368782</ulink>
+						</para>
+					</listitem>
+					<listitem>
+						<para>You can see all open bugs 
+							<ulink url="https://bugs.eclipse.org/bugs/buglist.cgi?list_id=1289794;query_format=advanced;bug_status=NEW;bug_status=ASSIGNED;bug_status=REOPENED;component=tooling;product=Virgo">here</ulink>.
+						</para>
+					</listitem>
+				</itemizedlist>
+			</listitem>
+		</itemizedlist>
 	</chapter>
 	<chapter id="Migration">
 		<title>Migration</title>
-		<section id="From_Pre_M2_to_M3">
-			<title>From Pre M2 to M3</title>
+		<section id="From_Pre_M2_to_M4">
+			<title>From Pre M2 to M4</title>
 			<section id="Server_Versions">
 				<title>Server Versions</title>
 				<para>The good news: We have done away with the need for managing multiple server versions. This also means that we won't have to support multiple WebTools Server Runtimes and Servers which will make adding new servers and variants much easier. See 
 					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453">https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453</ulink> for more details.
 				</para>
-				<para>The bad news: Any Server Runtimes that you already created for Virgo Server 3.5 will not work. But since Virgo Tooling didn't work with Virgo Server 3.5 *anyway*, this is sort of a moot issue.</para>
+				<para>The bad news: Any Server Runtimes that you already created for Virgo Server 3.5 will not work -- and you will see nasty exceptions if you try to use them. But since pre-M4 Virgo Tooling didn't work with Virgo Server 3.5 
+					<emphasis role="italic">anyway</emphasis>, this should be a moot issue for most people.
+				</para>
 				<para>What to do: If you have an existing (i.e., created using Virgo IDE installed before 10 March 2012) Virgo Server 3.5 Runtime defined, just delete it and replace it with a new Virgo Runtime in 
 					<emphasis role="italic">Preferences:Server:Runtime Environments</emphasis>. You'll see that the correct version is discovered automatically. Then, open any Servers that uses the old runtime and select the new one from the Runtime Environment popup menu.
 				</para>
@@ -392,6 +389,113 @@
 		<title>Importing Virgo Projects into Eclipse</title>
 		<para>See 
 			<ulink url="http://wiki.eclipse.org/Virgo/Committers#Eclipse_Setup">Eclipse Setup</ulink> under the Committers tab.
+		</para>
+	</chapter>
+	<chapter id="FAQ">
+		<title>FAQ</title>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">How do I turn on (or turn off) automatic Manifest generation? (Bundlor)</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>Bundlor is not used by default, you must create you own template file and then turn on incremental manifest generation. Right-click your Virgo project, select the Virgo subcategory from the context menu and select Enable (or Disable) Incremental Generation of MANIFEST.MF File. You can also modify this setting from the Overview page of the Bundle Manifest Editor, under the Bundle Actions section.</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Sometimes I'd like to automatically update my Manifest without having to turn on the automatic Manifest setting. How can I do this?</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>Right-click your Virgo project, select the Virgo subcategory from the context menu and select Run Generation of MANIFEST.MF File. This command has a keybinding that you may customize through Eclipse's Keys preferences. You can also perform an automatic update of the Manifest from the Overview page of the Bundle Manifest Editor, under the Bundle Actions section.</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Automatic Manifest generation doesn't appear to picking up changes to my source files.</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>Sometimes Manifest generation may behave differently depending on whether the tools are configured to scan source folders or to scan output folders. To modify this setting right-click your Virgo project, select properties and select the Virgo -&gt; Manifest Generation subcategory. If Manifest generation isn't working correctly for you, uncheck the &quot;Scan output folders instead of source folders to generate MANIFEST.MF&quot; setting and re-run the Manifest generation. If your Manifest is not being properly generated under either setting, please file a bug.</para>
+		<para>
+			<ulink url="/wiki/image:virgo-manifest-generation.png">image:virgo-manifest-generation.png</ulink>
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">My Virgo project is validating its dependencies against the wrong Virgo runtime! How do I manage server runtimes for my Virgo projects?</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>If you've deployed your Virgo projects to multiple Virgo runtimes the tools will associate the project with each runtime, but will only validate against one runtime. In order to manage which Virgo runtime your bundle dependencies are validated against, right-click on the project, select Properties and select the Targeted Runtimes category. From this dialog you can give priority to a particular Virgo runtime.</para>
+		<para>
+			<ulink url="/wiki/image:virgo-targeted-runtimes.png">image:virgo-targeted-runtimes.png</ulink>
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">How do I deploy a Plan with the Virgo tools?</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>Deploying a Plan works much the same way as deploying a Bundle or PAR from the tools. Unfortunately, the tools only handle Plan deployment correctly when the Plan refers to items already in Virgo's watched repository directories. If you try to deploy a Plan that references a project in the Eclipse workspace, the tools will fail. One workaround is to copy your workspace bundle(s) into repository/usr or some other watched repository directory. A discussion of this bug and other workarounds is available at 
+			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379765">https://bugs.eclipse.org/bugs/show_bug.cgi?id=379765</ulink>
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">How do I create a Web Application Bundle?</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>To create a web application bundle choose to create a normal bundle project, but on the Bundle Content panel select the additional property entitled &quot;Web Application Bundle&quot;. On the Bundle Properties panel enter a suitable context path for the application as the Web-ContextPath.</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">How do I export a Web Application Bundle (WAB)? Export -&gt; Bundle Project produces an incorrect product.</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>To export a WAB invoke Export -&gt; Web -&gt; WAR File</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Virgo Jetty Server (VJS) does not startup correctly and I see a 503 error when I go to 
+						<ulink url="http://localhost:8080/admin">http://localhost:8080/admin</ulink>
+					</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>This can happen after starting VJS clean because VJS is looking for a directory at $KERNEL_HOME/work/tmp but no tmp directory exists. A workaround is to start VJS from the command line without the -clean command, which will create the tmp directory. VJS can then be used from the tools. This bug and workaround are documented at 
+			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=384288">https://bugs.eclipse.org/bugs/show_bug.cgi?id=384288</ulink>  
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Can I get a deeper look into the state of the server from the Virgo Tools?</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>Yes! If you double-click a Virgo server runtime in the Servers view, you'll open up the server editor, with several pages of information. The Repository, Bundle Overview, Bundle Dependency Graph, and Server Console pages all give valuable insight into the state of the server. The Virgo perspective also provides several views into the Virgo Repository, Virgo Properties and Virgo Logs. See the Virgo Tooling Guide for more information.</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">I want to install Virgo Tools. Should I install all of this neat looking stuff under Virgo Add-ons?</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>We really don't recommend doing so (see 
+			<link linkend="Install_Virgo">Install_Virgo</link>). Select only Virgo Tooling and Eclipse will take care of installing anything the tooling relies on.
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Can I use the Virgo Tools with traditional PDE/Equinox Bundles?</emphasis>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>Deploying PDE/Equinox Bundles to Virgo Web Server are not yet supported yet, although exporting the bundles (as Eclipse Plug-in JARs) and manually deploying to Virgo Web Server works. Please show your support on 
+			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=329198">Bugzilla #329198</ulink>.
 		</para>
 		<para>
 			<ulink url="/wiki/Category:Virgo">Category:Virgo</ulink> 
