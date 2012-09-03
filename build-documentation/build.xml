@@ -31,5 +31,11 @@
 			<zipfileset dir="${package.dir}"/>
 		</zip>
 	</target>
+    
+    <target name="publish-download">
+         <antcall target="publish-package-download">
+            <param name="package.file" value="${package.output.file}"/>
+        </antcall>
+    </target>
 
 </project>
