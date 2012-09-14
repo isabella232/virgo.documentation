@@ -18,6 +18,46 @@
 		  <listitem>Plans</listitem>
 		  <listitem>Configuration Files</listitem>
 		</itemizedlist>
+        <section id="initial-deployment-deploying-bulk">
+			<title>Initial Bulk Hot Deploy</title>
+            <note>
+                This section currently is ONLY relevant for @nano.product.name@.
+            </note>
+			<para>
+				To hot deploy an artifact initially in bulk mode, copy it into the pickup directory (by default <literal>$SERVER_HOME/pickup</literal>) and start up the server. Upon this startup all the artifacts in the <literal>pickup</literal> directory will get first installed and resolved and only then they will be started.
+			</para>
+            <para>
+                This solves the problem where artifacts depend on each other and when not in bulk mode the install order is not guaranteed therefore errors could occur.
+            </para>
+            <para>
+                This is only available as part of the initial scan of the <literal>pickup</literal> directory. Subsequently it goes back to the known mode of single file handled at a time.
+            </para>
+			<programlisting>prompt$ cd /home/applications
+prompt$ cp BundleA.jar $SERVER_HOME/pickup
+prompt$ cp BundleWithDependencyOnA.jar $SERVER_HOME/pickup
+prompt$ cd $SERVER_HOME/bin
+prompt$ ./startup.sh</programlisting>
+			<para>
+				When the server is started, artifacts are hot deployed and messages similar to the following appear in the log file:
+			</para>
+			<screen>[2009-12-10 06:41:01.021] fs-watcher          &lt;HD0001I&gt; Hot deployer processing 'INITIAL' event for file 'BundleA.jar; BundleWithDependencyOnA.jar; '.
+[2009-12-10 06:41:01.087] fs-watcher          &lt;DE0000I&gt; Installing bundle 'BundleA' version '0.0.0'.
+[2009-12-10 06:41:01.274] fs-watcher          &lt;DE0001I&gt; Installed bundle 'BundleA' version '0.0.0'.
+[2009-12-10 06:41:01.087] fs-watcher          &lt;DE0000I&gt; Installing bundle 'BundleWithDependencyOnA' version '0.0.0'.
+[2009-12-10 06:41:01.274] fs-watcher          &lt;DE0001I&gt; Installed bundle 'BundleWithDependencyOnA' version '0.0.0'.
+[2009-12-10 06:41:01.397] fs-watcher          &lt;DE0004I&gt; Starting bundle 'BundleA' version '0.0.0'.
+[2009-12-10 06:41:01.550] start-signalling-1  &lt;DE0005I&gt; Started bundle 'BundleA' version '0.0.0'.
+[2009-12-10 06:41:01.397] fs-watcher          &lt;DE0004I&gt; Starting bundle 'BundleWithDependencyOnA' version '0.0.0'.
+[2009-12-10 06:41:01.550] start-signalling-1  &lt;DE0005I&gt; Started bundle 'BundleWithDependencyOnA' version '0.0.0'.</screen>
+			<para>
+				If there is a problem with the deployment, such as the server being unable to resolve all dependencies, the console and log both show an error message to help you with troubleshooting.
+			</para>
+			<para>If there are no problems, @nano.product.name@ automatically starts the artifacts so that they are immediately available to users.
+			</para>
+            <para>Bulk deployment can be disabled and reverted back to the old one-file-at-a-time processing by removing this line from <literal>$SERVER_HOME/configuration/config.ini</literal>:
+            </para>
+            <programlisting>org.eclipse.virgo.fschecker.initialEventMode=bulk</programlisting>
+		</section>
 		<section id="deployment-deploying-hot">
 			<title>Hot Deploy</title>
 			<para>
