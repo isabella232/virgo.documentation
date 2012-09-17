@@ -1083,6 +1083,32 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
 						  <literal>true</literal>  
 					</entry>
                 </row>
+                <row>
+                    <entry>
+						<literal>WABHeaders</literal>
+					</entry>
+                    <entry>
+                    	<para>
+                    		This kernel property is only relevant for @nanoweb.product.name@. For the corresponding property in @tomcat.product.name@, see <link linkend="configuring-web">Configuring the Web Integration Layer</link>.
+                    	</para>
+						<para>
+							Specifies how Web Application Bundle manifest headers are processed.
+							See "Web Application Manifest Processing" in the
+							<ulink url="../../virgo-programmer-guide/html/index.html">Programmer Guide</ulink> for details.
+						</para>
+						<para>
+							A value of <literal>strict</literal> causes @nanoweb.product.name@ to interpret certain headers in strict compliance with
+							the OSGi Web Applications specification if they are not specified.
+						</para>
+						<para>
+							A value of <literal>defaulted</literal> causes @nanoweb.product.name@ to set certain headers to default values if they are not specified.
+							<emphasis>This value is provided as a migration aid and may not be supported in future releases.</emphasis>
+						</para>
+					</entry>
+					<entry>
+						<literal>strict</literal>
+					</entry>
+                </row>
                 </tbody>
              </tgroup>
             </table>
@@ -1586,6 +1612,10 @@ role.admin=juliet</programlisting>
 							</para>
 							<para>
 								The @jetty.product.name@ will always operate in <literal>strict</literal> mode.
+							</para>
+							<para>
+                    			@nanoweb.product.name@ does not have a Web Integration Layer, but has a corresponding kernel property.
+                    			See <link linkend="configuring-deployment">Configuring Deployment</link>.
 							</para>
 						</entry>
 						<entry>
