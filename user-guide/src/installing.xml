@@ -10,8 +10,8 @@
 			<ulink url="http://www.java.com/">http://www.java.com/</ulink> and elsewhere.
 		</para>
 		<para>
-			In case you are installing via a p2 director you'll need to get it. The easiest way is to download Eclipse from <ulink url="http://www.eclipse.org/downloads/">here</ulink>. 
-			It has built-in p2 director and other p2 applications. 
+			In case you are installing via a p2 director you'll need to get it. The easiest way is to download Eclipse from <ulink url="http://www.eclipse.org/downloads/">here</ulink>.
+			It has built-in p2 director and other p2 applications.
 		</para>
 	</section>
 	<section id="installation-zip">
@@ -19,7 +19,7 @@
 		<section>
 			<title>Downloading the ZIP file</title>
 			<para>
-				@tomcat.product.name@ is distributed as a ZIP file. This can be downloaded from 
+				@tomcat.product.name@ is distributed as a ZIP file. This can be downloaded from
 				<ulink url="http://www.eclipse.org/virgo/download/">here</ulink>.
 			</para>
 		</section>
@@ -28,7 +28,7 @@
 			<section  id="installation-zip-installing-linux">
 				<title>Linux</title>
 				<para>
-					To install @tomcat.product.name@ on Linux, unzip the distribution package to the desired installation directory. 
+					To install @tomcat.product.name@ on Linux, unzip the distribution package to the desired installation directory.
 					For example, to install into <literal>/opt</literal>:
 				</para>
 				<screen>prompt$ unzip virgo-web-server-@bundle.version@.zip -d /opt</screen>
@@ -51,13 +51,13 @@
 			</section>
 		</section>
 	</section>
-	
+
 	<section id="installation-updatesite">
 		<title>Installing from an update site</title>
 		<section>
 			<title>The repository location</title>
 			<para>
-				Virgo has a single p2 repository that contains all Virgo distrbutions. The repository for version @bundle.version@ can be found <ulink url="@p2repo@">here</ulink>. 
+				Virgo has a single p2 repository that contains all Virgo distributions. The repository for version @bundle.version@ can be found <ulink url="@p2repo@">here</ulink>.
 				There is a repository for each released version.
 			</para>
 		</section>
@@ -72,7 +72,7 @@
 			</para>
 		</section>
 	</section>
-	
+
 	<section id="installation-post">
 		<title>Post-installation steps</title>
 		<section id="installation-post-env">
@@ -91,7 +91,7 @@
 					to the @tomcat.product.name@ installation directory. Note that the @tomcat.product.name@ does not require that
 					such an environment variable has been set. This variable may have any name of your
 					choosing. The @tomcat.product.name@&rsquo;s documentation assumes that the variable is named
-					<literal>SERVER_HOME</literal>. 
+					<literal>SERVER_HOME</literal>.
 				</para>
 			</section>
 			<section id="installation-post-env-server-linux">
@@ -113,27 +113,27 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 			<section id="installation-post-env-server-win">
 				<title>Microsoft Windows</title>
 				<para>
-					This section shows how to add <literal>SERVER_HOME</literal> as a system variable on Windows.  Follow the same procedure to add or update the <literal>JAVA_HOME</literal> environment variable. 
+					This section shows how to add <literal>SERVER_HOME</literal> as a system variable on Windows.  Follow the same procedure to add or update the <literal>JAVA_HOME</literal> environment variable.
 				</para>
 				<para>
 					From the Start menu, open the Control Panel and double-click on &lsquo;System&rsquo;.
 				</para>
-				<para>	 
+				<para>
 					<imagedata fileref="images/system-props.png"/>
 				</para>
-				<para>	 
-					Click the &lsquo;Advanced&rsquo; tab and select &lsquo;Environment Variables&rsquo;. Next, 
-					click the &lsquo;New&rsquo; button in the &lsquo;System Variables&rsquo; section. 
+				<para>
+					Click the &lsquo;Advanced&rsquo; tab and select &lsquo;Environment Variables&rsquo;. Next,
+					click the &lsquo;New&rsquo; button in the &lsquo;System Variables&rsquo; section.
 				</para>
-				<para>	 
+				<para>
 					<imagedata fileref="images/env-variables.png"/>
 				</para>
 				<para>
-					This will display the &lsquo;New System Variable&rsquo; window.  Enter 
-					<literal>SERVER_HOME</literal> as the &lsquo;Variable name&rsquo; and 
+					This will display the &lsquo;New System Variable&rsquo; window.  Enter
+					<literal>SERVER_HOME</literal> as the &lsquo;Variable name&rsquo; and
 					the installation directory as the &lsquo;Variable value&rsquo;. Click OK.
 				</para>
-				<para>	 
+				<para>
 					<imagedata fileref="images/system-variable.png"/>
 				</para>
 				<para>
@@ -146,12 +146,12 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 		<section id="installation-post-env-server-win-troubleshooting">
 			<title>Microsoft Windows - Troubleshooting Security Permissions</title>
 			<para>
-				When starting @tomcat.product.name@ on some variants of Windows you might encounter a problem with file permissions. 
+				When starting @tomcat.product.name@ on some variants of Windows you might encounter a problem with file permissions.
 				The error looks like this.
 			</para>
 			<screen>WARNING: jmxPermissions.vbs did not update the permissions of C:\virgo\configuration\org.eclipse.virgo.kernel.jmxremote.access.properties. Check the file has the correct permissions.</screen>
 			<para>
-				If @tomcat.product.name.short@ starts correctly (see <xref linkend="starting-stopping"/>) you can skip this section and carry on. However to secure your 
+				If @tomcat.product.name.short@ starts correctly (see <xref linkend="starting-stopping"/>) you can skip this section and carry on. However to secure your
 				installation you have to set correct permissions. To do so, go to the &lsquo;configuration&rsquo; directory of the installation
 				in Windows Explorer.
 			</para>
@@ -159,7 +159,7 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 				<imagedata fileref="images/install-windows-1-FileListing.png" />
 			</para>
 			<para>
-				Right click on the &lsquo;org.eclipse.virgo.kernel.jmxremote.access.properties&rsquo; file and view its properties, 
+				Right click on the &lsquo;org.eclipse.virgo.kernel.jmxremote.access.properties&rsquo; file and view its properties,
 				then select the &lsquo;Security&rsquo; tab. Remove all groups and users from the list and select &lsquo;Apply&rsquo;.
 			</para>
 			<para>
@@ -173,7 +173,7 @@ export PATH=$JAVA_HOME/bin:$PATH</screen>
 				<imagedata fileref="images/install-windows-3-AdvanceSettingsOwner.png" />
 			</para>
 			<para>
-				Once this is done select &lsquo;OK&rsquo; to return to the &lsquo;Security&rsquo; tab 
+				Once this is done select &lsquo;OK&rsquo; to return to the &lsquo;Security&rsquo; tab
 				and now add the owner to the list of groups and users that have permission to access the file.
 			</para>
 			<para>
