@@ -10,13 +10,13 @@
 			<ulink url="http://www.java.com/">http://www.java.com/</ulink> and elsewhere.
 		</para>
 	</section>
-	
+
 	<section id="kernel-installation-zip">
 		<title>Installing from the ZIP Download</title>
 		<section>
 			<title>Downloading the ZIP file</title>
 			<para>
-				@kernel.product.name@ is distributed as a ZIP file. This can be downloaded from 
+				@kernel.product.name@ is distributed as a ZIP file. This can be downloaded from
 				<ulink url="http://www.eclipse.org/virgo/download/">here</ulink>.
 			</para>
 		</section>
@@ -25,7 +25,7 @@
 			<section  id="kernel-installation-zip-installing-linux">
 				<title>Linux</title>
 				<para>
-					To install the @kernel.product.name@ on Linux, unzip the distribution package to the desired installation directory. 
+					To install the @kernel.product.name@ on Linux, unzip the distribution package to the desired installation directory.
 					For example, to install into <literal>/opt</literal>:
 				</para>
 				<screen>prompt$ unzip virgo-kernel-@bundle.version@.zip -d /opt</screen>
@@ -48,13 +48,13 @@
 			</section>
 		</section>
 	</section>
-	
+
 	<section id="kernel-installation-updatesite">
 		<title>Installing from an update site</title>
 		<section>
 			<title>The repository location</title>
 			<para>
-				Virgo has a single p2 repository that contains all Virgo distrbutions. The repository for version @bundle.version@ can be found <ulink url="@p2repo@">here</ulink>. 
+				Virgo has a single p2 repository that contains all Virgo distributions. The repository for version @bundle.version@ can be found <ulink url="@p2repo@">here</ulink>.
 				There is a repository for each released version.
 			</para>
 		</section>
@@ -69,10 +69,10 @@
 			</para>
 		</section>
 	</section>
-	
+
 	<section id="kernel-installation-post">
 		<title>Post-installation steps</title>
 	    Follow the same <link linkend="installation-post">Post-installation steps</link> as for @tomcat.product.name@.
 	</section>
-	
+
 </chapter>
