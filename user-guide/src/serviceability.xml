@@ -100,8 +100,14 @@
 			The capture of <literal>System.out</literal> and <literal>System.err</literal> output is configured in the
 			<literal>configuration/org.eclipse.virgo.medic.properties</literal> file by the <literal>log.wrapSysOut</literal> and 
 			<literal>log.wrapSysErr</literal> properties. By default the properties have a value of <literal>true</literal>
-			and capture is enabled. Capture can be disabled by configuring the properties with a value of <literal>false</literal>.
-		  </para>
+			and capture is enabled. Capture can be disabled by configuring the properties with a value of <literal>false</literal>. 
+            The third and last accepted value is <literal>tee</literal> which captures the System streams output in the logs 
+            while at the same time allows printing output to the System streams. Thus this output will appear both in the logs
+		    and in the System stream output - an example could be the Equinox console, launched with <literal>-console</literal> startup argument.
+          </para>
+          <important>
+            If you provide value different than 'true | tee | false' then the server will default to 'tee' and print out a warning.
+          </important>
           <para>
             The trace entries for <literal>System.out</literal> and <literal>System.err</literal>
 			output are of the form:
