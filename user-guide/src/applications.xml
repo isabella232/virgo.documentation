@@ -18,6 +18,21 @@
 		  <listitem>Plans</listitem>
 		  <listitem>Configuration Files</listitem>
 		</itemizedlist>
+        <section id="deployment-deploying-nested-contexts">
+			<title>Deploying WARs with nested Web-ContextPaths</title>
+            <note>
+                This section currently is ONLY relevant for @nano.product.name@.
+            </note>
+			<para>
+				Virgo Nano Web supports deployment of WAR files which are transformed into Web Application Bundles. This process involves automatic creation of an OSGi manifest with all relevant OSGi header plus the very important Web-ContextPath header. Its value defines how the deployed WAR file can be requested. There is a limitation about this process that the automatic generation only creates a flat context path which equals the name of your WAR file. Virgo Nano Web supports generation of a nested one. 
+			</para>
+            
+			<para>In order to benefit from this flexibility all you need to do is just to add hashes '#' to your WAR file name in the places where you want to have slashes in your web context path. Here is an example:
+                <screen>myWarFile.war would result into "/myWarFile" web context path</screen>
+                <screen>my#War#File.war would result into "/my/War/File" web context path</screen>
+                The symbolic name of the resulting WAB file is the same as the WAR file name but the hashes '#' are replaced with dots '.'.
+            </para> 
+		</section>
         <section id="initial-deployment-deploying-bulk">
 			<title>Initial Bulk Hot Deploy</title>
             <note>
