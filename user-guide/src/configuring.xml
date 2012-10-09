@@ -1219,7 +1219,7 @@ deployer.pickupDirectory=pickup]]></programlisting>
 					</para>
 					<para>
 						The artifacts are specified as a comma separated list of URI strings of the form:
-						<programlisting><![CDATA[repository://type/name[/version]]]></programlisting>
+						<programlisting><![CDATA[repository:type/name[/version]]]></programlisting>
 						where <literal>type</literal> is the artifact type (e.g. "plan", "par", "bundle",
 						"configuration"), <literal>name</literal> is the (symbolic) name of the artifact, and, optionally,
 						<literal>version</literal> is the version of the artifact.
@@ -1227,8 +1227,8 @@ deployer.pickupDirectory=pickup]]></programlisting>
 						artifact with the highest version is selected.
 						So, for example, the following entries are valid:
 						<programlisting><![CDATA[initialArtifacts=...,\
- repository://plan/APlan,\
- repository://bundle/ABundle/1.0]]></programlisting>
+ repository:plan/APlan,\
+ repository:bundle/ABundle/1.0]]></programlisting>
 					</para>
 				</entry>
 			</row>
