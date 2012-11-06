@@ -324,7 +324,7 @@
 				(see section 104.6 in the Compendium Specification) </para>
 			<para>For a singleton configuration the name that it will be installed under is its filename 
 				minus the <code>.properties</code> extension. Factory Configuration is supported by 
-				specifying the <emphasis>service.factoryPid</emphasis> property. In this case actual PID will
+				specifying the <emphasis>service.factoryPid</emphasis> property. In this case the actual PID will
 				be created by <emphasis>Configuration Admin</emphasis> (see section 104.6 in the
 				Compendium Specification).</para>
 			<para>How to consume configuration data is discussed <link
