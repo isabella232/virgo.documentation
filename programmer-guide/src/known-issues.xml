@@ -49,17 +49,6 @@
 			</itemizedlist>
 		</para>
 	</section>
-	<section id="known-issues-tomcat-restrictions">
-		<title>@tomcat.product.name@ Restrictions</title>
-		<para>
-			The following Tomcat features are not supported.
-			<itemizedlist>
-				<listitem>
-					<literal>&lt;Context&gt;</literal> elements.
-				</listitem>	
-			</itemizedlist>
-		</para>
-	</section>
 	<section id="known-issues-web-bundle-default-headers">
 		<title>Default Web Application Bundle Headers</title>
 		<para>
