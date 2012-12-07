@@ -329,6 +329,8 @@ bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFr
 		<para>The following listing shows the default <literal>serviceability.xml</literal> file in a freshly-installed @project.name@; see the text after the listing for a brief overview of the file:</para>
 		<programlisting language="xml"><![CDATA[<configuration>
 
+	<jmxConfigurator />
+
 	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
 	<appender name="SIFTED_LOG_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
@@ -411,6 +413,7 @@ bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFr
 
 	<para>The main information to get from this file is that @project.name@ writes log messages to four different locations that map to the four appenders:</para>
 	<itemizedlist>
+		<listitem><para>The <literal>jmxConfigurator</literal> provides a possibility to configure logback via JMX. For more information see <ulink url="http://logback.qos.ch/manual/jmxConfig.html">JMX Configurator</ulink> documentation.</para></listitem>
 		<listitem><para>The <literal>contextListener</literal> propagates the changes made to the levels of logback loggers to Java Util Logging (JUL). For more information see <ulink url="http://logback.qos.ch/manual/configuration.html#LevelChangePropagator">LevelChangePropagator</ulink> documentation.</para> </listitem>
 		<listitem><para>The <literal>SIFTED_LOG_FILE</literal> appender logs both global and application-specific messages to the <literal>$SERVER_HOME/serviceability/logs/</literal><emphasis><literal>applicationName</literal></emphasis><literal>/log.log</literal> file, where <emphasis><literal>applicationName</literal></emphasis> refers to the name of the application.   The log messages for @project.name@ itself are logged to the <literal>$SERVER_HOME/serviceability/logs/virgo-server/log.log</literal> file. Because this appender creates different log files for each application, it is called a <emphasis>sifting appender</emphasis>.   </para>
 		<para>
