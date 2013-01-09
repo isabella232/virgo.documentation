@@ -96,6 +96,32 @@ prompt$ cp helloWorld.war $SERVER_HOME/pickup</programlisting>
 			<para>If there are no problems, @tomcat.product.name.short@ automatically starts the artifact so that it is immediately available to users.
 			</para>
 		</section>
+		
+		<section id="deployment-redeploy-hot">
+		  <title>Hot Redeploy</title>
+		  <para>
+				To hot redeploy an artifact which is already hot deployed, copy the updated artifact into the pickup directory (by default <literal>$SERVER_HOME/pickup</literal>), 
+        just as for hot deploy. When the artifact is redeployed, messages similar to the following appear in the log file:
+			</para>
+			<screen>[2013-01-09 14:08:12.422] fs-watcher                   &lt;HD0001I&gt; Hot deployer processing 'MODIFIED' event for file 'helloWorld.war'.
+[2013-01-09 14:08:12.422] fs-watcher                   &lt;DE0007I&gt; Refreshing bundle 'helloWorld' version '0.0.0'.
+[2013-01-09 14:08:12.469] fs-watcher                   &lt;WE0002I&gt; Stopping web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2013-01-09 14:08:13.094] fs-watcher                   &lt;WE0003I&gt; Stopped web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2013-01-09 14:08:13.094] fs-watcher                   &lt;DE0010I&gt; Stopping bundle 'helloWorld' version '0.0.0'.
+[2013-01-09 14:08:13.110] fs-watcher                   &lt;DE0011I&gt; Stopped bundle 'helloWorld' version '0.0.0'.
+[2013-01-09 14:08:13.250] fs-watcher                   &lt;DE0004I&gt; Starting bundle 'helloWorld' version '0.0.0'.
+[2013-01-09 14:08:13.250] start-signalling-2           &lt;WE0000I&gt; Starting web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2013-01-09 14:08:13.860] start-signalling-2           &lt;WE0001I&gt; Started web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2013-01-09 14:08:13.860] start-signalling-2           &lt;DE0005I&gt; Started bundle 'helloWorld' version '0.0.0'.
+[2013-01-09 14:08:13.860] fs-watcher                   &lt;DE0008I&gt; Refreshed bundle 'helloWorld' version '0.0.0'.</screen>
+    <note>
+      The following paragraph is ONLY relevant for @nano.product.name@.
+    </note>
+    <para>
+      The redeploy waits for any previous operations on the artifact being redeployed to finish. The wait timeout could be configured through the following property in <literal>$SERVER_HOME/configuration/config.ini</literal>: 
+    </para>
+    <programlisting>org.eclipse.virgo.update.timeout</programlisting>
+		</section>
 
 		<section id="deployment-deploying-manual">
 			<title>Deploying Using the Admin Console</title>
