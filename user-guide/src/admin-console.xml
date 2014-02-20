@@ -30,7 +30,7 @@
 		<para>The Admin Console uses basic authentication, therefore you will need to enter the default administration ID and password.
 		</para>
 		<screen>ID: admin 
-Password: springsource</screen>
+Password: admin</screen>
 
 		<para>The following graphic shows the main page of the Admin Console.
 		<mediaobject>
