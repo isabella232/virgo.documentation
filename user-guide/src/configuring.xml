@@ -1077,6 +1077,17 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
                 </row>
                 <row>
                     <entry>
+						<literal>deployer.scanIntervalMillis</literal>
+					</entry>
+                    <entry>
+						Specifies the scan interval, in milliseconds, used to survey the pickup directory.
+					</entry>
+					<entry>
+						  <literal>1000</literal>
+					</entry>
+                </row>
+                <row>
+                    <entry>
 						<literal>deployer.unpackBundles</literal>
 					</entry>
                     <entry>
@@ -1128,9 +1139,10 @@ my-hosted-repo.searchPattern=repository/hosted/*]]></programlisting>
                      <para>The following listing displays the default configuration distributed with @project.name@; only relevant sections of the <literal>org.eclipse.virgo.kernel.properties</literal> file are shown. </para>
 
             <programlisting><![CDATA[deployer.timeout=300
-deployer.pickupDirectory=pickup]]></programlisting>
+deployer.pickupDirectory=pickup
+deployer.scanIntervalMillis=1000]]></programlisting>
 
-            <para>So the default deployment timeout is 300 seconds and the default pickup directory is <literal>$SERVER_HOME/pickup</literal>.
+            <para>So the default deployment timeout is 300 seconds, the default pickup directory is <literal>$SERVER_HOME/pickup</literal> and the default scan interval is <literal>1000</literal>.
             </para>
         </section>
 
