@@ -2,13 +2,13 @@ apply plugin: 'java'
 apply plugin: 'docbook'
 
 docbook {
-    baseName = 'virgo-programmer-guide'
+    baseName = 'virgo-tooling-guide'
     version = version
 }
 
 task docsZip(type: Zip) {
     group = 'Distribution'
-    baseName = 'virgo-programmer-guide'
+    baseName = 'virgo-tooling-guide'
     classifier = 'docs'
 
     from (reference) { into 'reference' }

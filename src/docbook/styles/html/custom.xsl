@@ -24,8 +24,6 @@
 				exclude-result-prefixes="xslthl"
 				version='1.0'>
 
-	<xsl:import href="../../../docbook/html/docbook.xsl" />
-
 <!-- Extensions -->
 	<xsl:param name="use.extensions">1</xsl:param>
 	<xsl:param name="tablecolumns.extension">0</xsl:param>

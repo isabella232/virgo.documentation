@@ -244,7 +244,7 @@ git push origin
 			<i>virgo-build-tools</i> and one for the 
 			<i>org.eclipse.equinox.launcher</i> used to launch the tools.
 		</p>
-		<pre>org.eclipse.virgo.build.tools=1.2.1.RELEASE
+		<pre>virgoBuildToolsVersion=1.2.1.RELEASE
 </pre>
 		<p> 
 			The next step is to fetch 
@@ -254,7 +254,7 @@ git push origin
 </pre>
 		<p> 
 			This call fetches and unzips the 
-			<i>virgo-build-tools</i> of the specified version in the project's "${target.dir}/virgo-build-tools-${org.eclipse.virgo.build.tools}" directory. 
+			<i>virgo-build-tools</i> of the specified version in the project's "${target.dir}/virgo-build-tools-${virgoBuildToolsVersion}" directory. 
 		</p>
 		<p>Another way to achieve the same results is to add this ant target as a dependency to a target of your choice in which you plan to use any of the virgo-build-tools common targets. Here's how</p>
 		<pre>&amp;lt;target name="p2.publish" depends="package, fetch-unzipped-virgo-build-tools" description="Publishes bundles, features and product"&amp;gt;
@@ -281,7 +281,7 @@ git push origin
 		</p>
 		<pre>@Since 2.22
 &amp;lt;antcall target="convert-p2-to-ivy"&amp;gt;
-  &amp;lt;param name="tools.dir" value="${package.output.dir}"/&amp;gt;
+  &amp;lt;param name="virgoBuildToolsBaseName" value="${package.output.dir}"/&amp;gt;
   &amp;lt;param name="source.plugins.dir" value="${mirrored.repository.dir}/plugins"/&amp;gt;
   &amp;lt;param name="destination" value="${converted.repository.dir}"/&amp;gt;
   &amp;lt;param name="offset.to.virgo.build" value="../../../..virgo-build"/&amp;gt;
@@ -290,7 +290,7 @@ git push origin
 </pre>
 		<pre>@Since 2.22
 &amp;lt;antcall target="p2.mirror-metadata"&amp;gt;
-  &amp;lt;param name="tools.dir" value="${package.output.dir}"/&amp;gt;
+  &amp;lt;param name="virgoBuildToolsBaseName" value="${package.output.dir}"/&amp;gt;
   &amp;lt;param name="source" value="file:${repository.dir}"/&amp;gt;
   &amp;lt;param name="destination" value="${mirrored.repository.dir}"/&amp;gt;
   &amp;lt;param name="roots" value="testBundle"/&amp;gt;
@@ -298,7 +298,7 @@ git push origin
 </pre>
 		<pre>@Since 2.22
 &amp;lt;antcall target="p2.mirror-artifacts"&amp;gt;
-  &amp;lt;param name="tools.dir" value="${package.output.dir}"/&amp;gt;
+  &amp;lt;param name="virgoBuildToolsBaseName" value="${package.output.dir}"/&amp;gt;
   &amp;lt;param name="source" value="file:${repository.dir}"/&amp;gt;
   &amp;lt;param name="destination" value="${mirrored.repository.dir}"/&amp;gt;
   &amp;lt;param name="roots" value="testBundle"/&amp;gt;
