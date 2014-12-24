@@ -3,3 +3,8 @@ integration-repo
 ivy-cache
 spring-build/lib/findbugs
 spring-build/lib/docbook
+bin/
+build/
+.settings/
+.project
+.classpath
