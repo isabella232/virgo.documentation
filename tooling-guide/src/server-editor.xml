@@ -15,9 +15,36 @@
 			<imagedata fileref="images/editor-overview-page.png" format="PNG" />
 		</para>
 		<para>
-			See the
+		     The overview page contains several sections. Some of them are inherited by the Web Tools Platform while other
+		     are contributed specifically by the Virgo Tools.
+		    <itemizedlist>
+			 	<listitem>The <emphasis>Target Platform</emphasis> section has been introduced in release 1.5 and provides shortcuts
+			 	for editing or reloading the PDE Target Platform associated to the current @umbrella.product.name@. 
+			 	</listitem>		    
+			 	<listitem>The <emphasis>Redeploy Behavior</emphasis> section allows the user to specify files that should be copied
+			 	into the server without redeploying the bundle. This is typically used to speed up publishing operations for static files. 
+			 	</listitem>
+			 	<listitem>The <emphasis>Publishing</emphasis> section allows the user to select when changed resources should be published
+			 	to the running server. 
+			 	</listitem>
+				<listitem>The <emphasis>Timeouts</emphasis> section allows the user to configure the server startup and shutdown timeout.
+			 	</listitem>
+				<listitem>The <emphasis>Deployer Control</emphasis> section allows the user to configure the parameters of the JMX communication
+				between the Virgo Tools and the @umbrella.product.name@.
+			 	</listitem>
+			 	<listitem>The <emphasis>Artefact Deployment Order</emphasis> section allows the user to configure the activation order of the artefacts
+			 	deployed into the @umbrella.product.name@. Multi-selection is supported.
+			 	</listitem>
+			 	<listitem>The <emphasis>Server Startup Configuration</emphasis> section allows the user to configure statup parameters of 
+			 	the @umbrella.product.name@. The <emphasis>-clean</emphasis> options if checked forces the cleaning of the @umbrella.product.name@
+			 	temporary folders at every startup. 
+			 	</listitem>			 	
+			</itemizedlist>
+		</para>
+		<para>
+			See the 
 			<emphasis>Web Tools Platform Guide</emphasis>
-			for more information on what the various configuration options do.
+			for more information on the other configuration sections.
 		</para>
 	</section>
 	<section>

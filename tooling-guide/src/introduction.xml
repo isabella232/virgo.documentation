@@ -10,4 +10,7 @@
 		the conversion of existing projects into OSGi bundle projects. Projects can then be deployed and debugged on a running
 		@umbrella.product.name.short@ from within Eclipse.
 	</para>
+	<para>Besides its OSGi bundle projects, starting from version 1.5 Virgo Tools support usage of Plug-in Development
+		Environment (Eclipse PDE) for developing projects that can be deployed and debugged on a running @umbrella.product.name.short@ from within Eclipse.
+	</para>	
 </chapter>

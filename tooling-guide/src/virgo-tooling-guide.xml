@@ -59,9 +59,14 @@
 				<firstname>Leo</firstname>
 				<surname>Dos Santos</surname>
 			</author>
+			<author>
+				<firstname>GianMaria</firstname>
+				<surname>Romanato</surname>
+			</author>			
 		</authorgroup>
 		<legalnotice>
 			<para>Copyright &copy; 2012 VMware Inc.</para>
+			<para>Copyright &copy; 2016 GianMaria Romanato</para>
 		</legalnotice>
 	</bookinfo>
 
@@ -72,6 +77,7 @@
 	<xi:include href="perspective-views.xml" />
 	<xi:include href="server-editor.xml" />
 	<xi:include href="developing.xml" />
+	<xi:include href="developing_with_PDE.xml" />
 	<xi:include href="pars.xml" />
 	<xi:include href="deploying.xml" />
 	<xi:include href="wiki.xml" />

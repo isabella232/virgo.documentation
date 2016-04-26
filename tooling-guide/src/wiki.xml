@@ -18,6 +18,9 @@
 				<para>Web Bundles </para>
 			</listitem>
 			<listitem>
+				<para>New from release 1.5.0: PDE Plug-in projects (created via a dedicated Wizard)</para>
+			</listitem>						
+			<listitem>
 				<para>Deployment to a Virgo Server in the server view.</para>
 			</listitem>
 		</itemizedlist>
@@ -77,29 +80,8 @@
 		<title>Known Issues</title>
 		<itemizedlist>
 			<listitem>
-				<para>The Virgo tools currently do not support Eclipse 3.6 (Helios) and derived Spring Source products. 
-					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236">https://bugs.eclipse.org/bugs/show_bug.cgi?id=377236</ulink>.
-				</para>
-			</listitem>
-			<listitem>
-				<para>An exception occurs when you click on an item in the Bundle Overview. This is a Libra issue that will be fixed when the next Libra build occurs. 
-					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=377582">https://bugs.eclipse.org/bugs/show_bug.cgi?id=377582</ulink>.
-				</para>
-			</listitem>
-			<listitem>
 				<para>Manifest generation does not seem to be working properly. 
 					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379233">https://bugs.eclipse.org/bugs/show_bug.cgi?id=379233</ulink>
-				</para>
-			</listitem>
-			<listitem>
-				<para>The greenpages sample does not work. We're not yet sure if this is a tooling or runtime issue. 
-					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=368781">https://bugs.eclipse.org/bugs/show_bug.cgi?id=368781</ulink> 
-				</para>
-			</listitem>
-			<listitem>
-				<para>If you have existing Virgo server defined you will see nasty exceptions. Just follow the instructions 
-					<link linkend="Server_Versions">below</link> 
-					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379282">https://bugs.eclipse.org/bugs/show_bug.cgi?id=379282</ulink>
 				</para>
 			</listitem>
 			<listitem>
@@ -128,156 +110,6 @@
 				</itemizedlist>
 			</listitem>
 		</itemizedlist>
-	</section>
-	<section id="Migration">
-		<title>Migration</title>
-		<section id="From_Pre_M2_to_M4">
-			<title>From Pre M2 to M4</title>
-			<section id="Server_Versions">
-				<title>Server Versions</title>
-				<para>The good news: We have done away with the need for managing multiple server versions. This also means that we won't have to support multiple WebTools Server Runtimes and Servers which will make adding new servers and variants much easier. See 
-					<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453">https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453</ulink> for more details.
-				</para>
-				<para>The bad news: Any Server Runtimes that you already created for Virgo Server 3.5 will not work -- and you will see nasty exceptions if you try to use them. But since pre-M4 Virgo Tooling didn't work with Virgo Server 3.5 
-					<emphasis role="italic">anyway</emphasis>, this should be a moot issue for most people.
-				</para>
-				<para>What to do: If you have an existing (i.e., created using Virgo IDE installed before 10 March 2012) Virgo Server 3.5 Runtime defined, just delete it and replace it with a new Virgo Runtime in 
-					<emphasis role="italic">Preferences:Server:Runtime Environments</emphasis>. You'll see that the correct version is discovered automatically. Then, open any Servers that uses the old runtime and select the new one from the Runtime Environment popup menu.
-				</para>
-			</section>
-		</section>
-		<section id="From_Spring_Source_and_Virgo_2.x_Tooling">
-			<title>From Spring Source and Virgo 2.x Tooling</title>
-			<para>Moving from the old tooling to the new requires some changes to your existing projects, these are documented here. </para>
-			<para>The Bundlor .settings file has a new name (
-				<emphasis role="italic">com.springsource.server.ide.bundlor.core.prefs</emphasis> -&amp;gt; 
-				<emphasis role="italic">org.eclipse.virgo.ide.bundlor.core.prefs</emphasis>) and the property keys in it have new names as well. Currently these just need to be changed manually (replace 
-				<emphasis role="italic">com.springsource.server</emphasis> by 
-				<emphasis role="italic">org.eclipse.virgo</emphasis>) 
-				<emphasis role="bold">or use the project properties pane to create new settings and delete the old one.</emphasis> (recommended)
-			</para>
-			<para>The Bundle Dependencies classpath entry has a new name (
-				<emphasis role="italic">com.springsource.server.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER</emphasis> -&amp;gt; 
-				<emphasis role="italic">org.eclipse.virgo.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER</emphasis>). This can be changed manually (in the .classpath file) or in the Java Build Path section of the project properties. 
-			</para>
-			<para>The attributes used to mark folders as test folders have been renamed (
-				<emphasis role="italic">com.springsource.server.ide.jdt.core.test.classpathentry</emphasis> -&amp;gt; 
-				<emphasis role="italic">org.eclipse.virgo.ide.jdt.core.test.classpathentry</emphasis>). This can be changed manually (in the .classpath file). 
-			</para>
-			<para>The PAR and Bundle nature have been renamed (
-				<emphasis role="italic">com.springsource.server.ide.facet.core.bundlenature</emphasis> -&amp;gt; 
-				<emphasis role="italic">org.eclipse.virgo.ide.facet.core.bundlenature</emphasis> and (
-				<emphasis role="italic">com.springsource.server.ide.facet.core.parnature</emphasis> -&amp;gt; 
-				<emphasis role="italic">org.eclipse.virgo.ide.facet.core.parnature</emphasis>)). This can be changed manually (in the .project file). 
-			</para>
-			<para>The format and name of a PAR project changed. Rename 
-				<emphasis role="italic">.settings/com.springsource.server.ide.runtime.core.par.xml</emphasis> to 
-				<emphasis role="italic">.settings/org.eclipse.virgo.ide.runtime.core.par.xml</emphasis>. Inside the file rename occurences of 
-				<emphasis role="italic">com.springsource.server</emphasis> to 
-				<emphasis role="italic">org.eclipse.virgo</emphasis>. 
-			</para>
-			<para>
-				<emphasis role="bold">Snapshot build change:</emphasis> We've made a change in our tooling that will require modifying the org.eclipse.virgo.ide.runtime.core.par.xml file so that it points to the correct par.ecore URI. Rename 
-				<emphasis role="italic">xmlns:com.springsource.server.ide.par=&quot;
-					<ulink url="http:///com/springsource/server/ide/par.ecore&amp;quot">http:///com/springsource/server/ide/par.ecore&amp;quot</ulink>;
-				</emphasis> to 
-				<emphasis role="italic">&quot;xmlns:org.eclipse.virgo.ide.par=&quot;
-					<ulink url="http://eclipse.org/virgo/par.ecore&amp;quot">http://eclipse.org/virgo/par.ecore&amp;quot</ulink>;
-				</emphasis>
-			</para>
-			<para>Inside the WST settings file (
-				<emphasis role="italic">.settings/org.eclipse.wst.common.project.facet.core.xml</emphasis>) rename occurences of 
-				<emphasis role="italic">com.springsource.server.bundle</emphasis> to 
-				<emphasis role="italic">org.eclipse.virgo.server.bundle</emphasis> and occurences of 
-				<emphasis role="italic">com.springsource.server.par</emphasis> to 
-				<emphasis role="italic">org.eclipse.virgo.server.par</emphasis>. 
-			</para>
-			<para>Most/all of the conversion should be done by the following script (it has only see marginal testing, use at your own risk): 
-&lt;				pre&gt;#!/bin/sh</para>
-			<orderedlist>
-				<listitem>
-					<para>NOTE1: Run this at your own risk&amp;nbsp;:)</para>
-				</listitem>
-				<listitem>
-					<para>NOTE2: I should quote more dots in sed expressions but I'm lazy.</para>
-				</listitem>
-				<listitem>
-					<para>TODO: Delete old com.springsource files after conversion</para>
-				</listitem>
-			</orderedlist>
-			<para>if 
-				<ulink url="&amp;amp;nbsp;!">-d &amp;quot;$1&amp;quot; </ulink>; then 
-			</para>
-			<literallayout>       echo &amp;quot;Please point me at an eclipse project&amp;quot;&amp;amp;nbsp;; 
-       exit 1
-</literallayout>
-			<para>fi</para>
-			<orderedlist>
-				<listitem>
-					<para>Bundlor settings</para>
-				</listitem>
-			</orderedlist>
-			<para>f=&quot;$1/.settings/com.springsource.server.ide.bundlor.core.prefs&quot;
-				[ -f &quot;$f&quot; ] &amp;amp;&amp;amp;  (</para>
-			<literallayout>       echo &amp;quot;$1: Converting bundlor preferences&amp;quot;
-       sed -e 's/com\.springsource\.server/org.eclipse.virgo/g' &amp;quot;$f&amp;quot; &amp;amp;gt; &amp;quot;$(echo $f | sed -e s/com.springsource.server/org.eclipse.virgo/)&amp;quot;
-</literallayout>
-			<para>)</para>
-			<orderedlist>
-				<listitem>
-					<para>convert PAR</para>
-				</listitem>
-			</orderedlist>
-			<para>f=&quot;$1/.settings/com.springsource.server.ide.runtime.core.par.xml&quot;
-				[ -f &quot;$f&quot; ] &amp;amp;&amp;amp;  (</para>
-			<literallayout>       echo &amp;quot;$1: Converting PAR project dependencies&amp;quot;
-       sed -e 's/com\.springsource\.server/org.eclipse.virgo/g' &amp;quot;$f&amp;quot; &amp;amp;gt; &amp;quot;$(echo $f | sed -e s/com.springsource.server/org.eclipse.virgo/)&amp;quot;
-</literallayout>
-			<para>)</para>
-			<orderedlist>
-				<listitem>
-					<para>Fix classpaths        </para>
-				</listitem>
-			</orderedlist>
-			<para>f=&quot;$1/.classpath&quot;
-				[ -f &quot;$f&quot; ] &amp;amp;&amp;amp; (</para>
-			<literallayout>       echo &amp;quot;$1: Converting classpath containers and entries&amp;quot;
-       sed -i \
-               -e 's/com.springsource.server.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER/org.eclipse.virgo.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER/g' \
-               -e 's/com.springsource.server.ide.jdt.core.test.classpathentry/org.eclipse.virgo.ide.jdt.core.test.classpathentry/g' \
-               &amp;quot;$f&amp;quot;
-</literallayout>
-			<para>)</para>
-			<orderedlist>
-				<listitem>
-					<para>Fix natures..</para>
-				</listitem>
-			</orderedlist>
-			<para>f=&quot;$1/.project&quot;
-				[ -f &quot;$f&quot; ] &amp;amp;&amp;amp; (</para>
-			<literallayout>       echo &amp;quot;$1: Converting project natures&amp;quot;
-       sed -i \
-               -e 's/com.springsource.server.ide.facet.core.bundlenature/org.eclipse.virgo.ide.facet.core.bundlenature/g' \
-               -e 's/com.springsource.server.ide.facet.core.parnature/org.eclipse.virgo.ide.facet.core.parnature/g' \
-               &amp;quot;$f&amp;quot;
-</literallayout>
-			<para>)</para>
-			<orderedlist>
-				<listitem>
-					<para>Fix the wst file, could also replace runtime name here</para>
-				</listitem>
-			</orderedlist>
-			<para>f=&quot;$1/.settings/org.eclipse.wst.common.project.facet.core.xml&quot;
-				[ -f &quot;$f&quot; ] &amp;amp;&amp;amp; (</para>
-			<literallayout>       echo &amp;quot;$1: Converting org.eclipse.wst.common.project.facet.core.xml&amp;quot;
-       sed -i \
-               -e 's/com.springsource.server.bundle/org.eclipse.virgo.server.bundle/g'  \
-               -e 's/com.springsource.server.par/org.eclipse.virgo.server.par/g'  \
-               &amp;quot;$f&amp;quot;
-</literallayout>
-			<para>)</para>
-			<para>&lt;/pre&gt;</para>
-		</section>
 	</section>
 	<section id="Maven_plugin">
 		<title>Maven plugin</title>
@@ -486,16 +318,6 @@
 		</itemizedlist>
 		<para>We really don't recommend doing so (see 
 			<link linkend="Install_Virgo">Install_Virgo</link>). Select only Virgo Tooling and Eclipse will take care of installing anything the tooling relies on.
-		</para>
-		<itemizedlist>
-			<listitem>
-				<para>
-					<emphasis role="bold">Can I use the Virgo Tools with traditional PDE/Equinox Bundles?</emphasis>
-				</para>
-			</listitem>
-		</itemizedlist>
-		<para>Deploying PDE/Equinox Bundles to Virgo Web Server are not yet supported yet, although exporting the bundles (as Eclipse Plug-in JARs) and manually deploying to Virgo Web Server works. Please show your support on 
-			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=329198">Bugzilla #329198</ulink>.
 		</para>
 		<para>
 			<ulink url="/wiki/Category:Virgo">Category:Virgo</ulink> 

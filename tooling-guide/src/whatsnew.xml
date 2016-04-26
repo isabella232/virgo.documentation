@@ -1,6 +1,41 @@
 <?xml version='1.0' ?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="What.27s_New">
 	<title>What's New</title>
+	<section id="1.5.0_Release">
+		<title>1.5.0 Release</title>
+		<section id="UI_15">
+			<title>UI</title>
+			<para>Starting from version 1.5 it is possible to develop for the Virgo Runtime
+			using the Eclipse Plug-in Development Environment (PDE). See the Tooling Guide for more information on this new feature.
+			</para>
+			<section id="Wizards">
+				<title>Wizards</title>
+				<section id="Server_Runtime_Wizard">
+					<title>Server Runtime Wizard</title>
+					<para>The Server Runtime Wizard can now optionally assist the user in setting up a PDE Target Platform definition whose content reflects the
+						Virgo Runtime repository configuration.
+					</para>
+				</section>
+				<section id="PDE_Project_Wizard">
+					<title>PDE Project Wizard</title>
+					<para>A new project wizard allows creating PDE Plug-in projects that are also Virgo Runtime projects and can be deployed on a Virgo Server
+					</para>
+				</section>
+			</section>
+			<section id="Server_Editor">
+				<title>Server Editor</title>
+				<para>The Server Editor has been improved to:</para>
+				<itemizedlist>
+				<listitem>
+					<para>provide proper support for PDE Target Platform definitions</para>
+				</listitem>
+				<listitem>
+					<para>allow multi-selection in the 'Artefact Deployment Order' section.</para>
+				</listitem>
+			</itemizedlist>
+			</section>
+		</section>
+	</section>	
 	<section id="1.0.0_Release">
 		<title>1.0.0 Release</title>
 		<section id="UI">

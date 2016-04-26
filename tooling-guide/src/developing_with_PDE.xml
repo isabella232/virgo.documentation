@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="developing_with_PDE">
+	<title>Developing OSGi Bundles using Plug-in Development Environment
+		(PDE)
+	</title>
+	This chapter assumes that the user is already familiar with the Plug-in Development Environment (PDE). Should this not be the case
+	it is recommended to read first the PDE documentation or one of the many tutorials available online.
+	<section id="pde_dependencies">
+		<title>Resolving Bundle Dependencies</title>
+		<para>
+			Starting from release 1.5.0 the Tools support developing OSGi
+			Bundles using the widely popular Eclipse Plug-in Development
+			Environment (PDE).
+		</para>
+		<para>
+			While working with OSGi bundles, one of the most important
+			aspects is defining the required dependencies in the MANIFEST.MF file. 
+			When used in conjunction with the PDE, the Virgo Tools address this problem
+			by leveraging on the PDE tooling and in particular on the PDE Target Platform Definition.
+			A Target Platform Definition defines the bundles which your workspace will be built against.
+		</para>
+		<para>
+			At runtime however, a PDE Target Platform won't be available and
+			dependency resolution will always occur against the bundle
+			repositories configured for the @umbrella.product.name@. The Tools
+			try to bridge runtime and development by providing a Server
+			wizard that creates a new PDE Target Platform Definition that
+			matches the Server repository configuration,
+			as defined in
+			<code>org.eclipse.virgo.repository.properties</code>
+			.
+		</para>
+		<para>
+			The @umbrella.product.name@ supports watched, external and remote
+			repositories. Watched and external repositories correspond to
+			file system folders, while a remote repository is a remote Virgo
+			instance that can serve its repository content to other Virgo instances 
+			for the purpose of dependency resolution. The PDE Target Platform allows its content
+			to be specified only as file system folders or P2 Update sites. As such, when the Tools create a
+			PDE Target Platform Definition from the runtime repository configuration only watched and 
+			external repositories are considered.
+		<para>
+			Developers should properly setup a local @umbrella.product.name@ so that its bundle repositories
+			contain their application dependencies. Then they should use the Tools to setup a PDE Target Platform
+			so that their workspace projects are build and resolved against the same bundles that will be available
+			at runtime.			 
+		</para>
+		<note>
+			Note that when using the Tools together with PDE to develop for
+			Virgo it's not possible to use the MANIFEST.MF headers
+			<code>Import-Bundle</code>
+			(not part of the standard OSGi specification but supported by
+			Virgo)
+			and <code>Require-Bundle</code>
+			(part of the standard OSGi specification but not supported by Virgo).
+			Developers will have to declare all of their external dependencies
+			using the
+			<code>Import-Package</code>
+			header only.
+		</note>			
+		</para>
+	</section>
+	<section id="runtime-wizard">
+		<title>Server Runtime Wizard</title>
+		<para>
+			After installing the Virgo Tools in Eclipse it is possible
+			to create a new Server.
+			A Server can be created from the global <emphasis>New</emphasis> dialog, by selecting the
+			<emphasis>Virgo Runtime</emphasis> item within the <emphasis>EclipseRT</emphasis> category.
+			Alternatively, users can right click over the <emphasis>Servers</emphasis> view (easily accessible from
+			the <emphasis>Virgo</emphasis> perspective or via <emphasis>New -> Show View -> Other</emphasis>) and select <emphasis>New</emphasis> to
+			open the same wizard.
+		</para>
+		<para>
+			<imagedata fileref="images/new_server_wiz_1.png" format="PNG" />			
+		</para>
+		<para>
+			In both cases the Server wizard will appear and will ask the user
+			to select a valid Virgo installation from the local file system.
+			<note>
+			The first time a Server is created in a new workspace the wizard
+			will create both a Server instance and a Server Runtime. 
+			The former corresponds to the Server where the bundles in the workspace will be deployed,
+			the latter corresponds to the runtime definition of which the former will be an instance.
+			</note>
+			<note>
+			While it's in theory possible to create multiple runtimes and different Server instances
+			associated to them within a single workspace, only one PDE target platform can be active in a workspace at a time.			
+			As such when working with the Virgo Tools and PDE it is recommended to use one dedicated Eclipse workspace
+			for one Server runtime and one PDE Target Platform.</note>			
+		</para>		
+		<para>
+			<imagedata fileref="images/new_server_wiz_2.png" format="PNG" />
+		</para>		
+		<para>
+			To manage bundle dependencies with PDE make sure to select the check-box in the next page of the wizard:
+		</para>
+		<para>
+			<imagedata fileref="images/new_server_wiz_3.png" format="PNG" />
+		</para>
+		<para>
+			The wizard will then parse the <code>org.eclipse.virgo.repository.properties</code> file and show to the
+			user the folders that will be used for setting up the PDE Target Platform definition.
+		    In this page it's possible to include additional folders before pressing <emphasis>Finish</emphasis>.
+			The folders visible in the picture above are the default content of an unchanged <code>org.eclipse.virgo.repository.properties</code> file plus the server <emphasis>plugins</emphasis> folder
+			contained in the server home directory. In reality the <emphasis>plugins</emphasis> folder is not a bundle repository and is not listed in the <code>org.eclipse.virgo.repository.properties</code> file.
+			It contains some core components of the @umbrella.product.name@ and gets included in the Target Platform definition
+			because at runtime the contained bundles are made available to the deployed applications for dependencies resolution.  
+		</para><para>			
+			Additional folders can be added (or removed if already present in the <code>org.eclipse.virgo.repository.properties</code> file). When the <emphasis>Finish</emphasis> button
+			is pressed the wizard will create a PDE Target Platform definition and will offer to modify <code>org.eclipse.virgo.repository.properties</code> to reflect any change applied by the user.
+			The newly created Target Platform will be named after the Server runtime (usually "Virgo Runtime" if not changed by the user in the previous wizard page).		
+		<note>		
+			Note that while it's safe to include additional folders, users should not remove the default folders unless they really know what they are doing.
+			</note>
+		</para>
+		<para>
+			It is possible to double check the content of the newly created PDE Target Platform via the Target Platform preferences page in the
+			Preferences dialog (<emphasis>Window -> Preferences</emphasis>):
+		</para>
+		<para><imagedata fileref="images/virgo_target_platform.png" format="PNG" /></para>
+		<para>
+			The target platform name must match the Server runtime name ("Virgo Runtime" in this example) for the Virgo Tools to be able to correlate
+			the two. 
+			<note>When a PDE Target platform exists for a Virgo Server instance and is named like the corresponding Virgo Runtime, the Server icon
+			is decorated in the <emphasis>Servers</emphasis> view with a tiny plug-in icon in the top-left, as depicted below.</note> 		
+		</para>
+		<para><imagedata fileref="images/servers_and_editor.png" format="PNG" /></para>
+		<para>
+		As visible in the above picture, the <emphasis>Server editor</emphasis>, which is easily accessible by double-clicking over the @umbrella.product.name@
+		in the <emphasis>Server</emphasis> view, provides an new section titled <emphasis>Target Platform</emphasis> which allows reloading the
+		content of the Target Platform definition associated to the current server (useful for example when new bundles are added to the repository)
+		and allows editing the content of the current Target Platform definition by recalling the same UI of the last page of the server creation wizard.
+		</para>
+	</section>
+	<section id="pde-projects">
+	<title>PDE Bundle projects</title>
+	<para>
+		Now that the @umbrella.product.name@ has been properly setup in the Eclipse workspace, including the corresponding PDE Target Platform definition,
+		it's finally possible to create new projects.
+	</para>
+	<para>The Virgo Tools require PDE Plug-in projects to be augmented with some additional features to be usable. As such, in order to create
+	a new project it is necessary to use the dedicated wizard named <emphasis>PDE Bundle project</emphasis> located within the <emphasis>Virgo</emphasis>
+	category:
+	</para>
+	<para><imagedata fileref="images/pde_bundle_wiz.png" format="PNG" /></para>		
+	<para>
+		The above wizard is the standard PDE <emphasis>Plug-in project</emphasis> wizard with some choices disabled or defaulted.
+		In addition to the usual pages it includes an extra page where the user can optionally specify a Web context root.
+		If a context root is specified the new project will be a Web Application bundle (WAB). If the context root is not specified
+		the new project will be a regular OSGi bundle. 
+		<note>
+			The icon of Plug-in projects created for Virgo using the above wizard will be decorated with a tiny <emphasis>EclipseRT globe</emphasis> in the top left.
+		</note>
+		<para><imagedata fileref="images/new_pde_bundle.png" format="PNG" /></para>			
+	</para>
+	<para><note>
+		Once a <emphasis>PDE Bundle project</emphasis> has been created as explained above, the developer can use the standard <emphasis>PDE Plug-in Editor</emphasis>
+		and related tooling to work with the newly created project. Please refer to the official PDE documentation for further details.</note> 
+	</para>
+	</section>
+	<section id="pde-migration-actions">
+		<title>Migration actions</title>
+		<para>
+		Before the Virgo Tools provided support for PDE, some developers where using an unofficial Eclipse plug-in called  
+		<ulink url="http://github.com/giamma/PDE2Virgo">PDE2Virgo</ulink>.
+		The Virgo Tools provide a migration action for migrating PDE2Virgo projects into <emphasis>PDE bundle projects</emphasis>.
+		The migration action is accessible via <emphasis>Virgo</emphasis> context menu and is labeled <emphasis>Migrate PDE2Virgo project</emphasis>.
+		The action is visible when the selection contains only <emphasis>PDE2Virgo</emphasis> projects and supports multiple selection.
+		</para>
+		<para>
+		A migration action is also provided for PDE users who want to migrate PDE <emphasis>Plug-in</emphasis> projects to <emphasis>PDE bundle projects</emphasis> to be
+		able to run their projects on a Virgo test environment integrated in Eclipse.  
+		The migration action is accessible via <emphasis>Virgo</emphasis> context menu and is labeled <emphasis>Migrate Plug-in project</emphasis>.
+		The action is visible when the selection contains only <emphasis>Plug-in</emphasis> projects and supports multiple selection.
+		</para>		
+		<para><imagedata fileref="images/migrate_plugin.png" format="PNG" /></para>	
+	</section>
+</chapter>
+
+
