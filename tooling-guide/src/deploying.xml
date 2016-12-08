@@ -2,7 +2,8 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="deploying">
 	<title>Deploying Applications</title>
-	<para>Currently the Tools support direct deployment of WTP Dynamic Web Projects, OSGi bundle and PAR projects to the
+	<para>Currently the Tools support direct deployment of WTP Dynamic Web Projects, OSGi bundle projects,
+	PDE Bundle projects, PAR projects and Plan files (contained in Plan projects) to the
 		@umbrella.product.name.short@ from directly within Eclipse.
 	</para>
 	<para>To deploy an application to the @umbrella.product.name@ just bring up the context menu on the configured

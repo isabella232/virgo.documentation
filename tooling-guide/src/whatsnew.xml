@@ -21,6 +21,13 @@
 					<para>A new project wizard allows creating PDE Plug-in projects that are also Virgo Runtime projects and can be deployed on a Virgo Server
 					</para>
 				</section>
+				<section id="Plan_Project_Wizard">
+					<title>Plan Project Wizard</title>
+					<para>A new project wizard allows creating Plan projects in the workspace. Plan projects permit to deploy a plan to the Virgo Runtime within Eclipse
+						and can be seen as a possibly more convenient alternative to adding individual bundles to the Virgo Runtime and defining their activation order
+						via the Server Editor.
+					</para>
+				</section>
 			</section>
 			<section id="Server_Editor">
 				<title>Server Editor</title>

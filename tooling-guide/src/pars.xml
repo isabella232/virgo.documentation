@@ -20,15 +20,7 @@
 		</menuchoice>
 		and press
 		<emphasis>Next</emphasis>
-		:
-		<mediaobject>
-			<imageobject role="fo">
-				<imagedata fileref="images/new-par-project.png" format="PNG" align="center" width="9cm" />
-			</imageobject>
-			<imageobject role="html">
-				<imagedata fileref="images/new-par-project.png" format="PNG" align="center" />
-			</imageobject>
-		</mediaobject>
+		.
 	</para>
 	<para>
 		In the New PAR Project dialog, ensure the

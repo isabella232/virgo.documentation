@@ -78,6 +78,7 @@
 	<xi:include href="server-editor.xml" />
 	<xi:include href="developing.xml" />
 	<xi:include href="developing_with_PDE.xml" />
+	<xi:include href="plans.xml" />
 	<xi:include href="pars.xml" />
 	<xi:include href="deploying.xml" />
 	<xi:include href="wiki.xml" />

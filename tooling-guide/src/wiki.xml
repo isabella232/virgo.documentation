@@ -30,15 +30,7 @@
 		<section id="Install_Eclipse">
 			<title>Install Eclipse</title>
 			<para>If you're not installing into an existing Eclipse, you'll need one. </para>
-			<itemizedlist>
-				<listitem>
-					<para>Eclipse Indigo 3.7.x or Indigo based suite such as SpringSource Tool Suite 2.9.x</para>
-				</listitem>
-				<listitem>
-					<para>Eclipse Juno 3.8/4.2</para>
-				</listitem>
-			</itemizedlist>
-			<para>Eclipse JEE Indigo recommended.</para>
+			<para>Eclipse for Java EE developers is recommended.</para>
 		</section>
 		<section id="Install_Virgo">
 			<title>Install Virgo</title>
@@ -262,16 +254,6 @@
 		<para>If you've deployed your Virgo projects to multiple Virgo runtimes the tools will associate the project with each runtime, but will only validate against one runtime. In order to manage which Virgo runtime your bundle dependencies are validated against, right-click on the project, select Properties and select the Targeted Runtimes category. From this dialog you can give priority to a particular Virgo runtime.</para>
 		<para>
 			<ulink url="/wiki/image:virgo-targeted-runtimes.png">image:virgo-targeted-runtimes.png</ulink>
-		</para>
-		<itemizedlist>
-			<listitem>
-				<para>
-					<emphasis role="bold">How do I deploy a Plan with the Virgo tools?</emphasis>
-				</para>
-			</listitem>
-		</itemizedlist>
-		<para>Deploying a Plan works much the same way as deploying a Bundle or PAR from the tools. Unfortunately, the tools only handle Plan deployment correctly when the Plan refers to items already in Virgo's watched repository directories. If you try to deploy a Plan that references a project in the Eclipse workspace, the tools will fail. One workaround is to copy your workspace bundle(s) into repository/usr or some other watched repository directory. A discussion of this bug and other workarounds is available at 
-			<ulink url="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379765">https://bugs.eclipse.org/bugs/show_bug.cgi?id=379765</ulink>
 		</para>
 		<itemizedlist>
 			<listitem>

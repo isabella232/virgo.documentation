@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="plans">
+	<title>Developing Plans</title>
+	<para>In @project.name@, applications consisting of multiple bundles can be declared using one or more Plans.
+	</para>
+
+	<para>
+		To create a Plan project, right-click in the
+		<emphasis>Package Explorer</emphasis>
+		and select
+		<menuchoice>
+			<guimenu>New</guimenu>
+			<guimenuitem>Project…</guimenuitem>
+		</menuchoice>
+		. In the dialog that opens select
+		<menuchoice>
+			<guimenu>Virgo</guimenu>
+			<guimenuitem>Plan Project</guimenuitem>
+		</menuchoice>
+		and press
+		<emphasis>Next</emphasis>
+		:
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata fileref="images/new-plan-project.png" format="PNG" align="center" width="9cm" />
+			</imageobject>
+			<imageobject role="html">
+				<imagedata fileref="images/new-plan-project.png" format="PNG" align="center" />
+			</imageobject>
+		</mediaobject>
+	</para>
+	<para>
+		In the New Plan Project dialog, enter a suitable name for the project, set the location to a suitable directory, and press
+		<emphasis>Next</emphasis>
+	</para>
+	<para>
+		In the next wizard page, you can optionally specify a Plan name to also have a Plan file created for you by the wizard.
+	</para>
+	<para>
+		When creating additional Plan files, make sure you place them within the source folder. 
+		You can now add Plan files to the Virgo Runtime in Eclipse via the usual add/remove dialog or by means of drag and drop.
+	</para>
+	<section id="planBenefits">
+	<title>Benefit of using Plan files</title>
+	<para>
+		Plan projects and plan files can be used as an alternative to adding individual bundles to the test environment integrated in Eclipse.
+		The main benefits of using Plan files are:
+		<itemizedlist>
+			<listitem>
+				<para>
+					Plan files can be more easily shared with coworkers and/or committed to a source code repository
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					It may be more convenient to re-order the content of a Plan file using the Eclipse text editor than editing artefact ordering in the Server Editor
+				</para>
+			</listitem>
+			<listitem>
+				<para>				
+					Plan files can be composed of other plan files
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Items in Plan files will be picked either from the workspace or from the configured bundle repositories
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Using Plan files in the test environment is more representative of the production deployment
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+	</section>
+	<section id="planPublishing">
+	<title>Discovery of Plan files in the workspace</title>
+	<para>
+		The Virgo Tools create Plan projects as special types of Java projects with an additional Virgo-specific nature.
+		Plan files must be created within the source folder(s) of Plan projects.
+	</para>
+	<para>
+		When a Plan file refers to another Plan file, the Virgo Tools will look for the referred Plan file in the same project
+		of the top-level Plan and in all the Plan projects that are directly or indirectly reachable via the project's <emphasis>Java
+		Build Path</emphasis>.
+		If more than one Plan with the same name is found in the project's <emphasis>Java Build Path</emphasis>, the Virgo Tooling will 
+		pick the first found when following the <emphasis>Java Build Path</emphasis> defined class-path order.
+		Note that the Plan is identified by the value of the <emphasis>name</emphasis> attribute of the <emphasis>plan</emphasis> element
+		inside the Plan XML document and not the by the file name.
+	</para>
+	</section>
+</chapter>
