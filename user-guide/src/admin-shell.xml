@@ -49,7 +49,7 @@ osgi> ]]></programlisting>
 		
 		<para>
 		  <note>
-		    If you use the <literal>shutdown</literal> shell command to stop Virgo Tomcat Server, the shutdown messages appear in the shell terminal instead of in the terminal in which Virgo runs. This is due to the
+		    If you use the <literal>shutdown</literal> shell command to stop Virgo Server for Apache Tomcat, the shutdown messages appear in the shell terminal instead of in the terminal in which Virgo runs. This is due to the
         mechanisms which the shell implementation uses to redirect standard output.
       </note> 
 		</para>
