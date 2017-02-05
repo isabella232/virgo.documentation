@@ -2,8 +2,6 @@
 <project name="build-documentation" default="doc-html">
 
 	<path id="bundles">
-		<pathelement location="${basedir}/../user-guide"/>
-		<pathelement location="${basedir}/../programmer-guide"/>
 		<pathelement location="${basedir}/../tooling-guide"/>
 	</path>
 

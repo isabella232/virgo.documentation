@@ -1,0 +1,61 @@
+:virgo-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-{version}/docs/virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-3.6.4.RELEASE/docs/virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+:experimental: true
+:toc-placement: manual
+:toc:
+
+= {virgo-name} Programmer Guide
+
+[%hardbreaks]
+Ramnivas Laddad
+Colin Yates
+Sam Brannen
+Rob Harrop
+Christian Dupuis
+Andy Wilkinson
+Glyn Normington
+Steve Powell
+Christopher Frost
+Florian Waibel
+
+image::virgo-logo-small.png[Eclipse Virgo,float="right"]
+
+[%hardbreaks]
+{umbrella-virgo-name}
+{version}
+Copyright (C) 2009, 2011 VMware Inc. and others
+
+'''
+
+toc::[]
+
+include::preface.adoc[]
+include::prerequisites.adoc[]
+include::introduction.adoc[]
+include::architecture.adoc[]
+include::developing-applications.adoc[]
+include::migrating-to-osgi.adoc[]
+include::formtags-case-study.adoc[]
+include::common-libraries.adoc[]
+include::known-issues.adoc[]

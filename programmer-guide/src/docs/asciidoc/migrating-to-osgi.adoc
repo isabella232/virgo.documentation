@@ -1,0 +1,145 @@
+:virgo-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:migrating-to-osgi[Migrating to OSGi]
+
+== Migrating to OSGi
+
+Taking on a new technology such as OSGi may seem a bit daunting at first,
+but a proven set of migration steps can help ease the journey. Teams
+wishing to migrate existing applications to run on the {tomcat-product-name}
+will find that their applications typically fall into one of the following
+categories.
+
+* *Web Application*: for web applications,
+this chapter provides an overview of the steps required to migrate
+from a Standard WAR to a Shared Services WAR. Furthermore, the following
+chapter provides a detailed case study involving the migration
+of the Spring 3.0 Form Tags show case application.
+* *Anything else*: for any other type
+of application, you will typically either deploy your application
+as multiple individual bundles, as a single PAR file, or as a plan,
+which is the recommended approach for deploying applications on
+the {tomcat-product-name}. See xref:migrating-to-osgi-par-plan for details.
+
+anchor:migrating-to-osgi-web[]
+
+=== Migrating Web Applications
+
+Many applications may start with the standard WAR format for web applications and
+gradually migrate to a more OSGi-oriented architecture. Since the {tomcat-product-name}
+offers several benefits to all supported deployment formats, it provides a smooth
+migration path. Of course, depending on your application's complexity and your
+experience with OSGi, you may choose to start immediately with an OSGi-based
+architecture.
+
+
+anchor:migrating-to-osgi-web-standard-war[]
+
+==== Standard WAR
+
+If you are not yet familiar with OSGi or simply want to deploy an existing web application on the {tomcat-product-name},
+you can deploy a standard WAR and leverage the {tomcat-product-name-short} with a minimal learning curve. In fact reading the
+{user-guide}
+is pretty much all that you need to do to get started. Furthermore, you will gain
+familiarity with the {tomcat-product-name}, while preparing to take advantage of the other formats.
+
+anchor:migrating-to-osgi-web-shared-libraries-war[]
+
+==== Shared Libraries WAR
+
+The *Shared Libraries WAR*
+format is the first step to reaping the benefits of OSGi. In this phase, you dip your toes into OSGi-based dependency
+management by removing JAR files from the WAR and declaring dependencies on corresponding OSGi bundles.
+
+anchor:migrating-to-osgi-web-shared-services-war[]
+
+==== Shared Services WAR
+
+In this phase, you take the next step toward a fully OSGi-based architecture by separating your web artifacts
+(e.g., Servlets, Controllers, etc.) from the services they depend on.
+
+anchor:migrating-to-osgi-web-summary[]
+
+==== Web Migration Summary
+
+The following diagram graphically depicts the migration path from a Standard WAR to a Shared Services WAR.
+As you can see, the libraries (*libs*) move from within the deployment artifact
+to the Bundle Repository.
+Similarly, the services move from within the WAR to external bundles and are accessed via the
+OSGi Service Registry. In addition, the overall footprint of the deployment artifact decreases
+as you move towards a Shared Services WAR.
+image:migration-path-war-to-shsrv.png[]
+
+anchor:migrating-to-osgi-par-plan[]
+
+=== Migrating to a Plan or a PAR
+
+The first steps to migrating an existing application to a plan or a PAR are the same: deciding on the bundles that make up the application and ensuring that their `Import-Package`, `Import-Library`, and `Import-Bundle` manifest headers are correct.   Once you have the list of bundles that make up your application, you then decide whether you want to JAR them all into a single application file (PAR) or create a plan that simply lists the bundles by reference.  Creating a plan is the recommend way to create an application, although PARs also have benefits that might suit your needs better, as described in xref:migrating-to-osgi-parplan-decide[].
+
+anchor:migrating-to-osgi-parplan-bundles[]
+
+==== Creating the Application Bundles
+
+When migrating an existing application to the PAR packaging and deployment format or a plan,
+you consider modularity as the prime objective. Following the ideas discussed in
+xref:architecture-forming-bundles[], you refactor the application into multiple bundles.
+You may start conservatively with a small number of bundles and then further refactor those bundles.
+
+If the original code is crafted following good software practices such as separation of concerns and use of
+well-defined interfaces, migration may involve modifying only configuration and packaging. In other words,
+your Java sources will remain unchanged. Even configuration is likely to change only slightly.
+
+For example, the following diagram depicts a typical web application that has been refactored and
+packaged as a PAR. The blue elements within the *Application* box constitute
+the bundles of the application. Each of these bundles imports types from other bundles within
+the PAR using `Import-Package`. The green elements in the left column represent
+*libraries* installed on the {tomcat-product-name-short}. The PAR's bundles reference these
+libraries using `Import-Library`. The purple element in the left column
+represents a bundle within the {tomcat-product-name-short}'s bundle repository which is imported by the DAO
+bundle using `Import-Bundle`. In contrast to a traditional, monolithic
+WAR deployment, the PAR format provides both a logical and physical application boundary
+and simultaneously allows the application to benefit from both the OSGi container and the {tomcat-product-name}.
+image:migrating-to-osgi-par-structure.png[]
+
+anchor:migrating-to-osgi-parplan-decide[Plan or PAR?]
+
+==== Plan or PAR?
+
+Once you have refactored your existing application into separate OSGi bundles, you then must decide whether to package the bundles into a single PAR file or create a plan that lists the bundles by reference.  As described in more detail in preceding sections of this guides, PARs and plans have similar benefits, such as:
+
+* Scoping
+* Atomicity, or the ability to deploy and control the bundles as a single unit
+* Versioning
+* Improved serviceability
+
+Plans, the method most recommended by us to create your application, has the following added benefits:
+
+* Guaranteed order of deployment, based on the order in which they are listed in the plan's XML file
+* Ease of sharing content between plans and updating individual plans without having to physically repackage, due to the artifacts being listed by reference.
+* Ability to disable scoping and atomicity, if desired.
+
+The main benefit of PARS is that, because they physically contain all the required artifacts, you know exactly what bundles are deployed when you deploy the PAR file, in contrast to plans that allow content to be substituted or lost.
+
+For details about creating plans and PARs, see xref:developing-applications-plans[] and xref:developing-applications-packaging[], respectively.

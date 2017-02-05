@@ -1,5 +1,9 @@
 target
+build/
 integration-repo
 ivy-cache
 spring-build/lib/findbugs
 spring-build/lib/docbook
+.gradle
+.idea/
+

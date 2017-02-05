@@ -1,0 +1,1328 @@
+:project-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-project-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:nanoweb-product-name: Virgo Nano Full
+:nanoweb-product-name-short: VNF
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:programmer-guide: link:../../virgo-programmer-guide/html/index.html[Programmer Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:configuring[]
+
+== Configuration
+Configuration
+
+You use configuration files in the `$SERVER_HOME/configuration` directory to configure {project-name}.  You can also configure the OSGi framework  using files the same `$SERVER_HOME/configuration` directory. This section divides the configuration of the server into the following high-level tasks:
+
+* xref:configuring-osgi-framework[Configuring the OSGi framework]
+* xref:configuring-framework-extensions[Configuring framework extensions and fragments on the system bundle]
+* xref:configuring-serviceability[Configuring serviceability]
+* xref:configuring-provisioning-repository[Configuring the local provisioning repository]
+* xref:configuring-hosted-repo[Configuring the hosted repository]
+* xref:configuring-kernel[Configuring the kernel and User Region]
+* xref:configuring-tomcat[Configuring the embedded Tomcat servlet container]
+* xref:configuring-web[Configuring the web integration layer]
+* xref:configuring-jetty[Configuring the embedded Jetty servlet container]
+
+[NOTE]
+.Why is there both a config and a configuration directory?
+--
+The *config* directory has always contained {project-name} configuration files. When {nano-product-name} and its support for p2 provisioning was introduced in {project-name} 3.5.0, a *configuration* directory replaced the old *config* one. Now all {project-name} configurations are assembled in that directory providing a single point of configuration. The directory name *configuration* in the installation's root is used by default in p2 to configure the OSGi framework during provisioning.
+This chapter makes it clear which configuration goes in each directory.
+--
+
+[NOTE]
+--
+Sections 4-6 and 8-9 does not apply for {nano-product-name}.
+--
+
+anchor:configuring-osgi-framework[]
+
+=== Configuring the OSGi Framework
+
+This section provides information about configuring the OSGi framework by updating the following files in the `$SERVER_HOME/configuration` directory:
+
+anchor:configuring-osgi-framework-table[]
+[options="header",cols=",,"]
+.OSGi Framework Configuration Files
+|=======================================================================
+| Property File    | Description                          | Location
+| `config.ini`     | Configures xref:configuring-framework-properties[OSGi framework properties].
+                                                          |	`$SERVER_HOME/configuration`
+| `bundles.info`   | Configures xref:configuring-framework-bundles[OSGi framework bundles].
+                                                          | `$SERVER_HOME/configuration/org.eclipse.equinox.simpleconfigurator`
+| `java-server.profile`
+                   | Configures the xref:configuring-framework-profile[OSGi framework profile].
+                                                          | `$SERVER_HOME/configuration`
+|=======================================================================
+
+anchor:configuring-framework-properties[]
+
+==== Configuring OSGi Framework Properties
+
+You specify the framework properties in the `$SERVER_HOME/configuration/config.ini` file. The
+properties most relevant to users are described in the following table.
+
+[WARNING]
+--
+We strongly recommend that you update only the
+properties below; updating other properties could cause {project-name}
+to fail.
+--
+
+anchor:configuring-framework-properties-table[]
+[options="header",cols=","]
+.Framework Properties
+|=======================================================================
+| Property                                      | Description
+| `org.eclipse.virgo.kernel.startup.wait.limit` | Specifies the amount of time, in seconds, after which various operations time out out while trying to start the kernel.
+								                    The default value is 180.
+| `org.eclipse.virgo.suppress.heap.dumps`       | Set to 'false' by default this property will prevent heap dumps being contributed to dumps taken during a
+                                                    First Failure Data Capture (FFDC) event. When the heap dumps are produced they will be located along with
+                                                    the other dump artifacts in the `$SERVER_HOME/serviceability/dump/` folder.
+| `osgi.java.profile`                           | Specifies the profile to use using a `file:` URI with default value
+								                    `file:configuration/java-server.profile`.
+| `osgi.bundlefile.limit`                       | Specifies a limit on the number of jar files the framework will keep open.
+                                                    The minimum value allowed is 10. Any value less than 10 will disable the bundle file limit, making the the number of jar files the framework keeps open unlimited.
+                                                    By default the value is 100.
+                                                    Increase the default value if you have many jar files in the bundle class path, expect a lot of file system operations etc.
+|=======================================================================
+
+anchor:configuring-framework-bundles[]
+
+==== Configuring OSGi Framework Bundles
+
+You specify the framework bundles in the `$SERVER_HOME/configuration/org.eclipse.equinox.simpleconfigurator/bundles.info` file. The syntax
+that is accepted for listing bundles there is:
+
+....
+<bsn>,<version>,<jar-location>,<start-level>,<toStart?>
+bsn - the bundle's symbolic name string
+version - the bundle's version string
+jar-location - relative or absolute path to the jar file
+start-level - a digit indicating the bundle's start level
+toStart? - true or false value indicating whether a bundle should be started or not
+....
+
+Here's an example:
+
+....
+org.eclipse.virgo.util.osgi,3.1.0.BUILD-20111031165127,plugins/org.eclipse.virgo.util.osgi_3.1.0.BUILD-20111031165127.jar,4,true
+....
+
+[WARNING]
+--
+We strongly recommend that you don't remove bundles already present in your bundles.info file as that may break your server. Add bundles here only if absolutely necessary.
+--
+
+anchor:configuring-framework-profile[]
+
+==== Configuring OSGi Framework Profile
+
+You specify the framework profile in the `$SERVER_HOME/configuration/java6-server.profile` file. The
+properties most relevant to users are described in the following table.
+
+[WARNING]
+--
+We advise you not to change the framework profile unless you are sure you know exactly what
+you are doing; updating the profile could cause {project-name} to fail.
+--
+
+anchor:configuring-framework-profile-table[]
+[options="header",cols=","]
+.Framework Profile Properties
+|=======================================================================
+| Property                             | Description
+| `org.osgi.framework.bootdelegation`  | This property specifies the packages which are loaded by delegation to the application class loader.
+									Bundles can load classes belonging to these packages without importing the packages.
+									The `.*` wildcard matches any package suffix. `java.*` is always
+									boot delegated and must not be specified in this property.
+
+									A common reason for adding packages to this property is to run {project-name} under a performance profiler.
+| `org.osgi.framework.system.packages` | This property specifies the packages which are exported by the system bundle.
+									Although the system bundle is typically imported into the User Region, any additional packages will not be
+									visible in the User Region unless you also import them using the `packagedImports` property.
+									See xref:configuring-user-region[Configuring the User Region] for instructions.
+
+									It is very occasionally necessary to extend the set, for example when configuring email logging appenders since the
+									implementation of `javax.mail`	is intimately related to the implementation of
+									`javax.activation`.
+
+									To make the corresponding classes available for loading, the relevant JAR file(s) should be placed in
+									`$SERVER_HOME/lib` so that they will be added to the application class path.
+|=======================================================================
+
+anchor:configuring-framework-extensions[]
+
+=== Configuring Framework Extensions and Fragments on the System Bundle
+
+This section provides information about configuring framework extensions and fragments on the system bundle. Deployment of such bundles is not allowed in
+{project-name}. This is because by refreshing or uninstalling them the system.bundle is also refreshed, which causes {project-name} to crash.
+
+[NOTE]
+--
+This only applies for fragments on the system bundle. All other fragment bundles have no deployment restrictions.
+--
+
+Generally it's best to avoid usage of such fragment bundles as they are a common OSGi framework issue and often require restarting the framework.
+However sometimes there are no other options and one has to use framework extensions or fragments on the system bundle.
+
+You can configure framework extensions and system bundle fragments as follows:
+
+*1.* Place your fragment bundle in the `/plugins` directory of your {project-name} installation.
+Lets say we have bundle with
+....
+symbolic name: *testFragment*, version: *1.0.0* and filename: *testFragmentBinary_1.0.0.jar*
+....
+
+*2.* Configure the `bundles.info` file in `/configuration/org.eclipse.equinox.simpleconfigurator` to include the
+just copied fragment or framework extension bundle.
+
+Add a line at the end of the `bundles.info` file similar to this one:
+
+....
+testFragment,1.0.0,plugins/testFragmentBinary_1.0.0.jar,4,false*
+....
+
+*3.* Configure the `org.eclipse.virgo.kernel.userregion.properties` file in `/configuration` folder to import the fragment bundle or framework extension in the User Region.
+
+Add to the `bundleImports` property a new line describing the fragment bundle using its symbolic name and version.
+
+....
+bundleImports = org.eclipse.osgi;bundle-version="0",<emphasis role="bold">testFragment;bundle-version="0"*
+....
+
+anchor:configuring-serviceability[]
+
+=== Configuring Serviceability and Diagnostics
+
+The serviceability features of {project-name} allow you to gather and view data and information that you can then use to diagnose problems and failures.  Serviceability data includes:
+
+* Service dumps: Contain a snapshot of all the important state from the running {project-name} instance when an internal failure or thread deadlock is detected.
+You configure service dumps for {project-name} using the xref:configuring-serviceability-medic[org.eclipse.virgo.medic.properties] file in the `$SERVER_HOME/configuration` directory.  This file also includes some additional logging configuration.
+
+* Event logs and server/application (trace) logging: Logging support in {project-name} is based on http://logback.qos.ch/[Logback].  This means that you have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
+You configure logging for {project-name} using the xref:configuring-serviceability-logback[serviceability.xml] file in the `$SERVER_HOME/configuration` directory.  This file is essentially the Logback `logback.xml` (or `logback-test.xml`) configuration file but renamed for {project-name}.
+
+For additional conceptual information about the serviceability subsystem, see xref:serviceability" />.
+
+anchor:configuring-serviceability-medic[]
+
+==== The org.eclipse.virgo.medic.properties File
+
+The `$SERVER_HOME/configuration/org.eclipse.virgo.medic.properties` file configures {project-name} service dumps and whether you want to capture `System.out` and `System.err` output to your application's trace file.
+The following table describes the properties you can include in the `$SERVER_HOME/configuration/org.eclipse.virgo.medic.properties` file. This file configures serviceability properties that {project-name} includes in addition to those supplied by the Logback, configured in the `serviceability.xml` file.
+
+anchor:medic-properties-table[]
+[options="header",cols=","]
+.Serviceability Properties
+|=======================================================================
+| Property                       | Description
+| `dump.root.directory`          | Specifies the directory to which {project-name} writes the service dumps.  The directory name is relative to `$SERVER_HOME`.
+| `log.wrapSysOut`               | Specifies whether you want to capture `System.out` output from your applications to the application trace file.  The output is logged by {project-name}'s root logger, which captures `INFO` level and above.
+                                    Valid values for this property are `true` to capture `System.out` output, or `false` to disable the capture.
+                                    For more information, see xref:sysout-and-syserr[System.out and System.err].
+| `log.wrapSysErr`               | Specifies whether you want to capture `System.err` output from your applications to the application trace file.  The output is logged by {project-name}'s root logger, which captures `INFO` level and above.
+                                    Valid values for this property are `true` to capture `System.err` output, or `false` to disable the capture.
+                                    For more information, see xref:sysout-and-syserr[System.out and System.err].
+| `log.jul.consoleHandler`       | Specifies whether you want to use the `ConsoleHandler` of Java Util Logging. The default JVM configuration uses the handler to write logs to `System.err`.
+                                    Valid values for this property are `true` to enable `ConsoleHandler` output, or `false` to disable it. The default value is `false`.
+                                    For more information, see http://download.oracle.com/javase/6/docs/technotes/guides/logging/overview.html[Java Logging Overview].
+|=======================================================================
+
+anchor:configuring-serviceability-logback[]
+
+==== The serviceability.xml File
+Logging support in {project-name} is based on http://logback.qos.ch/[Logback], which is a successor of the log4j project. The Logback logging framework is faster, more reliable, and easier to use than log4j and certain other logging systems.
+You configure logging for {project-name} using the `$SERVER_HOME/configuration/serviceability.xml` file.  This file is the standard Logback `logback.xml` or `logback-test.xml` configuration file, but renamed for {project-name}.
+The following listing shows the default `serviceability.xml` file in a freshly-installed {project-name}; see the text after the listing for a brief overview of the file:
+
+[source,xml]
+----
+<configuration>
+
+	<jmxConfigurator />
+
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+
+	<appender name="SIFTED_LOG_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<Key>applicationName</Key>
+			<DefaultValue>virgo-server</DefaultValue>
+		</discriminator>
+		<sift>
+			<appender name="${applicationName}_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<file>serviceability/logs/${applicationName}/log.log</file>
+				<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+					<FileNamePattern>serviceability/logs/${applicationName}/log_%i.log</FileNamePattern>
+					<MinIndex>1</MinIndex>
+					<MaxIndex>4</MaxIndex>
+				</rollingPolicy>
+				<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+					<MaxFileSize>10MB</MaxFileSize>
+				</triggeringPolicy>
+				<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+					<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
+				</encoder>
+			</appender>
+		</sift>
+	</appender>
+
+	<appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>serviceability/logs/log.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>serviceability/logs/log_%i.log</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>4</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>10MB</MaxFileSize>
+		</triggeringPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="EVENT_LOG_STDOUT" class="org.eclipse.virgo.medic.log.logback.ReroutingAwareConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread <%X{medic.eventCode}> %msg %ex%n</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="EVENT_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>serviceability/eventlogs/eventlog.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>serviceability/eventlogs/eventlog_%i.log</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>4</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>10MB</MaxFileSize>
+		</triggeringPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread <%X{medic.eventCode}> %msg %ex%n</Pattern>
+		</encoder>
+	</appender>
+
+	<logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.localized">
+		<appender-ref ref="EVENT_LOG_STDOUT" />
+		<appender-ref ref="EVENT_LOG_FILE" />
+	</logger>
+
+	<logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.default">
+		<appender-ref ref="SIFTED_LOG_FILE" />
+		<appender-ref ref="LOG_FILE" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="SIFTED_LOG_FILE" />
+		<appender-ref ref="LOG_FILE" />
+	</root>
+
+</configuration>
+----
+
+Logback allows {project-name} to use logger, appender, and encoder (layout) objects to log messages according to message type and level and to format these messages and define where they are written.  The default `serviceability.xml` file shown above includes four appenders and three loggers (two user and one root.)
+
+The main information to get from this file is that {project-name} writes log messages to four different locations that map to the four appenders:
+
+* The `jmxConfigurator` provides a possibility to configure logback via JMX. For more information see http://logback.qos.ch/manual/jmxConfig.html[JMX Configurator] documentation.
+* The `contextListener` propagates the changes made to the levels of logback loggers to Java Util Logging (JUL). For more information see http://logback.qos.ch/manual/configuration.html#LevelChangePropagator[LevelChangePropagator] documentation.
+* The `SIFTED_LOG_FILE` appender logs both global and application-specific messages to the `$SERVER_HOME/serviceability/logs/`*`applicationName`*`/log.log` file, where *`applicationName`* refers to the name of the application.   The log messages for {project-name} itself are logged to the `$SERVER_HOME/serviceability/logs/virgo-server/log.log` file. Because this appender creates different log files for each application, it is called a *sifting appender*.
+    The default behaviour of these trace files is that, once `log.log` reaches a 10Mb limit, it rolls into a series of files named
+    `log_`*i*`.log` where *i* ranges from 1 to 4, and logging continues in
+    a new `log.log` file. This is called its *rolling policy*.
+
+    The `<Pattern>` element defines the format of each log message;  messages include the timestamp, the thread that generated the log message, the context-specific event code, and a stack trace of the exception, if any.  For example:
+		 `[2008-05-15 09:09:46.940] server-dm-2 org.apache.coyote.http11.Http11Protocol I Initializing Coyote HTTP/1.1 on http-48080`
+
+* The `LOG_FILE` appender is very similar to the first one, but it logs *all* log messages to the `$SERVER_HOME/serviceability/log/log.log` file rather than sifting application-specific messages to their own log file.  The rolling policy and message format for this appender is similar to that of the `SIFTED_LOG_FILE` appender.
+* The `EVENT_LOG_STDOUT` appender does not log messages to a file, but rather to the console window from which you started {project-name}. For example:
+		 `[2010-10-25 16:20:49.367] Thread-3   <WE0000I> Starting web bundle 'org.eclipse.virgo.apps.admin.web' version '2.1.0.RELEASE' with context path '/admin'.`
+* The `EVENT_LOG_FILE` appender logs only important events to the `$SERVER_HOME/serviceability/eventlogs/eventlog.log` file, and thus the volume of information is much lower than with the first two appenders. The rolling policy for the event log is the same as with the first two appenders, but the format of the messages is similar to that of the `EVENT_LOG_STDOUT` appender.
+
+The loggers and root logger specify the level of log that is written for each of the referenced appenders.
+
+Typically, the default logging configuration as specified by the `serviceability.xml` file is adequate for all {project-name} environments.  However, if you want to customize logging further, you can edit this file as well as the `org.eclipse.virgo.medic.properties`.  See the http://logback.qos.ch/manual/index.html[logback documentation] for detailed information about the architecture and the configuration of Logback.
+
+anchor:configuring-provisioning-repository[]
+
+=== Configuring the Local Provisioning Repository
+
+You configure the locations that {project-name} includes in its provisioning repository
+by editing the `org.eclipse.virgo.repository.properties` file in the `$SERVER_HOME/configuration` directory.
+
+When you specify a property in the file, use the format `repository-name.property=value`, where:
+
+* `repository-name` refers to the name of the local repository.
+* `property` refers to the name of a particular property.
+* `value` refers to the value of the property.
+
+For example, `ext.type=external` specifies that the `type` property of the repository
+with name `ext` is `external`.
+
+The `chain` property specifies the order in which {project-name} searches the individual repositories
+when it looks for dependencies.
+The `chain` property uses the names of the individual repositories as specified in the individual repository properties;
+for example, in the property `ext.type=external`, the name of the repository is `ext`.
+
+The default repository configuration for a newly installed {project-name} instance is as follows:
+
+[source,txt]
+----
+ext.type=external
+ext.searchPattern=repository/ext/{artifact}
+
+usr.type=watched
+usr.watchDirectory=repository/usr
+
+chain=ext,usr
+----
+
+The default configuration shown above has two searchpaths corresponding to the two default sub-directories of the `$SERVER_HOME/repository` directory created when you first install {project-name}: `ext` and `usr`. {project-name} searches each of these individual repositories when locating entries for inclusion in the repository.
+
+The `chain` property shows the order in which {project-name} searches the individual repositories: first `ext` and then `usr`.
+
+The following table lists all the available properties that you can use to configure an individual repository.
+Individual repositories as well as the repository search chain  are configured in the file
+`$SERVER_HOME/configuration/org.eclipse.virgo.repository.properties`.
+
+anchor:repository-options-table[]
+[options="header",cols=",,"]
+.Repository Properties
+|=======================================================================
+| Property                   | Description                                   | Default Value
+| *`repository-name`*`.type` | Specifies the type of path.  You can set this property to one of the following three valid values:
+* `external`: Specifies that this path points to a number of directories that satisfy a given search pattern
+and are local to the current {project-name} instance.
+Use the `searchPattern` property to specify the directory search pattern.
+* `watched`: Specifies that this path points to a single directory, local to the current {project-name} instance.
+{project-name} regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime.
+{project-name} also scans its local watched repositories when deploying any artifact.
+Use the `watchDirectory` property to specify the watched directory
+and the `watchInterval` property to specify how often {project-name} checks the directory.
+* `remote`: Specifies that the path points to a remotely-hosted repository,
+hosted by a remote instance of {tomcat-product-name}.
+Use the `uri` property to specify the full URI of the remote repository.
+You can also specify the optional `indexRefreshInterval` property.
+
+See xref:configuring-repository-watched-versus-external[Watched or External Repository?]
+for additional information about when to configure watched or external repositories for your particular environment.
+                                                                             | *no default*
+| *`repository-name`*`.searchPattern`
+                             | Specifies the pattern that an external repository uses when deciding which local directories it should search
+                                when identifying artifacts.  Use this property together with *`repository-name`*`.type=external`.
+                                See xref:configuring-provisioning-repository-search-paths[Search Paths: Additional Information]
+                                for detailed information about specifying a search pattern.
+                                                                             | *no default*
+| *`repository-name`*`.watchDirectory`
+                             | Specifies the single directory of a watched repository.
+                                You can specify either an absolute or relative pathname for the directory.
+                                If you specify a relative pathname, it is relative  to the root of the {project-name} installation (`$SERVER_HOME`).
+                                Use this property together with *`repository-name`*`.type=watched`.
+                                                                             | *no default*
+| *`repository-name`*`.watchInterval`
+                             | Specifies the interval in seconds between checks of a watched directory by a watched repository.
+						Use this property together with *`repository-name`*`.type=watched`.
+						                                                     | `5`
+| *`repository-name`*`.uri`  | Specifies the URI of the hosted repository to which a remote repository connects.
+						        The value of this property takes the following format:
+                                `http://`*`host`*`:`*`port`*`/org.eclipse.virgo.apps.repository/`*`remote-repository-name`*
+						where:
+* *`host`* refers to the computer on which the remote {tomcat-product-name-short}
+instance hosts the remote repository.
+* *`port`* refers to a Tomcat listener port of the remote {tomcat-product-name-short}
+instance which hosts the remote repository.
+* *`remote-repository-name`* refers to the name of the remote repository,
+as specified in the `org.eclipse.virgo.apps.repository.properties` file of the remote {tomcat-product-name-short} instance.
+
+Use this property together with *`repository-name`*`.type=remote`.           | *no default*
+| *`repository-name`*`.indexRefreshInterval`
+                             | Specifies the interval in seconds between checks by a remote repository that
+                                its local copy of the hosted repository index is up-to-date
+                                (a remote repository acts as a proxy for a hosted repository and thus it holds a local copy of the hosted repository's index).
+
+        						Use this property together with *`repository-name`*`.type=remote`.
+        						                                             | `5`
+|=======================================================================
+
+anchor:configuring-repository-watched-versus-external[]
+
+==== Should I Configure a Watched or External Repository?
+
+The main difference between a watched and an external repository is that {project-name} regularly scans watched directories
+and automatically picks up any changed artifacts,
+while {project-name} scans external directories only at startup, and then only if there is no cached index available.
+This means that {project-name} always performs a scan of an external repository when you start the server
+with the `-clean` (as this deletes the index) and only scans during a normal startup if the index isn't there because,
+for example, this is the first time you start the server.
+
+There is a performance cost associated with using a watched repository due to {project-name} using resources
+to scan the directory at the configured interval.
+The cost is small if the watched repository contains just a few artifacts; however,
+the performance cost increases as the number of artifacts increases.
+Note that {project-name} re-scans its local watched repositories when deploying any artifact, so the scanning interval
+can be configured to be relatively long.
+
+ For this reason, we recommend that you put most of your dependencies in external repositories,
+even when in development mode.
+If you make any changes to the artifacts in the external repositories,
+remember to restart {project-name} with the `-clean` option so that the server picks up any changes.
+Use watched directories for artifacts that you are prototyping, actively updating, or when adding new dependencies
+so that {project-name} quickly and easily picks them up.
+To increase performance even during development, however, you can use an external repository for most of your dependencies,
+in particular the ones that are fairly static.
+
+In production environments, where dependencies should not change,
+we recommend that you use *only* external repositories.
+
+anchor:configuring-provisioning-repository-search-paths[]
+
+==== Search Paths: Additional Information
+
+The *`repository-name`*`.searchPattern` and
+*`repository-name`*`.watchDirectory` properties specify search paths
+for external and watched repositories, respectively,
+that define a physical location that {project-name} searches when looking for a library or bundle dependency.
+If a search path is relative, its location is relative to the root of the installation,
+in other words, the `$SERVER_HOME` directory.
+
+anchor:configuring-provisioning-repository-search-paths-wildcards[]
+
+==== Using Wildcards
+
+Search paths specified with the *`repository-name`*`.searchPattern` property
+provide support for wildcards.
+In the entries above, the path segments surrounded by curly braces,
+for example `{bundle}` and `{library}`,
+are wildcards entries for a directory with any name.
+Allowing wildcards to be named in this way is intended to improve the readability of search path configuration.
+
+In addition to supporting the above-described form of wildcards, {project-name} also supports Ant-style paths,
+that is `\*` and `**` can be used to represent any directory and
+any series of directories, respectively.
+For example, `repository/usr/{bundle}` and `repository/usr/*`
+are equivalent.
+
+A common usage of the `**` wildcard is to allow dependencies stored in a directory structure of varying depth,
+such as a local Maven repository, to be provisioned by the {project-name}.
+
+anchor:configuring-provisioning-repository-using-system-properties[]
+
+==== Using System Properties
+
+You can use system properties when specifying the values of the *`repository-name`*`.searchPattern`,
+*`repository-name`*`.watchDirectory`,
+*`repository-name`*`.watchInterval`,
+*`repository-name`*`.uri`,
+and *`repository-name`*`.indexRefreshInterval`
+properties.
+You reference system properties as `${system.property.name}`;
+for example, a search path of `${user.home}/repository/bundles` references the
+`repository/bundles` directory in the user's home directory.
+
+anchor:configuring-provisioning-repository-examples[]
+
+==== Example Repository Configurations
+
+The following examples provide sample configuration that could be used for some common use cases.
+
+anchor:configuring-provisioning-repository-examples-ivy[]
+
+==== Add an Ivy cache repository
+
+The following example shows how to add an external repository whose location is actually an Ivy cache.
+*Note that Ivy repositories can contain bundles which will conflict with the normal operation of Virgo, so care should
+be exercised when adding such an external repository.*
+
+[source,txt]
+----
+ext.type=external
+ext.searchPattern=repository/ext/{artifact}
+
+usr.type=watched
+usr.watchDirectory=repository/usr
+
+ivy-repo.type=external
+ivy-repo.searchPattern=${user.home}/.ivy2/cache/{org}/{name}/{version}/{bundle}.jar
+
+chain=ext,usr,ivy-repo
+----
+
+anchor:configuring-provisioning-repository-examples-maven[]
+
+==== Add a Maven local repository
+
+The following example shows how to add an external repository whose location is actually a Maven repository.
+*Note that Maven repositories can contain bundles which will conflict with the normal operation of Virgo, so care should
+be exercised when adding such an external repository.*
+
+[source,txt]
+----
+ext.type=external
+ext.searchPattern=repository/ext/{artifact}
+
+usr.type=watched
+usr.watchDirectory=repository/usr
+
+maven-repo.type=external
+maven-repo.searchPattern=${user.home}/.m2/repository/**/{bundle}.jar
+
+chain=ext,usr,maven-repo
+----
+
+anchor:configuring-repository-examples-remote-watched[]
+
+==== Add remote and watched repositories
+
+The following example shows the default `org.eclipse.virgo.repository.properties` file
+from a freshly-installed {project-name} instance, but then updated to include new remote and watched repositories.
+Both of these repositories are part of the repository chain.
+
+The remote repository is called `remote-repo`.
+The URI of the hosted repository from which `remote-repo` gets its artifacts is
+`http://my-host:8080/org.eclipse.virgo.apps.repository/my-hosted-repo`;
+this means that there is a {tomcat-product-name-short} instance running on host `my-host`
+whose Tomcat server listens at the default port, `8080`,
+and this server instance hosts a repository called `my-hosted-repo`,
+configured in the `org.eclipse.virgo.apps.repository.properties` file of the remote server instance.
+The remote repository checks for changes in the hosted repository every 30 seconds.
+
+The watched repository is called `watched-repo` and the directory that holds the artifacts
+is `repository/watched`,
+relative to the installation directory of the {tomcat-product-name-short} instance.
+The server checks for changes in this watched repository every 5 seconds.
+
+[source,txt]
+----
+ext.type=external
+ext.searchPattern=repository/ext/{artifact}
+
+usr.type=watched
+usr.watchDirectory=repository/usr
+
+remote-repo.type=remote
+remote-repo.uri=http://my-host:8080/org.eclipse.virgo.apps.repository/my-hosted-repo
+remote-repo.indexRefreshInterval=30
+
+watched-repo.type=watched
+watched-repo.watchedDirectory=repository/watched
+watched-repo.watchedInterval=5
+
+chain=ext,usr,remote-repo,watched-repo
+----
+
+anchor:configuring-hosted-repo[]
+
+=== Configuring a Hosted Repository
+
+You configure a {tomcat-product-name-short} instance to host a repository
+by editing the `$SERVER_HOME/configuration/org.eclipse.virgo.apps.repository.properties` file;
+remote clients can then access the artifacts in this hosted repository and use them locally.
+
+When you specify a property in the file, use the format `repository-name.property=value`, where:
+
+* `repository-name` refers to the name of the hosted repository.
+* `property` refers to the name of a particular property.
+* `value` refers to the value of the property.
+
+For example, `my-hosted-repo.type=external` specifies that the `type` property
+of the `my-hosted-repo` repository is `external`.
+
+The following table lists the properties that you can include in the `org.eclipse.virgo.apps.repository.properties` file.
+
+anchor:hosted-repository-properties-table[]
+[options="header",cols=","]
+.Hosted Repository Properties
+|=======================================================================
+| Property                             | Description
+| *`repository-name`*`.type`           | Specifies the type of path of the hosted repository.
+                                            All paths are local to the current {tomcat-product-name-short} instance.
+                                            You can set this property to one of the following valid values:
+* `external`: Specifies that this path points to a number of directories that satisfy a given search pattern.
+Use the `searchPattern` property to specify the directory search pattern.
+* `watched`: Specifies that this path points to a single directory.
+{project-name} regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime.
+Use the `watchDirectory` property to specify the actual watched directory and the `watchInterval` property
+to specify how often {tomcat-product-name-short} checks the directory.
+
+See xref:configuring-repository-watched-versus-external[Watched or External Repository?]
+for additional information about when to configure watched or external repositories for your particular environment.
+
+| *`repository-name`*`.searchPattern`  | Specifies the pattern that an external hosted repository uses when deciding which
+                                            local directories it should search when identifying artifacts.
+                                            Use this property when `repository-name.type=external`.
+                                            See xref:configuring-provisioning-repository-search-paths[Search Paths: Additional Information]
+                                            for detailed information about specifying a search pattern.
+| *`repository-name`*`.watchDirectory` | Specifies the single directory of a watched hosted repository.
+                                            You can specify either an absolute or relative pathname for the directory.
+                                            If you specify a relative pathname, it is relative to the root of the {tomcat-product-name-short} installation (`$SERVER_HOME`).
+                                            Use this property when `repository-name.type=watched`.
+| *`repository-name`*`.watchInterval`  | Specifies the interval in seconds between checks of a watched directory by a watched hosted repository.
+			                                This property is optional.  Use this property when `repository-name.type=watched`.
+|=======================================================================
+
+The following sample shows a `org.eclipse.virgo.apps.repository.properties` file with a single external repository
+called `my-hosted-repo` with search pattern `$SERVER_HOME/repository/hosted/*`.
+
+....
+my-hosted-repo.type=external
+my-hosted-repo.searchPattern=repository/hosted/*
+....
+
+See xref:configuring-repository-examples-remote-watched[Example of watched and remote repositories]
+for details on how a local repository can remotely access the artifacts in this hosted repository.
+
+anchor:configuring-kernel
+
+=== Configuring the Kernel and User Region
+
+This section provides information about configuring the {project-name} kernel and the User Region.
+
+anchor:configuring-kernel-properties[]
+
+==== Configuring the Kernel
+
+To change any of the kernel properties, provide the new value to the startup script. The following table describes all properties.
+
+anchor:configuring-kernel-table[]
+[options="header",cols=",,"]
+.Kernel Configuration Properties
+|=======================================================================
+| Property (prefixed by `org.eclipse.virgo`)  | Description                      | Default Value
+| `.kernel.home`   | Specifies the location of the {kernel-product-name}.        | `$SERVER_HOME`
+| `.kernel.config` | Specifies the location of the {kernel-product-name} and User Region xref:configuring-kernel-files[configuration files].
+                       The location of the configuration files can also be specified using
+                       xref:starting-stopping-configuration-directory[] `-configDir` startup parameter].
+                                                                                 | `$SERVER_HOME/configuration`
+| `.kernel.domain` | Specifies the http://download.oracle.com/javase/6/docs/api/javax/management/ObjectName.html[JMX domain] that should be
+                       used by the {kernel-product-name}.                        | `org.eclipse.virgo.kernel`
+| `.kernel.startup.wait.limit`
+                   | Specifies the amount of time, in seconds, after which various operations time out out while trying to start the kernel.
+                        See xreF:configuring-framework-properties[Configuring OSGi Framework Properties] for the recommended way
+                        to configure this parameter.                             | `180`
+|=======================================================================
+
+anchor:configuring-kernel-files[]
+
+==== Configuration Files
+
+The configuration of the {kernel-product-name} and User Region by default is located in the `$SERVER_HOME/configuration` directory:
+
+anchor:configuring-kernel-files-table[]
+[options="header",cols=","]
+.Kernel Configuration Files
+|=======================================================================
+| Property File                                          | Description
+| `org.eclipse.virgo.kernel.properties`                  | Configures xref:configuring-deployment[deployment].
+| `org.eclipse.virgo.kernel.userregion.properties`       | Configures the xref:configuring-user-region[User Region] of {project-name}.
+| `org.eclipse.virgo.kernel.users.properties`            | Configures the xref:configuring-authentication[users that are allowed to access] the Admin Console, and roles to which they map.
+| `org.eclipse.virgo.kernel.jmxremote.access.properties` | Configures the xref:configuring-authentication[permissions for users] that are allowed to access the Admin Console.
+| `org.eclipse.virgo.kernel.authentication.config`       | Configures the xref:configuring-authentication[Java Authentication and Authorization Service (JAAS)] for the Tomcat server users.
+| `osgi.console.ssh.properties`                          | Configures the kernel SSH console. See xref:admin-shell-enable[].
+| `osgi.console.telnet.properties`                       | Configures the kernel telnet console. See xref:admin-shell-enable[].
+|=======================================================================
+
+anchor:configuring-deployment[]
+
+==== Configuring Deployment
+
+You can configure various properties of deployment: the pickup directory into which you copy applications for hot-deployment, the deployment timeout,
+and whether or not bundles are unpacked during deployment.
+
+To change any of these properties, edit the `deployer.XXX` properties of the `$SERVER_HOME/configuration/org.eclipse.virgo.kernel.properties` file.  The following table describes these properties.
+
+anchor:configuring-deployment-table[]
+[options="header",cols=",,"]
+.Deployment Configuration Properties
+|=======================================================================
+| Property                      | Description                                         | Default Value
+| `deployer.pickupDirectory`    | Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.
+                                   Relative paths are relative to `$SERVER_HOME`.     | `./pickup`
+| `deployer.timeout`            | Specifies the amount of time, in seconds, after which {project-name} times out while trying to deploy an artifact.
+						           If you want to disable deployment timeout, specify `0`.
+                                                                                      | `300`
+| `deployer.scanIntervalMillis` | Specifies the scan interval, in milliseconds, used to survey the pickup directory.
+                                                                                      | `1000`
+| `deployer.unpackBundles`      | Determines whether or not bundles (with file extension `.jar` or `.war`) are unpacked
+            						during deployment. The value must be either `true` or `false`.
+
+			        				If you want to deploy bundles packed, specify `false`.
+					        		This option can help alleviate a known issue with xref:long-work-paths[long work directory paths under Windows].
+
+                                    Note that web applications may behave differently depending on whether they are deployed packed or unpacked.
+                                    Certain servlet API methods return `null` when a web application is deployed packed.
+                                                                                      | `true`
+| `WABHeaders`                  | This kernel property is only relevant for {nanoweb-product-name}. For the corresponding property in {tomcat-product-name}, see xref:configuring-web[Configuring the Web Integration Layer].
+
+                                    Specifies how Web Application Bundle manifest headers are processed.
+                                    See "Web Application Manifest Processing" in the
+                                    {programmer-guide} for details.
+
+                                    A value of `strict` causes {nanoweb-product-name} to interpret certain headers in strict compliance with
+                                    the OSGi Web Applications specification if they are not specified.
+
+                                    A value of `defaulted` causes {nanoweb-product-name} to set certain headers to default values if they are not specified.
+                                    *This value is provided as a migration aid and may not be supported in future releases.*
+                                                                                      | `strict`
+|=======================================================================
+
+The following listing displays the default configuration distributed with {project-name}; only relevant sections of the `org.eclipse.virgo.kernel.properties` file are shown.
+
+....
+deployer.timeout=300
+deployer.pickupDirectory=pickup
+deployer.scanIntervalMillis=1000
+....
+
+So the default deployment timeout is 300 seconds, the default pickup directory is `$SERVER_HOME/pickup` and the default scan interval is `1000`.
+
+anchor:configuring-user-region[]
+
+==== Configuring the User Region
+
+The User Region is the subsystem of {project-name} that
+supports deployed applications, both your own user applications and
+those of the server itself, such as the Admin Console. The User Region
+is deliberately isolated from the kernel, which protects the kernel from interference by applications.
+
+
+You configure the User Region by updating properties in the
+`$SERVER_HOME/configuration/org.eclipse.virgo.kernel.userregion.properties`
+file; these properties are described in the following table.  
+
+[WARNING]
+--
+We strongly recommend that you update only the
+`initialArtifacts`
+property; updating other properties could cause
+{project-name} to fail. These properties are documented for your
+information.
+--
+
+anchor:configuring-user-region-table[]
+[options="header",cols=","]
+.User Region Configuration Properties
+|=======================================================================
+| Property            | Description
+| `baseBundles`       | Specifies the hard-coded list of bundles that {project-name} installs directly into the User Region.
+                        {project-name} does not perform any automatic dependency satisfaction for these bundles; in other words, you only get the bundles
+                        in the list and nothing more.
+| `bundleImports`
+				      | Specifies the bundles in the kernel that {project-name} imports into the User Region so that they are visible to bundles in the User Region.
+						This property supports an optional `bundle-version` attribute which specifies a version range.
+						By default only the system bundle is imported.
+
+						Note that packages exported by these bundles are *not* automatically made available in the User Region: these must be specified using the
+						`packageImports` property.
+| `packageImports`    | Specifies the packages in the kernel that {project-name} imports into the User Region so that they are in turn available to be
+						imported by bundles in the User Region.
+						This property supports a `.*` wildcard which is expanded based on the packages available in the kernel
+						when the User Region is created.
+						For example, `org.eclipse.virgo.util.*` will import all packages that start with
+						`org.eclipse.virgo.util.` (but *not* the package `org.eclipse.virgo.util`
+						which would need to be specified separately to be imported).
+
+						The property also supports matching attributes such as `version`, `bundle-symbolic-name`,
+				 		`bundle-version`, and user-defined attributes. This can be used to import all the packages of a bundle imported using the
+						`bundleImports` property.
+						For example the following imports all the packages of the system bundle:
+
+....
+packageImports=*;bundle-symbolic-name="org.eclipse.osgi",\
+...
+....
+						Note that if a package is specified more than once in `packageImports`, the last occurrence is used and the earlier
+						occurrences are ignored.
+						For this reason, it is recommended that imports specifying matching attributes are placed earlier in the list than other imports so that
+						if an import is	specified with and without matching attributes, the form without the matching attributes is used.
+| `serviceImports`    | Specifies the services in the kernel that are imported into the User Region so they are available to bundles in the User Region.
+| `serviceExports`    | Specifies the services in the User Region that are exported to the kernel so they are available to bundles in the kernel.
+| `initialArtifacts`  | Specifies the artifacts that {project-name} deploys into the User Region when the server starts.
+						{project-name} performs dependency satisfaction when it deploys these artifacts.
+						This means that you only need to list the top-level artifacts that you care about; {project-name} automatically installs,
+						from the repository, any other artifacts upon which they depend.
+
+						The artifacts are specified as a comma separated list of URI strings of the form:
+
+....
+repository:type/name[/version
+....
+
+						where `type` is the artifact type (e.g. "plan", "par", "bundle",
+						"configuration"), `name` is the (symbolic) name of the artifact, and, optionally,
+						`version` is the version of the artifact.
+						If `version` is omitted and there is at least one artifact in the repository with the given type and name, then the
+						artifact with the highest version is selected.
+						So, for example, the following entries are valid:
+....
+initialArtifacts=...,\
+ repository:plan/APlan,\
+ repository:bundle/ABundle/1.0
+....
+|=======================================================================
+
+anchor:configuring-user-region-consoles[]
+
+==== Configurating User Region Consoles
+
+The configuration of the User Region consoles is located by default in the `$SERVER_HOME/repository/ext` directory:
+
+anchor:configuring-user-region-consoles-table[]
+[options="header",cols=","]
+.User Region Console Configuration Files
+|=======================================================================
+| Property                         | Description
+| `osgi.console.ssh.properties`    | Configures the User Region SSH console. See xref:admin-shell-enable[].
+| `osgi.console.telnet.properties` | Configures the User Region telnet console. See xref:admin-shell-enable[].
+|=======================================================================
+
+anchor:configuring-authentication[]
+
+=== Configuring Authentication
+
+{project-name} uses the http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html[Java Authentication and Authorization Service (JAAS)]
+framework to authenticate the administration user that connects to Web
+Servers using the Admin Console. This section describes
+how the authentication mechanism is configured by default, and the
+files that you need to update if you want to change the administration
+user, change their password, and so on.
+
+The `$SERVER_HOME/configuration/org.eclipse.virgo.kernel.authentication.config` file configures the underlying authentication technology for {project-name}.  The short file consists of the following entries:
+
+....
+virgo-kernel {
+        org.eclipse.virgo.kernel.authentication.KernelLoginModule REQUIRED;
+};
+equinox_console {
+	org.eclipse.virgo.kernel.authentication.KernelLoginModule REQUIRED;
+};
+....
+
+The entry named `virgo-kernel` corresponds to the `<Realm>` element in the `$SERVER_HOME/configuration/tomcat-server.xml` file that configures the JAAS authentication mechanism for the `Catalina` service of the xref:configuring-tomcat[Tomcat servlet container].  The `virgo-kernel` entry specifies that the JAAS LoginModule that {project-name} uses to authenticate users is `org.eclipse.virgo.kernel.authentication.KernelLoginModule` and that this `KernelLoginModule` is required to "succeed" in order for authentication to be considered successful. The `KernelLoginModule` succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for {tomcat-product-name-short} is `admin/springsource`.
+
+The entry named `equinox_console` controls ssh authentication for the Virgo shell. It also uses the `KernelLoginModule`.
+
+You configure the administration user in the `org.eclipse.virgo.kernel.users.properties` file.  The default file for a freshly installed {project-name} is as follows:
+
+....
+##################
+# User definitions
+##################
+user.admin=springsource
+
+##################
+# Role definitions
+##################
+role.admin=admin
+....
+
+The administration user that connect to the Admin Console must have the
+`admin`
+role. The preceding file shows how, by default, the
+`admin`
+role is assigned the
+`admin`
+user with password
+`springsource`.
+
+If you want to change the administration user, update the `org.eclipse.virgo.kernel.users.properties` file.  For example, if you want the `juliet` user, with password `supersecret`, to be the new adminstration user, update the file as shown:
+
+....
+##################
+# User definitions
+##################
+user.juliet=supersecret
+
+##################
+# Role definitions
+##################
+role.admin=juliet
+....
+
+Be sure to restart {project-name} after you make this change for it to take effect.
+
+The final file involved in {project-name} authentication is `$SERVER_HOME/configuration/org.eclipse.virgo.kernel.jmxremote.access.properties`.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:
+
+....
+admin=readwrite
+....
+
+The only other value you can enter is
+`readonly`, which means that the adminstration user would only be able to *view*
+information using the Admin Console.
+
+anchor:configuring-tomcat[]
+
+=== Configuring the Embedded Tomcat Servlet Container
+
+[NOTE]
+--
+{nano-product-name} uses the default Gemini Web configuration. The details described below may still apply.
+--
+
+{project-name}
+embeds an OSGi-enhanced version of the http://tomcat.apache.org[Tomcat Servlet Container]
+in order to provide support for deploying Java EE WARs and OSGi *Web Application Bundles*.
+You configure the embedded Servlet container using the standard Apache Tomcat configuration.   The main difference is that the configuration file is called <filename>tomcat-server.xml</filename> rather than `server.xml`.  As with the other {project-name} configuration files, the `tomcat-server.xml` file is located in the `$SERVER_HOME/configuration` directory.
+Another difference is that not all standard Apache Tomcat configuration is supported in {tomcat-product-name}: the restrictions are described in the
+remainder of this section.
+
+Here's an extract of the default configuration distributed with the {tomcat-product-name-short}.
+
+[source,xml]
+---
+<?xml version='1.0' encoding='utf-8'?>
+<Server port="8005" shutdown="SHUTDOWN">
+	<Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+	<Listener className="org.apache.catalina.core.JasperListener" />
+	<Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+	<Listener className="org.eclipse.virgo.web.tomcat.ServerLifecycleLoggingListener"/>
+	<Service name="Catalina">
+		<Connector port="8080" protocol="HTTP/1.1"
+			connectionTimeout="20000"
+			redirectPort="8443" />
+		<Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
+			maxThreads="150" scheme="https" secure="true"
+			clientAuth="false" sslProtocol="TLS"
+			keystoreFile="configuration/keystore"
+			keystorePass="changeit"/>
+		<Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+		<Engine name="Catalina" defaultHost="localhost">
+			<Realm className="org.apache.catalina.realm.JAASRealm" appName="virgo-kernel"
+					userClassNames="org.eclipse.virgo.kernel.authentication.User"
+					roleClassNames="org.eclipse.virgo.kernel.authentication.Role"/>
+			<Host name="localhost"  appBase="webapps"
+					unpackWARs="false" autoDeploy="false"
+					deployOnStartup="false" createDirs="false">
+				<Valve className="org.apache.catalina.valves.AccessLogValve" directory="serviceability/logs/access"
+					prefix="localhost_access_log." suffix=".txt" pattern="common" resolveHosts="false"/>
+				<Valve className="org.eclipse.virgo.web.tomcat.ApplicationNameTrackingValve"/>
+			</Host>
+		</Engine>
+	</Service>
+</Server>
+----
+
+anchor:overview-tomcat-servlet-container[]
+
+==== Description of the Default Apache Tomcat Configuration
+
+The following bullets describe the main elements and attributes in the default `tomcat-server.xml` file; for details about updating this file to further configure the embedded Apache Tomcat server, see the http://tomcat.apache.org/tomcat-7.0-doc/config/index.html[Apache Tomcat Configuration Reference].
+
+[TIP]
+.Relative paths
+--
+If the configured path to a directory or file does not represent an absolute path, {project-name} typically interprets it as a path relative to the <filename>$SERVER_HOME</filename> directory.
+--
+
+* The root element of the `tomcat-server.xml` file is `<Server>`. The attributes of this element represent the characteristics of the entire embedded Tomcat servlet container. The `shutdown` attribute specifies the command string that the shutdown port number receives via a TCP/IP connection in order to shut down the servlet container. The `port` attribute specifies the TCP/IP port number that listens for a shutdown message.
+* The `<Listener>` XML elements specify the list of lifecycle listeners that monitor and manage the embedded Tomcat servlet container. Each listener class is a Java Management Extensions (JMX) MBean that listens to a specific component of the servlet container and has been programmed to do something at certain lifecycle events of the component, such as before starting up, after stopping, and so on.
+ The first four `<Listener>` elements configure standard Tomcat lifecycle listeners. The listener implemented by the `org.eclipse.virgo.web.tomcat.ServerLifecycleLoggingListener` class is specific to {tomcat-product-name} and manages server lifecycle logging.
+* The `<Service>` XML element groups together one or more connectors and a single engine. Connectors define a transport mechanism, such as HTTP, that clients use to to send and receive messages to and from the associated service. There are many transports that a client can use, which is why a `<Service>` element can have many `<Connector>` elements. The engine then defines how these requests and responses that the connector receives and sends are in turn handled by the servlet container; you can define only a single `<Engine>` element for any given `<Service>` element.
+The sample `tomcat-server.xml` file above includes three `<Connector>` elements: one for the HTTP transport, one for the HTTPS transport, and one for the AJP transport. The file also includes a single `<Engine>` element, as required.
+* The first connector listens for HTTP requests at the `8080` TCP/IP port. The connector, after accepting a connection from a client, waits for a maximum of 20000 milliseconds for a request URI; if it does not receive one from the client by then, the connector times out. If this connector receives a request from the client that requires the SSL transport, the servlet container automatically redirects the request to port `8443`.
+* The second connector is for HTTPS requests.  The TCP/IP port that users specify as the secure connection port is `8443`. Be sure that you set the value of the `redirectPort` attribute of your non-SSL connectors to this value to ensure that users that require a secure connection are redirected to the secure port, even if they initially start at the non-secure port.  The `SSLEnabled` attribute specifies that SSL is enabled for this connector.  The `secure` attribute ensures that a call to `request.isSecure()` from the connecting client always returns `true`. The `scheme` attribute ensures that a call to `request.getScheme()` from the connecting client always returns `https` when clients use this connector.
+The `maxThreads` attribute specifies that the servlet container creates a maximum of 150 request processing threads,
+which determines the maximum number of simultaneous requests that can be handled.
+The `clientAuth` attribute specifies that the servlet container does not require a certificate chain
+unless the client requests a resource protected by a security constraint that uses CLIENT-CERT authentication.
+The `keystoreFile` attribute specifies the name of the file that contains the servlet container's
+private key and public certificate used in the SSL handshake, encryption, and decryption.
+You use an alias and password to access this information.
+In the example, this file is `$SERVER_HOME/configuration/keystore`.
+The `keystorePass` attributes specify the password used to access the keystore.
+* The third AJP Connector element represents a Connector component that communicates with a web connector via the AJP protocol.
+* The engine has a logical name of `Catalina`;
+this is the name used in all log and error messages so you can easily identify problems.
+The value of the `defaultHost` attribute refers to the name of a `<Host>`
+child element of `<Engine>`;
+this host processes requests directed to host names on this servlet container.
+* The `<Realm>` child element of `<Engine>` represents a database of
+users, passwords, and mapped roles used for authentication in this service.  Virgo Web Server uses an implementation of the Tomcat 6 Realm interface that authenticates users through the Java Authentication and Authorization Service (JAAS) framework which is provided as part of the standard J2SE API.
+With the JAASRealm, you can combine practically any conceivable security realm with Tomcat's container managed authentication.  For details, see http://tomcat.apache.org/tomcat-7.0-doc/realm-howto.html[Realm Configuration].
+* The `<Host>` child element represents a virtual host,
+which is an association of a network name for a server (such as `www.mycompany.com`) with the particular
+server on which Catalina is running.
+The servlet container unpacks Web applications into a directory hierarchy if they are deployed as WAR files.
+Note that multiple `<Host>` elements are not supported in {tomcat-product-name}.
+* Finally, the `org.apache.catalina.valves.AccessLogValve` valve creates log files
+in the same format as those created by standard web servers.
+The servlet container creates the log files in the `$SERVER_HOME/serviceability/logs/access` directory.
+The log files are prefixed with the string `localhost_access_log.`, have a suffix of `.txt`,
+use a standard format for identifying what should be logged, and do not include DNS lookups of the IP address of the remote host.
+
+anchor:configuring-tomcat-connectors[]
+
+==== Connector Configuration
+The {tomcat-product-name} supports the configuration of any connector supported by Apache Tomcat.
+See the default configuration above for syntax examples, and for further details of the configuration properties
+supported for various `<Connector>` implementations,
+consult the official http://tomcat.apache.org/tomcat-7.0-doc/config/http.html[Tomcat HTTP Connector] documentation.
+
+[TIP]
+.Configuring SSL for Tomcat
+--
+The {tomcat-product-name} distribution includes a preconfigured `$SERVER_HOME/configuration/keystore`
+file that contains a single self-signed SSL Certificate.
+The password for this <filename>keystore</filename> file is `changeit`.
+This <filename>keystore</filename> file is intended for testing purposes only.
+For detailed instructions on how to configure Tomcat's SSL support,
+consult the official http://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html[Tomcat SSL Configuration HOW-TO].
+--
+
+anchor:configuring-tomcat-clustering[]
+
+==== Cluster Configuration
+
+{tomcat-product-name} supports standard Apache Tomcat cluster configuration.
+By default, clustering of the embedded servlet container is disabled,
+and the default configuration does not include any clustering information.
+See  http://tomcat.apache.org/tomcat-7.0-doc/cluster-howto.html[Tomcat Clustering/Session Replication HOW-TO]
+for detailed information about enabling and configuring clustering.
+
+anchor:configuring-default-web-xml[]
+
+==== Default web.xml Configuration
+
+Java Servlet specification enables web applications to provide deployment descriptor (`web.xml`) in the `WEB-INF` directory.
+Apache Tomcat introduces a default `web.xml` which is similar to web application's `web.xml`, but provides configurations that are applied to all web applications.
+When deploying a web application, Apache Tomcat uses the default `web.xml` file as a base configuration.
+If the web application provides its own configurations via `web.xml` (the one located in the web application's `WEB-INF`) or annotations, they overwrite the default ones.
+In {tomcat-product-name} you can also provide default configurations for all web applications.
+If you want to change/extend the default configurations, you can provide the default `web.xml` file located in the `{tomcat-product-name-short}_HOME/configuration` directory.
+
+[TIP]
+--
+Be careful when changing/extending the default `web.xml` as this will affect all web applications.
+--
+
+Here's an extract of the default configuration distributed with the {tomcat-product-name-short}.
+
+[source,xml]
+----
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    version="3.0">
+
+    <servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>0</param-value>
+        </init-param>
+        <init-param>
+            <param-name>listings</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>jsp</servlet-name>
+        <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+        <init-param>
+            <param-name>fork</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xpoweredBy</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>jsp</servlet-name>
+        <url-pattern>*.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>jsp</servlet-name>
+        <url-pattern>*.jspx</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <mime-mapping>
+        <extension>abs</extension>
+        <mime-type>audio/x-mpeg</mime-type>
+    </mime-mapping>
+    ......
+    <mime-mapping>
+        <extension>ppt</extension>
+        <mime-type>application/vnd.ms-powerpoint</mime-type>
+    </mime-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+</web-app>
+----
+
+The following bullets describe the main elements in the default `web.xml` file.
+
+* The `<Servlet>` XML element declares a given servlet and its configurations. The sample `web.xml` file above includes two <Servlet> elements.
+The default servlet serves static resources and processes the requests that are not mapped to any servlet.
+For details about default servlet configuration, see the http://tomcat.apache.org/tomcat-7.0-doc/default-servlet.html[Apache Tomcat Default Servlet Reference.].
+
+* The jsp servlet serves the requests to JavaServer Pages. It is mapped to the URL pattern "*.jsp" and "*.jspx".
+For details about jsp servlet configuration, see the http://tomcat.apache.org/tomcat-7.0-doc/jasper-howto.html[Apache Tomcat Jasper 2 JSP Engine.].
+* The `<servlet-mapping>` XML element specifies the mapping between the servlet and URL pattern.
+* The `<session-config>` XML element defines the session configuration for one web application.
+The sample `web.xml` file above specifies that the session timeout for all web applications will be 30 minutes by default.
+* The `<mime-mapping>` XML element defines a mapping between a filename extension and a mime type.
+When serving static resources, a "Content-Type" header will be generated based on these mappings.
+* The `<welcome-file-list>` XML element specifies a list of welcome files.
+When a request URI refers to a directory, the default servlet looks for a "welcome file" within that directory.
+If the "welcome file" exists it will be served, otherwise 404 status or directory listing will be returned, depending on the default servlet configuration.
+
+anchor:configuring-tomcat-contexts[]
+
+==== Context Configuration
+
+{tomcat-product-name} supports standard Apache Tomcat web application context configuration.
+The http://tomcat.apache.org/tomcat-7.0-doc/config/index.html[Apache Tomcat Configuration Reference] has a section on
+http://tomcat.apache.org/tomcat-7.0-doc/config/context.html[The Context Container] which describes the mechanism that
+is used in {tomcat-product-name-short} for searching context configuration files and details the context configuration properties.
+
+Context configuration files may be placed in the following locations,
+where `[enginename]` is the name of Tomcat's engine ('Catalina' by default) and `[hostname]` names
+a virtual host ('localhost' by default), both of which are configured in `tomcat-server.xml`:
+
+* `$SERVER_HOME/configuration/context.xml` provides the default context configuration file for all web applications.
+* The `$SERVER_HOME/configuration/[enginename]/[hostname]` directory may contain:
+** The default context configuration for all web applications of a given virtual host in the file `context.xml.default`.
+** Individual web applications' context configuration files as described in the Apache Tomcat Configuration Reference.
+For example, the context for a web application with
+context path `foo` may be configured in `foo.xml`.
+
+Note that the following context configuration features are not supported in {tomcat-product-name}:
+
+* Custom class loaders.
+* Specifying the context path. This is specified using the `Web-ContextPath` header in the web application's
+`MANIFEST.MF` file.
+* Specifying the document base directory.
+
+anchor:configuring-jsp-compilation[]
+
+==== JSP Compilation
+
+By default Apache Tomcat compiles JSP files in web applications agains Java 1.6.
+In order to enable JSP compilation against Java 1.7 for your web application,
+additional init parameters (`compilerSourceVM` and `compilerTargetVM`) should be added for the `org.apache.jasper.servlet.JspServlet` configuration.
+For details about `org.apache.jasper.servlet.JspServlet` configuration, see the http://tomcat.apache.org/tomcat-7.0-doc/jasper-howto.html[Apache Tomcat Jasper 2 JSP Engine].
+`org.apache.jasper.servlet.JspServlet` configuration can be provided with the web application's web.xml.
+
+[source,xml]
+----
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<servlet>
+    <servlet-name>jsp</servlet-name>
+    <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+    <init-param>
+        <param-name>compilerSourceVM</param-name>
+        <param-value>1.7</param-value>
+    </init-param>
+    <init-param>
+        <param-name>compilerTargetVM</param-name>
+        <param-value>1.7</param-value>
+    </init-param>
+    <init-param>
+        <param-name>fork</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <init-param>
+        <param-name>xpoweredBy</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+</servlet>
+<servlet-mapping>
+    <servlet-name>jsp</servlet-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>*.jspx</url-pattern>
+    </servlet-mapping>
+----
+
+anchor:configuring-web[]
+
+=== Configuring the Web Integration Layer
+
+{tomcat-product-name} integrates an OSGi-enhanced version of the http://tomcat.apache.org/[Tomcat Servlet Container]
+in order to provide support for deploying Java EE WARs and OSGi *Web Application Bundles*.
+
+For {tomcat-product-name} you
+configure the behaviour of the Web Integration Layer using the properties file called `org.eclipse.virgo.web.properties`.
+The `org.eclipse.virgo.web.properties` file is located in the `$SERVER_HOME/repository/ext` directory.
+
+The following table describes the properties.
+
+anchor:configuring-web-integration-layer[]
+[options="header",cols="1,3,1"]
+.Web Integration Layer Properties
+|=======================================================================
+| Property     | Description                                         | Default Value
+| `WABHeaders` | Specifies how Web Application Bundle manifest headers are processed.
+                    See "Web Application Manifest Processing" in the
+                    {programmer-guide} for details.
+
+                    A value of `strict` causes {tomcat-product-name-short} to interpret certain headers in strict compliance with
+                    the OSGi Web Applications specification if they are not specified.
+
+                    A value of `defaulted` causes {tomcat-product-name-short} to set certain headers to default values if they are not specified.
+                    This was how {tomcat-product-name-short} behaved prior to version 3.
+                    *This value is provided as a migration aid and may not be supported in future releases.*
+                    A warning event log message (WE0006W) is generated if this value is specified.
+
+                    The {jetty-product-name} will always operate in `strict` mode.
+
+                    {nanoweb-product-name} does not have a Web Integration Layer, but has a corresponding kernel property.
+                    See xref:configuring-deployment[Configuring Deployment].
+                                                                     | `strict`
+|=======================================================================
+
+There is no Web Integration Layer in {jetty-product-name}. The relevant configuration is described in
+xref:configuring-jetty[Configuring the Embedded Jetty Servlet Container].
+
+anchor:configuring-jetty[]
+
+=== Configuring the Embedded Jetty Servlet Container
+
+{jetty-product-name} supports *Web Application Bundles*, but does not provide support for Java EE WARs.
+
+
+The {jetty-product-name} contains a standard Jetty configuration file at `SERVER_HOME/jetty/etc/jetty.xml`.
+This has been tailored to the {umbrella-project-name}. To make modifications please refer to the
+http://wiki.eclipse.org/Jetty/Howto/Configure_Jetty#Using_Jetty_XML[Jetty documentation].

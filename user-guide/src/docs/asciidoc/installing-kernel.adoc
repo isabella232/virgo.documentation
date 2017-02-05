@@ -1,0 +1,94 @@
+:project-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-project-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:kernel-installation[]
+
+== Installing {kernel-product-name}
+
+anchor:kernel-installation-prereqs[]
+
+=== Prerequisites
+
+The {kernel-product-name}, or {kernel-product-name-short} for short, requires Java SE 6 or later to be installed. Java is available from
+http://www.java.com/[http://www.java.com/] and elsewhere.
+
+anchor:kernel-installation-zip
+
+=== Installing from the ZIP Download
+
+==== Downloading the ZIP file
+
+{kernel-product-name} is distributed as a ZIP file. This can be downloaded from
+http://www.eclipse.org/virgo/download/[here].
+
+anchor:kernel-installation-zip-installing
+
+==== Installing
+
+anchor:kernel-installation-zip-installing-linux[]
+
+===== Linux
+
+To install the {kernel-product-name} on Linux, unzip the distribution package to the desired installation directory.
+For example, to install into `/opt`:
+
+....
+$ unzip virgo-kernel-{version}.zip -d /opt
+....
+
+This creates a directory called `virgo-kernel-{version}` under `/opt`.
+
+{kernel-product-name} requires write access to the installation directory, in this case `/opt/virgo-kernel-{version}`.
+Typically this means it must be run as the user that installed it, or the installation directory's ownership must be changed.
+
+anchor:kernel-installation-zip-installing-win[]
+
+===== Microsoft Windows
+
+To install the {kernel-product-name} on Windows, unzip the distribution package to the desired installation directory.
+You should use a zip application such as 7zip, not the built-in folder decompression.  Note that both Windows and
+Java have some issues with long file names and file paths, so we recommend installing to the root directory of
+your chosen drive.
+
+anchor:kernel-installation-updatesite[]
+
+=== Installing from an update site
+
+==== The repository location
+
+Virgo has a single p2 repository that contains all Virgo distributions. The repository for version {version} can be found {p2repo}[here].
+There is a repository for each released version.
+
+==== Using the p2 director
+
+As shown in xref:using-director[] you can easily install {kernel-product-name-short} in a desired destination.
+The only director argument that needs to be adjusted is *-installIU*.
+
+For {kernel-product-name-short} the right value is *kernel.product*.
+
+anchor:kernel-installation-post[]
+
+=== Post-installation steps
+Follow the same xref:installation-post[Post-installation steps] as for {tomcat-product-name}.
+

@@ -1,0 +1,95 @@
+:virgo-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:common-libraries[]
+
+== Working with Common Enterprise Libraries
+
+Common Libraries
+
+anchor:common-libraries-hibernate[]
+
+=== Working with Hibernate
+
+anchor:common-libraries-hibernate-import[]
+
+==== Importing Hibernate
+
+Hibernate uses CGLIB to dynamically create subclasses of your entity types at
+runtime. To guarantee that Hibernate and CGLIB can correctly see the types,
+you must add an `Import-Library` or `Import-Bundle` for the Hibernate library or bundle
+into any bundle that uses Hibernate directly.
+
+Additionally, if other bundles in your application contain types to be persisted by Hibernate, then be sure to specify the `import-scope` directive of the `Import-Bundle` header in the bundle that uses Hibernate directly.  The `import-scope` directive tells {tomcat-product-name} to implicitly import the bundle into all other bundles that make up the application; this ensures that bundles that indirectly depend on the generated Hibernate classes have access to them, but you do not have to explicitly update their `Import-Bundle` header, ensuring modularity.  For example:
+
+[source,txt]
+----
+Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";import-scope:=application
+----
+
+The `import-scope` directive works only for the bundles in a scoped application (PARs or plans.)
+
+anchor:common-libraries-datasources[]
+
+=== Working with DataSources
+
+Many `DataSource` implementations use the `DriverManager`
+class which is incompatible with typical OSGi class loading semantics. To get around this,
+use a `DataSource` implementation that does not rely on
+`DriverManager`. Versions of the following
+`DataSources` that are known to work in an OSGi environment are available in the
+{ebr}.
+
+* http://build.eclipse.org/rt/virgo/ivy/bundles/release/org.eclipse.virgo.mirrored/org.apache.commons.dbcp/[Apache Commons DBCP]
+* SimpleDriverDataSource available in http://build.eclipse.org/rt/virgo/ivy/bundles/release/org.eclipse.virgo.mirrored/org.springframework.jdbc/[Spring JDBC] 2.5.5 and later
+
+anchor:common-libraries-weaving-instrumentation[]
+
+=== Weaving and Instrumentation
+
+When using a library that performs bytecode weaving or instrumentation, such as AspectJ,
+OpenJPA or EclipseLink, any types that are woven must be able to see the library doing
+the weaving. This is accomplished by adding an `Import-Library` for the
+weaving library into all bundles that are to be woven.
+
+Weaving is often used by JPA implementations to transform persisted types. When using a
+JPA provider that uses load-time weaving, an `Import-Library` for the
+provider is needed in the bundles containing the persisted types.
+
+anchor:common-libraries-tld[]
+
+=== JSP Tag Libraries
+
+When using tag libraries within a WAR or WAB, be sure to include an `Import-Bundle`
+or `Import-Library` for the tag library bundle(s). This will ensure that your WAR or WAB
+can see the TLD definition and implementing types. For example, to use the Apache implementation of JSTL,
+add the following to your bundle's `/META-INF/MANIFEST.MF`:
+
+[source,txt]
+----
+Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1.1.2"
+----
+
+`Import-Package` can also be used but it is tedious to add all the imports as there are
+typically lots of tld definitions in a bundle providing them.

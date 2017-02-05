@@ -1,0 +1,993 @@
+:project-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-project-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:admin-shell[]
+
+== Equinox Console
+
+anchor:admin-shell-enable[Enabling the Equinox Console]
+
+=== Enabling the Equinox Console
+
+Shells are provided for both user region and kernel, although they are disabled by default and need enabling before
+they can be used.
+
+The user region shell ports may be reconfigured by editing the file
+`osgi.console.properties` in the `repository/ext` directory, and
+then restarting Virgo. The telnet properties in the file are prefixed with *telnet.*, and the ssh properties are prefixed with *ssh.*.
+The kernel shell ports may be reconfigured by editing the file `osgi.console.properties` in the `configuration` directory, and then restarting Virgo.
+
+To enable any of these shell ports, change the `enabled` setting from `false` to `true`
+[source,txt]
+----
+enabled=true
+----
+in the corresponding properties files.
+
+If you wish to change a port, any free port can be used, but the usual defaults are, for telnet, 2501 for the user region and 2401 for the kernel, and
+for ssh, 2502 for the user region and 2402 for the kernel.
+
+Access is via ssh or telnet.
+The simplest way to access the shell is via telnet to port 2501 or 2401 for user region or kernel, respectively.
+
+....
+$ telnet localhost 2501
+Trying ::1...
+Connected to localhost.
+Escape character is '^]'.
+
+osgi>
+....
+
+Alternatively, you can ssh to port 2502 or 2402 for user region or kernel, respectively.
+The users and passwords for ssh are configured in `configuration/org.eclipse.virgo.kernel.users.properties` as described
+in xref:configuring-authentication[Configuring Authentication]. The default user and password are `admin`
+and `admin`.
+
+[NOTE]
+--
+Currently the {nano-product-name} Equinox Console is enabled by default. Telnet is accesible on *2401* and SSH on *2402*. In future these will be configurable.
+--
+
+[NOTE]
+--
+If you use the `shutdown` shell command to stop Virgo Server for Apache Tomcat, the shutdown messages appear in the shell terminal instead of in the terminal in which Virgo runs. This is due to the
+mechanisms which the shell implementation uses to redirect standard output.
+--
+
+anchor:admin-shell-using-vsh[]
+
+=== Using Virgo Shell Commands
+
+[NOTE]
+--
+This section is not applicable to {nano-product-name}.
+--
+
+Virgo provides shell commands
+that allow you to examine artifacts
+currently installed in a particular {kernel-product-name} instance, manage the lifecycle of the installed artifacts, install new artifacts, and shut down
+the {kernel-product-name}. You can install, examine, and manage the lifecycle of the following artifacts:
+
+* Bundles
+* Configuration Artifacts
+* PARs
+* Plans
+
+and can examine:
+
+* Exported packages
+* Services in the OSGi service registry
+
+Virgo also provides shell commands to list all bundles that contain, export, or load a particular class.
+
+These commands are provided *for the user region shells only* and are grouped together in
+the `vsh` *scope*.
+
+You invoke commands using the `vsh:` scope. For example:
+
+....
+osgi> vsh:plan list
+
+Name                                           Version                            State
+org.eclipse.virgo.apps.admin.plan              2.1.0                             ACTIVE
+org.eclipse.virgo.kernel.userregion.springdm   2.1.0                             ACTIVE
+org.eclipse.virgo.web                          2.1.0                             ACTIVE
+....
+
+anchor:admin-shell-vsh-using-command-list[]
+
+==== Virgo Shell Commands
+
+The following table lists the Virgo shell commands; each command in turn has a variety of options that you can specify, depending on what you want to do, such as start a bundle or refresh a plan. The reference documentation about each command provides the full list of available options.
+
+anchor:admin-shell-vsh-commands-table[]
+
+[options="header",cols="1,4"]
+.Virgo Shell Commands
+|=======================================================================
+| Command        | Description
+| xref:admin-shell-vsh-bundle-command[bundle]
+                 | Manages and displays information about bundle artifacts.
+| xref:admin-shell-cl-clhas[clhas]
+                 | Lists all bundles that <emphasis role="bold">contain* a class or resource.
+| xref:admin-shell-cl-clexport[clexport]
+                 | Lists all bundles that <emphasis role="bold">export* a class or package.
+| xref:admin-shell-cl-clload[clload]
+                 | Lists all bundles that can <emphasis role="bold">load* a class.
+| xref:admin-shell-vsh-config-command[config]
+                 | Manages and displays information about configuration artifacts.
+| xref:admin-shell-vsh-package-command[packages]
+                 | Displays information about exported packages.
+| xref:admin-shell-vsh-par-command[par]
+                 | Manages and displays information about PAR artifacts.
+| xref:admin-shell-vsh-plan-command[plan]
+                 | Manages and displays information about plan artifacts.
+| xref:admin-shell-vsh-service-command[service]
+                 | Displays information about services in the OSGi service registry.
+| xref:admin-shell-vsh-install-command[install]
+                 | Installs an artifact to {kernel-product-name}.
+| xref:admin-shell-vsh-shutdown-command[shutdown]
+                 | Shuts down the {kernel-product-name} instance to which the Equinox Console is connected.
+|=======================================================================
+
+anchor:admin-shell-vsh-command-reference[]
+
+=== Virgo Shell Command Reference
+
+This section contains reference information about the Virgo shell commands
+
+xref:admin-shell-vsh-bundle-command[bundle],
+xref:admin-shell-cl-clhas[clhas],
+xref:admin-shell-cl-clexport[clexport],
+xref:admin-shell-cl-clload[clload],
+xref:admin-shell-vsh-config-command[config],
+xref:admin-shell-vsh-package-command[packages],
+xref:admin-shell-vsh-par-command[par],
+xref:admin-shell-vsh-plan-command[plan],
+xref:admin-shell-vsh-service-command[service],
+xref:admin-shell-vsh-install-command[install],
+xref:admin-shell-vsh-shutdown-command[shutdown],
+xref:admin-shell-vsh-help-command[help] and
+xref:admin-shell-vsh-exit-command[exit].
+
+anchor:admin-shell-vsh-bundle-command[]
+
+==== bundle Command
+
+Use the `bundle` command to manage the lifecycle of bundles deployed in {kernel-product-name} and to gather information about deployed bundles, such as diagnostic information, header information, and so on.
+The following table lists the options you can specify for this command.
+
+anchor:admin-shell-vsh-bundle-command-table[]
+[options="header",cols="1,5"]
+.Options of the bundle Command
+|=======================================================================
+| Option        | Description
+| list          | Displays the list of bundles that are currently installed in the current {kernel-product-name} instance.  With the exception of a few kernel bundles and their services, which {kernel-product-name} uses to administer the user region, none of the kernel is visible to user installed artifacts; rather, only the bundles installed in the user region are visible.
+                    Each bundle is identified by an internal `ID` which you can then use with the other `bundle` commands that manage a particular bundle, such as `start `*`id`*.   The `list` command also displays the version of the bundle, along with its state, which is one of the following standard OSGi lifecycle states:
+                    *Installed*: The bundle is installed but its dependencies have not yet been resolved.
+                    *Resolved*: The bundle is resolved and you can now start it.
+                    *Uninstalled*: The bundle is uninstalled and you cannot use it.
+                    *Starting*:  The bundle is in the process of starting.
+                    *Active*: The bundle is running and you can now use it.
+                    *Stopping*: The bundle is in the process of stopping.
+                    Use one of the other `bundle` commands to change the state of a bundle.  For example, use the `bundle start `*`id`* command to change the state of a bundle from `Installed` to `Active`.
+| examine *id*  | Displays detailed information about the specified bundle.  Use the `bundle list` command to get the internal id of a particular bundle.
+			      In addition to the information provided by the `bundle list` command (id, full name, version, and state), the `examine` command specifies whether the bundle includes a Spring application context (or is *Spring Powered*) and the exact physical location of the bundle JAR file.
+				  The `examine` also provides the full list of packages that the bundle imports, as well as the bundles that in turn export these imported packages.  Finally, the command displays the packages that the current bundle exports, and then in turn the list of other installed bundles that are currently importing these exported packages.
+| start *id*    | Starts the specified bundle.  Use the `bundle list` command to get the internal id of a particular bundle.
+				  After {kernel-product-name} successfully starts the bundle, it is listed in the `Active` state.
+| stop *id*     | Stops the specified bundle.  Use the `bundle list` command to get the internal id of a particular bundle.
+				  When you stop a bundle, it goes from the `Active` state to the `Resolved` state, and you must re-start it if you want to use the application that the bundle contains.
+| refresh *id*  | Updates the contents of the specified bundle. Use the `bundle list` command to get the internal id of a particular bundle.  Use this command if you have changed the contents of the bundle JAR file and you want to refresh the artifact as installed in the OSGi framework.
+| uninstall *id*| Uninstalls the specified bundle from {kernel-product-name}.   Use the `bundle list` command to get the internal id of a particular bundle.
+				  When the uninstall process is complete, the bundle does not show up in the list of bundles displayed by the `bundle list` command.  If you want to use the application in the bundle, you must re-install it using the `install` command.
+| diag *id*     | Provides diagnostic information about the specified bundle.
+                    In particular, this command displays information about the imported packages that {kernel-product-name} could not resolve.
+                    Use the `bundle list` command to get the internal id of a particular bundle.
+                    Note that {project-name} does not install unresolvable bundles.
+                    Instead is takes a state dump (for offline analysis using the web administration console) and fails the deployment.
+                    So bundles are only likely to become unresolvable in {project-name} after an update operation.
+| headers *id*  | Displays the complete list of manifest headers of the specified bundle.  Use the `bundle list` command to get the internal id of a particular bundle.
+				  The manifest headers include: `Import-Package`, `Export-Package`, `Bundle-SymbolicName`, and so on.
+|=======================================================================
+
+The following examples show how to use this command.
+
+First, use the `bundle list` command to view all the installed bundles:
+
+....
+osgi> vsh:bundle list
+
+Id   Name                                       Version                    State
+40   org.eclipse.virgo.kernel.userregionfactory 3.0.0.RELEASE             ACTIVE
+47   org.eclipse.equinox.cm                     1.0.300.v20101204         ACTIVE
+48   org.eclipse.virgo.kernel.userregion        3.0.0.RELEASE             ACTIVE
+49   org.eclipse.virgo.kernel.osgicommand       3.0.0.RELEASE             ACTIVE
+50   org.eclipse.osgi.services                  3.3.0.v20110110           ACTIVE
+51   com.springsource.org.apache.mina.core      2.0.2                     ACTIVE
+52   org.apache.felix.gogo.command              0.8.0.v201105062003       ACTIVE
+53   org.apache.felix.gogo.runtime              0.8.0.v201105062003       ACTIVE
+54   org.apache.felix.gogo.shell                0.8.0.v201107131313       ACTIVE
+55   org.eclipse.equinox.console.supportability 1.0.0.20110722-2          ACTIVE
+56   com.springsource.org.apache.sshd.core      0.5.0                     ACTIVE
+57   org.springframework.osgi.core              1.2.1                     ACTIVE
+58 S org.springframework.osgi.extender          1.2.1                     ACTIVE
+59   org.springframework.osgi.io                1.2.1                     ACTIVE
+60   org.eclipse.virgo.kernel.agent.dm          3.0.0.RELEASE             ACTIVE
+61 S org.eclipse.virgo.kernel.deployer.dm       3.0.0.RELEASE             ACTIVE
+62   org.eclipse.equinox.ds                     1.3.0.v20110124-0830      ACTIVE
+63   org.eclipse.equinox.util                   1.0.200.v20100503         ACTIVE
+64   com.springsource.org.aopalliance           1.0.0                     ACTIVE
+65   org.eclipse.virgo.kernel.dmfragment        3.0.0.RELEASE           RESOLVED
+66   org.springframework.aop                    3.0.5.RELEASE             ACTIVE
+67   org.springframework.asm                    3.0.5.RELEASE             ACTIVE
+68   org.springframework.beans                  3.0.5.RELEASE             ACTIVE
+69   org.springframework.context                3.0.5.RELEASE             ACTIVE
+70   org.springframework.core                   3.0.5.RELEASE             ACTIVE
+71   org.springframework.expression             3.0.5.RELEASE             ACTIVE
+....
+
+The following example shows how to view the headers of the `org.springframework.osgi.extender` bundle (only the first few lines are shown):
+
+....
+osgi> vsh:bundle examine 5
+
+Id:              5
+Name:            org.springframework.osgi.extender
+Version          1.2.1
+State:           ACTIVE
+Spring Powered:  true
+Bundle Location: file:<... omitted ...>/org.springframework.osgi.extender-1.2.1.jar/
+
+Imported Packages:
+    org.springframework.osgi.context [1.2.1, 1.2.1]
+        exported by org.springframework.osgi.core 1.2.1 [4]
+    <... remainder omitted ...>
+
+Exported Packages:
+    org.springframework.osgi.extender 1.2.1
+    <... remainder omitted ...>
+
+Published services:
+     58 org.springframework.beans.factory.xml.NamespaceHandlerResolver
+        consumed by org.springframework.osgi.extender 1.2.1 [5]
+        consumed by org.eclipse.virgo.kernel.deployer.dm 2.1.0.RELEASE [8]
+    <... remainder omitted ...>
+
+Consumed services:
+      1 org.osgi.service.packageadmin.PackageAdmin
+        published by org.eclipse.osgi 3.7.0.v20110224 [0]
+    <... remainder omitted ...>
+
+Fragments:
+    org.eclipse.virgo.kernel.dmfragment 2.1.0.RELEASE [10]
+....
+
+anchor:admin-shell-vsh-config-command[]
+
+==== config Command
+
+Use the `config` command to view and manage the configuration artifacts that have been installed in {kernel-product-name}.  A *configuration artifact* is simply a properties file that is associated with a user application that is contained in a bundle.  Using configuration artifacts, you can manage the configuration of a user application completely separately from the bundle that contains the application.
+The following table lists the options you can specify for this command.
+
+anchor:admin-shell-vsh-config-command-table[]
+[options="header",cols="1,3"]
+.Options of the config Command
+|=======================================================================
+| Option        | Description
+| list          | Lists the configuration artifacts that are currently installed in {kernel-product-name}.
+			      The `list` option displays the full name of each installed configuration artifact, its version, and its current state.  Configuration artifacts have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a configuration can be in is the same as those of bundles; see xref:admin-shell-bundle-command[the bundle command] for the list of possible states.
+| examine *name [version]*
+                | Displays information about the specified configuration artifact.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed.  Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
+				  A configuration artifact must be active for you to examine it; if it is not currently active, use `config start` to start it and thus change its state to `Active`.
+				  The command first displays the factory pid of the configuration artifact as well as the complete location of the bundle to which the configuration artifact is associated.   The command then lists all the properties that make up the configuration, as well as their current value.
+| start *name [version]*
+                | Starts the specified configuration artifact and makes it visible to {kernel-product-name}.
+                    Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the
+                    configuration artifact installed (which {project-name} does not currently support).
+                    Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
+                    Starting the configuration sets its state to `Active`.
+| stop *name [version]*
+                | Stops the specified configuration artifact and makes it invisible to {kernel-product-name}.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which {project-name} does not currently support).  Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
+                    Stopping the configuration sets its state to `Resolved`.
+| refresh *name [version]*
+                | Updates the contents of the specified configuration artifact to {kernel-product-name}.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which {project-name} does not currently support).  Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
+                    Use this command if you have changed the contents of the configuration artifact, and you want to make this information known to {kernel-product-name} and the associated bundle.
+| uninstall *name [version]*
+                | Uninstalls the specified configuration artifact and make it completely unavailable to {kernel-product-name}.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which {project-name} does not currently support).  Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
+                    Stopping the configuration  removes it from {kernel-product-name}'s list of deployed artifacts and it will not show up when you perform a `config list`.
+|=======================================================================
+
+The following example shows how to use this command to list the installed configuration artifacts.
+
+....
+osgi> vsh:config list
+
+Name                                      Version                          State
+org.eclipse.virgo.kernel                  0.0.0                           ACTIVE
+org.eclipse.virgo.kernel.jmxremote.access 0.0.0                           ACTIVE
+org.eclipse.virgo.kernel.userregion       0.0.0                           ACTIVE
+org.eclipse.virgo.kernel.users            0.0.0                           ACTIVE
+org.eclipse.virgo.medic                   0.0.0                           ACTIVE
+org.eclipse.virgo.repository              0.0.0                           ACTIVE
+osgi.console.ssh                          0.0.0                           ACTIVE
+osgi.console.telnet                       0.0.0                           ACTIVE
+....
+
+To view the properties of a configuration artifact, and their current values, use `config examine`:
+
+....
+osgi> vsh:config examine org.eclipse.virgo.repository
+
+Factory pid:     
+Bundle Location: file:plugins/org.eclipse.virgo.kernel.services-{version}.jar
+
+Properties:
+    chain:
+        ext,usr
+    ext.searchPattern:
+        repository/ext/{artifact}
+    ext.type:
+        external
+    service.pid:
+        org.eclipse.virgo.repository
+    usr.type:
+        watched
+    usr.watchDirectory:
+        repository/usr
+....
+
+anchor:admin-shell-vsh-package-command[]
+
+==== packages Command
+
+Use the `packages` command to view the complete list of packages exported by all bundles installed in {kernel-product-name}, as well as examine a particular exported package in more detail.
+
+The following table lists the options you can specify for this command.
+
+anchor:admin-shell-vsh-package-command-table[]
+[options="header",cols="1,3"]
+.Options of the packages Command
+|=======================================================================
+| Option        | Description
+| list          | Displays all the exported packages for all bundles in the uer region of {kernel-product-name}.  In addition to the package name, the command displays the version of the exported package and the `id` of the bundle that contains the exported package.  You can examine the bundle by using the command `bundle examine` *id*.
+| examine *name version*
+                | Displays details about the exported package.  You must specify both the name of the exported package and its version; use `packages list` to view the exact names and version.
+|=======================================================================
+
+The `examine` command provides the following additional information about the exported package:
+
+* The name and version of the bundle that exports the package.  This means that the package name is explicitly listed in the bundle's `MANIFEST.MF` file as part of the `Export-Package` header.
+* Any attributes that are part of the `Export-Package`, in addition to `version`.
+* The directives that are part of the `Export-Package` header.  A typical directive is `uses`, which declares up-front constraints on a number of other packages.
+* The list of all bundles that import the package.
+
+The following example shows how to list all the exported packages for all bundles installed:
+....
+osgi> vsh:packages list
+
+Name                                                        Version                    Providing Bundle
+javax.accessibility                                         0.0.0                      0
+javax.activation                                            0.0.0                      0
+javax.activation                                            1.1.1                      0
+<... remainder omitted ...>
+....
+
+The following example shows how to examine a particular exported package:
+
+....
+osgi> vsh:packages examine org.slf4j 1.6.1
+
+Exporter: org.eclipse.virgo.region.user 0.0.0 [1]
+
+Attributes:
+    None
+
+Directives:
+    uses:
+        org.slf4j.spi
+    x-equinox-ee:
+        -1
+    x-internal:
+        false
+
+Importer(s):
+    org.eclipse.virgo.kernel.agent.dm 2.1.0.RELEASE [7]
+        Import-Package attributes:
+            bundle-version:
+                0.0.0
+            version:
+                [1.6.1,2.0.0)
+        Import-Package directives:
+            resolution:
+                static
+    <... remainder omitted ...>
+....
+
+anchor:admin-shell-vsh-par-command[]
+
+==== par Command
+
+Use the `par` command to view all the PARs currently installed in {kernel-product-name}, view details about a particular PAR and manage its lifecycle, such as starting, stopping, refreshing, and uninstalling it.
+The following table lists the options you can specify for this command.
+
+anchor:admin-shell-vsh-par-command-table[]
+[options="header",cols="1,3"]
+.Options of the par Command
+|=======================================================================
+| Option        | Description
+| list          | Displays all the PARs that are currently installed in {kernel-product-name}.
+                  The `list` option displays the full name of each installed PAR, its version, and its current state.  PARs have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a PAR can be in is the same as those of bundles; see xref:admin-shell-bundle-command[the bundle command] for the list of possible states.
+| examine *name version*
+                | Displays information about the specified PAR; you are required to identify the PAR with both its name and its version.  Use the `par list` command to view all installed PAR files and their versions.  The command displays the following information:
+                    The current state of the PAR (see xref:admin-shell-vsh-bundle-command[the bundle command] for the full list of possible states).
+                    Whether the PAR is *scoped*.  Scoping specifies whether {kernel-product-name} should deploy the members of the PAR in their own scope; when scoping is disabled, {kernel-product-name} deploys the artifacts into the global scope and they are accessible for access by all other artifacts.
+				    Whether the PAR is *atomic*.  When a PAR is atomic, {kernel-product-name} manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then {kernel-product-name} starts *all* the PAR artifacts. If one artifact fails to start, then {kernel-product-name} stops all other artifacts in the PAR.
+				    The individual members, or children, of the PAR. These could be plans, bundles, configuration artifacts, and so on.
+| start *name version*
+                | Starts the specified PAR.  You must specify both the full name of the PAR as well as the version you want to start. Use the `par list` command to get the list of PARs currently installed in {kernel-product-name}.
+                    To start a PAR, it must have already been resolved by {kernel-product-name}, or in other words, be in the `Resolved` state.  After {kernel-product-name} successfully starts the PAR, it is listed in the `Active` state.
+| stop *name version*
+                | Stops the specified PAR.  You must specify both the full name of the PAR as well as the version you want to stop. Use the `par list` command to get the list of PARs currently installed in {kernel-product-name}.
+                    When you stop a PAR, it goes from the `Active` state to the `Resolved` state, and you must re-start it if you want to use the application that the PAR contains.
+| refresh *name version*
+                | Updates the contents of the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the `par list` command to this information.
+				    Use this command if you have changed the contents of the PAR file and you want to refresh the artifact as installed in the OSGi framework.
+| uninstall *name version*
+                | Uninstalls the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the `par list` command to this information.
+				  When the uninstall process is complete, the PAR will not show up in the list of PARs displayed by the `par list` command.  If you want to use the application in the PAR, you must re-install it using the `install` command.
+|=======================================================================
+
+The following example shows how to list the PARs that have been installed in {kernel-product-name}:
+
+....
+osgi> vsh:par list
+
+Name                                         Version                      State
+
+org.eclipse.virgo.server.repository.hosted    2.1.0.RELEASE              ACTIVE
+....
+
+The following example shows how to examine a particular PAR file:
+
+....
+osgi> vsh:par examine org.eclipse.virgo.server.repository.hosted 2.1.0.RELEASE
+
+State:  ACTIVE
+Scoped: true
+Atomic: true
+
+Children:
+    bundle org.eclipse.virgo.server.repository.hosted.core 2.1.0.RELEASE
+    bundle org.eclipse.virgo.server.repository.hosted.web 2.1.0.RELEASE
+    bundle org.eclipse.virgo.server.repository.hosted-synthetic.context 2.1.0.RELEASE
+....
+
+Finally, the following example shows how to refresh an installed PAR file:
+
+....
+osgi> vsh:par refresh my.exciting.par 1.2.0
+
+par my.exciting.par 1.2.0 refreshed successfully
+....
+
+anchor:admin-shell-vsh-plan-command[]
+
+==== plan Command
+
+Use the `plan` command to view all the plans currently installed in {kernel-product-name}, view details about a particular plan and manage its lifecycle, such as starting, stopping, refreshing, and uninstalling it.
+The following table lists the options you can specify for this command.
+
+anchor:admin-shell-vsh-plan-command-table[]
+[options="header",cols="1,3"]
+.Options of the plan Command
+|=======================================================================
+| Option        | Description
+| list          | Displays all the plans that are currently installed in {kernel-product-name}.
+			          The `list` option displays the full name of each installed plan, its version, and its current state.  Plans have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a plan can be in is the same as those of bundles; see xref:admin-shell-bundle-command[the bundle command] for the list of possible states.
+| examine *name version*
+                | Displays information about the specified plan; you are required to identify the plan with both its name and its version.  Use the `plan list` command to view all installed plans and their versions.  The command displays the following information:
+                    The current state of the plan (see xref:admin-shell-vsh-bundle-command[the bundle command] for the full list of possible states).
+				    Whether the plan is *scoped*.  Scoping specifies whether {kernel-product-name} should deploy the members of the plan in their own scope; when scoping is disabled, {kernel-product-name} deploys the artifacts into the global scope and they are accessible for access by all other artifacts.
+				    Whether the plan is *atomic*.  When a plan is atomic, {kernel-product-name} manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then {kernel-product-name} starts *all* the plan artifacts. If one artifact fails to start, then {kernel-product-name} stops all other artifacts in the plan.
+				    The individual members, or children, of the plan.  These could be other plans, PARs, bundles, configuration artifacts, and so on.
+| start *name version*
+                | Starts the specified plan.  You must specify both the full name of the plan as well as the version you want to start. Use the `plan list` command to get the list of plans currently installed in {kernel-product-name}.
+				    To start a plan, it must have already been resolved by {kernel-product-name}, or in other words, be in the `Resolved` state.  After {kernel-product-name} successfully starts the plan, it is listed in the `Active` state.
+| stop *name version*
+                | Stops the specified plan.  You must specify both the full name of the plan as well as the version you want to stop. Use the `plan list` command to get the list of plans currently installed in {kernel-product-name}.
+				    When you stop a plan, it goes from the `Active` state to the `Resolved` state, and you must re-start it if you want to use the application that the plan contains.
+| refresh *name version*
+                | Updates the contents of the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the `plan list` command to this information.
+				    Use this command if you have changed the contents of the plan file and you want to refresh the artifact as installed in the OSGi framework.
+| uninstall *name version*
+                | Uninstalls the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the `plan list` command to this information.
+				    When the uninstall process is complete, the plan will not show up in the list of plans displayed by the `plan list` command.  If you want to use the application in the plan, you must re-install it using the `install` command.
+|=======================================================================
+
+The following example shows how to list the plans that have been installed in {kernel-product-name}:
+
+....
+osgi> vsh:plan list
+
+Name                                           Version                            State
+org.eclipse.virgo.apps.admin.plan              2.1.0                             ACTIVE
+org.eclipse.virgo.kernel.userregion.springdm   2.1.0                             ACTIVE
+org.eclipse.virgo.web                          2.1.0                             ACTIVE
+....
+
+The following example shows how to examine a particular plan:
+
+....
+osgi> vsh:plan examine org.eclipse.virgo.kernel.userregion.springdm 2.1.0
+
+State:  ACTIVE
+Scoped: false
+Atomic: false
+
+Children:
+    bundle org.eclipse.virgo.kernel.agent.dm 2.1.0.RELEASE
+    bundle org.springframework.osgi.io 1.2.1
+    bundle org.springframework.osgi.extender 1.2.1
+    bundle org.springframework.osgi.core 1.2.1
+    bundle org.eclipse.virgo.kernel.deployer.dm 2.1.0.RELEASE
+....
+
+The following example shows how to stop a currently Active plan:
+
+....
+osgi> vsh:plan stop org.eclipse.virgo.web 2.1.0
+
+plan org.eclipse.virgo.web:2.1.0 stopped successfully
+....
+
+The following example shows how to start a plan:
+
+....
+osgi> vsh:plan start org.eclipse.virgo.web 2.1.0
+
+plan org.eclipse.virgo.web:2.1.0 started successfully
+....
+
+anchor:admin-shell-vsh-service-command[]
+
+==== service Command
+
+Use the `service` command to view all the services that have been registered in the OSGi service registry of {kernel-product-name}. You can also examine a specific service to discover its properties, the bundle that publishes the service, and any bundles that consume the service.
+The following table lists the options you can specify for this command.
+
+anchor:admin-shell-vsh-service-command-table[]
+[options="header",cols="1,3"]
+.Options of the service Command
+|=======================================================================
+| Option        | Description
+| list          | Displays the list of services that are currently registered in the OSGi service registry of {kernel-product-name}.
+				  Each service is identified by an internal `ID` which you can then use with the `service examine` command to view the details about a particular service. The `list` option also displays the object class that implements the service and the internal `id` of the bundle that provides the service.
+| examine *id*  | Displays detailed information about the specified service.  Use the `service list` command to get the internal id of a particular service.
+				  This command displays the properties of the service, such as the object class that implements the service, the name of the bundle that publishes the service and any bundles that consume the service.
+|=======================================================================
+
+The following example shows how to list the services currently registered in the OSGi service registry:
+
+....
+osgi> vsh:service list
+
+Id  Object Class(es)                                            Providing Bundle
+
+1   org.osgi.service.packageadmin.PackageAdmin                                 0
+2   org.osgi.service.permissionadmin.PermissionAdmin, ...                      0
+3   org.osgi.service.startlevel.StartLevel                                     0
+4   org.eclipse.osgi.service.debug.DebugOptions                                0
+5   java.lang.ClassLoader                                                      0
+6   org.eclipse.osgi.framework.log.FrameworkLog                                0
+7   org.eclipse.osgi.framework.log.FrameworkLog                                0
+<... remainder omitted ...>
+
+72 org.eclipse.gemini.web.core.spi.ServletContainer                           38
+73 org.eclipse.gemini.web.core.WebContainer                                   37
+74 org.eclipse.virgo.web.core.WebApplicationRegistry                          39
+<... remainder omitted ...>
+....
+
+The following example shows how to examine a particular service:
+
+....
+osgi> vsh:service examine 73
+
+		Properties:
+		    objectClass:
+		        org.eclipse.gemini.web.core.WebContainer
+		    service.id:
+		        73
+
+		Publisher: org.eclipse.gemini.web.core 1.1.0.RELEASE [37]
+
+		Consumer(s):
+		    org.eclipse.virgo.web.core 2.1.0.RELEASE [39]
+....
+
+anchor:admin-shell-vsh-install-command[]
+
+==== install Command
+
+Use the `install` command to deploy an artifact to {kernel-product-name}.  The artifact can be a bundle, PAR, plan, or configuration artifact.
+
+The `install` command takes a single parameter: the URI of the artifact you want to deploy.  For example, to deploy a bundle on the local computer, use the `file` scheme:
+
+....
+file://full-pathname-to-artifact
+....
+
+After you execute the `install` command, {kernel-product-name} attempts to resolve the artifact's dependencies, and if it is successful, puts it in the `Resolved` state.  At that point, you must start the artifact to be able to actually use it.
+
+The following example shows how to install a bundle called `swf-booking-mvc.war` located in the `/home/apps` directory of the computer on which the Equinox Console Extension is being run:
+
+....
+osgi> vsh:install file://home/apps/swf-booking-mvc.war
+...
+Artifact bundle swf-booking-mvc.war 0.0.0 installed
+....
+
+This command is particularly useful for installing an artifact from the {project-name} repository, in which case use the `repository:` scheme:
+
+....
+repository:artifact-type/bundle-symbolic-name/bundle-version
+....
+
+For example:
+
+....
+osgi> vsh:install repository:bundle/my.bundle/1.0
+... 
+Artifact bundle my.bundle 1.0.0 installed
+....
+
+The following example shows how to use the `bundle list` command to ensure that the bundle was indeed installed in {kernel-product-name}; if you had installed a different kind of artifact, for example a plan, then you would use the appropriate command (such as `plan list`):
+
+....
+osgi> vsh:bundle list
+
+Id   Name                             Version                   State
+
+0    org.eclipse.osgi                 3.6.1.R36x_v20100806     ACTIVE
+1    org.eclipse.virgo.region.user    0.0.0                    ACTIVE
+<... remainder omitted ...>
+
+59   org.eclipse.virgo.server.splash   2.1.0.RELEASE           ACTIVE
+60   swf-booking-mvc.war              0.0.0                  RESOLVED
+....
+
+Note that the `swf-booking-mvc.war` file is in the `Resolved` state.   The following examples start the bundle, and then examine it to ensure that it is in the `Active` state:
+
+....
+osgi> vsh:bundle start 60
+
+bundle swf-booking-mvc.war:0.0.0 started successfully
+
+
+osgi> vsh:bundle examine 60
+
+Id:              60
+Name:            swf-booking-mvc.war
+Version          0.0.0
+State:           ACTIVE
+Spring Powered:  true
+Bundle Location: file:<... omitted ...>/swf-booking-mvc.war/
+
+Imported Packages:
+    javax.crypto.interfaces [0.0.0, 0.0.0]
+        exported by org.eclipse.osgi 3.6.1.R36x_v20100806 [0]
+    org.omg.CosNaming.NamingContextPackage [0.0.0, 0.0.0]
+        exported by org.eclipse.osgi 3.6.1.R36x_v20100806 [0]
+    org.omg.DynamicAny.DynAnyFactoryPackage [0.0.0, 0.0.0]
+        exported by org.eclipse.osgi 3.6.1.R36x_v20100806 [0]
+    <... remainder omitted ...>
+
+osgi>
+....
+
+anchor:admin-shell-vsh-shutdown-command[]
+
+==== shutdown Command
+
+Use the `shutdown` command to shut down the {kernel-product-name} instance to which you are connected. When {kernel-product-name} is shut down, the shell returns you to the operating system prompt.
+The `shutdown` command does not have any options.
+
+The following example shows how to use this command.
+
+....
+osgi> vsh:shutdown
+osgi> ... 
+Connection closed by foreign host.
+$
+....
+
+anchor:admin-shell-cl-clhas[]
+
+==== clhas command
+
+Use the `clhas` command to list the entries contained in the bundles deployed in {project-name} and to solve class loading issues.
+The command accepts as a parameter a search pattern in the form *path/resource*. The resource part of the pattern can contain wildcards.
+The output contains all bundles that have resources or classes matching the pattern. Since wildcards are allowed, the matching entities are listed as well.
+
+The following examples show how to use this command.
+Use the `clhas` to view all bundles that contain `Servlet` class:
+
+....
+osgi>clhas /javax/servlet/Servlet.class
+
+Bundles containing [/javax/servlet/Servlet.class]:
+  76    javax.servlet
+            /javax/servlet/Servlet.class
+....
+
+Use the wildcard `*` with `clhas` to view all classes starting with `Servlet`:
+
+....
+osgi> clhas /javax/servlet/Servlet*
+
+Bundles containing [/javax/servlet/Servlet*]:
+  76    javax.servlet
+            /javax/servlet/ServletRequestAttributeEvent.class
+            /javax/servlet/ServletRequest.class
+            <... remainder omitted ...>
+            /javax/servlet/Servlet.class
+            <... remainder omitted ...>
+....
+
+The `clhas` command can also be used with class name instead of resource path:
+
+....
+osgi> clhas javax.servlet.Servlet
+
+Bundles containing [javax/servlet/Servlet.class]:
+  76    javax.servlet
+            /javax/servlet/Servlet.class
+....
+
+Please note that the command converts the class name to a path and appends `class` extension by default.
+To search for a resource with an extension different than `class` you should use the resource path form:
+
+....
+osgi> clhas /LocalStrings.properties
+
+Bundles containing [/LocalStrings.properties]:
+  96    com.springsource.org.apache.catalina
+            /org/apache/catalina/core/LocalStrings.properties
+            /org/apache/tomcat/util/http/mapper/LocalStrings.properties
+            /org/apache/catalina/loader/LocalStrings.properties
+            <... remainder omitted ...>
+....
+
+The following example shows how to identify a possible `ClassCastException` due to wrong packaging:
+
+....
+osgi>clhas /javax/servlet/Servlet.class
+
+Bundles containing [/javax/servlet/Servlet.class]:
+  76    javax.servlet
+            /javax/servlet/Servlet.class
+  107   myapp
+            /WEB-INF/classes/javax/servlet/Servlet.class
+....
+
+It's obvious that the `javax.servlet` package should not be present in `myapp` application and its packaging has to be changed. This problem can often be seen in WAR or web bundles that package Servlet/JSP classes by accident.
+
+anchor:admin-shell-cl-clexport[]
+
+==== clexport command
+
+Use the `clexport` command to list the bundles that export a class or package.
+The command accepts as a parameter the fully qualified class name (in the form *package.class*).
+The command checks to see if the provided class is actually contained in a bundle. If the class is not found in a bundle but its package is exported, then a hint `[class not found, package only]` is displayed.
+
+The following examples show how to use this command.
+Use the `clexport` to view all bundles that contain `Servlet` class:
+
+....
+osgi> clexport javax.servlet.Servlet
+
+Bundles exporting [javax.servlet.Servlet]:
+  14    com.springsource.javax.servlet
+....
+
+If a bundle exports a package but does not contain the requested class, the output of the command will be similar to this:
+
+....
+osgi> clexport javax.servlet.ServletX
+
+Bundles exporting [javax.servlet.ServletX]:
+  14    com.springsource.javax.servlet     [class not found, package only]
+....
+
+anchor:admin-shell-cl-clload[]
+
+==== clload command
+
+Use the `clload` command to list the bundles that can load a class or to check if a specific bundle can load a class.
+The command accepts as parameters either:
+
+* the fully qualified class name (in the form *package.class*)
+* the fully qualified class name (in the form *package.class*) and the symbolic name or id of the bundle that is to be tested
+
+The command lists not only the bundle that successfully loaded the class, but also the one that actually provides the class. This is visualized with hints like `[exported by 14 com.springsource.javax.servlet]`.
+
+The following examples show how to use this command.
+You can use the `clload` to view all bundles that can load `Servlet` class:
+
+....
+osgi> clload javax.servlet.Servlet
+
+Successfully loaded [javax.servlet.Servlet] from:
+  56    com.springsource.org.apache.taglibs.standard
+                [exported by 14 com.springsource.javax.servlet]
+  54    org.eclipse.virgo.apps.admin.web
+                [exported by 14 com.springsource.javax.servlet]
+  19    com.springsource.org.apache.commons.fileupload
+                [exported by 14 com.springsource.javax.servlet]
+  <... remainder omitted ...>
+....
+
+If a bundle is to be tested, then its id can be used as a command parameter:
+
+....
+osgi> clload javax.servlet.Servlet 19
+
+Successfully loaded [javax.servlet.Servlet] using class loader from:
+  19    com.springsource.org.apache.commons.fileupload
+                [exported by 14 com.springsource.javax.servlet]
+....
+
+Or the same class load test can specify the symbolic name of the bundle:
+
+....
+osgi> clload javax.servlet.Servlet com.springsource.org.apache.commons.fileupload
+
+Successfully loaded [javax.servlet.Servlet] using class loader from:
+  19    com.springsource.org.apache.commons.fileupload
+                [exported by 14 com.springsource.javax.servlet]
+....
+
+anchor:p2-commands[]
+
+=== Using the p2 for extending your {project-name} installation
+
+==== Extending with the p2 director
+
+You can provision new features on top of your {project-name} installation using the p2 director. It can be used both for initial provisioning and extending an existing installtion.
+
+For extending an existing installation you can use these director arguments:
+
+....
+-repository http://download.eclipse.org/rt/ecf/3.5.3/site.p2
+-installIU org.eclipse.ecf.remoteservice.feature.feature.group
+-destination <your {project-name} installation folder>
+....
+
+This installs the *latest* version of the specified p2 feature in your {project-name} installation's p2 profile.
+
+==== Extending via the p2 shell commands
+
+Another way to achieve the same results is to use the p2 commands. The commands are available only in {nano-product-name-short} as it includes p2 by default.
+
+[NOTE]
+--
+For the other distributions only the director is supported and the operation only extends their kernel region.
+--
+
+Here's a list of the most commonly used p2 commands:
+
+anchor:p2-common-commands-table[]
+[options="header",cols="1,3"]
+.p2 Common Shell Commands
+|=======================================================================
+| Command                        | Help
+| `provaddrepo <repository URI>` | Add specified URI as metadata and artifact repository. Note that if you pass a wrong URL you'll get an error saying:
+								   `Repository not modifiable: http://wrongURL`. The default behavior of this command is to create an empty repository at the
+								   specified location if there isn't any. That won't work for remote locations so keep in mind that if you see this you probably passed a wrong URL.
+| `provdelrepo <repository URI>` | Remove specified metadata and artifact repository.
+| `provinstall <InstallableUnit> <version> <profileid>`
+                                 | Install an IU to the profileid.  If no profileid is given, installs into default profile.
+| `provremove <InstallableUnit> <version> <profileid>`
+                                 |Uninstall an IU from the profileid.  If no profileid is given, uninstalls form default profile.
+| `provlg [<repository URI \| *> <iu id \| *> <version range \| *>]`
+							     | Lists all IUs with group capabilities in the given repo or in all repos if URI is omitted.
+| `provliu [<repository URI \| *> <iu id \| *> <version range \| *>]`
+                                 | Lists the IUs that match the pattern in the given repo.  * matches all.
+| `confapply`                    | This is a Simple Configurator command, not a p2 one. However it is relevant because it applies dynamically, at runtime, the installed p2 features.
+								   What the command does is to apply to the running OSGi framework the current content in the bundles.info file. When using the provinstall command it takes care of updating the bundles.info file.
+|=======================================================================
+
+Here's an example showing how to install the ECF remote services but with the p2 commands this time:
+
+....
+osgi> provaddrepo http://download.eclipse.org/rt/ecf/3.5.3/site.p2
+
+osgi> provlg
+
+org.eclipse.ecf.core.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.core.featurepatch.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.core.featurepatch.source.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.core.source.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.datashare.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.datashare.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.dnssd.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.dnssd.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.jmdns.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.jmdns.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.slp.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.slp.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.zookeeper.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.zookeeper.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.examples.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.examples.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.feature.feature.group 2.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.source.feature.feature.group 2.0.0.v20111109-2142
+org.eclipse.ecf.osgi.services.feature.feature.group 2.0.1.v20111109-2142
+org.eclipse.ecf.osgi.services.source.feature.feature.group 2.0.1.v20111109-2142
+org.eclipse.ecf.remoteservice.examples.feature.feature.group 1.1.0.v20111109-2142
+org.eclipse.ecf.remoteservice.examples.source.feature.feature.group 1.1.0.v20111109-2142
+org.eclipse.ecf.remoteservice.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rest.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rest.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rosgi.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rosgi.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.sdk.feature.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.remoteservice.sdk.source.feature.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.remoteservice.soap.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.soap.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.server.generic.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.server.generic.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.xmpp.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.xmpp.source.feature.feature.group 1.0.0.v20111109-2142
+
+osgi> provinstall org.eclipse.ecf.remoteservice.feature.feature.group 1.0.0.v20111109-2142
+Installation complete for org.eclipse.ecf.remoteservice.feature.feature.group 1.0.0.v20111109-2142
+
+osgi> confapply
+
+osgi> ss
+
+"Framework is launched."
+
+
+id	State       Bundle
+0	ACTIVE      org.eclipse.osgi_3.7.1.R37x_v20110808-1106
+...
+92	RESOLVED    org.springframework.osgi.io_1.2.1
+93	RESOLVED    org.eclipse.ecf.console_1.0.0.v20111109-2142
+94	RESOLVED    org.eclipse.ecf.discovery_4.0.0.v20111109-2142
+95	RESOLVED    org.eclipse.ecf.provider_4.2.100.v20111109-2142
+96	RESOLVED    org.eclipse.ecf.provider.discovery_2.1.200.v20111109-2142
+97	RESOLVED    org.eclipse.ecf.provider.remoteservice_4.0.0.v20111109-2142
+98	RESOLVED    org.eclipse.ecf.remoteservice_6.0.200.v20111109-2142
+99	RESOLVED    org.eclipse.ecf.sharedobject_2.2.100.v20111109-2142
+100	RESOLVED    org.eclipse.equinox.concurrent_1.0.200.v20110502
+....
+
+You can see that after applying the changes with *confapply* the remote services bundles and their dependencies are installed in {nano-product-name-short}.

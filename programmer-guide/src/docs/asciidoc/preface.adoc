@@ -1,0 +1,60 @@
+:virgo-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-${version}/docs/virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-3.6.4.RELEASE/docs/virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+== Preface
+
+Increasing complexity in modern enterprise applications is a fact of life.
+Developers not only have to deal with complex business logic, but also a myriad
+of other concerns such as security, auditing, exposing business
+functionality to external applications, and managing the evolution of
+these concerns. The Spring Framework addresses these
+needs by offering a Plain-Old Java Object (POJO) based solution that
+lets you focus on your business logic.
+
+Complex applications pose problems that go beyond using the right set of
+technologies. You need to take into account other considerations such as
+a simplified development process, easy deployment, monitoring deployed
+applications, and managing changes in response to changing business needs.
+This is where the {umbrella-virgo-name} comes into play. It offers a simple yet
+comprehensive platform to develop, deploy, and service enterprise
+applications. In this Programmer Guide, we explore the runtime portions of the
+{umbrella-virgo-name}, the {tomcat-product-name}, {jetty-product-name} and the
+{kernel-product-name}, and learn how to develop applications to benefit from their
+capabilities.
+
+.For {kernel-product-name} Programmers
+[NOTE]
+--
+Although this guide is written primarily for {tomcat-product-name} programmers, much of it is also useful for
+{kernel-product-name} programmers who should simply ignore the web-related sections.
+--
+
+.For {nano-product-name} Programmers
+[NOTE]
+--
+This guide is written primarily for {tomcat-product-name} programmers. Although a base version of {nano-product-name}, without the new provisioning
+system, is used to build the {tomcat-product-name}, much of this guide does not apply to {nano-product-name}. The {nano-product-name-short} lacks regions support but has much
+improved runtime footprint and startup time and also provides support for p2 provisioning. The {nano-product-name} features are covered better in the
+{user-guide}.
+--

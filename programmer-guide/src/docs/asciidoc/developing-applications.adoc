@@ -1,0 +1,966 @@
+:virgo-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-{version}/docs/virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-3.6.4.RELEASE/docs/virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:developing-applications[Developing Applications]
+
+== Developing Applications
+
+Applications that take advantage of the OSGi capabilities of {virgo-name}
+are typically comprised of multiple bundles. Each bundle may have dependencies on
+other bundles. Furthermore, each bundle exposes only certain packages and
+services. In this chapter, we look at how to create bundles, import and export
+appropriate functionality, and create artifacts to deploy web applications on the {tomcat-product-name}.
+
+anchor:developing-applications-bundle[]
+
+=== Anatomy of a Bundle
+
+[TIP]
+--
+This is an abbreviated introduction to OSGi bundles. Please refer to the {gemini-blueprint-guide} for full details.
+--
+
+An OSGi bundle is simply a jar file with metadata that describe
+additional characteristics such as version and imported and exported packages.
+
+A bundle exports types and publishes services to be used by other bundles:
+
+* *Types*: via the OSGi `Export-Package` directive,
+* *Services*: via Gemini Blueprint's `<service ... >` XML namespace element.
+
+A bundle may import types and services exported by other bundles:
+
+* *Types*: via the OSGi `Import-Package` directive,
+* *Services*: via Gemini Blueprint's `<reference ... >` XML namespace element.
+
+Let's see an example from the PetClinic sample application. The following listing shows the
+`MANIFEST.MF` file for the `org.springframework.petclinic.infrastructure.hsqldb` bundle.
+
+.MANIFEST.MF
+[source,txt]
+----
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PetClinic HSQL Database Infrastructure
+Bundle-SymbolicName: org.springframework.petclinic.infrastructure.hsqldb
+Bundle-Version: 1.0
+Import-Library: org.springframework.spring;version="[2.5,2.6]"
+Import-Bundle: com.springsource.org.apache.commons.dbcp;version="[1.2.2.osgi,1.2.2.osgi]",
+ com.springsource.org.hsqldb;version="[1.8.0.9,1.8.0.9]"
+Import-Package: javax.sql
+Export-Package: org.springframework.petclinic.infrastructure
+----
+
+The `org.springframework.petclinic.infrastructure.hsqldb` bundle expresses its dependencies on
+the `javax.sql` package, the Commons DBCP and HSQLDB bundles, and the Spring library (we will examine
+the details of the library artifact in xref:developing-applications-defining-libraries[]. The Commons DBCP
+bundle is imported at a version of exactly `1.2.2.osgi` and the HSQLDB bundle is imported at a version of exactly
+`1.8.0.9`. The Spring library is imported at a version between `2.5` inclusive and `2.6` exclusive.
+
+Note that you do not specify the bundle that will provide the imported packages.
+{virgo-name} will examine the available bundles and satisfy the required dependencies.
+
+The following `osgi-context.xml` file from the PetClinic sample's
+`org.springframework.petclinic.repository.jdbc` bundle declares a service published by the bundle and
+references a service published by another bundle.
+
+.osgi-context.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/osgi"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/osgi  
+        http://www.springframework.org/schema/osgi/spring-osgi.xsd
+        http://www.springframework.org/schema/beans   
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <service id="osgiClinic" ref="clinic" interface="org.springframework.petclinic.repository.Clinic" />
+    <reference id="dataSource" interface="javax.sql.DataSource"/>
+
+</beans:beans>
+----
+
+The `service` element publishes the `clinic` bean
+(a regular Spring bean declared in the `module-context.xml` file) and specifies
+`org.springframework.petclinic.repository.Clinic` as the type
+of the published service.
+
+The `reference` elements define a `dataSource` bean that references
+a service published by another bundle with a an interface type of `javax.sql.DataSource`.
+
+anchor:developing-applications-packaging[Creating PARs and Web Applications]
+
+=== Creating PARs and Web Applications
+
+{virgo-name} supports two OSGi-oriented ways of packaging applications: the PAR format
+and application bundles (including web bundles). The {tomcat-product-name-short} also supports three
+distinct WAR deployment and packaging formats: standard Java EE WAR, Shared Libraries WAR, Shared Services WAR.
+
+{virgo-name} also supports plans as a way to describe an application. This method is similar to a PAR
+in that it encapsulates all the artifacts of an application as a single unit, but differs in that a plan simply
+lists the bundles in an XML file rather than packaging all the bundles in a single JAR file.  The use of plans
+offers additional benefits to using PARs; for this reason, we recommend their use.  For details, see
+xref:developing-applications-plans[].
+
+anchor:developing-applications-packaging-par[]
+
+==== PARs
+
+An OSGi application is packaged as a JAR file, with extension `.par`. A PAR artifact offers several benefits:
+
+* A PAR file has an application name, version, symbolic name, and description.
+* The artifacts of a PAR file are scoped so that they cannot
+be shared accidentally by other applications. The scope forms a boundary for automatic
+propagation of load time weaving and bundle refresh.
+See xref:developing-applications-plans-scoping[Plans and Scoping] for more on scoping.
+* Since a PAR is scoped, its artifacts have their exported packages imported by the
+synthetic context bundle which is used for thread context class loading. So,
+for example, hibernate will be able to load classes of any of the exported
+packages of the bundles in a PAR file using the thread context class loader.
+* A PAR file is visible to management interfaces.
+* A PAR file can be undeployed and redeployed as a unit.
+* A PAR file is *atomic* in that it ties together the lifecycle of its artifacts. If you start, stop, or uninstall
+one of a PAR's artifacts, {virgo-name} escalates the operation to the whole PAR file.
+So {virgo-name} prevents artifacts of a PAR from being in inconsistent states.
+For example, if one artifact should fail to start, then {virgo-name} stops all artifacts in the PAR.
+
+See xref:developing-applications-plans-scoping[Plans and Scoping] for more information on scoping.
+
+A PAR includes one or more application bundles and its manifest specifies the following
+manifest headers:
+
+anchor:developing-applications-packaging-par-headers-table[]
+
+[options="header",cols=","]
+.PAR file headers
+|=======================================================================
+| Header                     | Description
+| `Application-SymbolicName` | Identifier for the application which, in combination with Application-Version, uniquely identifies an application
+| `Application-Name`         | Human readable name of the application
+| `Application-Version`      | Version of the application
+| `Application-Description`  | Short description of the application
+|=======================================================================
+
+The following code shows an example MANIFEST.MF in a PAR file:
+
+.MANIFEST.MF
+[source]
+----
+Application-SymbolicName: com.example.shop
+Application-Version: 1.0
+Application-Name: Online Shop
+Application-Description: Example.com's Online Shopping Application
+----
+
+anchor:developing-applications-web-application-bundles
+
+==== Web Application Bundles
+
+{tomcat-product-name} supports Web Application Bundles that are compliant with the OSGi Web Applications specification.
+The defining property of a Bundle that makes it a Web Application Bundle is a manifest header, `Web-ContextPath`.
+This defines the context path the web application will be registered under.
+
+See xref:using-spring[Using Spring and Gemini Blueprint] for information on using Spring or Gemini Blueprint in a Web Application Bundle.
+
+anchor:developing-applications-plans[Creating Plans]
+
+=== Creating Plans
+
+Plans are similar to PARs in that they encapsulate the artifacts of an application as a single unit.
+However plans are XML files that refer to their artifacts, whereas PARs are JAR files that physically contain their artifacts.
+Plans, known as *parent* plans may refer to other plans, known as *child* plans.
+
+Plans share several benefits with PARs:
+
+* A plan has a (symbolic) name and a version.
+* A plan may be *scoped*, although this is optional.
+See xref:developing-applications-plans-scoping[Plans and Scoping] for more on scoping.
+* A plan is visible to management interfaces.
+* A plan can be undeployed and redeployed as a unit.
+* A plan may be *atomic*, although this is optional.
+
+Plans have the following additional benefits compared to PARs:
+
+* {virgo-name} deploys the artifacts in the plan in the order in which they are listed in the XML file, which gives you
+complete control over deployment order.
+With a PAR, the order of deployment of the included artifacts is not guaranteed.
+* Since plans refer to their artifacts, it is easier to share content between plans as well as update individual
+parts of a plan without having to physically repackage (re-JAR) it.
+* Plans may contain child plans, but PARs cannot contain other PARs.
+* You can make certain plans deploy faster by disabling the provisioning of bundles to satisfy missing dependencies,
+but you cannot disable provisioning for PARs.
+* You can specify whether a plan is scoped or unscoped and atomic or non-atomic; PARs are always scoped and atomic.
+
+The artifacts of a plan are usually stored in {virgo-name}'s repository.  This means, for example, that if you drop one of the plan's artifacts in the `pickup` directory rather than adding it to the repository, the plan will fail to deploy because it will not find the artifact.
+
+The artifacts of a plan may also be stored outside {virgo-name}'s repository, somewhere else on the file system and referenced from the plan using URIs.
+Such artifacts must be available on the file system when the plan is deployed and when {virgo-name} restarts while the plan is deployed.
+If you delete any of these artifacts, deployment of the plan may fail, either when it is initially deployed or when {virgo-name} restarts.
+
+anchor:developing-applications-plans-create[]
+
+==== Creating the Plan XML File
+
+Plans are XML files that have a `.plan` file extension, such as `multi-artifact.plan`.
+The structure of the XML file is simple:
+the root element is `<plan>` with attributes specifying the name of the plan, the version, atomicity, and scoping.
+Then, for each artifact that makes up your application,
+you add a `<artifact>` element, using its attributes to specify the type of artifact and its name and version.
+The following is a simple example of a plan's XML file:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<plan name="multi-artifact.plan" version="1.0.0" scoped="true" atomic="true"
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="
+		        http://www.eclipse.org/virgo/schema/plan
+		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd">
+
+    <artifact type="configuration" name="app-properties" version="1.0.0"/>
+    <artifact type="bundle" name="com.springsource.exciting.app" version="[2.0.0, 3.1.0)"/>
+
+</plan>
+----
+
+In the preceding example, the name of the plan is `multi-artifact.plan` and its version is `1.0.0`.
+The plan is both scoped and atomic. The plan contains two artifacts: one is a bundle called `com.springsource.exciting.app` and the other is a configuration file called `app-properties`.
+
+The following table describes the attributes of the `<plan>` element.
+
+[options="header",cols="1,3,1"]
+.PAR file headers
+|=======================================================================
+| Attribute | Description                                          | Required?
+| `name`    | Specifies the name of this plan.
+              {virgo-name} uses the name as one component of the unique
+              identifier of this plan.                             | Yes.
+| `version` | Specifies the version of this plan.
+              You must use OSGi version specification syntax,
+              such as `2.1.0`.
+              {virgo-name} uses the version as one component of
+              the unique identifier of this plan.                  | Yes.
+| `scoped`  | Specifies whether {virgo-name} should install the
+              artifacts into plan-specific scope so that only the
+              application described by this plan has access to the artifacts.
+              If you disable scoping, then {virgo-name} installs
+              the artifacts into the global scope, which means they
+              are then available for access by all other deployed artifacts.
+              Set the attribute to `true` to enable scoping or
+              `false` to disable it.                               | Yes.
+| `atomic`  | Specifies whether you want to tie together the lifecycle
+              of the artifacts in this plan.
+              Making a plan atomic means that if you start, stop, or
+              uninstall a single artifact in the plan, {virgo-name}
+              escalates the operation to the whole plan.
+              Also {virgo-name} prevents artifacts of an atomic plan
+              from being in inconsistent states.
+              For example, if one artifact should fail to start,
+              then {virgo-name} stops all artifacts in the plan.
+              Set this attribute to `true` to enable atomicity or
+              `false` to disable it.                               | Yes.
+| `provisioning`
+            | Specifies whether {virgo-name} installs bundles from
+              the repository to attempt to satisfy any missing
+              dependencies in the plan.
+              Missing dependencies prevent one or more bundles in
+              the plan from resolving.
+              For example, a bundle which imports a package cannot
+              resolve if the package is missing, that is, not
+              exported by another bundle. A value of
+              `auto` instructs {virgo-name} to install bundles from the repository
+              to attempt to satisfy any missing dependencies in the plan.
+              This is known as *auto-provisioning*.
+              A value of `disabled` prevents {virgo-name} from
+              installing bundles from the repository to attempt to
+			  satisfy any missing	dependencies in the plan.
+			  This value can make the plan deploy faster, although if
+			  there are missing dependencies, deployment will fail.
+              A value of `inherit`, which is the default if no value is specified, inherits the parent plan's provisioning behaviour.
+              If the plan does not have a parent, it inherits {virgo-name}'s
+              auto-provisioning behaviour.                         |No. If not specified, defaults to `inherit`.
+|=======================================================================
+
+
+The following table describes the attributes of the `<artifact>` element. Note that you must either specify `type`, `name`, and (optionally) `version`,
+in which case {virgo-name}'s repository is searched for the artifact, or `uri` in which case the artifact is obtained directly from the file system.
+If you specify `uri`, you must not specify `type`, `name`, or `version`.
+
+anchor:developing-applications-plans-create-artifact-attributes[]
+
+[options="header",cols="1,3,1"]
+.PAR file headers
+|=======================================================================
+| Attribute | Description                                          | Required?
+| `type`    | Specifies the type of the artifact. Valid values are:
+
+`bundle`: Specifies an OSGi bundle.  Use this artifact type for WAR files and Web application bundles.
+`configuration`: Specifies that the artifact is a configuration file.  Configuration files contain name/value pairs that set initial values for configuration properties of a bundle.
+`plan`: Specifies that the artifact is a plan.
+`par`: Specifies that the artifact is a PAR.                       | Yes, unless `uri` is specified in which case `type` must not be specified and is automatically determined from the artifact.
+| `name`    | Specifies the name of the artifact.
+See xref:artifact-names[Artifact Names] for guidelines for determining
+the name of an artifact.                                           | Yes, unless `uri` is specified in which case `name` must not be specified and is automatically determined from the artifact.
+| `version` | Specifies the range of versions of this artifact that
+              {virgo-name} should look up in its repositories and
+              then install and deploy.
+              You must use OSGi version specification syntax,
+              such as `[1.0.0, 2.0.0)`.
+              Note that a single version number represents the range
+              from that version number upwards.
+              For example, `1.3` represents the range of versions
+              greater than or equal to `1.3`.                      | No. If `uri` is specified, `version` must not be specified.
+							If neither `uri` nor `version` are specified, `version` defaults to `0`, which in OSGi means 0 to infinity, or any version.
+| `uri`     | Specifies an optional, absolute URI string beginning
+              with `file:` that refers to the artifact on the file system.
+              Such an artifact must be available on the file system
+              when the plan is deployed and when {virgo-name} restarts
+              while the plan is deployed.
+              If you delete such an artifact, deployment of the plan may fail,
+              either when it is initially deployed or when {virgo-name} restarts.
+              This attribute is normally omitted so that the artifact
+              is searched for in {virgo-name}'s repository.      | No. If not specified, {virgo-name} searches for the artifact in its repository.
+|=======================================================================
+
+anchor:artifact-names[]
+
+==== Artifact Names
+
+When you create a plan, you use the `name` attribute of the `<artifact>` element to specify the name of all the plan's dependencies.  This section describes how to determine the name of an artifact, which is not always obvious.
+
+Use the following guidelines to determine the name of an artifact:
+
+* *Bundle*: In this context, a *bundle* refers to a standard OSGi bundle as well as a Web Application Bundle and a WAR file.  The name of a bundle is the value of the `Bundle-SymbolicName` header in the `META-INF/MANIFEST.MF` file of the `*.jar`.
+If a WAR file has `Bundle-SymbolicName` header then it will be treated as a Web Application Bundle. The following `MANIFEST.MF` snippet shows a bundle with name `com.springsource.exciting.app`:
+
+....
+Bundle-SymbolicName: org.eclispe.virgo.exciting.app
+....
+
+If the bundle does not contain a `META-INF/MANIFEST.MF` file or the `MANIFEST.MF` doesn't contain a `Bundle-SymbolicName` header, then the name of the bundle is its filename minus the `.jar` or `.war` extension.
+
+* *Configuration File*: The name of a configuration or PID (Persistent Identity) is its filename minus the `.properties` extension. The PID can also be specified within the properties file with the
+					*service.pid* property.
+* *Plan*: The name of a plan is the value of the required `name` attribute of the `<plan>` element in the plan's XML file.  In the following XML snippet, the plan name is `multi-artifact.plan`:
+
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<plan name="multi-artifact.plan" version="1.0.0" scoped="true" atomic="true"
+        xmlns="http://www.eclipse.org/virgo/schema/plan">
+....
+* *PAR*: The name of a PAR is the value of the `Application-SymbolicName` header in the `META-INF/MANIFEST.MF` file of the `*.par` file.   The following `MANIFEST.MF` snippet shows a PAR with name `com.springsource.my.par`:
+
+....
+Application-SymbolicName: org.eclipse.virgo.my.par
+....
+
+If the PAR does not contain a `META-INF/MANIFEST.MF` file, then the name of the PAR is its filename minus the `.par` extension.
+
+anchor:passing-properties[]
+
+==== Supplying Properties to Artifacts
+
+It is possible to pass properties to an artifact specified in a plan. An example of this can be seen in the Admin Console plan where the context path to be used in the Admin console is passed from the plan.
+
+[source,xml]
+----
+<artifact type="bundle" name="org.eclipse.virgo.apps.admin.web" version="[3.0, 4.0)">
+    <property name="header:Web-ContextPath" value="/admin" />
+</artifact>
+----
+
+The only supported property is `header` which will overwrite the given manifest header with the supplied value. This should be used with care!
+
+anchor:developing-applications-plans-use[]
+
+==== Using the Plan
+
+Because a plan is a list of artifacts, rather than a physical file that contains the artifacts, there are a few additional steps you must perform before you deploy it to {virgo-name}.
+
+. Copy the artifacts that make up the plan to the `usr` repository, which by default is the `$SERVER_HOME/repository/usr` directory, where `$SERVER_HOME` refers to the top-level installation directory of {virgo-name}.  Note that you might have configured the server differently; in which case, copy the artifacts to your custom repository directory.
+. Restart {virgo-name} if the repository used is not a *watched* repository.
+. After the server has started, either use the Admin Console to deploy the plan, or manually deploy it by copying the plan's XML file into the `$SERVER_HOME/pickup` directory.
+. This results in {virgo-name} deploying the plan.
+. To undeploy the plan, use the Admin Console, or simply delete it from the `$SERVER_HOME/pickup` directory.
+
+anchor:developing-applications-plans-scoping[]
+
+==== Plans and Scoping
+
+As described in previous sections, you can specify that a plan be *scoped*.  This means that {virgo-name} installs the artifacts that make up the plan into a plan-specific scope so that only the application described by the plan has access to the artifacts. If you disable scoping, then {virgo-name} installs the artifacts into the global scope, which means they are available for access by all other deployed artifacts. This section describes scoping in a bit more detail.  It also describes how you can change the default behavior of scoping, with respect to services, so that a service that is in a scope can be made globally available.
+
+If a bundle in a given scope imports a package and a bundle in the same scope exports the package, then the import may only be satisfied by the bundle in the scope, and not by any bundles outside the scope, including the global scope.   Similarly, package exports from bundles in a scope are not visible to bundles in the global scope.
+
+If a bundle in a scope uses Spring DM (or the blueprint service) to obtain a service reference and a bundle in the same scope uses Spring DM (or the blueprint service) to publish a matching service, then the service reference may only bind to the service published in the scope (and not to any services outside the scope).  Services published by bundles in a scope are not visible to bundles in the global scope.
+
+However, sometimes it is useful to make a service in a scope globally available to artifacts outside the scope.  To do this, publish the service with the `org.eclipse.virgo.service.scope` service property set to `global`.  Use the `<service-properties>` child element of `<service>`, as shown in the following example:
+
+[source,xml]
+----
+<service id="publishIntoGlobal" interface="java.lang.CharSequence">
+  <service-properties>
+    <beans:entry key="org.eclipse.virgo.service.scope" value="global" />
+  </service-properties>
+  <beans:bean class="java.lang.String">
+    <beans:constructor-arg value="foo"/>
+  </beans:bean>
+</service>
+----
+
+A scope forms a boundary for automatic propagation of load time weaving and bundle refresh.
+Additionally, a synthetic context bundle is generated for each scope. This bundle imports all the packages exported by other bundles in the scope.
+The class loader of the synthetic context bundle is used for thread context class loading. So,
+for example, hibernate will be able to load classes of any of the exported
+packages of the bundles in a scope using the thread context class loader.
+
+To ensure predictable class loading behaviour and avoid other issues associated with *split packages* (packages whose classes
+are split across more than one bundle), the synthetic context bundle has a restriction:
+no package may be exported by more than one
+bundle in the scope*.
+If this restriction is broken, the scoped application will fail to deploy.
+This restriction can cause problems for xref:scoping-and-substitutable-exports[substitutable exports].
+
+anchor:developing-applications-plans-scoping-webapps[]
+
+==== Web Applications and Scoping
+
+A Web Application Bundle (WAB) or WAR has its bundle class loader set as the TCCL, even when the WAB or WAR belongs to
+a PAR or scoped plan.
+To enable the TCCL to load classes of other bundles in the same scope as a WAB or WAR, use a WAB which imports the necessary packages.
+
+Also a WAB or WAR has its own per-application trace, independent of the per-application trace of any PAR or scoped plan to which the
+WAB or WAR belongs.
+
+
+anchor:developing-applications-configuration-artifacts[]
+
+=== Creating and Using Configuration Artifacts
+
+Applications typically include some sort of configuration data
+that might change depending on the environment in which the
+application is deployed. For example, if an application connects to a
+database server using JDBC, the configuration data would include the
+JDBC URL of the database server, the JDBC drvier, and the username and
+password that the application uses to connect to the database server.
+This information often changes as the application is deployed to
+different computers or the application moves from the testing phase to
+the production phase.
+
+{virgo-name} provides a feature called
+*configuration artifacts*
+that makes it very easy for you to manage this configuration data. A
+configuration artifact is simply a properties file that is made
+available at runtime using the OSGi
+`ConfigurationAdmin`
+service. When you create this properties file, you set the values of
+the properties for the specific environment in which you are going to
+deploy your application, and then update the metadata of your Spring
+application to use the properties file. You then deploy the
+application and properties file together, typically as a
+xref:developing-applications-plans[plan]. {virgo-name} automatically creates a configuration artifact from
+the properties file, and you can manage the lifecycle of this
+configuration artifact in the same way you manage the lifecycle of
+PARs, bundles, and plans, using the Admin
+Console. Additionally, {virgo-name} subscribes your
+application for notification of any refresh of the configuration
+artifact and the application can then adapt accordingly, which means
+you can easily
+*change*
+the configuration of your application without redeploying it.
+
+In sum, configuration artifacts, especially when combined with
+plans, provide an excellent mechanism for managing external
+configuration data for your applications.
+
+The following sections describe the format of the configuration
+artifact, how to update the Spring application context file of your
+application so that it knows about the configuration artifact, and
+finally how to include it in a plan alongside your application.
+
+As an example to illustrate the configuration artifact feature, assume
+that you have a Spring bean called
+`PropertiesController`
+whose constructor requires that four property values be passed to it,
+as shown in the following snippet of Java code:
+
+[source,java]
+----
+@Controller
+public class PropertiesController {
+
+    private final String driverClassName;
+    private final String url;
+    private final String username;
+    private final String password;
+
+    public PropertiesController(String driverClassName, String url, String username, String password) {
+        this.driverClassName = driverClassName;
+        this.url = url;
+        this.username = username;
+        this.password = password;
+}
+----
+
+In the preceding example, the `PropertiesController` constructor requires four property values: `driverClassName`, `url`, `username`, and `password`.  Note that the example shows just one way that a class might require property values; your application may code it another way.
+
+Additionally, assume that the following snippet of the associated Spring application context XML file shows how the `PropertiesController` bean is configured:
+
+[source,xml]
+----
+<bean class="com.springsource.configuration.properties.PropertiesController">
+                <constructor-arg value="${driverClassName}"/>
+                <constructor-arg value="${url}"/>
+                <constructor-arg value="${username}"/>
+                <constructor-arg value="${password}"/>
+</bean>
+----
+
+The rest of this section describes how the bean can get these property values using a configuration artifact.
+
+anchor:developing-applications-configuration-artifacts-propfile[]
+
+==== Creating the Properties File
+
+To create a properties file that in turn will become a configuration artifact when deployed to {virgo-name} from which a Spring bean, such as the `PropertiesController` bean, will get the actual property values, follow these guidelines:
+
+* Create a text file in which each property is listed as a name/value pair, one pair per line.  Precede comments with a `#`.  For example:
+....
+# Properties for the com.springsource.configuration.properties sample
+
+driverClassName   = org.w3.Driver
+url               = http://www.springsource.com
+username          = joe
+password          = secret
+....
+
+The example shows four properties whose name correspond to the constructor arguments of the `PropertiesController` Spring bean.
+
+* Name the file anything you want, as long as it has a `.properties` extension, such as `app-properties.properties`.
+
+anchor:developing-applications-configuration-artifacts-app[]
+
+==== Updating Your Application
+
+To update your application so that it "knows" about the configuration artifact, you update the application's Spring application context XML file, typically located in the `WEB-INF` or `META-INF/spring` directories (read xref:using-spring[Using Spring and Gemini Blueprint]
+to understand which directory to use).
+
+You use the `<context:property-placeholder>` element to specify that you want to use the {virgo-name} mechanism for substituting values into bean properties.  The `properties-ref` attribute of this element points to a `<osgi-compendium:cm-properties>` element which you use to specify the configuration artifact that contains the property values.  You set the value of the `persistent-id` attribute of this element equal to the name of the configuration artifact, which is the name of the properties file *minus* the `.properties` extension.
+
+The following sample Spring application context XMl file shows everything wired together; only relevant parts of the file are shown:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:osgi-compendium="http://www.springframework.org/schema/osgi-compendium"
+  xsi:schemaLocation="http://www.springframework.org/schema/osgi 
+    http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/osgi-compendium 
+    http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium-1.2.xsd">
+
+...
+
+        <bean class="com.springsource.configuration.properties.PropertiesController">
+                <constructor-arg value="${driverClassName}"/>
+                <constructor-arg value="${url}"/>
+                <constructor-arg value="${username}"/>
+                <constructor-arg value="${password}"/>
+        </bean>
+
+        <context:property-placeholder properties-ref="configAdminProperties"/>
+
+        <osgi-compendium:cm-properties id="configAdminProperties" persistent-id="app-properties"/>
+
+...
+
+</beans>
+----
+
+The preceding example shows how the id `configAdminProperites` wires the `<context:property-placeholder>` and `<osgi-compendium:cm-properties>` elements together.  Based on the value of the `persistent-id` attribute, you must also deploy a properties file called `app-properties.properties` which {virgo-name} installs as a configuration artifact.
+
+anchor:developing-applications-configuration-artifacts-plan[]
+
+==== Adding the Configuration Artifact to a Plan
+
+Although you can always deploy your application and associated configuration artifact using the `pickup` directory, we recommends that you group the two together in a plan, add the two artifacts to the repository, and then deploy the plan using the `pickup` directory.  The following sample plan includes the two artifacts:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<plan name="multi-artifact.plan" version="1.0.0"
+         scoped="false" atomic="false"
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="
+		        http://www.eclipse.org/virgo/schema/plan
+		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd">
+
+    <artifact type="configuration" name="app-properties" version="0"/>
+    <artifact type="bundle" name="org.eclipse.virgo.configuration.properties" version="1.0.0"/>
+</plan>
+----
+
+For additional information about plans, see xref:developing-applications-plans[Creating Plans].
+
+anchor:using-spring[]
+
+=== Using Spring and Gemini Blueprint
+
+{virgo-name} supports the use of Spring framework and Gemini Blueprint by application bundles.
+
+Spring (and Gemini Blueprint) application context XML files should generally be placed in a bundle's `META-INF/spring` directory, but
+for a web application, these files must be placed in the `WEB-INF` directory.
+
+
+.A common mistake
+[TIP]
+--
+Placing a web application's Spring application context XML files in the `META-INF/spring` directory produces
+unpredictable results since	Spring DM will attempt to build an application context independently of, and asynchronously from,
+the web application.
+--
+
+To use Gemini Blueprint from a web application, the `contextClass` servlet parameter and the servlet context listener
+should be configured (in `WEB-INF/web.xml`) like this:
+
+[source,xml]
+----
+<context-param>
+    <param-name>contextClass</param-name>
+    <param-value>org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext</param-value>
+</context-param>
+
+<listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+</listener>
+----
+
+{virgo-name} has Gemini Blueprint built-in and thereby supports the OSGi Blueprint standard in addition to Spring DM.
+
+For detailed information on Spring Framework and Blueprint, please see xref:prerequisites-references[].
+
+anchor:developing-applications-programmatic-access[]
+
+=== Programmatic Access to the Servlet Context
+
+This section describes how to programmatically access the servlet context to obtain the WebApplicationContext or the BundleContext.
+
+anchor:developing-applications-programmatic-access-web[]
+
+==== Programmatic Access to Web Features
+
+anchor:developing-applications-programmatic-access-web-application-context[]
+
+==== Programmatic Access to the WebApplicationContext
+
+The {tomcat-product-name} automatically creates a `WebApplicationContext`
+for Web Application Bundles and WAR files. When used in conjunction with an
+an auto-configured Spring MVC `DispatcherServlet`,
+there is generally no need to access the `WebApplicationContext`
+programmatically, since all components of the web application are configured
+within the scope of the `WebApplicationContext`
+itself. However, if you wish to access the `WebApplicationContext`
+you can do so via the web application's `ServletContext`.
+{virgo-name} stores the bundle's
+`WebApplicationContext` in the ServletContext under
+the attribute name "`BSN-ApplicationContext`", where
+`BSN` is the `Bundle-SymbolicName`
+of your WAR or Web Application Bundle.
+
+Alternatively, since {virgo-name} also stores the
+`WebApplicationContext` under the attribute name
+with the value of the `WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE`
+constant, you may choose to use Spring MVC's WebApplicationContextUtils'
+`getWebApplicationContext(servletContext)`
+or
+`getRequiredWebApplicationContext(servletContext)`
+methods to access the `WebApplicationContext` without providing
+an explicit attribute name.
+
+anchor:developing-applications-programmatic-access-web-bundle-context[]
+
+==== Programmatic Access to the BundleContext
+
+As required by the OSGi Web Applications specification, you can access the
+`BundleContext` of your WAR or Web Application Bundle via the web application's
+`ServletContext`. The bundle context is stored in the
+`ServletContext` under the attribute name `osgi-bundlecontext`.
+
+anchor:developing-applications-automatic-imports-web[]
+
+=== Web Application Manifest Processing
+{tomcat-product-name} generates automatic package imports (i.e., via the
+`Import-Package` manifest header) for certain web applications.
+This section lists which packages are automatically generated.
+
+{tomcat-product-name-short} supports Web Application Bundles (WABs) as defined by the OSGi Web Applications Specification and WAR files.
+A WAR will typically not contain any OSGi defined manifest headers.
+A WAB is distinguished from a WAR by the presence of one or more of the following OSGi defined headers:
+
+* `Bundle-SymbolicName`
+* `Bundle-Version`
+* `Bundle-ManifestVersion`
+* `Import-Package`
+* `Web-ContextPath`
+
+As required by the OSGi Web Applications specification, the following defaults are applied to a WAR:
+
+* `Bundle-ManifestVersion` is set to `2`
+* `Bundle-SymbolicName` is generated from the path from which the bundle was installed
+* `Bundle-ClassPath` is set to `WEB-INF/classes` followed by the JARs in
+`WEB-INF/lib` in an unspecified order, followed by any transitive dependencies declared
+by the JARs in `WEB-INF/lib`
+* `Import-Package` is extended in an implementation defined way, as described below
+
+The following packages are automatically imported into WARs:
+
+* `javax.servlet;version="2.5"`
+* `javax.servlet.http;version="2.5"`
+* `javax.servlet.jsp;version="2.1"`
+* `javax.servlet.jsp.el;version="2.1"`
+* `javax.servlet.jsp.tagext;version="2.1"`
+* `javax.el;version="1.0"`
+
+In addition to the above-described imports, {tomcat-product-name-short} will also
+generate automatic imports for all of the packages that are exported by the system
+bundle, unless an import for the package already exists in the WAR's manifest,
+or the WAR contains the package, i.e. within `WEB-INF/classes`,
+or in a jar file in `WEB-INF/lib`. When an import is generated, it
+is versioned such that it exactly matches the version or versions of the package that
+are exported from the system bundle. For example, a package that's exported only at
+version `1.0.0` will generate an import with a version of
+`[1.0.0,1.0.0]`, and a package that's exported at version
+`1.0.0` and version `2.0.0` will generate an import
+with a version of `[1.0.0,2.0.0]`.
+
+Web Application Bundles are not subject to the above manifest processing.
+This is a change of behaviour compared to Virgo Web Server 2.1.x.
+See (see xref:known-issues-web-bundle-default-headers[Default Web
+Application Bundle Headers]) if you need the old behaviour until you
+have changed your WABs to match the new behaviour.
+
+{tomcat-product-name-short} supports ROOT.war as a default web application. The `Web-ContextPath`
+of the deployed ROOT.war is set to the default web context path - `/`.
+
+.System Bundle Package Exports
+[TIP]
+--
+For further details on which packages are exported by the
+OSGi system bundle, consult the <filename>java-server.profile</filename>
+file located in the `SERVER_HOME/configuration` directory.
+--
+
+anchor:developing-applications-dependencies[]
+
+=== Working with Dependencies
+
+Complex enterprise frameworks such a Spring and Hibernate are typically divided into many, many different
+packages. Traditionally, if an OSGi bundle wished to make extensive use of such a framework its manifest would
+have to import a huge number of different packages. This can be an error-prone and tedious process. Furthermore,
+application developers are used to thinking in terms of their application using a framework, such as Spring, as a
+whole, rather than a long list of all the different packages that comprise the framework.
+
+The following figure provides a simple illustration of the complexity of only using `Import-Package`:
+
+image:import-package.png[]
+
+{virgo-name} reduces the need for long lists of imported packages by introducing two new manifest
+headers; `Import-Bundle` and `Import-Library`. The following figure provides an
+illustration of the simplification that these new headers offer:
+
+image:import-bundle_import-library.png[]
+
+As you can see, use of `Import-Bundle` and `Import-Library` can lead to a dramatic reduction
+in the number of imports that you need to include in an application bundle's manifest. Furthermore, `Import-Bundle`
+and `Import-Library` are simply aliases for `Import-Package`; at deployment time `Import-Bundle`
+and `Import-Library` header entries are automatically expanded into numerous `Import-Package` entries. This
+means that you retain the exact same semantics of using `Import-Package`, without having to go through the labourious
+process of doing so.
+
+anchor:developing-applications-importing-libraries[Importing Libraries]
+
+==== Importing Libraries
+
+A bundle in an application can declare a dependency on a library by using the
+{umbrella-virgo-name} specific `Import-Library` header. This header specifies a
+comma-separated list of library symbolic names and version ranges that determine which libraries
+are imported. By default a dependency on a library is mandatory but this can be
+controlled through use of the resolution directive in exactly the same way as
+it can with `Import-Package`.
+
+[source,txt]
+----
+Import-Library: org.springframework.spring;version="[2.5.4, 3.0)",
+ org.aspectj;version="[1.6.0,1.6.0]";resolution:="optional"
+----
+
+This example `Import-Library` header declares a mandatory dependency on the Spring
+library at a version from 2.5.4 inclusive to 3.0 exclusive. It also declares an
+optional dependency on the AspectJ library at exactly 1.6.0.
+
+anchor:developing-applications-importing-bundles
+
+==== Importing Bundles
+
+A bundle in an application can declare a dependency on a bundle by using the
+{umbrella-virgo-name} specific `Import-Bundle` header. The header specifies a comma-separated
+list of bundle symbolic names, version ranges, and scope declarmations that determine which bundles are imported and the scope of their dependency. By default a dependency
+on a bundle is mandatory but this can be controlled through use of the resolution directive in exactly
+the same way as it can with `Import-Package`.
+
+[source,txt]
+----
+Import-Bundle: com.springsource.org.apache.commons.dbcp;version="[1.2.2.osgi, 1.2.2.osgi]"
+----
+
+This example `Import-Bundle` header declares a mandatory dependency on the Apache Commons
+DBCP bundle at exactly 1.2.2.osgi.
+
+anchor:developing-applications-importing-bundles-disadvantages[]
+
+===== Disadvantages
+
+A disadvantage of using `Import-Bundle` or especially `Import-Library`, is that the application
+bundle has a greater apparent fan-out than it strictly needs. An Alternative is to use a tool such as bnd or Bundlor
+to generate the package imports of the bundle.
+
+anchor:developing-applications-scoping-libraries-bundles[]
+
+==== Scoping Bundles in an Application
+
+When working with a scoped application, such as a PAR file or a plan, you might run into a situation where one of the bundles in the application (call it `bundleA`) depends on another bundle (`bundleB`) that performs a runtime task (such as class generation) that a third bundle (`bundleC`) might need to know about, although `bundleC` does not explicitly depend on `bundleB`.
+
+For example, Hibernate uses CGLIB (code generation library) at runtime to generate proxies for persistent classes.  Assume that a domain bundle in your application uses Hibernate for its persistent objects, and thus its `Import-Bundle` manifest header includes the Hibernate bundle.  Further assume that a separate Web bundle uses reflection in its data-binding code, and thus needs to reflect on the persistent classes generated by Hibernate at runtime.  The Web bundle now has an indirect dependency on the Hibernate bundle because of these dynamically generated classes, although the Web bundle does not typically care about the details of how these classes are persisted.  One way to solve this dependency problem is to explicitly add the Hibernate bundle to the `Import-Bundle` header of the Web bundle; however, this type of explicit-specified dependency breaks the modularity of the application and is not a programming best practice.
+
+A better way to solve this problem is to specify that {virgo-name} itself dynamically import
+the bundle (Hibernate in the example above) to all bundles in the application at runtime.
+You do this by adding the `import-scope:=application` directive to the `Import-Bundle` header
+of the bundle that has the direct dependency (the domain bundle in our example).  At runtime, although the Web bundle
+does not explicitly import the Hibernate bundle, {virgo-name} implicitly imports it and thus its classes are available
+to the Web bundle.  This mechanism allows you to declare the dependencies you need to make your application run,
+without having to make changes to your application that might limit its flexibility.
+
+The following example shows how to use the `import-scope` directive with the `Import-Bundle` header:
+
+[source,txt]
+----
+Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";import-scope:=application
+----
+
+You can also set the `import-scope` directive to the (default) value `bundle`; in this case, the scope of the bundle is just the bundle itself and thus {virgo-name} does not perform any implicit importing into other bundles of the application.
+
+Note that use of the `import-scope:=application` directive of the `Import-Bundle` header only makes sense when the bundle is part of a scoped application (PAR or plan);  if the bundle is not part of a scoped application, then this directive has no effect.
+
+Finally, because `import-scope:=application` implicitly adds a bundle import to each bundle of the PAR or plan, the impact of subsequently refreshing the imported bundle is, in general, broader than it would have been if you had not used `import-scope:=application`. This may well affect the performance of refresh.
+
+anchor:developing-applications-defining-libraries[Defining Libraries]
+
+==== Defining Libraries
+
+Libraries are defined in a simple text file, typically with a `.libd` suffix. This file identifies the
+library and lists all of its constituent bundles. For example, the following is the library definition for
+Spring 2.5.4:
+
+[source,txt]
+----
+Library-SymbolicName: org.springframework.spring
+Library-Version: 2.5.4
+Library-Name: Spring Framework
+Import-Bundle: org.springframework.core;version="[2.5.4,2.5.5)",
+ org.springframework.beans;version="[2.5.4,2.5.5)",
+ org.springframework.context;version="[2.5.4,2.5.5)",
+ org.springframework.aop;version="[2.5.4,2.5.5)",
+ org.springframework.web;version="[2.5.4,2.5.5)", 
+ org.springframework.web.servlet;version="[2.5.4,2.5.5)",
+ org.springframework.jdbc;version="[2.5.4,2.5.5)",
+ org.springframework.orm;version="[2.5.4,2.5.5)",
+ org.springframework.transaction;version="[2.5.4,2.5.5)",
+ org.springframework.context.support;version="[2.5.4,2.5.5)",
+ org.springframework.aspects;version="[2.5.4,2.5.5)",
+ com.springsource.org.aopalliance;version="1.0"
+----
+
+The following table lists all of the headers that may be used in a library definition:
+
+anchor:developing-applications-defining-libraries-library-headers-table[]
+
+[options="header",cols="2,5"]
+.Library definition headers
+|=======================================================================
+| Header               | Description
+| Library-SymbolicName | Identifier for the library
+| Library-Version      | Version number for the library
+| Import-Bundle        | A comma separated list of bundle symbolic names.
+                         Each entry may optionally specify a version (using the `version=` directive)
+                         and the scope of the import (using the `import-scope` directive).
+| Library-Name         | Optional. The human-readable name of the library
+| Library-Description  | Optional. A human-readable description of the library
+|=======================================================================
+
+anchor:developing-applications-installing-dependencies[]
+
+==== Installing Dependencies
+
+Rather than encouraging the packaging of all an application's dependencies within the application itself, {virgo-name}
+uses a local provisioning repository of bundles and libraries upon which an application can depend. When the {virgo-name}
+encounters an application with a particular dependency, it will automatically provide, from its provisioning repository,
+the appropriate bundle or library.
+
+Making a dependency available for provisioning is simply a matter of copying it to the appropriate location in the
+{virgo-name}'s local provisioning repository. By default this is
+`SERVER_HOME/repository/usr`. A more detailed discussion of the provisioning
+repository can be found in the {user-guide}.
+
+anchor:developing-applications-application-trace[]
+
+=== Application Trace
+
+As described in the {user-guide} {virgo-name} provides support for
+per-application trace for PARs, scoped Plans and WABs. {virgo-name} provides SLF4J with Logback logging for Event Logging and Tracing.
+Application trace is configured in the `serviceability.xml` file.
+See the {user-guide} for more details.
+
+anchor:developing-applications-versioning[]
+
+=== Application Versioning
+
+In much the same way that individual OSGi bundles can be versioned, {virgo-name} allows applications to be versioned. How exactly you do this depends on how you have packaged the application:
+
+* If you package your application using a PAR, you version the application by using the `Application-Version` header in the `MANIFEST.MF` file of the PAR file.
+* If you use a plan to describe the artifacts that make up your application, you version it by using the `version` attribute of the `<plan>` root element of the plan's XML file.
+* If your application consists of a single bundle, you version it in the standard OSGi way: by using the `Bundle-Version` header of the `MANIFEST.MF` file of the bundle.
+
+{virgo-name} uses an application's version to prevent clashes when multiple versions of the same application are deployed at
+the same time. For example, the application trace support described in xref:developing-applications-application-trace[Application Trace],
+includes the application's name and version in the file path. This ensures that each version of the same application has its
+own trace or logging file.

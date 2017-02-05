@@ -1,0 +1,76 @@
+:project-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-project-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:programmer-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-{version}/docs/virgo-programmer-guide/html/index.html[User Guide]
+:tooling-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-3.6.4.RELEASE/docs/virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+:experimental: true
+:toc:
+
+= {project-name} User Guide
+
+[%hardbreaks]
+Rob Harrop
+Paul Kuzan
+Sam Brannen
+Paul Harris
+Christopher Frost
+Ben Hale
+Glyn Normington
+Juliet Shackell
+Steve Powell
+Violeta Georgieva
+Hristo Iliev
+Borislav Kapukaranov
+Florian Waibel
+
+image::virgo-logo-small.png[Eclipse Virgo,float="right"]
+
+[%hardbreaks]
+{umbrella-project-name}
+{version}
+Copyright (C) 2009, 2011 VMware Inc. and others
+
+[%hardbreaks]
+Contributors:
+
+* VMware Inc. - initial contribution and subsequent updates
+* Violeta Georgieva, SAP AG - Apache Tomcat configuration
+* Hristo Iliev, SAP AG - Setting jmx.properties permissions
+* Borislav Kapukaranov, SAP AG - Configuring framework extensions and fragments on system bundle; Added {nano-product-name} references and tips
+
+'''
+
+include::introduction.adoc[]
+include::concepts.adoc[]
+include::using-the-p2-director.adoc[]
+include::installing.adoc[]
+include::installing-kernel.adoc[]
+include::installing-nano.adoc[]
+include::starting-stopping.adoc[]
+include::admin-shell.adoc[]
+include::admin-console.adoc[]
+include::repository.adoc[]
+include::serviceability.adoc[]
+include::applications.adoc[]
+include::configuring.adoc[]
+include::log-codes.adoc[]
+include::known-issues.adoc[]
+include::further-reading.adoc[]

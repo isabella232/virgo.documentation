@@ -1,0 +1,198 @@
+:virgo-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-${version}/docs/virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-3.6.4.RELEASE/docs/virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+== Introduction to the {tomcat-product-name}
+
+=== Overview
+
+In this chapter, we provide an overview of the {tomcat-product-name} focusing
+on what it is, what benefits it provides to developers and administrators,
+and why you should use it.
+
+anchor:introduction-what[]
+
+=== What is the {tomcat-product-name}?
+
+The {tomcat-product-name}, or {tomcat-product-name-short} for short, is the runtime portion of the {umbrella-virgo-name}.
+It is a lightweight, modular, OSGi-based runtime that provides a complete packaged solution for developing,
+deploying, and managing enterprise applications.
+By leveraging several best-of-breed technologies and improving upon
+them, the {tomcat-product-name-short} offers a compelling solution to develop and deploy
+enterprise applications.
+
+anchor:introduction-constituents[]
+
+==== What Makes up the {tomcat-product-name}?
+
+The {tomcat-product-name} is built on top of the following core technologies:
+
+* https://projects.spring.io/spring-framework/[Spring Framework], obviously!
+* http://tomcat.apache.org/[Tomcat] as the web container.
+* http://www.osgi.org/Specifications/HomePage[OSGi R4.3].
+* http://www.eclipse.org/equinox/[Equinox] as the OSGi implementation.
+* https://eclipse.org/gemini/blueprint/[Gemini Blueprint] for working with OSGi in a Spring application.
+* {tooling-guide} for developing applications.
+
+Note, however, that the {tomcat-product-name} isn't just a combination
+of these technologies. Rather, it integrates and extends these
+technologies to provide many features essential for developing,
+deploying, and managing today's enterprise Java applications.
+
+The following diagram presents a high-level overview of the {tomcat-product-name-short}'s architecture.
+
+image:introduction-architecture.png[]
+
+At the heart of the {tomcat-product-name} is the {kernel-product-name} or {kernel-product-name-short}.
+The {kernel-product-name-short} is an OSGi-based kernel that takes full advantage of the modularity
+and versioning of the OSGi platform. The {kernel-product-name-short} builds on a base version of {nano-product-name} or {nano-product-name-short} and extends its capabilities for
+provisioning and library management, as well as providing core functionality for the {tomcat-product-name-short}. The {nano-product-name-short} maintains a minimal
+runtime footprint and startup time. It builds on top of a pure Equinox, extending it with more sophisticated diagnostics and supportability functionality.
+The {nano-product-name-short} supports full p2 provisioning. This feature is not included in the Virgo Nano Base that the {kernel-product-name-short} is built on.
+
+To maintain a minimal runtime footprint, OSGi bundles are installed on demand by the
+{nano-product-name-short}. On subsequent restarts these core bundles are warm-started thus reducing the startup time. This allows for an application to be installed
+into a running {tomcat-product-name-short} and for its dependencies to be satisfied from an external repository. Not only
+does this remove the need to manually install all your application dependencies, which would be tedious, but it also keeps memory usage to a minimum.
+
+As shown in the figure, {kernel-product-name-short} runs on top of {nano-product-name-short} that extends Equinox within a standard Java
+Virtual Machine. Above the {kernel-product-name-short} further layers contribute functionality
+to the {tomcat-product-name-short}. Such as management and web application support.
+
+Version {version} of the {tomcat-product-name} supports *bundle*,
+*plan*, *PAR*, *configuration*,
+*Web Application Bundle (WAB)*, and *WAR* artifacts, which enable
+you to build sophisticated web applications. This includes support for
+standard Java EE WARs, "shared library" WARs, and "shared services" WARs, each of
+which will be covered in greater detail in xref:architecture[].
+
+[IMPORTANT]
+--
+The {nano-product-name} has a different provisioning system which isn't included in the Virgo Nano Base on which the
+{kernel-product-name-short} and the {tomcat-product-name-short} are built.
+--
+
+Version {version} of the {nano-product-name} supports *bundle*,
+*p2 feature*, *Web Application Bundle (WAB)*, and *WAR* artifacts, which enable
+you to build sophisticated web applications too, taking full advantage of p2's dependency resolution, automated download and fail-early mechanics.
+The {nano-product-name} does NOT support *plan*, *PAR* or *configuration* artifacts.
+New *features* are provisioned via *update sites* or *p2 repositories*.
+Brief overview of p2 and it's mechanics is available on http://bkapukaranov.wordpress.com/2011/07/12/rt-meets-p2/[this blog].
+The {nano-product-name-short}'s default web container implementation is Gemini Web.
+
+anchor:introduction-why[]
+
+=== Why the {tomcat-product-name}?
+
+You could deploy a web application in a stand-alone servlet engine or application server.
+Or you could even deploy directly in an OSGi container such as Equinox. However,
+deploying in the {tomcat-product-name} offers a number of key benefits that make it both more
+appealing and more suitable for enterprise application development.
+
+anchor:introduction-unified-deployment[]
+
+==== Deployment Options and Migration Paths
+
+While many applications deployed in the {tomcat-product-name} will take advantage
+of OSGi capabilities, not all applications need such sophistication.
+For example, development teams may initially choose to continue packaging
+existing web applications as standard WAR files and then gradually migrate
+toward a fully OSGi-based packaging and deployment model. The {tomcat-product-name}
+makes such migrations easy for developers by supporting multiple packaging
+and deployment formats. These formats and migration strategies are discussed
+in greater detail in xref:migrating-to-osgi[] and
+xref:formtags-case-study[].
+
+anchor:introduction-simplified-deployment[]
+
+==== Simplified Development and Deployment of OSGi-based Applications
+
+Prior to the release of the {tomcat-product-name}, developing and deploying OSGi
+applications involved inherent complexity such as:
+
+* *Obtaining OSGi bundles for popular Java libraries:*
+For optimal benefits, every technology you use in an OSGi application must
+be packaged as OSGi bundles. Sometimes, this involves manually converting
+JAR files into bundles and making sure that any libraries needed by those
+bundles are also available as OSGi bundles. The {ebr} is a good source of
+popular pre-bundled libraries.
+
+* *Package management complexity:*
+OSGi bundles use other bundles through `Import-Package` manifest headers.
+Many applications use a set of common technologies (e.g., an ORM solution,
+a web framework, etc.). Combining these two characteristics leads to duplicated
+configuration in the form of repeated and verbose `Import-Package` statements.
+
+* *Lack of application-level isolation:*
+In OSGi everything is a bundle, and all bundles share the same OSGi Service Registry.
+To highlight how conflicts can arise between applications and their services in this
+shared service registry, consider the following scenarios.
+
+** Application `A` is comprised of bundles `B` and `C`.
+In a standard OSGi environment, if you attempt to install two instances of the same
+version of application `A` (i.e., two sets of bundles `B` and
+`C`), a clash will occur, because you cannot deploy multiple bundles with
+the same `Bundle-SymbolicName` and `Bundle-Version` combination.
+
+** Application `A1` is comprised of bundles `B1` and `C1`.
+Similarly, application `A2` is comprised of bundles `B2` and `C2`.
+Each bundle has a unique combination of `Bundle-SymbolicName` and `Bundle-Version`.
+Bundles `B1` and `B2` both export service `S` which
+is imported by both `C1` and `C2`. In contrast to the previous
+example, there is no conflict resulting from duplicate
+`Bundle-SymbolicName`/`Bundle-Version` combinations; however,
+there is a clash for the exported service `S`.
+Which service `S` will bundles `C1` and `C2` end up
+using once they are installed?
+Assuming bundles `B1` and `C1` are intended to work together,
+you would not want bundle `C1` to get a reference to service `S`
+from bundle `B2`, because it is installed in a different logical application.
+On the contrary, you typically want bundle `C1` to get a reference to
+service `S` exported by bundle `B1`, but in a standard OSGi environment
+this may not be the case.
+
+Furthermore, since standard OSGi does not define a notion of an application as a set of bundles,
+you cannot deploy or undeploy an application and its constituent bundles as a single unit.
+
+The {tomcat-product-name} introduces a number of features to solve these issues:
+
+* A full set of OSGi bundles for many popular Java libraries to get you
+started quickly with creating OSGi applications.
+* An OSGi library concept that obviates the need to
+duplicate verbose `Import-Package` statements.
+* The PAR packaging format which offers
+application-level isolation and deployment.
+* The concept of a plan, which is an XML file that lists a collection of bundles that {tomcat-product-name} should load together as a single application.  Conceptually, plans are very like PARs, except that a plan describes the contents of the application rather than a PAR that actually contains them.
+
+anchor:introduction-diagnostics[]
+
+==== Enhanced Diagnostics During Deployment and in Production
+
+Identifying why an application won't deploy or which particular library
+dependencies are unsatisfied is the cause of many headaches!
+Similarly, production time errors that don't identify the root cause are
+all too familiar to Java developers. The {tomcat-product-name-short} was designed from the
+ground up to enable tracing and First Failure Data Capture (FFDC) that
+empower developers with precise information at the point of failure to
+fix the problem quickly.
+

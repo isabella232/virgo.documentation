@@ -1,0 +1,199 @@
+:project-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-project-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:installation[]
+
+== Installing {tomcat-product-name}
+
+anchor:installation-prereqs[]
+
+=== Prerequisites
+
+The {tomcat-product-name}, or {tomcat-product-name-short} for short, requires Java SE 6 or later to be installed. Java is available from
+http://www.java.com/[http://www.java.com/] and elsewhere.
+
+In case you are installing via a p2 director you'll need to get it. The easiest way is to download Eclipse from http://www.eclipse.org/downloads/[here].
+It has built-in p2 director and other p2 applications.
+
+anchor:installation-zip[]
+
+=== Installing from the ZIP Download
+
+==== Downloading the ZIP file
+
+{tomcat-product-name} is distributed as a ZIP file. This can be downloaded from
+http://www.eclipse.org/virgo/download/[here].
+
+anchor:installation-zip-installing[]
+
+==== Installing
+
+anchor:installation-zip-installing-linux[]
+
+===== Linux
+
+To install {tomcat-product-name} on Linux, unzip the distribution package to the desired installation directory.
+For example, to install into `/opt`:
+
+....
+$ unzip virgo-web-server-{version}.zip -d /opt
+....
+
+This creates a directory called `virgo-web-server-{version}` under `/opt`.
+
+{tomcat-product-name} requires write access to the installation directory, in this case `/opt/virgo-web-server-{version}`.
+Typically this means it must be run as the user that installed it, or the installation directory's ownership must be changed.
+
+anchor:installation-zip-installing-win[]
+
+===== Microsoft Windows
+
+To install the {tomcat-product-name} on Windows, unzip the distribution package to the desired installation directory.
+You should use a zip application such as 7zip, not the built-in folder decompression.  Note that both Windows and
+Java have some issues with long file names and file paths, so we recommend installing to the root directory of
+your chosen drive.
+
+anchor:installation-updatesite[]
+
+=== Installing from an update site
+
+==== The repository location
+
+Virgo has a single p2 repository that contains all Virgo distributions. The repository for version {version} can be found {p2repo}[here].
+There is a repository for each released version.
+
+==== Using the p2 director
+
+As shown in xref:using-director[] you can easily install {tomcat-product-name-short} in a desired destination.
+The only director argument that needs to be adjusted is *-installIU*.
+
+For {tomcat-product-name-short} the right value is *tomcat-server.product*.
+
+anchor:installation-post[]
+
+=== Post-installation steps
+
+anchor:installation-post-env[]
+
+==== Set environment variable variables
+
+anchor:installation-post-env-java[]
+
+===== JAVA_HOME
+
+{tomcat-product-name} uses the `JAVA_HOME` environment variable to locate the `java`
+executable. Configure this environment variable to point to the home directory of the Java 6 installation on your computer.
+
+anchor:installation-post-env-server[]
+
+===== SERVER_HOME
+
+As a convenience it is recommended that you create an environment variable that points
+to the {tomcat-product-name} installation directory. Note that the {tomcat-product-name} does not require that
+such an environment variable has been set. This variable may have any name of your
+choosing. The {tomcat-product-name}'s documentation assumes that the variable is named
+`SERVER_HOME`.
+
+anchor:installation-post-env-server-linux[]
+
+==== Linux
+
+Edit the `.profile` file in your home directory to
+add the `SERVER_HOME` and `JAVA_HOME` environment variables. For
+example, if you installed into `/opt`:
+
+....
+$ export SERVER_HOME=/opt/virgo-web-server-{version}/
+$ export JAVA_HOME=/user/java/jdk1.6.0_17
+$ export PATH=$JAVA_HOME/bin:$PATH
+....
+
+To verify the setting of `JAVA_HOME`, issue the command `$JAVA_HOME/bin/java -version` from a new terminal window
+and ensure that the command completes successfully and reports
+a Java version `1.6.`*x* (denoting Java 6) or greater.
+
+anchor:installation-post-env-server-win[]
+
+==== Microsoft Windows
+
+This section shows how to add `SERVER_HOME` as a system variable on Windows.  Follow the same procedure to add or update the `JAVA_HOME` environment variable.
+
+From the Start menu, open the Control Panel and double-click on &lsquo;System'.
+
+image:system-props.png[]
+
+Click the 'Advanced' tab and select 'Environment Variables'. Next,
+click the 'New' button in the 'System Variables' section.
+
+image:env-variables.png[]
+
+This will display the &lsquo;New System Variable' window.  Enter
+`SERVER_HOME` as the &lsquo;Variable name' and
+the installation directory as the &lsquo;Variable value'. Click OK.
+
+image:system-variable.png[]
+
+To verify the setting of `JAVA_HOME`, issue the command `"%JAVA_HOME%"\bin\java -version` from
+a new command prompt and ensure that the command completes successfully and reports
+a Java version `1.6.`*x* (denoting Java 6) or greater.
+
+anchor:installation-post-env-server-win-troubleshooting[]
+
+===== Microsoft Windows - Troubleshooting Security Permissions
+
+When starting {tomcat-product-name} on some variants of Windows you might encounter a problem with file permissions.
+The error looks like this.
+
+....
+WARNING: jmxPermissions.vbs did not update the permissions of C:\virgo\configuration\org.eclipse.virgo.kernel.jmxremote.access.properties. Check the file has the correct permissions.</screen>
+....
+
+If {tomcat-product-name-short} starts correctly (see xref:starting-stopping[]) you can skip this section and carry on. However to secure your
+installation you have to set correct permissions. To do so, go to the &lsquo;configuration' directory of the installation
+in Windows Explorer.
+
+image:install-windows-1-FileListing.png[]
+
+Right click on the 'org.eclipse.virgo.kernel.jmxremote.access.properties' file and view its properties,
+then select the 'Security' tab. Remove all groups and users from the list and select 'Apply'.
+
+image:install-windows-2-SecuritySettings.png[]
+
+Within the security page select the &lsquo;Advanced' options. On the &lsquo;Owner' tab, choose the owner
+that you are trying to run the {tomcat-product-name-short} as and select &lsquo;Apply'.
+
+image:install-windows-3-AdvanceSettingsOwner.png[]
+
+Once this is done select &lsquo;OK' to return to the &lsquo;Security' tab
+and now add the owner to the list of groups and users that have permission to access the file.
+
+image:install-windows-4-AllSetReadAndExecute.png[]
+
+Once all these steps are complete you can proceed to start the {tomcat-product-name-short}.
+
+....
+C:\dev\virgo-web-server-{version}>bin\startup.bat
+[2009-12-08 13:09:09.545] startup-tracker              <KE0001I> Kernel starting.
+....
+

@@ -1,0 +1,104 @@
+:project-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-project-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:known-issues[]
+
+== Known Issues
+
+This section describes known issues that you might run into, along with corresponding workarounds.
+
+For the full list of known issues, see https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;order=Importance;classification=RT;product=Virgo[Virgo bugs in Eclipse Bugzilla].
+The bugs are organised by component as well as by release.
+You can also use bugzilla to enter a new issue if you cannot find an existing issue that describes the problem you are running into, but it's probably worth asking on the http://www.eclipse.org/forums/index.php?t=thread&amp;frm_id=159[Virgo community forum] first.
+
+anchor:known-issues-firewall-timeout[]
+
+=== Timeout During Startup Due to Firewall Settings
+
+{project-name} will fail to start correctly if it is prevented from
+connecting to needed ports by the firewall. Typically this manifests
+as error `SPPM0003E` . Configuring the firewall to
+allow {project-name} process to bind to the necessary ports will prevent
+this error from occurring.
+
+anchor:known-issues-startup-timeout[]
+
+=== Timeout During Startup Due to Insufficient Resources
+
+{project-name} will fail to start correctly if it is running on slow hardware or
+on a system with insufficient resources. Typically this manifests as error `KE0004E` .
+Configuring the xref:configuring-kernel-properties[startup wait limit] will provide
+{project-name} with more time for initialisation.
+
+anchor:known-issues-perm-gen-sun-vm[]
+
+=== OutOfMemoryError: PermGen Space Running on Sun JVM
+
+As a result of Sun Java bug
+http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4957990[4957990],
+the {project-name} may consume more PermGen space than expected when running with the
+server HotSpot compiler. This problem may be resolved by configuring the
+`JAVA_OPTS` environment variable to specify an increased
+`MaxPermSize`, for example `-XX:MaxPermSize=128M`.
+
+anchor:alternate-serviceability-work[]
+
+=== Alternate `serviceability` and `work` Directories
+
+Although an alternate `configuration` directory may be specified on startup, there is no way to specify
+alternate `serviceability` or `work` directories. This is covered by
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=307737[bug 307737] which also describes a workaround.
+
+anchor:windows-deletion[]
+
+=== Problem Deleting Installation Directory under Windows
+
+Sometimes Microsoft Windows won't let you delete the {project-name} Server installation directory, typically because of long paths
+inside the `work` directory.
+
+You can return the {project-name} instance to a clean state by stopping {project-name} if necessary and then running the startup script with the options
+`-clean -noStart`, after which you should be able to delete the installation directory.
+See xref:cleaning-without-starting[Cleaning {tomcat-product-name} without Starting it] for more information.
+
+anchor:long-work-paths[]
+
+=== Long Work Directory Paths under Windows
+
+Problems can arise under Windows when long paths are created in the `work` directory as artefacts are deployed.
+
+You can shorten some of these paths by preventing bundles from being unpacked during deployment.
+See xref:configuring-deployment[Configuring Deployment] for more information.
+
+anchor:known-issues-jetty-restrictions[]
+
+=== {jetty-product-name} Restrictions
+
+When using the {jetty-product-name} the Hosted Repository application and the Snaps modular web technology are not supported.
+
+anchor:known-issues-shutdown-logs-shell[]
+
+=== Shutdown Log Messages in Telnet Shell
+
+When you use the `shutdown` shell command to stop Virgo Server for Apache Tomcat, the shutdown log messages appear in the shell terminal instead of in the terminal in which Virgo runs.
+See xref:admin-shell-enable[Enabling Equinox Console] for more information. This is covered also by https://bugs.eclipse.org/bugs/show_bug.cgi?id=351533[bug 351533].

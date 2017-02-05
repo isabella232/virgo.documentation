@@ -1,0 +1,274 @@
+:project-name: Virgo
+:version: 3.7.0.RC01
+
+:umbrella-project-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:deployment[]
+
+== Working with Applications
+
+anchor:deployment-deploying[]
+
+=== Deploying Artifacts
+
+In the context of {tomcat-product-name}, *deploying* refers to installing an artifact to the server and then starting it to make it available to users.  Typically, when you install an artifact, {tomcat-product-name-short} automatically starts it as long as the server is able to successfully resolve all its dependencies.  For this reason, the terms *deploying* and *installing* are often used interchangeably.
+
+You deploy artifacts to {tomcat-product-name} using either the hot-deploy directory on the file system or by using the Admin Console.  The artifacts that you can deploy to {tomcat-product-name-short} are:
+
+* Bundles, including Web Application Bundles
+* WARs
+* PARs
+* Plans
+* Configuration Files
+
+anchor:deployment-deploying-nested-contexts[]
+
+==== Deploying WARs with nested Web-ContextPaths
+
+[NOTE]
+--
+This section currently is ONLY relevant for {nano-product-name}.
+--
+
+Virgo Nano Web supports deployment of WAR files which are transformed into Web Application Bundles. This process involves automatic creation of an OSGi manifest with all relevant OSGi header plus the very important Web-ContextPath header. Its value defines how the deployed WAR file can be requested. There is a limitation about this process that the automatic generation only creates a flat context path which equals the name of your WAR file. Virgo Nano Web supports generation of a nested one.
+
+In order to benefit from this flexibility all you need to do is just to add hashes '#' to your WAR file name in the places where you want to have slashes in your web context path. Here is an example:
+
+....
+myWarFile.war would result into "/myWarFile" web context path
+....
+
+....
+my#War#File.war would result into "/my/War/File" web context path
+....
+
+The symbolic name of the resulting WAB file is the same as the WAR file name but the hashes '#' are replaced with dots '.'.
+
+anchor:initial-deployment-deploying-bulk[]
+
+==== Initial Bulk Hot Deploy
+
+[NOTE]
+--
+This section currently is ONLY relevant for {nano-product-name}.
+--
+
+To hot deploy an artifact initially in bulk mode, copy it into the pickup directory (by default `$SERVER_HOME/pickup`) and start up the server. Upon this startup all the artifacts in the `pickup` directory will get first installed and resolved and only then they will be started.
+
+This solves the problem where artifacts depend on each other and when not in bulk mode the install order is not guaranteed therefore errors could occur.
+
+This is only available as part of the initial scan of the `pickup` directory. Subsequently it goes back to the known mode of single file handled at a time.
+
+....
+$ cd /home/applications
+$ cp BundleA.jar $SERVER_HOME/pickup
+$ cp BundleWithDependencyOnA.jar $SERVER_HOME/pickup
+$ cd $SERVER_HOME/bin
+$ ./startup.sh
+....
+
+When the server is started, artifacts are hot deployed and messages similar to the following appear in the log file:
+
+....
+[2009-12-10 06:41:01.021] fs-watcher          <HD0001I> Hot deployer processing 'INITIAL' event for file 'BundleA.jar; BundleWithDependencyOnA.jar; '.
+[2009-12-10 06:41:01.087] fs-watcher          <DE0000I> Installing bundle 'BundleA' version '0.0.0'.
+[2009-12-10 06:41:01.274] fs-watcher          <DE0001I> Installed bundle 'BundleA' version '0.0.0'.
+[2009-12-10 06:41:01.087] fs-watcher          <DE0000I> Installing bundle 'BundleWithDependencyOnA' version '0.0.0'.
+[2009-12-10 06:41:01.274] fs-watcher          <DE0001I> Installed bundle 'BundleWithDependencyOnA' version '0.0.0'.
+[2009-12-10 06:41:01.397] fs-watcher          <DE0004I> Starting bundle 'BundleA' version '0.0.0'.
+[2009-12-10 06:41:01.550] start-signalling-1  <DE0005I> Started bundle 'BundleA' version '0.0.0'.
+[2009-12-10 06:41:01.397] fs-watcher          <DE0004I> Starting bundle 'BundleWithDependencyOnA' version '0.0.0'.
+[2009-12-10 06:41:01.550] start-signalling-1  <DE0005I> Started bundle 'BundleWithDependencyOnA' version '0.0.0'.
+....
+
+If there is a problem with the deployment, such as the server being unable to resolve all dependencies, the console and log both show an error message to help you with troubleshooting.
+
+If there are no problems, {nano-product-name} automatically starts the artifacts so that they are immediately available to users.
+
+Bulk deployment can be disabled and reverted back to the old one-file-at-a-time processing by removing this line from `$SERVER_HOME/configuration/config.ini`:
+
+[source,txt]
+----
+org.eclipse.virgo.fschecker.initialEventMode=bulk
+----
+
+anchor:deployment-deploying-hot[]
+
+==== Hot Deploy
+
+To hot deploy an artifact, copy it into the pickup directory (by default `$SERVER_HOME/pickup`):
+
+....
+$ cd /home/applications
+$ cp helloWorld.war $SERVER_HOME/pickup
+....
+
+When the artifact is hot deployed, messages similar to the following appear in the log file:
+
+....
+[2009-12-10 06:41:01.021] fs-watcher          <HD0001I> Hot deployer processing 'CREATED' event for file 'helloWorld.war'.
+[2009-12-10 06:41:01.087] fs-watcher          <DE0000I> Installing bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:41:01.274] fs-watcher          <DE0001I> Installed bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:41:01.397] fs-watcher          <DE0004I> Starting bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:41:01.414] Thread-3            <WE0000I> Starting web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2009-12-10 06:41:01.537] Thread-3            <WE0001I> Started web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2009-12-10 06:41:01.550] start-signalling-1  <DE0005I> Started bundle 'helloWorld' version '0.0.0'.
+....
+
+If there is a problem with the deployment, such as the server being unable to resolve all dependencies, the console and log both show an error message to help you with troubleshooting.
+
+If there are no problems, {tomcat-product-name-short} automatically starts the artifact so that it is immediately available to users.
+
+anchor:deployment-redeploy-hot[]
+
+==== Hot Redeploy
+
+To hot redeploy an artifact which is already hot deployed, copy the updated artifact into the pickup directory (by default `$SERVER_HOME/pickup`),
+just as for hot deploy. When the artifact is redeployed, messages similar to the following appear in the log file:
+
+....
+[2013-01-09 14:08:12.422] fs-watcher                   <HD0001I> Hot deployer processing 'MODIFIED' event for file 'helloWorld.war'.
+[2013-01-09 14:08:12.422] fs-watcher                   <DE0007I> Refreshing bundle 'helloWorld' version '0.0.0'.
+[2013-01-09 14:08:12.469] fs-watcher                   <WE0002I> Stopping web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2013-01-09 14:08:13.094] fs-watcher                   <WE0003I> Stopped web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2013-01-09 14:08:13.094] fs-watcher                   <DE0010I> Stopping bundle 'helloWorld' version '0.0.0'.
+[2013-01-09 14:08:13.110] fs-watcher                   <DE0011I> Stopped bundle 'helloWorld' version '0.0.0'.
+[2013-01-09 14:08:13.250] fs-watcher                   <DE0004I> Starting bundle 'helloWorld' version '0.0.0'.
+[2013-01-09 14:08:13.250] start-signalling-2           <WE0000I> Starting web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2013-01-09 14:08:13.860] start-signalling-2           <WE0001I> Started web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2013-01-09 14:08:13.860] start-signalling-2           <DE0005I> Started bundle 'helloWorld' version '0.0.0'.
+[2013-01-09 14:08:13.860] fs-watcher                   <DE0008I> Refreshed bundle 'helloWorld' version '0.0.0'.
+....
+
+[NOTE]
+--
+The following paragraph is ONLY relevant for {nano-product-name}.
+--
+
+The redeploy waits for any previous operations on the artifact being redeployed to finish. The wait timeout could be configured through the following property in `$SERVER_HOME/configuration/config.ini`:
+
+....
+org.eclipse.virgo.update.timeout
+....
+
+anchor:deployment-deploying-manual[]
+
+==== Deploying Using the Admin Console
+
+The Admin Console allows you to upload a file, which will be deployed automatically, from your local file system to the {tomcat-product-name}. As soon as {tomcat-product-name} deploys the artifact,  it appears in the list of artifacts in the Admin Console.  Note that the GUI for uploading varies according to the browser and operating system you use.
+
+See xref:admin-console-install-artifacts[Installing a New Artifact] for details about using the Admin Console to install (deploy) an artifact.  See xreF:admin-console[The Web Admin Console] for general information about the Admin Console.
+
+anchor:deployment-deploying-happens[]
+
+==== What Happens When You Deploy
+
+When you deploy an artifact, either using hot-deployment or the Admin Console, Web Server copies the file to its work directory (`SERVER_HOME/work`) and registers it in its internal registry.
+The server then checks any dependencies the artifact might have to see if
+deployment can go ahead, and if all dependencies are resolved, {tomcat-product-name} starts the artifact.
+Because of all these additional internal activities, you should NOT simply copy the artifact into the `work` directory and assume it will be deployed, because {tomcat-product-name} will not do so.
+
+anchor:deployment-deploying-ordering[]
+
+==== Deployment Ordering
+
+When deploying bundles that have dependencies, it is important
+that you deploy them in the correct order. {tomcat-product-name}
+honors this ordering when it redeploys the artifacts on startup.
+
+If you use hot deployment to deploy your artifacts, be sure to copy the corresponding files into the pickup
+directory one-by-one. Copying the files in one group, for example by using a single `cp` command, provides no guarantee of ordering.
+
+anchor:deployment-deploying-shared[]
+
+==== Deploying Shared Artifacts
+
+Artifacts may be shared by plans.
+Sharing occurs when a plan is deployed which references an artifact that was previously deployed or is a child artifact
+of a plan that was previously deployed.
+Sharing also occurs when an artifact is deployed which is already a child of a deployed plan, but in this case the shared
+artifact may *not* appear as a top-level artifact, for example, in the Admin Console, in the shell,
+and in JMX.
+
+Sharing is taken into account when artifacts are stopped.
+A shared artifact is stopped only when all the artifacts referencing the shared artifact have been stopped
+and, if the shared artifact was deployed in its own right, the artifact itself has been stopped.
+
+anchor:deployment-deploying-restrictions[]
+
+==== Restrictions
+
+{tomcat-product-name} does not support deploying fragment bundles. Typically, fragment bundles should be placed in `$SERVER_HOME/repository/ext`
+or `$SERVER_HOME/repository/usr` so that they will be installed automatically with their host bundles.
+
+anchor:deployment-undeploy[]
+
+=== Undeploying Artifacts
+
+You undeploy artifacts from {tomcat-product-name} by using either the hot-deploy directory on the file system, or the Admin Console.
+
+[NOTE]
+--
+As with deploying, in this guide the terms *undeploying* and *uninstalling* are used interchangeably.
+--
+
+anchor:deployment-undeploy-hot[]
+
+==== Hot Undeploy
+
+To hot-undeploy an artifact, remove the corresponding file from the pickup directory (by default `$SERVER_HOME/pickup`):
+
+....
+$ cd $SERVER_HOME/pickup
+$ rm helloWorld.war
+....
+
+When {tomcat-product-name} completes the undeployment of the artifact, messages similar to the following appear in the log:
+
+....
+[2009-12-10 06:46:33.254] fs-watcher   <HD0001I> Hot deployer processing 'DELETED' event for file 'helloWorld.war'.
+[2009-12-10 06:46:33.259] Thread-3     <WE0002I> Stopping web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2009-12-10 06:46:33.285] Thread-3     <WE0003I> Stopped web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2009-12-10 06:46:33.290] fs-watcher   <DE0010I> Stopping bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:46:33.295] fs-watcher   <DE0011I> Stopped bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:46:33.302] fs-watcher   <DE0013I> Uninstalling bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:46:33.319] fs-watcher   <DE0014I> Uninstalled bundle 'helloWorld' version '0.0.0'.
+....
+
+anchor:deployment-undeploy-manual[]
+
+==== Undeploying Using the Admin Console
+
+You can undeploy only whole artifacts from the Admin Console, or in other words, you cannot undeploy the separate modules or bundles that make up an artifact.
+
+The only artifact that you cannot undeploy from the Admin Console is the Admin Console itself. If you need to undeploy this application, you must remove it from the pickup directory (by default `SERVER_HOME/pickup`); the name of the artifact is
+`org.eclipse.virgo.server.admin-{version}.plan`.
+
+See xref:admin-console-manage-artifacts[Viewing and Managing the Lifecycle of Deployed Artifacts] for details about uninstalling (undeploying) an artifact using the Admin Console.  The high-level steps are to highlight the artifact in the artifact tree then click `Uninstall`.
+
+anchor:deployment-undeploying-shared[]
+
+==== Undeploying Shared Artifacts
+
+Sharing is taken into account when artifacts are undeployed.
+A shared artifact is undeployed only when all the artifacts referencing the shared artifact have been undeployed
+and, if the shared artifact was deployed in its own right, the artifact itself has been undeployed.
