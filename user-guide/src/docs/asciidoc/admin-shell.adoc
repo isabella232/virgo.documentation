@@ -1,7 +1,7 @@
-:project-name: Virgo
+:virgo-name: Virgo
 :version: 3.7.0.RC01
 
-:umbrella-project-name: Eclipse Virgo
+:umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
 :tomcat-product-name-short: VTS
 :jetty-product-name: Virgo Jetty Server
@@ -206,9 +206,9 @@ anchor:admin-shell-vsh-bundle-command-table[]
 | diag *id*     | Provides diagnostic information about the specified bundle.
                     In particular, this command displays information about the imported packages that {kernel-product-name} could not resolve.
                     Use the `bundle list` command to get the internal id of a particular bundle.
-                    Note that {project-name} does not install unresolvable bundles.
+                    Note that {virgo-name} does not install unresolvable bundles.
                     Instead is takes a state dump (for offline analysis using the web administration console) and fails the deployment.
-                    So bundles are only likely to become unresolvable in {project-name} after an update operation.
+                    So bundles are only likely to become unresolvable in {virgo-name} after an update operation.
 | headers *id*  | Displays the complete list of manifest headers of the specified bundle.  Use the `bundle list` command to get the internal id of a particular bundle.
 				  The manifest headers include: `Import-Package`, `Export-Package`, `Bundle-SymbolicName`, and so on.
 |=======================================================================
@@ -306,17 +306,17 @@ anchor:admin-shell-vsh-config-command-table[]
 | start *name [version]*
                 | Starts the specified configuration artifact and makes it visible to {kernel-product-name}.
                     Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the
-                    configuration artifact installed (which {project-name} does not currently support).
+                    configuration artifact installed (which {virgo-name} does not currently support).
                     Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
                     Starting the configuration sets its state to `Active`.
 | stop *name [version]*
-                | Stops the specified configuration artifact and makes it invisible to {kernel-product-name}.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which {project-name} does not currently support).  Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
+                | Stops the specified configuration artifact and makes it invisible to {kernel-product-name}.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which {virgo-name} does not currently support).  Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
                     Stopping the configuration sets its state to `Resolved`.
 | refresh *name [version]*
-                | Updates the contents of the specified configuration artifact to {kernel-product-name}.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which {project-name} does not currently support).  Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
+                | Updates the contents of the specified configuration artifact to {kernel-product-name}.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which {virgo-name} does not currently support).  Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
                     Use this command if you have changed the contents of the configuration artifact, and you want to make this information known to {kernel-product-name} and the associated bundle.
 | uninstall *name [version]*
-                | Uninstalls the specified configuration artifact and make it completely unavailable to {kernel-product-name}.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which {project-name} does not currently support).  Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
+                | Uninstalls the specified configuration artifact and make it completely unavailable to {kernel-product-name}.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which {virgo-name} does not currently support).  Use the `config list` command to view all configuration artifacts and versions currently installed in {kernel-product-name}.
                     Stopping the configuration  removes it from {kernel-product-name}'s list of deployed artifacts and it will not show up when you perform a `config list`.
 |=======================================================================
 
@@ -650,7 +650,7 @@ osgi> vsh:install file://home/apps/swf-booking-mvc.war
 Artifact bundle swf-booking-mvc.war 0.0.0 installed
 ....
 
-This command is particularly useful for installing an artifact from the {project-name} repository, in which case use the `repository:` scheme:
+This command is particularly useful for installing an artifact from the {virgo-name} repository, in which case use the `repository:` scheme:
 
 ....
 repository:artifact-type/bundle-symbolic-name/bundle-version
@@ -728,7 +728,7 @@ anchor:admin-shell-cl-clhas[]
 
 ==== clhas command
 
-Use the `clhas` command to list the entries contained in the bundles deployed in {project-name} and to solve class loading issues.
+Use the `clhas` command to list the entries contained in the bundles deployed in {virgo-name} and to solve class loading issues.
 The command accepts as a parameter a search pattern in the form *path/resource*. The resource part of the pattern can contain wildcards.
 The output contains all bundles that have resources or classes matching the pattern. Since wildcards are allowed, the matching entities are listed as well.
 
@@ -872,21 +872,21 @@ Successfully loaded [javax.servlet.Servlet] using class loader from:
 
 anchor:p2-commands[]
 
-=== Using the p2 for extending your {project-name} installation
+=== Using the p2 for extending your {virgo-name} installation
 
 ==== Extending with the p2 director
 
-You can provision new features on top of your {project-name} installation using the p2 director. It can be used both for initial provisioning and extending an existing installtion.
+You can provision new features on top of your {virgo-name} installation using the p2 director. It can be used both for initial provisioning and extending an existing installtion.
 
 For extending an existing installation you can use these director arguments:
 
 ....
 -repository http://download.eclipse.org/rt/ecf/3.5.3/site.p2
 -installIU org.eclipse.ecf.remoteservice.feature.feature.group
--destination <your {project-name} installation folder>
+-destination <your {virgo-name} installation folder>
 ....
 
-This installs the *latest* version of the specified p2 feature in your {project-name} installation's p2 profile.
+This installs the *latest* version of the specified p2 feature in your {virgo-name} installation's p2 profile.
 
 ==== Extending via the p2 shell commands
 

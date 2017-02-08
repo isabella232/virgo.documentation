@@ -1,7 +1,7 @@
-:project-name: Virgo
+:virgo-name: Virgo
 :version: 3.7.0.RC01
 
-:umbrella-project-name: Eclipse Virgo
+:umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
 :tomcat-product-name-short: VTS
 :jetty-product-name: Virgo Jetty Server
@@ -24,7 +24,7 @@
 :experimental: true
 :toc:
 
-= {project-name} User Guide
+= {virgo-name} User Guide
 
 [%hardbreaks]
 Rob Harrop
@@ -44,7 +44,7 @@ Florian Waibel
 image::virgo-logo-small.png[Eclipse Virgo,float="right"]
 
 [%hardbreaks]
-{umbrella-project-name}
+{umbrella-virgo-name}
 {version}
 Copyright (C) 2009, 2011 VMware Inc. and others
 

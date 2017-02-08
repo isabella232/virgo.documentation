@@ -1,7 +1,7 @@
-:project-name: Virgo
+:virgo-name: Virgo
 :version: 3.7.0.RC01
 
-:umbrella-project-name: Eclipse Virgo
+:umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
 :tomcat-product-name-short: VTS
 :jetty-product-name: Virgo Jetty Server
@@ -215,4 +215,4 @@ Finally, the console also displays information about the Spring context, if the 
 
 Enter a package name with wildcards '\*' representing part of a package name (excluding periods) and
 '*' representing one or more components of a package name separated by periods.
-For example, `\*.virgo.*` displays {project-name} packages.
+For example, `\*.virgo.*` displays {virgo-name} packages.

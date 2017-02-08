@@ -1,7 +1,7 @@
-:project-name: Virgo
+:virgo-name: Virgo
 :version: 3.7.0.RC01
 
-:umbrella-project-name: Eclipse Virgo
+:umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
 :tomcat-product-name-short: VTS
 :jetty-product-name: Virgo Jetty Server
@@ -26,7 +26,7 @@ anchor:concepts[]
 
 == Concepts
 
-This chapter introduces some basic concepts that will help you to use {project-name}.
+This chapter introduces some basic concepts that will help you to use {virgo-name}.
 
 anchor:concepts.modular[]
 
@@ -42,7 +42,7 @@ anchor:concepts.osgi[]
 	
 === OSGi Concepts
 
-Modules in {project-name} are represented using a standard Java
+Modules in {virgo-name} are represented using a standard Java
 module system known as *OSGi*.
 Modules in OSGi are known as *bundles*.
 Bundles consist of programs and resources organised by Java package together
@@ -62,7 +62,7 @@ to organising applications into bundles.
 An industry consortium known as the
 *OSGi Alliance* develops OSGi
 specifications, reference implementations, and compliance tests.
-{project-name} is built on the Equinox OSGi framework which is also
+{virgo-name} is built on the Equinox OSGi framework which is also
 the reference implementation for the OSGi framework specification.
 
 ==== Bundles
@@ -309,7 +309,7 @@ any version of this package would satisfy the import.
 
 Bundle manifests have a version which is `1` by default,
 indicating OSGi Release 3 semantics.
-{project-name} is based on OSGi Release 4 and therefore expects bundle manifests to be
+{virgo-name} is based on OSGi Release 4 and therefore expects bundle manifests to be
 at version `2`, indicating OSGi Release 4 semantics.
 The bundle manifest's version should be specified on the Bundle-ManifestVersion manifest header, exactly as follows:
 
@@ -357,11 +357,11 @@ the specified services to the OSGi service registry.
 
 When a bundle is stopped, Spring DM retracts any services it published on behalf of the bundle
 and closes the bundle's application contexts.
-{project-name} turns off damping of a service proxy while the proxy's application context
+{virgo-name} turns off damping of a service proxy while the proxy's application context
 is being closed.
 
 Spring DM was contributed to Eclipse as the *Gemini Blueprint* project.
-{project-name} has Gemini Blueprint built-in.
+{virgo-name} has Gemini Blueprint built-in.
 
 Gemini Blueprint supports both Spring DM and Blueprint programming models.
 Blueprint, known formally as the "OSGi Blueprint Container", provides some of the basic facilities of Spring DM,
@@ -370,7 +370,7 @@ See xref:furtherreading[] for the Blueprint specification.
 
 anchor:concepts.virgo[]
 
-=== {project-name} Concepts
+=== {virgo-name} Concepts
 
 [NOTE]
 --
@@ -381,11 +381,11 @@ anchor:concepts.repositories[]
 	
 ==== The Provisioning Repository
 
-The {project-name} provisioning repository contains artifacts and metadata indexed by the artifact type, name, and version. There are three kinds of repository: *external*, *watched*, and *remote*. Repositories are passive in the sense that changes to repository content do not cause artifacts to be deployed into {project-name}, refreshed, or undeployed.
+The {virgo-name} provisioning repository contains artifacts and metadata indexed by the artifact type, name, and version. There are three kinds of repository: *external*, *watched*, and *remote*. Repositories are passive in the sense that changes to repository content do not cause artifacts to be deployed into {virgo-name}, refreshed, or undeployed.
 
 ==== Artifact Types
 
-In addition to the standard OSGi bundle, artifact types in {project-name} include configuration (properties file), PAR, plan, and library.
+In addition to the standard OSGi bundle, artifact types in {virgo-name} include configuration (properties file), PAR, plan, and library.
 PARs, plans, and libraries are discussed in xref:concepts.grouping[].
 
 ==== External Repositories
@@ -393,34 +393,34 @@ PARs, plans, and libraries are discussed in xref:concepts.grouping[].
 External repositories are created by scanning a directory which contains artifacts, possibly in nested directories. The repository configuration specifies a pattern which
 says which files should be treated as artifacts. After the repository is created, changes to the directory do not affect the repository content.
 
-{project-name}'s default repository configuration, in `configuration/org.eclipse.virgo.repository.properties`, specifies an external repository created from the
+{virgo-name}'s default repository configuration, in `configuration/org.eclipse.virgo.repository.properties`, specifies an external repository created from the
 `repository/ext` directory.
 
 ==== Watched Repositories
 
 Watched repositories are created by scanning a directory which contains artifacts but no nested directories. All files in the directory are treated as artifacts.
 The directory is re-scanned periodically and the interval between re-scans is specified in the repository configuration.
-The directory is also re-scanned when an artifact is deployed into {project-name}.
+The directory is also re-scanned when an artifact is deployed into {virgo-name}.
 Changes detected by re-scanning are reflected in the repository content. Note that changing the content of a watched repository does not cause artifacts to be deployed
-into {project-name}, refreshed, or undeployed.
+into {virgo-name}, refreshed, or undeployed.
 
-{project-name}'s default repository configuration specifies a watched repository based on the contents of the `repository/usr` directory.
+{virgo-name}'s default repository configuration specifies a watched repository based on the contents of the `repository/usr` directory.
 
 ===== Remote Repositories
 
-A remote repository refers to a repository hosted by a {project-name} instance sometimes known as a *repository server*.
+A remote repository refers to a repository hosted by a {virgo-name} instance sometimes known as a *repository server*.
 The hosted repository is configured using the file `configuration/org.eclipse.virgo.apps.repository.properties` and may be either an external or a watched
 repository.
 
-The remote repository is accessed by a {project-name} instance sometimes known as a *repository client*.
-The repository client is normally a different instance of {project-name} to the instance hosting the repository, but it can be the same instance (which is handy for
+The remote repository is accessed by a {virgo-name} instance sometimes known as a *repository client*.
+The repository client is normally a different instance of {virgo-name} to the instance hosting the repository, but it can be the same instance (which is handy for
 testing). The remote repository periodically downloads its index from the hosted repository. The period between downloads may be configured in the repository
 configuration. The remote repository also caches artifacts which have secure hashes associated with them in the hosted repository. Only bundles currently have secure
 hashes associated with them. The secure hash is used to determine when a cached artifact is stale and needs to be freshly downloaded.
 
 ==== Repository Chains
 
-The {project-name} repository is configured as a *chain* of external, watched, and remote repositories.
+The {virgo-name} repository is configured as a *chain* of external, watched, and remote repositories.
 The chain is a list which is searched in the configured order.
 The effect of this search order is that an artifact with a given type, name, and version which appears in more than one repository in the chain is only accessed from the
 first repository in the chain in which it appears. Abstractly, the repository chain behaves as a single repository, but its content may mutate in quite a different way to
@@ -430,7 +430,7 @@ anchor:concepts.grouping[Grouping Bundles]
 
 ==== Grouping Bundles
 
-{project-name} provides a way of grouping together a collection
+{virgo-name} provides a way of grouping together a collection
 of OSGi bundles and other artifacts which comprise a single application.
 These artifacts are placed in a JAR file with extension "`.par`". This is called a PAR file.
 
@@ -441,12 +441,12 @@ inside the PAR file may depend on packages and services outside the PAR file,
 but bundles outside the PAR file may not depend on packages and services
 provided by the PAR file.
 
-{project-name} also provides the plan artifact as another way of grouping bundles and other artifacts into an application.
+{virgo-name} also provides the plan artifact as another way of grouping bundles and other artifacts into an application.
 A *plan* is a file (in XML format) listing a collection of artifacts.
-The artifacts referred to by a plan reside in the {project-name} provisioning repository.
+The artifacts referred to by a plan reside in the {virgo-name} provisioning repository.
 
-In addition to PARs and plans, which are used for deploying groups of artifacts, {project-name} provides libraries as a way of grouping together a collection
-of bundles that	can then be imported into an application using the {project-name}-specific `Import-Library` manifes header.
+In addition to PARs and plans, which are used for deploying groups of artifacts, {virgo-name} provides libraries as a way of grouping together a collection
+of bundles that	can then be imported into an application using the {virgo-name}-specific `Import-Library` manifes header.
 
 anchor:kernel.user.region[]
 

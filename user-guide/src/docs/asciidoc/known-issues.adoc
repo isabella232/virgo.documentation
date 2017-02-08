@@ -1,7 +1,7 @@
-:project-name: Virgo
+:virgo-name: Virgo
 :version: 3.7.0.RC01
 
-:umbrella-project-name: Eclipse Virgo
+:umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
 :tomcat-product-name-short: VTS
 :jetty-product-name: Virgo Jetty Server
@@ -36,20 +36,20 @@ anchor:known-issues-firewall-timeout[]
 
 === Timeout During Startup Due to Firewall Settings
 
-{project-name} will fail to start correctly if it is prevented from
+{virgo-name} will fail to start correctly if it is prevented from
 connecting to needed ports by the firewall. Typically this manifests
 as error `SPPM0003E` . Configuring the firewall to
-allow {project-name} process to bind to the necessary ports will prevent
+allow {virgo-name} process to bind to the necessary ports will prevent
 this error from occurring.
 
 anchor:known-issues-startup-timeout[]
 
 === Timeout During Startup Due to Insufficient Resources
 
-{project-name} will fail to start correctly if it is running on slow hardware or
+{virgo-name} will fail to start correctly if it is running on slow hardware or
 on a system with insufficient resources. Typically this manifests as error `KE0004E` .
 Configuring the xref:configuring-kernel-properties[startup wait limit] will provide
-{project-name} with more time for initialisation.
+{virgo-name} with more time for initialisation.
 
 anchor:known-issues-perm-gen-sun-vm[]
 
@@ -57,7 +57,7 @@ anchor:known-issues-perm-gen-sun-vm[]
 
 As a result of Sun Java bug
 http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4957990[4957990],
-the {project-name} may consume more PermGen space than expected when running with the
+the {virgo-name} may consume more PermGen space than expected when running with the
 server HotSpot compiler. This problem may be resolved by configuring the
 `JAVA_OPTS` environment variable to specify an increased
 `MaxPermSize`, for example `-XX:MaxPermSize=128M`.
@@ -74,10 +74,10 @@ anchor:windows-deletion[]
 
 === Problem Deleting Installation Directory under Windows
 
-Sometimes Microsoft Windows won't let you delete the {project-name} Server installation directory, typically because of long paths
+Sometimes Microsoft Windows won't let you delete the {virgo-name} Server installation directory, typically because of long paths
 inside the `work` directory.
 
-You can return the {project-name} instance to a clean state by stopping {project-name} if necessary and then running the startup script with the options
+You can return the {virgo-name} instance to a clean state by stopping {virgo-name} if necessary and then running the startup script with the options
 `-clean -noStart`, after which you should be able to delete the installation directory.
 See xref:cleaning-without-starting[Cleaning {tomcat-product-name} without Starting it] for more information.
 

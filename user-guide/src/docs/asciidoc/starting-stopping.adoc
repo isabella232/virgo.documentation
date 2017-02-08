@@ -1,7 +1,7 @@
-:project-name: Virgo
+:virgo-name: Virgo
 :version: 3.7.0.RC01
 
-:umbrella-project-name: Eclipse Virgo
+:umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
 :tomcat-product-name-short: VTS
 :jetty-product-name: Virgo Jetty Server
@@ -458,7 +458,7 @@ anchor:equinox-launcher[]
 
 === Using Equinox Launcher
 
-Since version 3.5 {project-name} uses the standard Equinox Launcher as its default launcher.
+Since version 3.5 {virgo-name} uses the standard Equinox Launcher as its default launcher.
 As a result in addition to all the launcher options described so far users can also pass arguments specific to the Equinox launcher.
 
 [IMPORTANT]

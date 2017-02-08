@@ -1,7 +1,7 @@
-:project-name: Virgo
+:virgo-name: Virgo
 :version: 3.7.0.RC01
 
-:umbrella-project-name: Eclipse Virgo
+:umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
 :tomcat-product-name-short: VTS
 :jetty-product-name: Virgo Jetty Server
@@ -30,12 +30,12 @@ anchor:event-log-codes-format[]
 
 === Format of the event log codes
 
-Event log codes issued by {project-name} have the general syntax
+Event log codes issued by {virgo-name} have the general syntax
 `<XXnnnnL>` where:
 
 [cols="1,6"]
 |=======================================================================
-| `XX`     | is a two-letter code (upper-case) identifying the area of the {project-name} code which issued the log message;
+| `XX`     | is a two-letter code (upper-case) identifying the area of the {virgo-name} code which issued the log message;
 | `nnnn`   | is a four-digit message number; and
 | `L`      | is a single-letter (upper-case) code identifying the level of the message.
 |=======================================================================

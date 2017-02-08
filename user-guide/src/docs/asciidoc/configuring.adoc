@@ -1,7 +1,7 @@
-:project-name: Virgo
+:virgo-name: Virgo
 :version: 3.7.0.RC01
 
-:umbrella-project-name: Eclipse Virgo
+:umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
 :tomcat-product-name-short: VTS
 :jetty-product-name: Virgo Jetty Server
@@ -30,7 +30,7 @@ anchor:configuring[]
 == Configuration
 Configuration
 
-You use configuration files in the `$SERVER_HOME/configuration` directory to configure {project-name}.  You can also configure the OSGi framework  using files the same `$SERVER_HOME/configuration` directory. This section divides the configuration of the server into the following high-level tasks:
+You use configuration files in the `$SERVER_HOME/configuration` directory to configure {virgo-name}.  You can also configure the OSGi framework  using files the same `$SERVER_HOME/configuration` directory. This section divides the configuration of the server into the following high-level tasks:
 
 * xref:configuring-osgi-framework[Configuring the OSGi framework]
 * xref:configuring-framework-extensions[Configuring framework extensions and fragments on the system bundle]
@@ -45,7 +45,7 @@ You use configuration files in the `$SERVER_HOME/configuration` directory to con
 [NOTE]
 .Why is there both a config and a configuration directory?
 --
-The *config* directory has always contained {project-name} configuration files. When {nano-product-name} and its support for p2 provisioning was introduced in {project-name} 3.5.0, a *configuration* directory replaced the old *config* one. Now all {project-name} configurations are assembled in that directory providing a single point of configuration. The directory name *configuration* in the installation's root is used by default in p2 to configure the OSGi framework during provisioning.
+The *config* directory has always contained {virgo-name} configuration files. When {nano-product-name} and its support for p2 provisioning was introduced in {virgo-name} 3.5.0, a *configuration* directory replaced the old *config* one. Now all {virgo-name} configurations are assembled in that directory providing a single point of configuration. The directory name *configuration* in the installation's root is used by default in p2 to configure the OSGi framework during provisioning.
 This chapter makes it clear which configuration goes in each directory.
 --
 
@@ -84,7 +84,7 @@ properties most relevant to users are described in the following table.
 [WARNING]
 --
 We strongly recommend that you update only the
-properties below; updating other properties could cause {project-name}
+properties below; updating other properties could cause {virgo-name}
 to fail.
 --
 
@@ -143,7 +143,7 @@ properties most relevant to users are described in the following table.
 [WARNING]
 --
 We advise you not to change the framework profile unless you are sure you know exactly what
-you are doing; updating the profile could cause {project-name} to fail.
+you are doing; updating the profile could cause {virgo-name} to fail.
 --
 
 anchor:configuring-framework-profile-table[]
@@ -156,7 +156,7 @@ anchor:configuring-framework-profile-table[]
 									The `.*` wildcard matches any package suffix. `java.*` is always
 									boot delegated and must not be specified in this property.
 
-									A common reason for adding packages to this property is to run {project-name} under a performance profiler.
+									A common reason for adding packages to this property is to run {virgo-name} under a performance profiler.
 | `org.osgi.framework.system.packages` | This property specifies the packages which are exported by the system bundle.
 									Although the system bundle is typically imported into the User Region, any additional packages will not be
 									visible in the User Region unless you also import them using the `packagedImports` property.
@@ -175,7 +175,7 @@ anchor:configuring-framework-extensions[]
 === Configuring Framework Extensions and Fragments on the System Bundle
 
 This section provides information about configuring framework extensions and fragments on the system bundle. Deployment of such bundles is not allowed in
-{project-name}. This is because by refreshing or uninstalling them the system.bundle is also refreshed, which causes {project-name} to crash.
+{virgo-name}. This is because by refreshing or uninstalling them the system.bundle is also refreshed, which causes {virgo-name} to crash.
 
 [NOTE]
 --
@@ -187,7 +187,7 @@ However sometimes there are no other options and one has to use framework extens
 
 You can configure framework extensions and system bundle fragments as follows:
 
-*1.* Place your fragment bundle in the `/plugins` directory of your {project-name} installation.
+*1.* Place your fragment bundle in the `/plugins` directory of your {virgo-name} installation.
 Lets say we have bundle with
 ....
 symbolic name: *testFragment*, version: *1.0.0* and filename: *testFragmentBinary_1.0.0.jar*
@@ -214,13 +214,13 @@ anchor:configuring-serviceability[]
 
 === Configuring Serviceability and Diagnostics
 
-The serviceability features of {project-name} allow you to gather and view data and information that you can then use to diagnose problems and failures.  Serviceability data includes:
+The serviceability features of {virgo-name} allow you to gather and view data and information that you can then use to diagnose problems and failures.  Serviceability data includes:
 
-* Service dumps: Contain a snapshot of all the important state from the running {project-name} instance when an internal failure or thread deadlock is detected.
-You configure service dumps for {project-name} using the xref:configuring-serviceability-medic[org.eclipse.virgo.medic.properties] file in the `$SERVER_HOME/configuration` directory.  This file also includes some additional logging configuration.
+* Service dumps: Contain a snapshot of all the important state from the running {virgo-name} instance when an internal failure or thread deadlock is detected.
+You configure service dumps for {virgo-name} using the xref:configuring-serviceability-medic[org.eclipse.virgo.medic.properties] file in the `$SERVER_HOME/configuration` directory.  This file also includes some additional logging configuration.
 
-* Event logs and server/application (trace) logging: Logging support in {project-name} is based on http://logback.qos.ch/[Logback].  This means that you have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
-You configure logging for {project-name} using the xref:configuring-serviceability-logback[serviceability.xml] file in the `$SERVER_HOME/configuration` directory.  This file is essentially the Logback `logback.xml` (or `logback-test.xml`) configuration file but renamed for {project-name}.
+* Event logs and server/application (trace) logging: Logging support in {virgo-name} is based on http://logback.qos.ch/[Logback].  This means that you have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
+You configure logging for {virgo-name} using the xref:configuring-serviceability-logback[serviceability.xml] file in the `$SERVER_HOME/configuration` directory.  This file is essentially the Logback `logback.xml` (or `logback-test.xml`) configuration file but renamed for {virgo-name}.
 
 For additional conceptual information about the serviceability subsystem, see xref:serviceability" />.
 
@@ -228,19 +228,19 @@ anchor:configuring-serviceability-medic[]
 
 ==== The org.eclipse.virgo.medic.properties File
 
-The `$SERVER_HOME/configuration/org.eclipse.virgo.medic.properties` file configures {project-name} service dumps and whether you want to capture `System.out` and `System.err` output to your application's trace file.
-The following table describes the properties you can include in the `$SERVER_HOME/configuration/org.eclipse.virgo.medic.properties` file. This file configures serviceability properties that {project-name} includes in addition to those supplied by the Logback, configured in the `serviceability.xml` file.
+The `$SERVER_HOME/configuration/org.eclipse.virgo.medic.properties` file configures {virgo-name} service dumps and whether you want to capture `System.out` and `System.err` output to your application's trace file.
+The following table describes the properties you can include in the `$SERVER_HOME/configuration/org.eclipse.virgo.medic.properties` file. This file configures serviceability properties that {virgo-name} includes in addition to those supplied by the Logback, configured in the `serviceability.xml` file.
 
 anchor:medic-properties-table[]
 [options="header",cols=","]
 .Serviceability Properties
 |=======================================================================
 | Property                       | Description
-| `dump.root.directory`          | Specifies the directory to which {project-name} writes the service dumps.  The directory name is relative to `$SERVER_HOME`.
-| `log.wrapSysOut`               | Specifies whether you want to capture `System.out` output from your applications to the application trace file.  The output is logged by {project-name}'s root logger, which captures `INFO` level and above.
+| `dump.root.directory`          | Specifies the directory to which {virgo-name} writes the service dumps.  The directory name is relative to `$SERVER_HOME`.
+| `log.wrapSysOut`               | Specifies whether you want to capture `System.out` output from your applications to the application trace file.  The output is logged by {virgo-name}'s root logger, which captures `INFO` level and above.
                                     Valid values for this property are `true` to capture `System.out` output, or `false` to disable the capture.
                                     For more information, see xref:sysout-and-syserr[System.out and System.err].
-| `log.wrapSysErr`               | Specifies whether you want to capture `System.err` output from your applications to the application trace file.  The output is logged by {project-name}'s root logger, which captures `INFO` level and above.
+| `log.wrapSysErr`               | Specifies whether you want to capture `System.err` output from your applications to the application trace file.  The output is logged by {virgo-name}'s root logger, which captures `INFO` level and above.
                                     Valid values for this property are `true` to capture `System.err` output, or `false` to disable the capture.
                                     For more information, see xref:sysout-and-syserr[System.out and System.err].
 | `log.jul.consoleHandler`       | Specifies whether you want to use the `ConsoleHandler` of Java Util Logging. The default JVM configuration uses the handler to write logs to `System.err`.
@@ -251,9 +251,9 @@ anchor:medic-properties-table[]
 anchor:configuring-serviceability-logback[]
 
 ==== The serviceability.xml File
-Logging support in {project-name} is based on http://logback.qos.ch/[Logback], which is a successor of the log4j project. The Logback logging framework is faster, more reliable, and easier to use than log4j and certain other logging systems.
-You configure logging for {project-name} using the `$SERVER_HOME/configuration/serviceability.xml` file.  This file is the standard Logback `logback.xml` or `logback-test.xml` configuration file, but renamed for {project-name}.
-The following listing shows the default `serviceability.xml` file in a freshly-installed {project-name}; see the text after the listing for a brief overview of the file:
+Logging support in {virgo-name} is based on http://logback.qos.ch/[Logback], which is a successor of the log4j project. The Logback logging framework is faster, more reliable, and easier to use than log4j and certain other logging systems.
+You configure logging for {virgo-name} using the `$SERVER_HOME/configuration/serviceability.xml` file.  This file is the standard Logback `logback.xml` or `logback-test.xml` configuration file, but renamed for {virgo-name}.
+The following listing shows the default `serviceability.xml` file in a freshly-installed {virgo-name}; see the text after the listing for a brief overview of the file:
 
 [source,xml]
 ----
@@ -340,13 +340,13 @@ The following listing shows the default `serviceability.xml` file in a freshly-i
 </configuration>
 ----
 
-Logback allows {project-name} to use logger, appender, and encoder (layout) objects to log messages according to message type and level and to format these messages and define where they are written.  The default `serviceability.xml` file shown above includes four appenders and three loggers (two user and one root.)
+Logback allows {virgo-name} to use logger, appender, and encoder (layout) objects to log messages according to message type and level and to format these messages and define where they are written.  The default `serviceability.xml` file shown above includes four appenders and three loggers (two user and one root.)
 
-The main information to get from this file is that {project-name} writes log messages to four different locations that map to the four appenders:
+The main information to get from this file is that {virgo-name} writes log messages to four different locations that map to the four appenders:
 
 * The `jmxConfigurator` provides a possibility to configure logback via JMX. For more information see http://logback.qos.ch/manual/jmxConfig.html[JMX Configurator] documentation.
 * The `contextListener` propagates the changes made to the levels of logback loggers to Java Util Logging (JUL). For more information see http://logback.qos.ch/manual/configuration.html#LevelChangePropagator[LevelChangePropagator] documentation.
-* The `SIFTED_LOG_FILE` appender logs both global and application-specific messages to the `$SERVER_HOME/serviceability/logs/`*`applicationName`*`/log.log` file, where *`applicationName`* refers to the name of the application.   The log messages for {project-name} itself are logged to the `$SERVER_HOME/serviceability/logs/virgo-server/log.log` file. Because this appender creates different log files for each application, it is called a *sifting appender*.
+* The `SIFTED_LOG_FILE` appender logs both global and application-specific messages to the `$SERVER_HOME/serviceability/logs/`*`applicationName`*`/log.log` file, where *`applicationName`* refers to the name of the application.   The log messages for {virgo-name} itself are logged to the `$SERVER_HOME/serviceability/logs/virgo-server/log.log` file. Because this appender creates different log files for each application, it is called a *sifting appender*.
     The default behaviour of these trace files is that, once `log.log` reaches a 10Mb limit, it rolls into a series of files named
     `log_`*i*`.log` where *i* ranges from 1 to 4, and logging continues in
     a new `log.log` file. This is called its *rolling policy*.
@@ -355,19 +355,19 @@ The main information to get from this file is that {project-name} writes log mes
 		 `[2008-05-15 09:09:46.940] server-dm-2 org.apache.coyote.http11.Http11Protocol I Initializing Coyote HTTP/1.1 on http-48080`
 
 * The `LOG_FILE` appender is very similar to the first one, but it logs *all* log messages to the `$SERVER_HOME/serviceability/log/log.log` file rather than sifting application-specific messages to their own log file.  The rolling policy and message format for this appender is similar to that of the `SIFTED_LOG_FILE` appender.
-* The `EVENT_LOG_STDOUT` appender does not log messages to a file, but rather to the console window from which you started {project-name}. For example:
+* The `EVENT_LOG_STDOUT` appender does not log messages to a file, but rather to the console window from which you started {virgo-name}. For example:
 		 `[2010-10-25 16:20:49.367] Thread-3   <WE0000I> Starting web bundle 'org.eclipse.virgo.apps.admin.web' version '2.1.0.RELEASE' with context path '/admin'.`
 * The `EVENT_LOG_FILE` appender logs only important events to the `$SERVER_HOME/serviceability/eventlogs/eventlog.log` file, and thus the volume of information is much lower than with the first two appenders. The rolling policy for the event log is the same as with the first two appenders, but the format of the messages is similar to that of the `EVENT_LOG_STDOUT` appender.
 
 The loggers and root logger specify the level of log that is written for each of the referenced appenders.
 
-Typically, the default logging configuration as specified by the `serviceability.xml` file is adequate for all {project-name} environments.  However, if you want to customize logging further, you can edit this file as well as the `org.eclipse.virgo.medic.properties`.  See the http://logback.qos.ch/manual/index.html[logback documentation] for detailed information about the architecture and the configuration of Logback.
+Typically, the default logging configuration as specified by the `serviceability.xml` file is adequate for all {virgo-name} environments.  However, if you want to customize logging further, you can edit this file as well as the `org.eclipse.virgo.medic.properties`.  See the http://logback.qos.ch/manual/index.html[logback documentation] for detailed information about the architecture and the configuration of Logback.
 
 anchor:configuring-provisioning-repository[]
 
 === Configuring the Local Provisioning Repository
 
-You configure the locations that {project-name} includes in its provisioning repository
+You configure the locations that {virgo-name} includes in its provisioning repository
 by editing the `org.eclipse.virgo.repository.properties` file in the `$SERVER_HOME/configuration` directory.
 
 When you specify a property in the file, use the format `repository-name.property=value`, where:
@@ -379,12 +379,12 @@ When you specify a property in the file, use the format `repository-name.propert
 For example, `ext.type=external` specifies that the `type` property of the repository
 with name `ext` is `external`.
 
-The `chain` property specifies the order in which {project-name} searches the individual repositories
+The `chain` property specifies the order in which {virgo-name} searches the individual repositories
 when it looks for dependencies.
 The `chain` property uses the names of the individual repositories as specified in the individual repository properties;
 for example, in the property `ext.type=external`, the name of the repository is `ext`.
 
-The default repository configuration for a newly installed {project-name} instance is as follows:
+The default repository configuration for a newly installed {virgo-name} instance is as follows:
 
 [source,txt]
 ----
@@ -397,9 +397,9 @@ usr.watchDirectory=repository/usr
 chain=ext,usr
 ----
 
-The default configuration shown above has two searchpaths corresponding to the two default sub-directories of the `$SERVER_HOME/repository` directory created when you first install {project-name}: `ext` and `usr`. {project-name} searches each of these individual repositories when locating entries for inclusion in the repository.
+The default configuration shown above has two searchpaths corresponding to the two default sub-directories of the `$SERVER_HOME/repository` directory created when you first install {virgo-name}: `ext` and `usr`. {virgo-name} searches each of these individual repositories when locating entries for inclusion in the repository.
 
-The `chain` property shows the order in which {project-name} searches the individual repositories: first `ext` and then `usr`.
+The `chain` property shows the order in which {virgo-name} searches the individual repositories: first `ext` and then `usr`.
 
 The following table lists all the available properties that you can use to configure an individual repository.
 Individual repositories as well as the repository search chain  are configured in the file
@@ -412,13 +412,13 @@ anchor:repository-options-table[]
 | Property                   | Description                                   | Default Value
 | *`repository-name`*`.type` | Specifies the type of path.  You can set this property to one of the following three valid values:
 * `external`: Specifies that this path points to a number of directories that satisfy a given search pattern
-and are local to the current {project-name} instance.
+and are local to the current {virgo-name} instance.
 Use the `searchPattern` property to specify the directory search pattern.
-* `watched`: Specifies that this path points to a single directory, local to the current {project-name} instance.
-{project-name} regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime.
-{project-name} also scans its local watched repositories when deploying any artifact.
+* `watched`: Specifies that this path points to a single directory, local to the current {virgo-name} instance.
+{virgo-name} regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime.
+{virgo-name} also scans its local watched repositories when deploying any artifact.
 Use the `watchDirectory` property to specify the watched directory
-and the `watchInterval` property to specify how often {project-name} checks the directory.
+and the `watchInterval` property to specify how often {virgo-name} checks the directory.
 * `remote`: Specifies that the path points to a remotely-hosted repository,
 hosted by a remote instance of {tomcat-product-name}.
 Use the `uri` property to specify the full URI of the remote repository.
@@ -436,7 +436,7 @@ for additional information about when to configure watched or external repositor
 | *`repository-name`*`.watchDirectory`
                              | Specifies the single directory of a watched repository.
                                 You can specify either an absolute or relative pathname for the directory.
-                                If you specify a relative pathname, it is relative  to the root of the {project-name} installation (`$SERVER_HOME`).
+                                If you specify a relative pathname, it is relative  to the root of the {virgo-name} installation (`$SERVER_HOME`).
                                 Use this property together with *`repository-name`*`.type=watched`.
                                                                              | *no default*
 | *`repository-name`*`.watchInterval`
@@ -468,26 +468,26 @@ anchor:configuring-repository-watched-versus-external[]
 
 ==== Should I Configure a Watched or External Repository?
 
-The main difference between a watched and an external repository is that {project-name} regularly scans watched directories
+The main difference between a watched and an external repository is that {virgo-name} regularly scans watched directories
 and automatically picks up any changed artifacts,
-while {project-name} scans external directories only at startup, and then only if there is no cached index available.
-This means that {project-name} always performs a scan of an external repository when you start the server
+while {virgo-name} scans external directories only at startup, and then only if there is no cached index available.
+This means that {virgo-name} always performs a scan of an external repository when you start the server
 with the `-clean` (as this deletes the index) and only scans during a normal startup if the index isn't there because,
 for example, this is the first time you start the server.
 
-There is a performance cost associated with using a watched repository due to {project-name} using resources
+There is a performance cost associated with using a watched repository due to {virgo-name} using resources
 to scan the directory at the configured interval.
 The cost is small if the watched repository contains just a few artifacts; however,
 the performance cost increases as the number of artifacts increases.
-Note that {project-name} re-scans its local watched repositories when deploying any artifact, so the scanning interval
+Note that {virgo-name} re-scans its local watched repositories when deploying any artifact, so the scanning interval
 can be configured to be relatively long.
 
  For this reason, we recommend that you put most of your dependencies in external repositories,
 even when in development mode.
 If you make any changes to the artifacts in the external repositories,
-remember to restart {project-name} with the `-clean` option so that the server picks up any changes.
+remember to restart {virgo-name} with the `-clean` option so that the server picks up any changes.
 Use watched directories for artifacts that you are prototyping, actively updating, or when adding new dependencies
-so that {project-name} quickly and easily picks them up.
+so that {virgo-name} quickly and easily picks them up.
 To increase performance even during development, however, you can use an external repository for most of your dependencies,
 in particular the ones that are fairly static.
 
@@ -501,7 +501,7 @@ anchor:configuring-provisioning-repository-search-paths[]
 The *`repository-name`*`.searchPattern` and
 *`repository-name`*`.watchDirectory` properties specify search paths
 for external and watched repositories, respectively,
-that define a physical location that {project-name} searches when looking for a library or bundle dependency.
+that define a physical location that {virgo-name} searches when looking for a library or bundle dependency.
 If a search path is relative, its location is relative to the root of the installation,
 in other words, the `$SERVER_HOME` directory.
 
@@ -516,14 +516,14 @@ for example `{bundle}` and `{library}`,
 are wildcards entries for a directory with any name.
 Allowing wildcards to be named in this way is intended to improve the readability of search path configuration.
 
-In addition to supporting the above-described form of wildcards, {project-name} also supports Ant-style paths,
+In addition to supporting the above-described form of wildcards, {virgo-name} also supports Ant-style paths,
 that is `\*` and `**` can be used to represent any directory and
 any series of directories, respectively.
 For example, `repository/usr/{bundle}` and `repository/usr/*`
 are equivalent.
 
 A common usage of the `**` wildcard is to allow dependencies stored in a directory structure of varying depth,
-such as a local Maven repository, to be provisioned by the {project-name}.
+such as a local Maven repository, to be provisioned by the {virgo-name}.
 
 anchor:configuring-provisioning-repository-using-system-properties[]
 
@@ -594,7 +594,7 @@ anchor:configuring-repository-examples-remote-watched[]
 ==== Add remote and watched repositories
 
 The following example shows the default `org.eclipse.virgo.repository.properties` file
-from a freshly-installed {project-name} instance, but then updated to include new remote and watched repositories.
+from a freshly-installed {virgo-name} instance, but then updated to include new remote and watched repositories.
 Both of these repositories are part of the repository chain.
 
 The remote repository is called `remote-repo`.
@@ -660,7 +660,7 @@ anchor:hosted-repository-properties-table[]
 * `external`: Specifies that this path points to a number of directories that satisfy a given search pattern.
 Use the `searchPattern` property to specify the directory search pattern.
 * `watched`: Specifies that this path points to a single directory.
-{project-name} regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime.
+{virgo-name} regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime.
 Use the `watchDirectory` property to specify the actual watched directory and the `watchInterval` property
 to specify how often {tomcat-product-name-short} checks the directory.
 
@@ -695,7 +695,7 @@ anchor:configuring-kernel
 
 === Configuring the Kernel and User Region
 
-This section provides information about configuring the {project-name} kernel and the User Region.
+This section provides information about configuring the {virgo-name} kernel and the User Region.
 
 anchor:configuring-kernel-properties[]
 
@@ -733,7 +733,7 @@ anchor:configuring-kernel-files-table[]
 |=======================================================================
 | Property File                                          | Description
 | `org.eclipse.virgo.kernel.properties`                  | Configures xref:configuring-deployment[deployment].
-| `org.eclipse.virgo.kernel.userregion.properties`       | Configures the xref:configuring-user-region[User Region] of {project-name}.
+| `org.eclipse.virgo.kernel.userregion.properties`       | Configures the xref:configuring-user-region[User Region] of {virgo-name}.
 | `org.eclipse.virgo.kernel.users.properties`            | Configures the xref:configuring-authentication[users that are allowed to access] the Admin Console, and roles to which they map.
 | `org.eclipse.virgo.kernel.jmxremote.access.properties` | Configures the xref:configuring-authentication[permissions for users] that are allowed to access the Admin Console.
 | `org.eclipse.virgo.kernel.authentication.config`       | Configures the xref:configuring-authentication[Java Authentication and Authorization Service (JAAS)] for the Tomcat server users.
@@ -757,7 +757,7 @@ anchor:configuring-deployment-table[]
 | Property                      | Description                                         | Default Value
 | `deployer.pickupDirectory`    | Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.
                                    Relative paths are relative to `$SERVER_HOME`.     | `./pickup`
-| `deployer.timeout`            | Specifies the amount of time, in seconds, after which {project-name} times out while trying to deploy an artifact.
+| `deployer.timeout`            | Specifies the amount of time, in seconds, after which {virgo-name} times out while trying to deploy an artifact.
 						           If you want to disable deployment timeout, specify `0`.
                                                                                       | `300`
 | `deployer.scanIntervalMillis` | Specifies the scan interval, in milliseconds, used to survey the pickup directory.
@@ -785,7 +785,7 @@ anchor:configuring-deployment-table[]
                                                                                       | `strict`
 |=======================================================================
 
-The following listing displays the default configuration distributed with {project-name}; only relevant sections of the `org.eclipse.virgo.kernel.properties` file are shown.
+The following listing displays the default configuration distributed with {virgo-name}; only relevant sections of the `org.eclipse.virgo.kernel.properties` file are shown.
 
 ....
 deployer.timeout=300
@@ -799,7 +799,7 @@ anchor:configuring-user-region[]
 
 ==== Configuring the User Region
 
-The User Region is the subsystem of {project-name} that
+The User Region is the subsystem of {virgo-name} that
 supports deployed applications, both your own user applications and
 those of the server itself, such as the Admin Console. The User Region
 is deliberately isolated from the kernel, which protects the kernel from interference by applications.
@@ -814,7 +814,7 @@ file; these properties are described in the following table.
 We strongly recommend that you update only the
 `initialArtifacts`
 property; updating other properties could cause
-{project-name} to fail. These properties are documented for your
+{virgo-name} to fail. These properties are documented for your
 information.
 --
 
@@ -823,17 +823,17 @@ anchor:configuring-user-region-table[]
 .User Region Configuration Properties
 |=======================================================================
 | Property            | Description
-| `baseBundles`       | Specifies the hard-coded list of bundles that {project-name} installs directly into the User Region.
-                        {project-name} does not perform any automatic dependency satisfaction for these bundles; in other words, you only get the bundles
+| `baseBundles`       | Specifies the hard-coded list of bundles that {virgo-name} installs directly into the User Region.
+                        {virgo-name} does not perform any automatic dependency satisfaction for these bundles; in other words, you only get the bundles
                         in the list and nothing more.
 | `bundleImports`
-				      | Specifies the bundles in the kernel that {project-name} imports into the User Region so that they are visible to bundles in the User Region.
+				      | Specifies the bundles in the kernel that {virgo-name} imports into the User Region so that they are visible to bundles in the User Region.
 						This property supports an optional `bundle-version` attribute which specifies a version range.
 						By default only the system bundle is imported.
 
 						Note that packages exported by these bundles are *not* automatically made available in the User Region: these must be specified using the
 						`packageImports` property.
-| `packageImports`    | Specifies the packages in the kernel that {project-name} imports into the User Region so that they are in turn available to be
+| `packageImports`    | Specifies the packages in the kernel that {virgo-name} imports into the User Region so that they are in turn available to be
 						imported by bundles in the User Region.
 						This property supports a `.*` wildcard which is expanded based on the packages available in the kernel
 						when the User Region is created.
@@ -856,9 +856,9 @@ packageImports=*;bundle-symbolic-name="org.eclipse.osgi",\
 						if an import is	specified with and without matching attributes, the form without the matching attributes is used.
 | `serviceImports`    | Specifies the services in the kernel that are imported into the User Region so they are available to bundles in the User Region.
 | `serviceExports`    | Specifies the services in the User Region that are exported to the kernel so they are available to bundles in the kernel.
-| `initialArtifacts`  | Specifies the artifacts that {project-name} deploys into the User Region when the server starts.
-						{project-name} performs dependency satisfaction when it deploys these artifacts.
-						This means that you only need to list the top-level artifacts that you care about; {project-name} automatically installs,
+| `initialArtifacts`  | Specifies the artifacts that {virgo-name} deploys into the User Region when the server starts.
+						{virgo-name} performs dependency satisfaction when it deploys these artifacts.
+						This means that you only need to list the top-level artifacts that you care about; {virgo-name} automatically installs,
 						from the repository, any other artifacts upon which they depend.
 
 						The artifacts are specified as a comma separated list of URI strings of the form:
@@ -899,14 +899,14 @@ anchor:configuring-authentication[]
 
 === Configuring Authentication
 
-{project-name} uses the http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html[Java Authentication and Authorization Service (JAAS)]
+{virgo-name} uses the http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html[Java Authentication and Authorization Service (JAAS)]
 framework to authenticate the administration user that connects to Web
 Servers using the Admin Console. This section describes
 how the authentication mechanism is configured by default, and the
 files that you need to update if you want to change the administration
 user, change their password, and so on.
 
-The `$SERVER_HOME/configuration/org.eclipse.virgo.kernel.authentication.config` file configures the underlying authentication technology for {project-name}.  The short file consists of the following entries:
+The `$SERVER_HOME/configuration/org.eclipse.virgo.kernel.authentication.config` file configures the underlying authentication technology for {virgo-name}.  The short file consists of the following entries:
 
 ....
 virgo-kernel {
@@ -917,11 +917,11 @@ equinox_console {
 };
 ....
 
-The entry named `virgo-kernel` corresponds to the `<Realm>` element in the `$SERVER_HOME/configuration/tomcat-server.xml` file that configures the JAAS authentication mechanism for the `Catalina` service of the xref:configuring-tomcat[Tomcat servlet container].  The `virgo-kernel` entry specifies that the JAAS LoginModule that {project-name} uses to authenticate users is `org.eclipse.virgo.kernel.authentication.KernelLoginModule` and that this `KernelLoginModule` is required to "succeed" in order for authentication to be considered successful. The `KernelLoginModule` succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for {tomcat-product-name-short} is `admin/springsource`.
+The entry named `virgo-kernel` corresponds to the `<Realm>` element in the `$SERVER_HOME/configuration/tomcat-server.xml` file that configures the JAAS authentication mechanism for the `Catalina` service of the xref:configuring-tomcat[Tomcat servlet container].  The `virgo-kernel` entry specifies that the JAAS LoginModule that {virgo-name} uses to authenticate users is `org.eclipse.virgo.kernel.authentication.KernelLoginModule` and that this `KernelLoginModule` is required to "succeed" in order for authentication to be considered successful. The `KernelLoginModule` succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for {tomcat-product-name-short} is `admin/springsource`.
 
 The entry named `equinox_console` controls ssh authentication for the Virgo shell. It also uses the `KernelLoginModule`.
 
-You configure the administration user in the `org.eclipse.virgo.kernel.users.properties` file.  The default file for a freshly installed {project-name} is as follows:
+You configure the administration user in the `org.eclipse.virgo.kernel.users.properties` file.  The default file for a freshly installed {virgo-name} is as follows:
 
 ....
 ##################
@@ -958,9 +958,9 @@ user.juliet=supersecret
 role.admin=juliet
 ....
 
-Be sure to restart {project-name} after you make this change for it to take effect.
+Be sure to restart {virgo-name} after you make this change for it to take effect.
 
-The final file involved in {project-name} authentication is `$SERVER_HOME/configuration/org.eclipse.virgo.kernel.jmxremote.access.properties`.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:
+The final file involved in {virgo-name} authentication is `$SERVER_HOME/configuration/org.eclipse.virgo.kernel.jmxremote.access.properties`.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:
 
 ....
 admin=readwrite
@@ -979,10 +979,10 @@ anchor:configuring-tomcat[]
 {nano-product-name} uses the default Gemini Web configuration. The details described below may still apply.
 --
 
-{project-name}
+{virgo-name}
 embeds an OSGi-enhanced version of the http://tomcat.apache.org[Tomcat Servlet Container]
 in order to provide support for deploying Java EE WARs and OSGi *Web Application Bundles*.
-You configure the embedded Servlet container using the standard Apache Tomcat configuration.   The main difference is that the configuration file is called <filename>tomcat-server.xml</filename> rather than `server.xml`.  As with the other {project-name} configuration files, the `tomcat-server.xml` file is located in the `$SERVER_HOME/configuration` directory.
+You configure the embedded Servlet container using the standard Apache Tomcat configuration.   The main difference is that the configuration file is called <filename>tomcat-server.xml</filename> rather than `server.xml`.  As with the other {virgo-name} configuration files, the `tomcat-server.xml` file is located in the `$SERVER_HOME/configuration` directory.
 Another difference is that not all standard Apache Tomcat configuration is supported in {tomcat-product-name}: the restrictions are described in the
 remainder of this section.
 
@@ -1031,7 +1031,7 @@ The following bullets describe the main elements and attributes in the default `
 [TIP]
 .Relative paths
 --
-If the configured path to a directory or file does not represent an absolute path, {project-name} typically interprets it as a path relative to the <filename>$SERVER_HOME</filename> directory.
+If the configured path to a directory or file does not represent an absolute path, {virgo-name} typically interprets it as a path relative to the <filename>$SERVER_HOME</filename> directory.
 --
 
 * The root element of the `tomcat-server.xml` file is `<Server>`. The attributes of this element represent the characteristics of the entire embedded Tomcat servlet container. The `shutdown` attribute specifies the command string that the shutdown port number receives via a TCP/IP connection in order to shut down the servlet container. The `port` attribute specifies the TCP/IP port number that listens for a shutdown message.
@@ -1324,5 +1324,5 @@ anchor:configuring-jetty[]
 
 
 The {jetty-product-name} contains a standard Jetty configuration file at `SERVER_HOME/jetty/etc/jetty.xml`.
-This has been tailored to the {umbrella-project-name}. To make modifications please refer to the
+This has been tailored to the {umbrella-virgo-name}. To make modifications please refer to the
 http://wiki.eclipse.org/Jetty/Howto/Configure_Jetty#Using_Jetty_XML[Jetty documentation].
