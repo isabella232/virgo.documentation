@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -222,7 +222,7 @@ You configure service dumps for {virgo-name} using the xref:configuring-servicea
 * Event logs and server/application (trace) logging: Logging support in {virgo-name} is based on http://logback.qos.ch/[Logback].  This means that you have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
 You configure logging for {virgo-name} using the xref:configuring-serviceability-logback[serviceability.xml] file in the `$SERVER_HOME/configuration` directory.  This file is essentially the Logback `logback.xml` (or `logback-test.xml`) configuration file but renamed for {virgo-name}.
 
-For additional conceptual information about the serviceability subsystem, see xref:serviceability" />.
+For additional conceptual information about the serviceability subsystem, see xref:serviceability[]" />.
 
 anchor:configuring-serviceability-medic[]
 
@@ -717,7 +717,7 @@ anchor:configuring-kernel-table[]
                        used by the {kernel-product-name}.                        | `org.eclipse.virgo.kernel`
 | `.kernel.startup.wait.limit`
                    | Specifies the amount of time, in seconds, after which various operations time out out while trying to start the kernel.
-                        See xreF:configuring-framework-properties[Configuring OSGi Framework Properties] for the recommended way
+                        See xref:configuring-framework-properties[Configuring OSGi Framework Properties] for the recommended way
                         to configure this parameter.                             | `180`
 |=======================================================================
 
@@ -1326,3 +1326,4 @@ anchor:configuring-jetty[]
 The {jetty-product-name} contains a standard Jetty configuration file at `SERVER_HOME/jetty/etc/jetty.xml`.
 This has been tailored to the {umbrella-virgo-name}. To make modifications please refer to the
 http://wiki.eclipse.org/Jetty/Howto/Configure_Jetty#Using_Jetty_XML[Jetty documentation].
+

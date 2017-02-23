@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat

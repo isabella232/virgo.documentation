@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -93,3 +93,4 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1.1.2"
 
 `Import-Package` can also be used but it is tedious to add all the imports as there are
 typically lots of tld definitions in a bundle providing them.
+

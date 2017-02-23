@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -58,3 +58,4 @@ system, is used to build the {tomcat-product-name}, much of this guide does not 
 improved runtime footprint and startup time and also provides support for p2 provisioning. The {nano-product-name} features are covered better in the
 {user-guide}.
 --
+

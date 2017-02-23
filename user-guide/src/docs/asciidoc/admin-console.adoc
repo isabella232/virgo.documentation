@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -216,3 +216,4 @@ Finally, the console also displays information about the Spring context, if the 
 Enter a package name with wildcards '\*' representing part of a package name (excluding periods) and
 '*' representing one or more components of a package name separated by periods.
 For example, `\*.virgo.*` displays {virgo-name} packages.
+

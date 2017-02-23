@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -102,3 +102,4 @@ anchor:known-issues-shutdown-logs-shell[]
 
 When you use the `shutdown` shell command to stop Virgo Server for Apache Tomcat, the shutdown log messages appear in the shell terminal instead of in the terminal in which Virgo runs.
 See xref:admin-shell-enable[Enabling Equinox Console] for more information. This is covered also by https://bugs.eclipse.org/bugs/show_bug.cgi?id=351533[bug 351533].
+

@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -991,3 +991,4 @@ id	State       Bundle
 ....
 
 You can see that after applying the changes with *confapply* the remote services bundles and their dependencies are installed in {nano-product-name-short}.
+

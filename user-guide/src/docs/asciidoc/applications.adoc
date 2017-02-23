@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -176,7 +176,7 @@ anchor:deployment-deploying-manual[]
 
 The Admin Console allows you to upload a file, which will be deployed automatically, from your local file system to the {tomcat-product-name}. As soon as {tomcat-product-name} deploys the artifact,  it appears in the list of artifacts in the Admin Console.  Note that the GUI for uploading varies according to the browser and operating system you use.
 
-See xref:admin-console-install-artifacts[Installing a New Artifact] for details about using the Admin Console to install (deploy) an artifact.  See xreF:admin-console[The Web Admin Console] for general information about the Admin Console.
+See xref:admin-console-install-artifacts[Installing a New Artifact] for details about using the Admin Console to install (deploy) an artifact.  See xref:admin-console[The Web Admin Console] for general information about the Admin Console.
 
 anchor:deployment-deploying-happens[]
 
@@ -272,3 +272,4 @@ anchor:deployment-undeploying-shared[]
 Sharing is taken into account when artifacts are undeployed.
 A shared artifact is undeployed only when all the artifacts referencing the shared artifact have been undeployed
 and, if the shared artifact was deployed in its own right, the artifact itself has been undeployed.
+

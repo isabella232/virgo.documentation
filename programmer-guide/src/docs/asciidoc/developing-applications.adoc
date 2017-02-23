@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -964,3 +964,4 @@ In much the same way that individual OSGi bundles can be versioned, {virgo-name}
 the same time. For example, the application trace support described in xref:developing-applications-application-trace[Application Trace],
 includes the application's name and version in the file path. This ensures that each version of the same application has its
 own trace or logging file.
+

@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -136,3 +136,4 @@ any applications are deployed, list the bundle in the `initialArtifacts` propert
 {user-guide}.
 
 See https://bugs.eclipse.org/bugs/show_bug.cgi?id=337826[bug 337826] for details.
+

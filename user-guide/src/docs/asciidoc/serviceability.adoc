@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -22,7 +22,7 @@
 
 :imagesdir: assets/images
 
-anchor:serviceability[]
+anchor:serviceability[Serviceability and Diagnostics]
 
 == Serviceability and Diagnostics
 
@@ -211,3 +211,4 @@ for end user consumption but is useful for service personnel.
 
 
 By default, service dumps are created in `$SERVER_HOME/serviceability/dump`.
+

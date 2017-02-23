@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -34,3 +34,4 @@ http://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/[Spring 
 http://www.osgi.org/Specifications/HomePage[Blueprint Container Specification](in the OSGi 4.2 and 5.0 Enterprise Specifications)
 
 http://logback.qos.ch/manual[The Logback Manual]
+

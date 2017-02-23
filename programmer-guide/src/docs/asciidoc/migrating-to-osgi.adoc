@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -41,7 +41,7 @@ of the Spring 3.0 Form Tags show case application.
 of application, you will typically either deploy your application
 as multiple individual bundles, as a single PAR file, or as a plan,
 which is the recommended approach for deploying applications on
-the {tomcat-product-name}. See xref:migrating-to-osgi-par-plan for details.
+the {tomcat-product-name}. See xref:migrating-to-osgi-par-plan[Migrating to a Plan or a PAR] for details.
 
 anchor:migrating-to-osgi-web[]
 
@@ -143,3 +143,4 @@ Plans, the method most recommended by us to create your application, has the fol
 The main benefit of PARS is that, because they physically contain all the required artifacts, you know exactly what bundles are deployed when you deploy the PAR file, in contrast to plans that allow content to be substituted or lost.
 
 For details about creating plans and PARs, see xref:developing-applications-plans[] and xref:developing-applications-packaging[], respectively.
+

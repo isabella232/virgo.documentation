@@ -1,5 +1,5 @@
 :virgo-name: Virgo
-:version: 3.7.0.RC01
+:version: 3.7.0.RELEASE
 
 :umbrella-virgo-name: Eclipse Virgo
 :tomcat-product-name: Virgo for Apache Tomcat
@@ -111,3 +111,4 @@ anchor:repository-configuration[]
 Details of how to configure a {virgo-name} installation's provisioning repository can be found in xref:configuring-provisioning-repository[Configuring the Provisioning Repository].  See xref:configuring-hosted-repo[Configuring a Hosted Repository] for details of how to configure a repository that remote clients can access, also called a hosted repository.
 
 The two configuration sections describe the format of the repository properties files of {virgo-name}, how to add new directories to the local repository, how to configure the repository to get artifacts from a remote repository hosted on a remote {tomcat-product-name-short} instance, and how to configure the local {tomcat-product-name-short} instance to host a repository that other remote servers access.
+
