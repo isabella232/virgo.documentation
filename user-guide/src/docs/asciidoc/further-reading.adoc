@@ -1,0 +1,37 @@
+:virgo-name: Virgo
+:version: 3.7.0.RELEASE
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:programmer-guide: link:../../virgo-programmer-guide/html/index.html[Programmer Guide]
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:furtherreading[Further Reading]
+
+== Further Reading
+
+{programmer-guide}
+
+http://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/[Spring Framework Reference Documentation]
+
+http://www.osgi.org/Specifications/HomePage[Blueprint Container Specification](in the OSGi 4.2 and 5.0 Enterprise Specifications)
+
+http://logback.qos.ch/manual[The Logback Manual]
+

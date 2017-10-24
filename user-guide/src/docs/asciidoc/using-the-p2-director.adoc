@@ -1,0 +1,111 @@
+:virgo-name: Virgo
+:version: 3.7.0.RELEASE
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:using-the-p2-director[]
+
+== Using the p2 director
+
+anchor:prereqs[]
+
+=== Prerequisites
+
+The {tomcat-product-name}, or {tomcat-product-name-short} for short, requires Java SE 6 or later to be installed. Java is available from
+http://www.java.com/[http://www.java.com/] and elsewhere.
+
+Since you're going to use the p2 director you'll need to get it. The easiest way is to download Eclipse from http://www.eclipse.org/downloads/[here].
+It has built-in p2 director and other p2 applications.
+
+[IMPORTANT]
+--
+Setting the Target Platform
+--
+
+Before using the director make sure you have a proper target platform set. Otherwise you may not see the director application. Here's how to do that:
+Go to Eclipse's Preferences->Plug-in Development->Target Platform. Below is shown how the view looks like when a default target platform is set.
+
+image:target-platform-view.png[]
+
+If for some reason you don't have any target platform set or it's not the default one you must set the default target platform from the image above.
+If the default target platform is missing then add a new one via the *Add...* button and select the *Default* radio button as shown below:
+
+image:default-target-create.png[]
+
+You can now click *Next* and then *Finish*.
+
+anchor:using-director[Installing with the p2 director from Eclipse]
+
+=== Installing with the p2 director from Eclipse
+
+This section covers briefly using the p2 director for installing.
+A helpful page is the p2 director's http://help.eclipse.org/indigo/index.jsp?topic=/org.eclipse.platform.doc.isv/guide/p2_director.html[documentation at help.eclipse.org].
+There you can find more information on the different supported arguments.
+
+Here's how to use the GUI version of the director built-in Eclipse.
+
+. Go to the *Run* context menu and select *Run Configurations*
+. Create a new one and choose the director application as shown below, then switch to the *Arguments* tab
+
+[IMPORTANT]
+--
+In the image below the "Location:" text box's value is managed by your IDE, don't type anything in there.
+--
+
+image:run_configuration.png[]
+
+In the *Program Arguments* section append the director arguments. Here's an example I used:
+
+....
+-repository <yourP2repo>
+-installIU nano.product
+-tag InitialState
+-destination /Users/<youruser>/install/virgo
+-profile VirgoProfile
+-roaming
+-p2.os ${target.os}
+-p2.ws ${target.ws}
+-p2.arch ${target.arch}
+....
+
+[IMPORTANT]
+--
+The *-repository* argument accepts any valid p2 repository.
+The *-destination* argument accepts any valid absolute location. It defines the location where your Virgo installation will be provisioned.
+If the directory does not exist, it will be created by the director.
+--
+
+These arguments produce a {nano-product-name} installation. For the *p2.** arguments use the same properties from the example above. Eclipse will substitute them later with real values.
+
+The passed value for *-installIU* determines which Virgo product is going to be installed. Here's a list of all Virgo product install IUs:
+*nano.product* - {nano-product-name}
+*nano-full.product* - {nano-product-name} Full ({nano-product-name-short} ` p2 ` GW)
+*kernel.product* - {kernel-product-name}
+*tomcat-server.product* - {tomcat-product-name}
+*jetty-server.product* - {jetty-product-name}
+
+image:director_args.png[]
+
+Finally, run the created configuration. You should see the following output in Eclipse's Console
+
+image:director_result.png[]
+

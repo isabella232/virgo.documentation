@@ -1,0 +1,474 @@
+:virgo-name: Virgo
+:version: 3.7.0.RELEASE
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:starting-stopping"[Starting and Stopping {tomcat-product-name}]
+
+== Starting and Stopping {tomcat-product-name}
+
+Starting and Stopping {tomcat-product-name-short}
+
+=== Starting {tomcat-product-name}
+
+To start {tomcat-product-name} run the `startup.sh` (Linux) or `startup.bat` (Windows) script.
+For both platforms, the script is located in the `SERVER_HOME/bin` directory.
+
+[NOTE]
+--
+This chapter applies to {nano-product-name} too. Note that since {nano-product-name-short}
+has a single region you can ignore the console output from the user region and focus on the instructions.
+A successful startup of {nano-product-name-short} is as simple as that:
+....
+[2011-12-28 11:41:31.528] startup-tracker              <KE0001I> Kernel starting.
+[2011-12-28 11:41:31.602] startup-tracker              <KE0002I> Kernel started.
+....
+--
+
+==== Linux
+
+To start {tomcat-product-name}, open a terminal window and run `startup.sh`:
+
+....
+$ cd $SERVER_HOME
+$ bin/startup.sh</screen>
+....
+
+Once {tomcat-product-name} has started, the console will display a log message
+similar to the one shown below, along with other status messages:
+
+....
+[2009-11-30 12:12:12.111] Thread-2   <UR0001I> User region ready.
+....
+
+The preceding message indicates that you can start using {tomcat-product-name-short}.
+
+==== Microsoft Windows
+
+To start {tomcat-product-name}, open a command-window and run `startup.bat`:
+
+....
+c:> cd %SERVER_HOME%
+c:> bin\startup.bat</screen>
+....
+
+Once {tomcat-product-name} has started, the console will display a log message
+similar to the one shown below, along with other status messages:
+
+....
+[2009-11-30 12:12:12.111] Thread-2   <UR0001I> User region ready.
+....
+
+The preceding message indicates that you can start using {tomcat-product-name-short}.
+
+=== Starting in Clean Mode
+
+When you start {tomcat-product-name} in clean mode, the startup script removes the `SERVER_HOME/work` directory (and hence all
+running applications) as well as all trace, log and dump files.  It leaves the
+`SERVER_HOME/repository` and `SERVER_HOME/pickup` directories untouched,
+which means that any applications previously hot deployed will be automatically reinstalled.
+
+==== Linux
+
+To start {tomcat-product-name} in clean mode, open a terminal window and run `startup.sh -clean`:
+
+....
+$ cd $SERVER_HOME
+$ bin/startup.sh -clean
+....
+
+==== Microsoft Windows
+
+To start {tomcat-product-name} in clean mode, open a command window and run `startup.bat -clean`:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\startup.bat -clean
+....
+
+=== Starting in Debug Mode
+
+==== Linux
+
+To start {tomcat-product-name} in debug mode, run
+`startup.sh` passing in the
+`-debug` argument:
+
+....
+$ cd $SERVER_HOME
+$ bin/startup.sh -debug
+....
+
+This will start the debug agent listening on port
+`8000` which is the default remote debug port used
+by Eclipse. To start in debug mode with a specific port number, pass
+this in as the value for the `-debug` argument:
+
+....
+$ cd $SERVER_HOME
+$ bin/startup.sh -debug 8001
+....
+
+This will start the debug agent listening on port
+`8001`. To start in debug mode and suspend the VM
+until a debugger attaches, pass in the `-suspend`
+argument along with the `-debug` argument:
+
+....
+$ cd $SERVER_HOME
+$ bin/startup.sh -debug -suspend
+....
+
+This starts the debug agent, but prevents {tomcat-product-name} from actually
+starting until a debugger attaches to the agent. This can be useful
+when trying to diagnose problems that occur during startup.
+
+==== Microsoft Windows
+
+To start {tomcat-product-name} in debug mode, run
+`startup.bat` passing in the
+`-debug` argument:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\startup.bat -debug
+....
+
+This will start the debug agent listening on port
+`8000` which is the default remote debug port used
+by Eclipse. To start in debug mode with a specific port number, pass
+this in as the value for the `-debug` argument:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\startup.bat -debug 8001
+....
+
+This will start the debug agent listening on port
+`8001`. To start in debug mode and suspend the VM
+until a debugger attaches, pass in the `-suspend`
+argument along with the `-debug` argument:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\startup.bat -debug -suspend
+....
+
+This starts the debug agent, but prevents {tomcat-product-name} from actually
+starting until a debugger attaches to the agent. This can be useful
+when trying to diagnose problems that occur during startup.
+
+=== Starting with JMX Access Modifications
+
+The {tomcat-product-name} always starts with JMX access enabled, allowing you to use a management tool such as JConsole
+to attach to the Web Server instance.
+By default both local access and remote access over SSL with username and password
+authentication are provided. The default port for secure JMX access is `9875`
+and the default username and password are `admin` and `springsource`.
+
+==== Linux
+
+To start {tomcat-product-name} with default JMX access enabled, run `startup.sh` passing
+in no arguments:
+
+....
+$ cd $SERVER_HOME
+$ bin/startup.sh
+....
+
+To start JConsole, run the `jconsole.sh` script, located in the `bin` directory, as shown:
+
+....
+$ cd $SERVER_HOME
+$ bin/jconsole.sh
+....
+
+The following image shows how to specify a local connection using JConsole.
+
+image:jmx-local-attach.png[]
+
+The following image shows how to specify a remote connection in JConsole that uses SSL with the default
+username/password (`admin/springsource` and default secure port of `9875`).
+
+image:jmx-remote-attach-default.png[]
+
+To start with the JMX remote access on a specific port number other than the default `9875`,
+pass this port number in as the value
+of the `-jmxport` argument:
+
+....
+$ cd $SERVER_HOME
+$ bin/startup.sh -jmxport 9090
+....
+
+This will start the {tomcat-product-name} with JMX enabled for remote connections on port `9090`.
+
+image:jmx-remote-attach-jmxport.png[]
+
+To start the JMX remote access with a custom username and password, update the `$SERVER_HOME/configuration/org.eclipse.virgo.kernel.users.properties` file.  First specify the custom username by changing the value of the `role.admin` property.  Then set the password of this new user by adding a new property called `user.*username*`, where `*username*` refers to the actual name of the user.  Finally, restart {tomcat-product-name-short} for the changes to take effect.
+ For example, if you want change the JMX remote access username to `zebedee` with password `florence`, change the file as follows:
+
+[source,txt]
+----
+##################
+# User definitions
+##################
+user.zebedee=florence
+
+
+##################
+# Role definitions
+##################
+role.admin=zebedee
+----
+
+Specify the custom username in JConsole as shown.
+
+image:jmx-remote-attach-jmxusers.png[]
+
+To start the JMX remote access using a custom SSL certificate, edit the file located at
+`$SERVER_HOME/configuration/keystore`. If you wish to use a different keystore,
+pass this filename in as the value for the `-keystore` argument and the keystore
+password in as the value for the `-keystorePassword` argument:
+
+....
+$ cd $SERVER_HOME
+$ bin/startup.sh -keystore customKeystore -keystorePassword customKeystorePassword
+....
+
+This will start the {tomcat-product-name} with JMX enabled for remote connections using an SSL certificate from
+`customKeystore` with a password of `customKeystorePassword`.
+
+==== Microsoft Windows
+
+To start {tomcat-product-name} with default JMX access enabled, run `startup.bat` passing
+in no arguments:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\startup.bat
+....
+
+To start JConsole, run the `jconsole.bat` script, located in the `bin` directory, as shown:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\jconsole.bat
+....
+
+The following image shows how to specify a local connection using JConsole.
+
+image:jmx-local-attach.png[]
+
+The following image shows how to specify a remote connection in JConsole that uses SSL with the default
+username/password (`admin/springsource` and default secure port of `9875`).
+
+image:jmx-remote-attach-default.png[]
+
+To start with the JMX remote access on a specific port number other than the default `9875`,
+pass this port number in as the value of the `-jmxport` argument:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\startup.bat -jmxport 9090
+....
+
+This will start the {tomcat-product-name} with JMX enabled for remote connections on port
+`9090`.
+
+image:jmx-remote-attach-jmxport.png[]
+
+To start the JMX remote access with a custom username and password, update the `%SERVER_HOME%\configuration\org.eclipse.virgo.kernel.users.properties` file.  First specify the custom username by changing the value of the `role.admin` property.  Then set the password of this new user by adding a new property called `user.*username*`, where `*username*` refers to the actual name of the user.  Finally, restart {tomcat-product-name-short} for the changes to take effect.
+ For example, if you want change the JMX remote access username to `zebedee` with password `florence`, change the file as follows:
+
+[source,txt]
+----
+##################
+# User definitions
+##################
+user.zebedee=florence
+
+
+##################
+# Role definitions
+##################
+role.admin=zebedee
+----
+
+Specify the custom username in JConsole as shown.
+
+image:jmx-remote-attach-jmxusers.png[]
+
+To start the JMX remote access using a custom SSL certificate, edit the file located at
+`%SERVER_HOME%\configuration\keystore`. If you wish to use a different
+keystore, pass this filename in as the value for the `-keystore` argument and the
+keystore password in as the value for the `-keystorePassword` argument:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\startup.bat -keystore customKeystore -keystorePassword customKeystorePassword
+....
+
+This will start the {tomcat-product-name} with JMX enabled for remote attach using an SSL certificate from
+`customKeystore` with a password of `customKeystorePassword`.
+
+anchor:starting-stopping-configuration-directory[]
+
+=== Starting with a Custom Configuration Directory
+
+Use the `-configDir` option to specify an alternate `configuration` directory, different from the
+default `SERVER_HOME/configuration` directory. This option allows you to use the same {tomcat-product-name}
+installation to run multiple instances of {tomcat-product-name-short}. Simply create a configuration directory for each
+instance, specify unique port numbers, logging and tracing directories, and so on, and then specify that directory
+when starting {tomcat-product-name-short}.
+
+If you specify a relative path for the `-configDir` parameter,
+the startup script interprets the path as relative to the root of the {tomcat-product-name} installation,
+and not relative to the directory from which you execute the `startup` script.
+
+See xref:alternate-serviceability-work[Alternate `serviceability` and `work`
+Directories] for a known issue related to specifying an alternate `configuration` directory.
+
+==== Linux
+
+To start {tomcat-product-name} using a configuration directory of `/configuration/node1`:
+
+....
+$ cd $SERVER_HOME
+$ bin/startup.sh -configDir /configuration/node1
+....
+
+==== Windows
+
+To start {tomcat-product-name} using a configuration directory of `c:\configuration\node1`:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\startup.bat -configDir c:\configuration\node1
+....
+
+=== Stopping {tomcat-product-name}
+
+==== Linux
+
+To stop a running instance of {tomcat-product-name}, start a new terminal window and run the `shutdown.sh` script:
+
+....
+$ cd $SERVER_HOME
+$ bin/shutdown.sh
+....
+
+To stop a running instance of {tomcat-product-name} immediately, bypassing normal shutdown
+processing, run `shutdown.sh` with the `-immediate` option:
+
+....
+$ cd $SERVER_HOME
+$ bin/shutdown.sh -immediate
+....
+
+If, when you started the Web Server instance, you used the `-jmxport` option to specify a non-default JMX port number,
+then you must pass this port number to the `-jmxport` of the `shutdown.sh` script
+to gracefully shut it down.
+For example, if you specified `9090` as the JMX port, use the following to shut down the Web Server instance:
+
+....
+$ cd $SERVER_HOME
+$ bin/shutdown.sh -jmxport 9090
+....
+
+==== Microsoft Windows
+
+To stop a running instance of {tomcat-product-name}, start a new console window and run the `shutdown.bat` script:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\shutdown.bat
+....
+
+To stop a running instance of {tomcat-product-name} immediately, bypassing normal shutdown
+processing, run `shutdown.bat` with the `-immediate` option:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\shutdown.bat -immediate
+....
+
+If, when you started the Web Server instance, you used the `-jmxport` option to specify a non-default JMX port number,
+then you must pass this port number to the `-jmxport` of the `shutdown.bat` script to gracefully shut it down.
+For example, if you specified `9090` as the JMX port, use the following to shut down the Web Server instance:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\shutdown.bat -jmxport 9090
+....
+
+anchor:cleaning-without-starting[]
+
+=== Cleaning  {tomcat-product-name} without Starting it
+
+When you clean {tomcat-product-name}, the startup script removes the `SERVER_HOME/work` directory (and hence all
+running applications) as well as all trace, log and dump files.  It leaves the
+`SERVER_HOME/repository` and `SERVER_HOME/pickup` directories untouched,
+which means that any applications previously hot deployed will be automatically reinstalled next time the Web Server is started.
+
+Cleaning is useful when you want to start the Web Server from a clean state next time, but you don't want to start the Web Server yet.
+
+Cleaning is also useful for tidying up the directory structure. For example, sometimes Microsoft Windows won't let you delete the Web
+Server installation directory.
+See xref:windows-deletion[Problem Deleting Installation Directory under Windows] for more details.
+
+==== Linux
+
+To clean {tomcat-product-name}, open a terminal window and run `startup.sh -clean -noStart`:
+
+....
+$ cd $SERVER_HOME
+$ bin/startup.sh -clean -noStart
+....
+
+==== Microsoft Windows
+
+To clean {tomcat-product-name}, open a command window and run `startup.bat -clean -noStart`:
+
+....
+C:> cd %SERVER_HOME%
+C:> bin\startup.bat -clean -noStart
+....
+
+anchor:equinox-launcher[]
+
+=== Using Equinox Launcher
+
+Since version 3.5 {virgo-name} uses the standard Equinox Launcher as its default launcher.
+As a result in addition to all the launcher options described so far users can also pass arguments specific to the Equinox launcher.
+
+[IMPORTANT]
+--
+The Equinox Launcher arguments must be placed at the end of the startup call. Here's an example
+....
+$ ./startup.sh "virgo-args" "equinox-launcher-args"
+$ ./startup.sh -clean -console 2222</screen>
+....
+--
+
+A full list of the accepted Equinox Launcher arguments is available at http://help.eclipse.org/[help.eclipse.org].
+

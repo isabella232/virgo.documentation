@@ -1,0 +1,41 @@
+:virgo-name: Virgo
+:version: 3.7.0.RELEASE
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-{version}/docs/virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: http://www.eclipse.org/virgo/documentation/virgo-documentation-3.6.4.RELEASE/docs/virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:prerequisites-references[Prerequisites]
+
+== Prerequisites
+
+=== Runtime Environment
+{virgo-name} requires Java SE 7 or later to be installed. Java is available from
+http://www.oracle.com/technetwork/java/javase/downloads/index.html[Oracle] and elsewhere.
+
+=== References
+
+To make effective use of the {tomcat-product-name}, you should also refer to the following:
+
+* {user-guide}
+* {tooling-guide}
+* https://www.osgi.org/developer/specifications/[Blueprint Container Specification](in the OSGi 4.2 and 5.0 Enterprise Specifications)
+* https://docs.spring.io/spring/docs/{spring-framework-version}/spring-framework-reference/[Spring Framework {spring-framework-version} Reference Documentation]
+

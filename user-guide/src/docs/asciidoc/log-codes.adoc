@@ -1,0 +1,75 @@
+:virgo-name: Virgo
+:version: 3.7.0.RELEASE
+
+:umbrella-virgo-name: Eclipse Virgo
+:tomcat-product-name: Virgo for Apache Tomcat
+:tomcat-product-name-short: VTS
+:jetty-product-name: Virgo Jetty Server
+:jetty-product-name-short: VJS
+:kernel-product-name: Virgo Kernel
+:kernel-product-name-short: VK
+:nano-product-name: Virgo Nano
+:nano-product-name-short: VN
+:user-guide: link:../../virgo-user-guide/html/index.html[User Guide]
+:tooling-guide: link:../../virgo-tooling-guide/html/index.html[Tooling Guide]
+
+:gemini-blueprint-guide: https://www.eclipse.org/gemini/blueprint/documentation/reference/2.0.0.RELEASE/html/index.html[Eclipse Gemini Blueprint Reference Guide]
+
+:spring-framework-version: 4.2.9.RELEASE
+
+:homepage: https://www.eclipse.org/virgo
+:ebr: http://www.eclipse.org/ebr[EBR]
+
+:imagesdir: assets/images
+
+anchor:log-codes[]
+
+== Event log codes
+
+anchor:event-log-codes-format[]
+
+=== Format of the event log codes
+
+Event log codes issued by {virgo-name} have the general syntax
+`<XXnnnnL>` where:
+
+[cols="1,6"]
+|=======================================================================
+| `XX`     | is a two-letter code (upper-case) identifying the area of the {virgo-name} code which issued the log message;
+| `nnnn`   | is a four-digit message number; and
+| `L`      | is a single-letter (upper-case) code identifying the level of the message.
+|=======================================================================
+
+The two-letter codes are (this list is not complete):
+
+[cols="1,6"]
+|=======================================================================
+| `AG` | `org.eclipse.virgo.kernel.agent.dm`
+| `DE` | `org.eclipse.virgo.kernel.deployer.core`
+| `HD` | `org.eclipse.virgo.kernel.deployer.hot`
+| `HR` | `org.eclipse.virgo.apps.repository.core`
+| `KE` | `org.eclipse.virgo.kernel.core`
+| `KS` | `org.eclipse.virgo.kernel.services`
+| `OF` | `org.eclipse.virgo.kernel.osgi`
+| `RP` | `org.eclipse.virgo.repository`
+| `TC` | `org.eclipse.virgo.web.tomcat`
+| `UR` | `org.eclipse.virgo.kernel.userregion`
+| `WE` | `org.eclipse.virgo.web.core`
+|=======================================================================
+
+The four-digit numbers identify the message text (with placeholders for inserted values). These are not listed here, but can be discovered by examining the files called 
+`EventLogMessages.properties`, found in the relevant packages.
+
+The single-digit level code is one of:
+
+[cols="1,6"]
+|=======================================================================
+| `E` | Error level: enabled if level is `ERROR`.
+| `W` | Warning level: enabled if level is `WARNING` or above.
+| `I` | Info level: enabled if level is `INFO` or above.
+| `D` | Debug level: enabled if level is `DEBUG` or above.
+| `T` | Trace level: always enabled.
+|=======================================================================
+
+There are never two messages with the same prefix and number, but with different levels.
+
